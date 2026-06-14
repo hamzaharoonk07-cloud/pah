@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAH – Exercise Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+<style>
+:root{ --brand:#e11d48; --accent:#fb7185; }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:#fff;background:#000}
+h1,h2,h3{font-family:'Poppins',sans-serif}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.04em}
+.nav-logo img{width:38px;height:38px;border-radius:10px;object-fit:cover}
+.nav-logo span{color:var(--brand)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-link{color:#cbd5e1;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.04em;transition:color .2s}
+.nav-link:hover{color:#fff}
+.nav-back{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#fff;text-decoration:none;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.05em;
+  padding:8px 18px;border-radius:100px;transition:background .2s;
+}
+.nav-back:hover{background:rgba(255,255,255,.12)}
+.nav-streak{
+  display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;
+  background:rgba(225,29,72,.12);border:1px solid rgba(225,29,72,.3);color:var(--accent);
+  font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:700;
+}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* ACCOUNT GATE */
+.gate-overlay{
+  position:fixed;inset:0;z-index:9999;background:#000;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.gate-overlay.hidden{display:none}
+.gate-box{
+  width:100%;max-width:440px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:40px 32px;
+}
+.gate-logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:8px}
+.gate-logo img{width:48px;height:48px;border-radius:12px;object-fit:cover}
+.gate-logo span{color:var(--brand)}
+.gate-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.4rem;text-align:center;margin-bottom:6px}
+.gate-sub{color:#94a3b8;font-size:.85rem;text-align:center;margin-bottom:28px}
+.gate-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.gate-field{display:flex;flex-direction:column;gap:6px}
+.gate-field label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;font-weight:600}
+.gate-field input,.gate-field select{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;
+  padding:10px 12px;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;
+}
+.gate-field input:focus,.gate-field select:focus{outline:none;border-color:var(--brand)}
+.gate-submit{
+  margin-top:10px;width:100%;padding:13px;border-radius:12px;border:none;
+  background:var(--brand);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;
+  font-size:.9rem;letter-spacing:.04em;cursor:pointer;transition:opacity .2s;
+}
+.gate-submit:hover{opacity:.88}
+.gate-error{color:var(--accent);font-size:.78rem;text-align:center;margin-top:10px;display:none}
+
+/* FOOTER */
+.site-footer{padding:64px 24px 32px;border-top:1px solid rgba(255,255,255,.08);background:#000}
+.footer-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto 40px}
+@media(max-width:768px){.footer-cols{grid-template-columns:1fr 1fr}}
+.footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.footer-brand img{width:38px;height:38px;border-radius:10px;object-fit:cover}
+.footer-brand span{color:var(--brand)}
+.footer-desc{color:#94a3b8;font-size:.85rem;line-height:1.7;max-width:290px}
+.footer-heading{font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-links a{color:#94a3b8;text-decoration:none;font-size:.85rem;transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-links span{color:#94a3b8;font-size:.85rem}
+.footer-bottom{
+  max-width:1200px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.footer-bottom span{color:#94a3b8;font-size:.72rem;font-family:monospace}
+.footer-bottom-links{display:flex;gap:22px}
+.footer-bottom-links a{color:#94a3b8;text-decoration:none;font-size:.72rem;font-family:monospace}
+.footer-bottom-links a:hover{color:#fff}
+
+.ex-header{padding:120px 24px 60px;text-align:center;max-width:760px;margin:0 auto}
+.ex-tag{display:inline-block;font-weight:700;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:14px}
+.ex-title{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:900;line-height:1.1;margin-bottom:18px;letter-spacing:-.02em}
+.ex-title span{color:var(--brand)}
+.ex-sub{color:#cbd5e1;font-size:1rem;line-height:1.75}
+
+.ex-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:24px;max-width:1200px;margin:0 auto;padding:0 24px 100px;
+}
+
+.ex-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:28px;transition:border-color .25s,transform .25s;
+}
+.ex-card:hover{border-color:rgba(225,29,72,.5);transform:translateY(-4px)}
+
+.ex-icon{
+  width:48px;height:48px;border-radius:14px;background:rgba(225,29,72,.15);
+  display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+}
+.ex-icon svg{width:24px;height:24px}
+
+.ex-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.ex-focus{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;font-weight:600}
+.ex-diff{
+  font-size:.7rem;font-weight:700;padding:3px 12px;border-radius:100px;
+  letter-spacing:.05em;text-transform:uppercase;
+}
+
+.ex-name{font-size:1.3rem;font-weight:800;margin-bottom:12px;letter-spacing:-.01em}
+
+.ex-instruction{color:#cbd5e1;font-size:.92rem;line-height:1.65;margin-bottom:16px}
+
+.ex-note{
+  display:flex;gap:10px;align-items:flex-start;
+  padding-top:16px;border-top:1px solid rgba(255,255,255,.08);
+  color:#94a3b8;font-size:.82rem;line-height:1.6;
+}
+.ex-note svg{flex-shrink:0;margin-top:2px}
+
+.ex-reps{
+  margin-top:14px;font-size:.78rem;font-weight:700;color:var(--brand);
+  letter-spacing:.08em;text-transform:uppercase;
+}
+
+.ex-start{
+  margin-top:18px;width:100%;padding:12px;border-radius:12px;border:none;
+  background:var(--brand);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;
+  font-size:.85rem;letter-spacing:.04em;cursor:pointer;transition:opacity .2s;
+}
+.ex-start:hover{opacity:.88}
+
+/* SECTION HEADERS */
+.section-tag{font-weight:700;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:14px}
+.section-title{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:900;line-height:1.1;margin-bottom:18px;letter-spacing:-.02em}
+.section-title span{color:var(--brand)}
+
+/* DASHBOARD */
+#dashboard{padding:80px 24px 100px;max-width:1200px;margin:0 auto}
+.dash-head{text-align:center;margin-bottom:48px}
+.dash-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.dash-metric{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;
+  padding:24px;text-align:center;
+}
+.dash-metric-label{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;margin-bottom:10px;font-weight:700}
+.dash-metric-val{font-size:2.4rem;font-weight:800;font-family:'Poppins',sans-serif;color:var(--brand)}
+.dash-metric-sub{font-size:.75rem;color:#94a3b8;margin-top:6px}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dash-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:24px}
+.dash-card-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:18px}
+#weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:120px;gap:8px}
+.weekly-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+.weekly-bar-track{width:100%;background:rgba(255,255,255,.04);border-radius:4px;flex:1;position:relative;overflow:hidden}
+.weekly-bar-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--brand),var(--accent));border-radius:4px;transition:height 1s ease}
+.weekly-bar-label{font-size:.65rem;color:#94a3b8;font-weight:600}
+#recent-sessions{display:flex;flex-direction:column;gap:8px}
+.recent-row{
+  display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
+  border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);
+}
+.recent-name{font-weight:700;font-size:.85rem}
+.recent-date{font-size:.65rem;color:#94a3b8;margin-top:2px}
+.recent-reps{font-size:1rem;font-weight:800;color:var(--brand);text-align:right}
+.recent-form{font-size:.65rem;color:#94a3b8;text-align:right;margin-top:2px}
+.dash-empty{color:#94a3b8;font-size:.82rem;text-align:center;padding:24px 0}
+@media(max-width:768px){.dash-metrics{grid-template-columns:repeat(2,1fr)}.dash-grid{grid-template-columns:1fr}}
+
+/* AI COACH */
+#ai-coach{padding:40px 24px 100px;max-width:900px;margin:0 auto}
+.coach-head{text-align:center;margin-bottom:32px}
+.coach-box{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;
+  overflow:hidden;display:flex;flex-direction:column;height:520px;
+}
+.coach-top{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.coach-avatar{
+  width:38px;height:38px;border-radius:12px;background:var(--brand);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;color:#fff;font-size:.9rem;
+}
+.coach-status{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:.65rem;color:var(--accent);letter-spacing:.05em}
+.coach-dot{width:6px;height:6px;border-radius:50%;background:#00e5a0}
+#ai-chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ai-chat-msg{
+  max-width:85%;padding:12px 16px;border-radius:14px;font-size:.85rem;line-height:1.65;
+}
+.ai-chat-msg.bot{background:rgba(255,255,255,.05);align-self:flex-start;border:1px solid rgba(255,255,255,.06)}
+.ai-chat-msg.user{background:var(--brand);color:#fff;align-self:flex-end}
+.ai-chat-msg strong{display:block;color:var(--brand);font-size:.78rem;margin-bottom:6px}
+.ai-chat-msg.user strong{color:#fff}
+.quick-chip{
+  color:var(--accent);cursor:pointer;background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.25);
+  padding:5px 14px;border-radius:100px;font-size:.75rem;transition:background .2s;
+}
+.quick-chip:hover{background:rgba(225,29,72,.2)}
+.coach-input-row{padding:14px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:10px}
+#ai-chat-input{
+  flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;
+  padding:12px 16px;color:#fff;font-family:'Inter',sans-serif;font-size:.84rem;outline:none;
+}
+#ai-chat-input:focus{border-color:var(--brand)}
+.coach-send{
+  background:var(--brand);color:#fff;border:none;border-radius:12px;padding:12px 18px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--brand);display:inline-block;margin-right:4px;animation:typingPulse 1s ease-in-out infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}
+.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes typingPulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* SESSION MODAL — fullscreen */
+.session-overlay{
+  position:fixed;inset:0;z-index:1000;background:#000;
+  display:none;
+}
+.session-overlay.open{display:block}
+.session-stage{
+  position:absolute;inset:0;width:100%;height:100%;background:#000;overflow:hidden;
+}
+.session-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.session-stage canvas{position:absolute;inset:0;width:100%;height:100%;transform:scaleX(-1)}
+#skeleton-canvas{z-index:2}
+.session-head{
+  position:absolute;top:0;left:0;right:0;z-index:6;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  padding:20px 24px;background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent);
+}
+.session-title{font-size:1.3rem;font-weight:800}
+.session-focus{color:#cbd5e1;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.session-close{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;
+  border-radius:100px;padding:8px 18px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.78rem;font-weight:600;
+}
+.session-hud{
+  position:absolute;top:88px;left:24px;z-index:5;
+  background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.15);border-radius:100px;
+  padding:6px 16px;font-family:'Poppins',sans-serif;font-size:.7rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:8px;
+  pointer-events:none;
+}
+.session-hud .hud-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor}
+.session-msg{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;text-align:center;padding:24px;color:#94a3b8;font-size:.85rem;line-height:1.7;z-index:7;
+  background:#0f172a;
+}
+.session-footer{
+  position:absolute;bottom:0;left:0;right:0;z-index:6;
+  background:linear-gradient(to top,rgba(0,0,0,.85),transparent);
+  padding:18px 24px 24px;display:flex;flex-direction:column;gap:12px;
+}
+.session-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.session-stat{background:rgba(255,255,255,.08);backdrop-filter:blur(6px);border-radius:14px;padding:12px;text-align:center}
+.session-stat-val{font-size:1.6rem;font-weight:800;color:var(--brand);font-family:'Poppins',sans-serif}
+.session-stat-label{font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:#cbd5e1;margin-top:2px}
+.session-feedback{
+  background:rgba(225,29,72,.18);border:1px solid rgba(225,29,72,.4);border-radius:14px;
+  padding:12px 18px;font-size:.88rem;color:var(--accent);text-align:center;
+}
+.session-feedback.warn{
+  background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.4);color:#fecaca;
+}
+.session-start-btn{
+  width:100%;margin-top:16px;padding:14px;border-radius:100px;border:none;
+  background:var(--brand);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="gate-overlay" id="gate-overlay">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <img src="pahlogo/pahlogo.jpeg" alt="PAH">
+      <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.04em"><span>P</span>AH</div>
+    </div>
+    <div class="gate-title">Create Your Account</div>
+    <div class="gate-sub">Tell us about yourself so we can personalize your recovery plan.</div>
+    <form id="gate-form">
+      <div class="gate-row">
+        <div class="gate-field">
+          <label for="gate-name">Name</label>
+          <input type="text" id="gate-name" required placeholder="Your name">
+        </div>
+        <div class="gate-field">
+          <label for="gate-gender">Gender</label>
+          <select id="gate-gender" required>
+            <option value="" disabled selected>Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="gate-row">
+        <div class="gate-field">
+          <label for="gate-age">Age</label>
+          <input type="number" id="gate-age" required min="5" max="120" placeholder="Years">
+        </div>
+        <div class="gate-field">
+          <label for="gate-weight">Weight (kg)</label>
+          <input type="number" id="gate-weight" required min="10" max="300" placeholder="kg">
+        </div>
+      </div>
+      <div class="gate-row" style="grid-template-columns:1fr">
+        <div class="gate-field">
+          <label for="gate-height">Height (cm)</label>
+          <input type="number" id="gate-height" required min="50" max="260" placeholder="cm">
+        </div>
+      </div>
+      <button type="submit" class="gate-submit">Create Account &amp; Continue</button>
+      <div class="gate-error" id="gate-error">Please fill in all fields.</div>
+    </form>
+  </div>
+</div>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><img src="pahlogo/pahlogo.jpeg" alt="PAH"><span>P</span>AH</a>
+  <div class="nav-links">
+    <a href="#exercises" class="nav-link">Exercises</a>
+    <a href="#ai-coach" class="nav-link">AI Coach</a>
+    <a href="#dashboard" class="nav-link">Dashboard</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="nav-streak" id="nav-streak" style="display:none">
+      <span id="nav-streak-val">0</span>d streak
+    </div>
+    <a href="index.html" class="nav-back">&larr; Back</a>
+  </div>
+</nav>
+
+<script>
+(function(){
+  const overlay = document.getElementById('gate-overlay');
+  const form = document.getElementById('gate-form');
+  const error = document.getElementById('gate-error');
+  const account = JSON.parse(localStorage.getItem('pah_account') || 'null');
+  if(account){ overlay.classList.add('hidden'); }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    const name = document.getElementById('gate-name').value.trim();
+    const gender = document.getElementById('gate-gender').value;
+    const age = document.getElementById('gate-age').value;
+    const weight = document.getElementById('gate-weight').value;
+    const height = document.getElementById('gate-height').value;
+    if(!name || !gender || !age || !weight || !height){
+      error.style.display = 'block';
+      return false;
+    }
+    localStorage.setItem('pah_account', JSON.stringify({name, gender, age, weight, height}));
+    overlay.classList.add('hidden');
+    return false;
+  });
+})();
+</script>
+
+<div class="ex-header" id="exercises">
+  <div class="ex-tag">Clinical Exercise Library</div>
+  <h1 class="ex-title">Physio-Approved <span>Exercises</span></h1>
+  <p class="ex-sub">A curated set of mobility and strengthening exercises targeting each region covered in our assessment — designed to relieve pain, restore range of motion, and prevent recurrence.</p>
+</div>
+
+<div class="ex-grid" id="ex-grid"></div>
+
+<section id="ai-coach">
+  <div class="coach-head">
+    <div class="section-tag">AI Physiotherapist</div>
+    <h2 class="section-title">Describe Your <span>Pain</span></h2>
+    <p style="color:#cbd5e1;font-size:.92rem;line-height:1.7;max-width:620px;margin:0 auto">Tell our AI where it hurts, how severe, and how long — it builds a personalized rehab program from clinical physiotherapy protocols.</p>
+  </div>
+  <div class="coach-box">
+    <div class="coach-top">
+      <div class="coach-avatar">AI</div>
+      <div>
+        <div style="font-weight:800;font-size:1rem">PAH AI Physiotherapist</div>
+        <div class="coach-status"><span class="coach-dot"></span>Online · Clinical Protocol</div>
+      </div>
+    </div>
+    <div id="ai-chat-messages">
+      <div class="ai-chat-msg bot">
+        <strong>PAH AI Physiotherapist</strong>
+        Hello! Describe your pain — location, severity (1-10), and duration — and I'll build a personalized rehab program.
+      </div>
+      <div class="ai-chat-msg bot">
+        <strong>Quick Start</strong>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
+          <span class="quick-chip" onclick="AICoach.quickInput('lower back pain L4 L5 disc')">L4-L5 Back</span>
+          <span class="quick-chip" onclick="AICoach.quickInput('neck pain cervical spondylosis')">Cervical Neck</span>
+          <span class="quick-chip" onclick="AICoach.quickInput('shoulder pain rotator cuff')">Shoulder</span>
+          <span class="quick-chip" onclick="AICoach.quickInput('knee pain patellar')">Knee</span>
+        </div>
+      </div>
+    </div>
+    <div class="coach-input-row">
+      <input id="ai-chat-input" type="text" placeholder="Describe your pain... e.g. lower back 3 weeks 7/10" onkeypress="if(event.key==='Enter')AICoach.send()">
+      <button class="coach-send" onclick="AICoach.send()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="dash-head">
+    <div class="section-tag">Smart Recovery Dashboard</div>
+    <h2 class="section-title">Track Your <span>Recovery</span></h2>
+  </div>
+  <div class="dash-metrics">
+    <div class="dash-metric"><div class="dash-metric-label">Day Streak</div><div class="dash-metric-val" id="dash-streak">0</div><div class="dash-metric-sub">Days Consecutive</div></div>
+    <div class="dash-metric"><div class="dash-metric-label">Sessions</div><div class="dash-metric-val" id="dash-sessions">0</div><div class="dash-metric-sub">Total Completed</div></div>
+    <div class="dash-metric"><div class="dash-metric-label">Reps</div><div class="dash-metric-val" id="dash-reps">0</div><div class="dash-metric-sub">Total Performed</div></div>
+    <div class="dash-metric"><div class="dash-metric-label">Form Score</div><div class="dash-metric-val" id="dash-form">--</div><div class="dash-metric-sub">Average Accuracy</div></div>
+  </div>
+  <div class="dash-grid">
+    <div class="dash-card">
+      <div class="dash-card-title">Weekly Activity</div>
+      <div id="weekly-bars"></div>
+    </div>
+    <div class="dash-card">
+      <div class="dash-card-title">Recent Sessions</div>
+      <div id="recent-sessions"><div class="dash-empty">No sessions yet. Start your first exercise!</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="session-overlay" id="session-overlay">
+  <div class="session-stage">
+    <video id="session-video" autoplay playsinline muted style="display:none"></video>
+    <canvas id="skeleton-canvas" style="display:none"></canvas>
+    <div class="session-head">
+      <div>
+        <div class="session-title" id="session-name">Exercise</div>
+        <div class="session-focus" id="session-focus">Focus</div>
+      </div>
+      <button class="session-close" onclick="closeSession()">Close</button>
+    </div>
+    <div class="session-hud" id="session-hud" style="display:none">
+      <span class="hud-dot" id="hud-dot"></span><span id="hud-label">TRACKING</span>
+    </div>
+    <div class="session-msg" id="session-msg">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      <div>Camera feed is processed entirely on your device. No video is stored or sent anywhere.</div>
+      <button class="session-start-btn" id="session-start-btn" onclick="startSessionCamera()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Activate Camera
+      </button>
+    </div>
+    <div class="session-footer">
+      <div class="session-stats">
+        <div class="session-stat"><div class="session-stat-val" id="session-reps">0</div><div class="session-stat-label">Reps / <span id="session-target">-</span></div></div>
+        <div class="session-stat"><div class="session-stat-val" id="session-score">--%</div><div class="session-stat-label">Form Score</div></div>
+        <div class="session-stat"><div class="session-stat-val" id="session-state">Idle</div><div class="session-stat-label">Status</div></div>
+      </div>
+      <div class="session-feedback" id="session-feedback">Activate your camera to begin this exercise.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const EXERCISES=[
+  {name:"Cervical Tilt",focus:"Cervical Spine",difficulty:"Beginner",icon:"M12 5v14M5 12l7-7 7 7",detection:"neck",targetReps:12,instruction:"Gently tilt head to each side. Hold 3s at end range. Keep shoulders relaxed.",physioNote:"Reduces cervical tension and mobilizes facet joints. Primary treatment for spondylosis.",
+    jointMap:{primary:[0,7,8,11,12],secondary:[13,14,23,24],connections:[[7,8],[7,11],[8,12],[11,12],[0,7],[0,8]],secondaryConns:[[11,13],[12,14],[11,23],[12,24]]}},
+  {name:"Shoulder Circles",focus:"Thoracic & Shoulder",difficulty:"Beginner",icon:"M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",detection:"shoulder",targetReps:15,instruction:"Roll both shoulders in large backward circles. Keep neck relaxed.",physioNote:"Releases upper trapezius and mobilizes the glenohumeral joint. Reduces thoracic kyphosis.",
+    jointMap:{primary:[11,12,13,14],secondary:[7,8,15,16,23,24],connections:[[11,12],[11,13],[12,14],[13,15],[14,16]],secondaryConns:[[7,11],[8,12],[11,23],[12,24]]}},
+  {name:"Bilateral Arm Raise",focus:"Shoulder Flexion",difficulty:"Intermediate",icon:"M5 10l7-7m0 0l7 7m-7-7v18",detection:"arm_raise",targetReps:15,instruction:"Raise both arms overhead. Hold 2s at top.",physioNote:"Assesses shoulder range of motion, stretches latissimus dorsi, and mobilizes thoracolumbar fascia.",
+    jointMap:{primary:[11,12,13,14,15,16],secondary:[7,8,23,24],connections:[[11,12],[11,13],[13,15],[12,14],[14,16]],secondaryConns:[[7,11],[8,12],[11,23],[12,24]]}},
+  {name:"Wrist Mobilization",focus:"Wrist & Forearm",difficulty:"Beginner",icon:"M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",detection:"wrist",targetReps:20,instruction:"Hold arms forward. Rotate wrists in full circles, both directions.",physioNote:"Improves radioulnar mobility and helps prevent carpal tunnel progression.",
+    jointMap:{primary:[13,14,15,16,17,18],secondary:[11,12],connections:[[13,15],[14,16],[15,17],[16,18]],secondaryConns:[[11,13],[12,14],[11,12]]}},
+  {name:"Thoracic Rotation",focus:"Thoracic Spine",difficulty:"Intermediate",icon:"M8 7l4-4 4 4m0 6l-4 4-4-4",detection:"spine",targetReps:12,instruction:"Keep hips forward. Rotate upper torso to each side. Hold 2s.",physioNote:"Core L4-L5 mobilizer. Reduces discogenic pain via segmental movement.",
+    jointMap:{primary:[11,12,23,24],secondary:[7,8,25,26],connections:[[11,12],[11,23],[12,24],[23,24]],secondaryConns:[[7,11],[8,12],[23,25],[24,26]]}},
+  {name:"McKenzie Extension",focus:"Lumbar L4-L5",difficulty:"Beginner",icon:"M19 14l-7 7m0 0l-7-7m7 7V3",detection:"back",targetReps:10,instruction:"Place hands on lower back. Gently arch backward. Hold 3s.",physioNote:"McKenzie method — primary treatment for L4-L5 disc herniation. Centralizes pain.",
+    jointMap:{primary:[11,12,23,24],secondary:[7,8,25,26],connections:[[11,12],[11,23],[12,24],[23,24]],secondaryConns:[[7,11],[8,12],[23,25],[24,26]]}},
+  {name:"Hamstring Stretch",focus:"Posterior Chain",difficulty:"Intermediate",icon:"M19 14l-7 7m0 0l-7-7m7 7V3",detection:"hamstring",targetReps:8,instruction:"Feet hip-width apart. Hinge at hips, reach toward floor. Hold 5s.",physioNote:"Reduces lumbar load. Essential for L4-L5 nerve root tension relief.",
+    jointMap:{primary:[23,24,25,26,27,28],secondary:[11,12],connections:[[23,24],[23,25],[25,27],[24,26],[26,28]],secondaryConns:[[11,23],[12,24]]}},
+  {name:"Straight Leg Raise",focus:"Hip Flexors & Quad",difficulty:"Advanced",icon:"M5 11l7-7 7 7M5 19l7-7 7 7",detection:"leg_raise",targetReps:12,instruction:"Stand tall. Raise one leg straight forward. Alternate sides.",physioNote:"Activates iliopsoas and quadriceps. Equivalent to the SLR test for nerve involvement.",
+    jointMap:{primary:[23,24,25,26],secondary:[11,12,27,28],connections:[[23,24],[23,25],[24,26],[25,27],[26,28]],secondaryConns:[[11,23],[12,24]]}},
+  {name:"Ankle Mobility",focus:"Ankle & Proprioception",difficulty:"Beginner",icon:"M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",detection:"ankle",targetReps:20,instruction:"Lift one foot. Rotate ankle in full circles. Switch sides.",physioNote:"Restores talocrural mobility, prevents sprains, and improves gait mechanics.",
+    jointMap:{primary:[25,26,27,28,29,30,31,32],secondary:[23,24],connections:[[25,27],[26,28],[27,29],[28,30],[29,31],[30,32]],secondaryConns:[[23,25],[24,26]]}},
+  {name:"Glute Bridge",focus:"Hip Extensors & Core",difficulty:"Intermediate",icon:"M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3",detection:"hip_bridge",targetReps:15,instruction:"Lie back, drive through heels and squeeze glutes to lift hips.",physioNote:"Activates gluteus maximus, reduces low back pain. Key L4-L5 stabilizer.",
+    jointMap:{primary:[23,24,25,26],secondary:[11,12,27,28],connections:[[23,24],[23,25],[24,26],[25,27],[26,28]],secondaryConns:[[11,23],[12,24]]}},
+  {name:"Postural Assessment",focus:"Full Body Screen",difficulty:"Beginner",icon:"M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",detection:"posture",targetReps:1,instruction:"Stand naturally and hold for a full clinical postural check.",physioNote:"Full clinical postural screen: cervical, shoulder, lumbar, and pelvic tilt assessment.",
+    jointMap:{primary:[0,7,8,11,12,23,24,25,26],secondary:[13,14,15,16,27,28],connections:[[11,12],[11,23],[12,24],[23,24],[23,25],[24,26],[7,11],[8,12],[0,7],[0,8]],secondaryConns:[[11,13],[12,14],[13,15],[14,16],[25,27],[26,28]]}}
+];
+
+const diffColors={Beginner:"#00e5a0",Intermediate:"#ffcc00",Advanced:"#ef4444"};
+
+const grid=document.getElementById('ex-grid');
+grid.innerHTML=EXERCISES.map((ex,i)=>`
+  <div class="ex-card">
+    <div class="ex-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ex.icon}"/></svg>
+    </div>
+    <div class="ex-meta">
+      <span class="ex-focus">${ex.focus}</span>
+      <span class="ex-diff" style="color:${diffColors[ex.difficulty]};background:${diffColors[ex.difficulty]}22">${ex.difficulty}</span>
+    </div>
+    <h3 class="ex-name">${ex.name}</h3>
+    <p class="ex-instruction">${ex.instruction}</p>
+    <div class="ex-reps">${ex.targetReps===1?'Hold':ex.targetReps+' Reps'} Target</div>
+    <div class="ex-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>${ex.physioNote}</span>
+    </div>
+    <button class="ex-start" onclick="openSession(${i})">Start Exercise</button>
+  </div>
+`).join('');
+
+// ============================================================
+// USER STATE / DASHBOARD
+// ============================================================
+const defaultUser={streak:0,totalSessions:0,totalReps:0,weekly:[0,0,0,0,0,0,0],history:[],lastSession:null,formHistory:[]};
+function loadUser(){try{const d=localStorage.getItem("pah_v4");return d?{...defaultUser,...JSON.parse(d)}:{...defaultUser}}catch{return{...defaultUser}}}
+function saveUser(){try{localStorage.setItem("pah_v4",JSON.stringify(userState))}catch{}}
+function updateStreak(){
+  const t=new Date().toDateString();
+  if(userState.lastSession===t)return;
+  const y=new Date(Date.now()-86400000).toDateString();
+  userState.streak=userState.lastSession===y?userState.streak+1:1;
+  userState.lastSession=t;
+}
+let userState=loadUser();
+
+function updateNavStreak(){
+  const s=document.getElementById('nav-streak');
+  if(userState.streak>0){s.style.display='flex';document.getElementById('nav-streak-val').textContent=userState.streak}
+}
+
+function updateDashboard(){
+  document.getElementById('dash-streak').textContent=userState.streak;
+  document.getElementById('dash-sessions').textContent=userState.totalSessions;
+  document.getElementById('dash-reps').textContent=userState.totalReps;
+  const avg=userState.formHistory.length?Math.round(userState.formHistory.reduce((a,b)=>a+b,0)/userState.formHistory.length):null;
+  document.getElementById('dash-form').textContent=avg?avg+'%':'--';
+
+  const days=['M','T','W','T','F','S','S'],maxV=Math.max(...userState.weekly,1);
+  document.getElementById('weekly-bars').innerHTML=userState.weekly.map((v,i)=>{
+    const pct=Math.min(100,(v/maxV)*100);
+    return `<div class="weekly-bar"><div class="weekly-bar-track"><div class="weekly-bar-fill" style="height:${pct}%"></div></div><span class="weekly-bar-label">${days[i]}</span></div>`;
+  }).join('');
+
+  const re=document.getElementById('recent-sessions');
+  if(!userState.history.length){
+    re.innerHTML='<div class="dash-empty">No sessions yet. Start your first exercise!</div>';
+  }else{
+    re.innerHTML=userState.history.slice(0,5).map(h=>`
+      <div class="recent-row">
+        <div><div class="recent-name">${h.name}</div><div class="recent-date">${new Date(h.date).toLocaleDateString()}</div></div>
+        <div><div class="recent-reps">${h.reps} reps</div>${h.form?`<div class="recent-form">${h.form}% form</div>`:''}</div>
+      </div>`).join('');
+  }
+}
+
+updateDashboard();
+updateNavStreak();
+
+// ============================================================
+// AI COACH
+// ============================================================
+const AICoach={
+  async send(){
+    const input=document.getElementById('ai-chat-input');
+    const msg=input.value.trim();if(!msg)return;
+    this.addMsg(msg,'user');input.value='';this.showTyping();
+    const resp=await this.getResponse(msg);
+    this.removeTyping();this.addMsg(resp,'bot');
+  },
+  quickInput(text){document.getElementById('ai-chat-input').value=text;this.send()},
+  addMsg(text,role){
+    const msgs=document.getElementById('ai-chat-messages');
+    const div=document.createElement('div');div.className='ai-chat-msg '+role;
+    if(role==='bot')div.innerHTML=`<strong>PAH AI Physiotherapist</strong>${text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}`;
+    else div.textContent=text;
+    msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  },
+  showTyping(){
+    const msgs=document.getElementById('ai-chat-messages');
+    const div=document.createElement('div');div.id='typing-indicator';div.className='ai-chat-msg bot';
+    div.innerHTML='<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  },
+  removeTyping(){const el=document.getElementById('typing-indicator');if(el)el.remove()},
+  async getResponse(msg){
+    const l=msg.toLowerCase();
+    await new Promise(r=>setTimeout(r,700+Math.random()*500));
+    if(l.includes('l4')||l.includes('l5')||l.includes('lumbar')||l.includes('lower back')||l.includes('disc')||l.includes('back pain'))
+      return "Based on your L4-L5/lumbar symptoms, here is your personalized rehabilitation protocol:\n\n**Clinical Assessment:** L4-L5 disc involvement commonly causes lower back pain radiating into the leg, aggravated by flexion and relieved by extension.\n\n**Program:**\n1. **McKenzie Extension** (10 reps x 3) — primary decompression\n2. **Thoracic Rotation** (12 reps each side) — reduces compensatory strain\n3. **Glute Bridge** (15 reps x 2) — stabilizes lumbar spine\n4. **Hamstring Stretch** (8 reps, 5s hold) — reduces sciatic tension\n\n**Postural Advice:** Sleep with a pillow between knees. Avoid sitting >30min without breaks.\n\n**Red Flags:** Seek emergency care for bowel/bladder dysfunction or bilateral leg weakness.";
+    if(l.includes('cervical')||l.includes('neck')||l.includes('c5')||l.includes('c6'))
+      return "Your symptoms suggest cervical spine involvement. Here is your targeted neck rehab protocol:\n\n**Clinical Assessment:** Cervical spondylosis presents with neck stiffness and upper trapezius tension, often driven by forward head posture.\n\n**Program:**\n1. **Cervical Tilt** (12 reps each side) — facet joint mobilization\n2. **Shoulder Circles** (15 reps) — upper trapezius release\n3. **Bilateral Arm Raise** (15 reps) — thoracic extension to offload cervical spine\n\n**Postural Advice:** Screen at eye level. Take a 5-min neck break every 30 minutes.";
+    if(l.includes('shoulder')||l.includes('rotator')||l.includes('impingement'))
+      return "Shoulder rehabilitation protocol based on your description:\n\n**Clinical Assessment:** Likely rotator cuff tendinopathy or subacromial impingement — painful arc, weakness in external rotation.\n\n**Program:**\n1. **Shoulder Circles** (15 reps) — joint mobilization\n2. **Bilateral Arm Raise** (15 reps) — overhead mobility restoration\n3. **Postural Assessment** — scapular alignment check\n\n**Advice:** Avoid overhead lifting above pain threshold. Ice after exercise (15 min).";
+    if(l.includes('knee')||l.includes('patella')||l.includes('acl')||l.includes('meniscus'))
+      return "**Knee Rehabilitation Protocol:**\n\n**Assessment:** Patellar tracking issues, ACL involvement, or knee OA.\n\n**Program:**\n1. **Straight Leg Raise** (12 reps) — quad activation without joint compression\n2. **Ankle Mobility** — kinetic chain optimization\n3. **Glute Bridge** (15 reps) — hip-knee alignment\n4. **Hamstring Stretch** — reduces posterior knee tension\n\n**Advice:** Avoid deep squatting initially.";
+    if(l.includes('hip')||l.includes('pelvis')||l.includes('gluteal'))
+      return "**Hip & Pelvic Rehabilitation Protocol:**\n\n**Assessment:** Hip flexor tightness and gluteal weakness — common cause of LBP and anterior pelvic tilt.\n\n**Program:**\n1. **Glute Bridge** — gluteal activation\n2. **Straight Leg Raise** — hip flexor strengthening\n3. **McKenzie Extension** — lumbar-hip mobility\n4. **Hamstring Stretch** — posterior hip release";
+    if(l.includes('hello')||l.includes('hi')||l.includes('help')||l.length<12)
+      return "Hello! To provide the most accurate rehab program, please describe:\n\n1. **Where** is your pain?\n2. **Severity?** (1-10)\n3. **Duration?**\n4. **What makes it worse?**\n\nI'll create a personalized evidence-based program instantly.";
+    if(l.includes('7')||l.includes('8')||l.includes('9')||l.includes('10')||l.includes('severe'))
+      return "I understand your pain is significant. For high-severity pain (7-10/10):\n\n**Immediate Recommendations:**\n- Relative rest: avoid pain-aggravating movements\n- Ice therapy: 15-20 min, 3x/day for acute phase (<72 hrs)\n- Heat therapy: after acute phase\n\n**Seek emergency care for:** bowel/bladder dysfunction, bilateral limb weakness, or pain following trauma.\n\nStart with **gentle** exercises only.";
+    return "Thank you for describing your symptoms. For an accurate protocol, please specify:\n- **Pain location** (e.g. lower back, neck, shoulder)\n- **Severity** (1-10)\n- **Duration**\n\n**Commonly treated:** L4-L5 disc, cervical spondylosis, shoulder impingement, knee OA, hip dysfunction.";
+  }
+};
+
+// ============================================================
+// POSE DETECTION SESSION
+// ============================================================
+const midpoint=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
+const dist=(a,b)=>Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2);
+
+function analyzePosture(lm){
+  const issues=[],goods=[];let score=100;
+  const vis=(idx)=>lm[idx]&&(lm[idx].visibility===undefined||lm[idx].visibility>0.25);
+  if(vis(7)&&vis(8)&&vis(11)&&vis(12)){
+    const ear=midpoint(lm[7],lm[8]),sh=midpoint(lm[11],lm[12]);
+    const fhDelta=Math.abs(ear.x-sh.x);
+    if(fhDelta>0.08){score-=24;issues.push("Forward head posture — tuck chin, elongate cervical spine")}
+    else if(fhDelta>0.045){score-=10;issues.push("Mild forward head — gently retract chin, ears over shoulders")}
+    else goods.push("Cervical alignment: optimal")
+  }
+  if(vis(11)&&vis(12)){
+    const sAsy=Math.abs(lm[11].y-lm[12].y);
+    if(sAsy>0.055){score-=20;issues.push("Shoulder elevation — lower raised shoulder, level scapulae")}
+    else if(sAsy>0.030){score-=8;issues.push("Slight shoulder imbalance — relax elevated shoulder")}
+    else goods.push("Shoulders: level and symmetrical")
+  }
+  if(vis(11)&&vis(12)&&vis(23)&&vis(24)){
+    const st=midpoint(lm[11],lm[12]),sb=midpoint(lm[23],lm[24]);
+    const spineShift=Math.abs(st.x-sb.x);
+    if(spineShift>0.065){score-=22;issues.push("Lumbar lateral shift — centre weight, engage core")}
+    else if(spineShift>0.038){score-=9;issues.push("Mild trunk sway — distribute weight evenly, brace core")}
+    else goods.push("Lumbar spine: aligned (L4-L5 neutral)")
+  }
+  if(vis(23)&&vis(24)){
+    const pObl=Math.abs(lm[23].y-lm[24].y);
+    if(pObl>0.055){score-=16;issues.push("Pelvic obliquity — level hips, stand on both feet equally")}
+    else if(pObl>0.028){score-=6;issues.push("Slight pelvic tilt — engage glutes and deep core")}
+    else goods.push("Pelvis: level")
+  }
+  if(vis(11)&&vis(12)){
+    const shoulderWidth=dist(lm[11],lm[12]);
+    if(shoulderWidth<0.14){score-=14;issues.push("Rounded shoulders — open chest, retract scapulae")}
+    else if(shoulderWidth<0.17){score-=6;issues.push("Mild protraction — squeeze shoulder blades gently")}
+    else goods.push("Chest open, scapulae neutral")
+  }
+  if(vis(25)&&vis(26)&&vis(23)&&vis(24)){
+    const hipW=dist(lm[23],lm[24]),kneeW=dist(lm[25],lm[26]);
+    if(hipW>0.05&&kneeW<hipW*0.65){score-=12;issues.push("Knee valgus — push knees outward, activate glutes/abductors")}
+    else if(hipW>0.05&&kneeW<hipW*0.78){score-=4;issues.push("Mild knee inward drift — maintain hip-width stance")}
+    else goods.push("Knee alignment: within normal limits")
+  }
+  if(vis(27)&&vis(28)&&vis(25)&&vis(26)){
+    const kneeW2=dist(lm[25],lm[26]),ankleW=dist(lm[27],lm[28]);
+    if(kneeW2>0.05&&Math.abs(kneeW2-ankleW)>kneeW2*0.35){score-=4;issues.push("Foot/ankle imbalance — ground all four corners of each foot")}
+    else if(vis(27)&&vis(28))goods.push("Ankle stance: balanced")
+  }
+  return{score:Math.max(0,Math.min(100,Math.round(score))),issues,goods}
+}
+
+const VIS_MIN=0.5;
+const vis=(lm,...idx)=>idx.every(i=>lm[i]&&(lm[i].visibility===undefined||lm[i].visibility>VIS_MIN));
+const NOT_VISIBLE={state:"wait",event:null,feedback:"Step back so your full body is visible to the camera."};
+
+const Detectors={
+  neck(lm,s){
+    if(!vis(lm,7,8,11,12))return NOT_VISIBLE;
+    const ear=midpoint(lm[7],lm[8]),sh=midpoint(lm[11],lm[12]);
+    const tilt=Math.abs(ear.x-sh.x)>0.08,center=Math.abs(ear.x-sh.x)<0.028;
+    if((!s||s==="center"||s==="wait")&&tilt)return{state:"tilted",event:"rep",feedback:"Hold the stretch 3 seconds. Breathe out and deepen."};
+    if(s==="tilted"&&center)return{state:"center",event:null,feedback:"Return to center. Now tilt to the other side."};
+    return{state:s==="wait"?"center":(s||"center"),event:null,feedback:"Slowly tilt head toward shoulder — ear to shoulder. Keep chin tucked."}
+  },
+  shoulder(lm,s){
+    if(!vis(lm,11,12,13,14))return NOT_VISIBLE;
+    const ls=lm[11],rs=lm[12],le=lm[13],re=lm[14];
+    const rising=(le.y<ls.y-0.06)||(re.y<rs.y-0.06);
+    const low=(le.y>ls.y+0.02)&&(re.y>rs.y+0.02);
+    if((!s||s==="low"||s==="wait")&&rising)return{state:"up",event:"rep",feedback:"Great rotation! Squeeze shoulder blades at top."};
+    if(s==="up"&&low)return{state:"low",event:null,feedback:"Arms down — begin next circle. Keep movement large."};
+    return{state:s==="wait"?"low":(s||"low"),event:null,feedback:"Rotate both arms in large backward circles from the shoulder blade."}
+  },
+  arm_raise(lm,s){
+    if(!vis(lm,11,12,15,16))return NOT_VISIBLE;
+    const lw=lm[15],rw=lm[16],ls=lm[11],rs=lm[12];
+    const raised=lw.y<ls.y-0.16&&rw.y<rs.y-0.16;
+    const low=lw.y>ls.y+0.02&&rw.y>rs.y+0.02;
+    if((!s||s==="low"||s==="wait")&&raised)return{state:"raised",event:"rep",feedback:"Hold overhead — breathe, feel the thoracic stretch!"};
+    if(s==="raised"&&low)return{state:"low",event:null,feedback:"Lower slowly — eccentric control trains the muscle."};
+    return{state:s==="wait"?"low":(s||"low"),event:null,feedback:"Raise both arms straight overhead. Keep core braced, ribs down."}
+  },
+  wrist(lm,s){
+    if(!vis(lm,13,14,15,16))return NOT_VISIBLE;
+    const lw=lm[15],rw=lm[16],le=lm[13],re=lm[14];
+    const lM=dist(lw,le)>0.058,rM=dist(rw,re)>0.058;
+    const moving=lM||rM;
+    if(moving&&(!s||s==="still"||s==="wait"))return{state:"moving",event:"rep",feedback:"Full circles — clockwise then counter-clockwise."};
+    if(!moving&&s==="moving")return{state:"still",event:null,feedback:"Reset and draw another circle."};
+    return{state:s==="wait"?"still":(s||"still"),event:null,feedback:"Extend arms forward. Rotate wrists in complete full circles."}
+  },
+  spine(lm,s){
+    if(!vis(lm,11,12,23,24))return NOT_VISIBLE;
+    const sh=midpoint(lm[11],lm[12]),hi=midpoint(lm[23],lm[24]);
+    const twist=Math.abs(sh.x-hi.x)>0.065,center=Math.abs(sh.x-hi.x)<0.025;
+    if((!s||s==="center"||s==="wait")&&twist)return{state:"twisted",event:"rep",feedback:"Hold rotation. Exhale and deepen the stretch. Feel L4-L5 mobilize."};
+    if(s==="twisted"&&center)return{state:"center",event:null,feedback:"Return center. Rotate to the other side — keep hips anchored."};
+    return{state:s==="wait"?"center":(s||"center"),event:null,feedback:"Brace hips forward. Rotate upper trunk only — thoracic rotation."}
+  },
+  back(lm,s){
+    if(!vis(lm,11,12,23,24))return NOT_VISIBLE;
+    const sh=midpoint(lm[11],lm[12]),hi=midpoint(lm[23],lm[24]);
+    const ext=sh.y>hi.y+0.018,neut=sh.y<hi.y-0.01;
+    if((!s||s==="neutral"||s==="wait")&&ext)return{state:"extended",event:"rep",feedback:"McKenzie extension achieved! Hold 3s — centralization occurring."};
+    if(s==="extended"&&neut)return{state:"neutral",event:null,feedback:"Return to neutral. Prepare for next extension."};
+    return{state:s==="wait"?"neutral":(s||"neutral"),event:null,feedback:"Hands on lower back. Gently arch backward — McKenzie protocol for L4-L5."}
+  },
+  hamstring(lm,s){
+    if(!vis(lm,11,12,23,24))return NOT_VISIBLE;
+    const hipY=midpoint(lm[23],lm[24]).y,shY=midpoint(lm[11],lm[12]).y;
+    const bent=hipY>shY+0.12,up=hipY<shY+0.025;
+    if((!s||s==="up"||s==="wait")&&bent)return{state:"bent",event:"rep",feedback:"Hold 5s — breathe out. Feel posterior chain lengthening."};
+    if(s==="bent"&&up)return{state:"up",event:null,feedback:"Rise slowly — maintain neutral spine throughout."};
+    return{state:s==="wait"?"up":(s||"up"),event:null,feedback:"Hinge at hips — NOT waist. Reach hands toward floor, spine neutral."}
+  },
+  leg_raise(lm,s){
+    if(!vis(lm,23,24,25,26))return NOT_VISIBLE;
+    const lh=lm[23],rh=lm[24],lk=lm[25],rk=lm[26];
+    const lUp=lk.y<lh.y-0.08,rUp=rk.y<rh.y-0.08;
+    const up=lUp||rUp,down=!lUp&&!rUp;
+    if((!s||s==="down"||s==="wait")&&up)return{state:"up",event:"rep",feedback:"Hold 2s at top — control the descent, do not drop leg."};
+    if(s==="up"&&down)return{state:"down",event:null,feedback:"Switch legs. Keep core tight, pelvis neutral."};
+    return{state:s==="wait"?"down":(s||"down"),event:null,feedback:"Stand tall, core braced. Raise one straight leg to 45-90 degrees."}
+  },
+  ankle(lm,s){
+    if(!vis(lm,25,26,27,28))return NOT_VISIBLE;
+    const la=lm[27],ra=lm[28],lk=lm[25],rk=lm[26];
+    const lM=dist(la,lk)>0.042,rM=dist(ra,rk)>0.042;
+    const moving=lM||rM;
+    if(moving&&(!s||s==="still"||s==="wait"))return{state:"moving",event:"rep",feedback:"Complete full circles — maximize range of motion."};
+    if(!moving&&s==="moving")return{state:"still",event:null,feedback:"Reset and draw another circle."};
+    return{state:s==="wait"?"still":(s||"still"),event:null,feedback:"Lift one foot off floor. Draw full circles with your toe — both directions."}
+  },
+  hip_bridge(lm,s){
+    if(!vis(lm,23,24,25,26))return NOT_VISIBLE;
+    const hipY=midpoint(lm[23],lm[24]).y,kneeY=midpoint(lm[25],lm[26]).y;
+    const up=hipY<kneeY-0.04,down=hipY>kneeY+0.018;
+    if((!s||s==="down"||s==="wait")&&up)return{state:"up",event:"rep",feedback:"Hold bridge — squeeze glutes maximally for 2 seconds!"};
+    if(s==="up"&&down)return{state:"down",event:null,feedback:"Lower with control. Drive through heels on next rep."};
+    return{state:s==="wait"?"down":(s||"down"),event:null,feedback:"Tilt pelvis posteriorly. Squeeze glutes to drive hips forward — simulate bridge position."}
+  },
+  posture(lm,s){
+    const pa=analyzePosture(lm);
+    return{state:"holding",event:null,feedback:pa.issues.length?pa.issues[0]:"Excellent posture! All landmarks are in clinical alignment.",score:pa.score}
+  }
+};
+
+const LANDMARK_NAMES={
+  0:"Head",7:"L Ear",8:"R Ear",11:"L Shoulder",12:"R Shoulder",13:"L Elbow",14:"R Elbow",
+  15:"L Wrist",16:"R Wrist",17:"L Hand",18:"R Hand",23:"L Hip",24:"R Hip",25:"L Knee",26:"R Knee",
+  27:"L Ankle",28:"R Ankle",29:"L Heel",30:"R Heel",31:"L Foot",32:"R Foot"
+};
+
+const FACE_IDX=[1,2,3,4,5,6];
+const HAND_IDX=[17,18,19,20,21,22];
+const FOOT_IDX=[29,30,31,32];
+
+function jointColor(idx,lm,state,res,pa){
+  if(res&&res.event==='rep')return"#00e5a0";
+  if(pa&&pa.score<60)return"#ef4444";
+  if(state==='moving'||state==='hold')return"#ffcc00";
+  return"#3d9eff";
+}
+
+function drawPoseFocused(ctx,results,w,h,res,pa){
+  ctx.save();ctx.clearRect(0,0,w,h);
+  if(!results||!results.poseLandmarks){ctx.restore();return}
+  const lm=results.poseLandmarks;
+  const ex=session.exercise;
+  const jm=ex&&ex.jointMap?ex.jointMap:{primary:[],secondary:[],connections:[],secondaryConns:[]};
+  const primary=new Set(jm.primary||[]);
+  const secondary=new Set(jm.secondary||[]);
+  const allowFace=ex&&ex.detection==='neck'||ex&&ex.detection==='posture';
+  const allowHand=ex&&ex.detection==='wrist';
+  const allowFoot=ex&&ex.detection==='ankle';
+
+  const suppressed=i=>{
+    if(FACE_IDX.includes(i)&&!allowFace)return true;
+    if(HAND_IDX.includes(i)&&!allowHand)return true;
+    if(FOOT_IDX.includes(i)&&!allowFoot)return true;
+    return false;
+  };
+
+  const state=session.state;
+  const PAIR_CONNS=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[15,17],[16,18],[27,29],[28,30],[0,7],[0,8],[7,11],[8,12]];
+
+  // tier 1 — ghost skeleton
+  ctx.lineWidth=1.5;
+  PAIR_CONNS.forEach(([a,b])=>{
+    if(!lm[a]||!lm[b]||suppressed(a)||suppressed(b))return;
+    if((lm[a].visibility||1)<0.30||(lm[b].visibility||1)<0.30)return;
+    ctx.globalAlpha=0.10;
+    ctx.beginPath();ctx.moveTo(lm[a].x*w,lm[a].y*h);ctx.lineTo(lm[b].x*w,lm[b].y*h);
+    ctx.strokeStyle="#ffffff";ctx.shadowBlur=0;ctx.stroke();
+  });
+  lm.forEach((p,i)=>{
+    if(suppressed(i)||(p.visibility||1)<0.30)return;
+    ctx.globalAlpha=0.10;
+    ctx.beginPath();ctx.arc(p.x*w,p.y*h,3,0,Math.PI*2);
+    ctx.fillStyle="#ffffff";ctx.shadowBlur=0;ctx.fill();
+  });
+
+  // tier 2 — secondary
+  ctx.globalAlpha=0.35;
+  ctx.lineWidth=2;
+  (jm.secondaryConns||[]).forEach(([a,b])=>{
+    if(!lm[a]||!lm[b]||suppressed(a)||suppressed(b))return;
+    if((lm[a].visibility||1)<0.30||(lm[b].visibility||1)<0.30)return;
+    ctx.beginPath();ctx.moveTo(lm[a].x*w,lm[a].y*h);ctx.lineTo(lm[b].x*w,lm[b].y*h);
+    ctx.strokeStyle="#3d9eff";ctx.shadowColor="#3d9eff";ctx.shadowBlur=6;ctx.stroke();ctx.shadowBlur=0;
+  });
+  secondary.forEach(i=>{
+    if(!lm[i]||suppressed(i)||(lm[i].visibility||1)<0.30)return;
+    const c=jointColor(i,lm,state,res,pa);
+    ctx.beginPath();ctx.arc(lm[i].x*w,lm[i].y*h,5,0,Math.PI*2);
+    ctx.fillStyle=c;ctx.shadowColor=c;ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
+  });
+
+  // tier 3 — primary
+  ctx.globalAlpha=1.0;
+  ctx.lineWidth=4;
+  (jm.connections||[]).forEach(([a,b])=>{
+    if(!lm[a]||!lm[b]||suppressed(a)||suppressed(b))return;
+    if((lm[a].visibility||1)<0.30||(lm[b].visibility||1)<0.30)return;
+    const c=jointColor(a,lm,state,res,pa);
+    ctx.beginPath();ctx.moveTo(lm[a].x*w,lm[a].y*h);ctx.lineTo(lm[b].x*w,lm[b].y*h);
+    ctx.strokeStyle=c;ctx.shadowColor=c;ctx.shadowBlur=18;ctx.stroke();
+    ctx.shadowBlur=32;ctx.stroke();ctx.shadowBlur=0;
+  });
+  primary.forEach(i=>{
+    if(!lm[i]||suppressed(i)||(lm[i].visibility||1)<0.30)return;
+    const c=jointColor(i,lm,state,res,pa);
+    const x=lm[i].x*w,y=lm[i].y*h;
+    ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);
+    ctx.fillStyle=c;ctx.shadowColor=c;
+    ctx.shadowBlur=18;ctx.fill();
+    ctx.shadowBlur=32;ctx.fill();ctx.shadowBlur=0;
+
+    // anatomical label
+    const name=LANDMARK_NAMES[i];
+    if(name){
+      ctx.globalAlpha=1.0;
+      ctx.font="600 11px 'Poppins',sans-serif";
+      const tw=ctx.measureText(name).width;
+      const padX=8,padY=4,boxH=18;
+      const onLeft=x>w*0.55;
+      const tx=onLeft?x-tw-padX*2-12:x+12;
+      const ty=y-boxH/2;
+      ctx.fillStyle="rgba(0,0,0,.6)";
+      ctx.beginPath();
+      ctx.roundRect?ctx.roundRect(tx,ty,tw+padX*2,boxH,9):ctx.rect(tx,ty,tw+padX*2,boxH);
+      ctx.fill();
+      ctx.fillStyle="#fff";
+      ctx.fillText(name,tx+padX,ty+13);
+    }
+  });
+
+  ctx.globalAlpha=1.0;
+  ctx.restore();
+}
+
+// rep-completion pulse animation — separate rAF loop, expanding fading ring
+let pulseFrames=[];
+function pulseJoints(lm,w,h,jointIdxs,color){
+  const pts=jointIdxs.map(i=>lm[i]).filter(p=>p&&(p.visibility||1)>=0.30).map(p=>({x:p.x*w,y:p.y*h}));
+  if(!pts.length)return;
+  pulseFrames.push({pts,color,frame:0,maxFrames:12});
+  if(pulseFrames.length===1)requestAnimationFrame(runPulseLoop);
+}
+function runPulseLoop(){
+  const canvas=document.getElementById('skeleton-canvas');
+  if(!canvas||!pulseFrames.length)return;
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height;
+  pulseFrames.forEach(pf=>{
+    const t=pf.frame/pf.maxFrames;
+    const r=8+t*24;
+    const alpha=1-t;
+    pf.pts.forEach(p=>{
+      ctx.save();
+      ctx.globalAlpha=alpha*0.8;
+      ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);
+      ctx.strokeStyle=pf.color;ctx.lineWidth=3;
+      ctx.shadowColor=pf.color;ctx.shadowBlur=10;
+      ctx.stroke();
+      ctx.restore();
+    });
+    pf.frame++;
+  });
+  pulseFrames=pulseFrames.filter(pf=>pf.frame<pf.maxFrames);
+  if(pulseFrames.length)requestAnimationFrame(runPulseLoop);
+}
+
+let pose=null,mediaStream=null,sessionActive=false;
+const session={exercise:null,reps:0,state:null,formScores:[]};
+
+function openSession(idx){
+  session.exercise=EXERCISES[idx];
+  session.reps=0;session.state=null;session.formScores=[];
+  document.getElementById('session-name').textContent=session.exercise.name;
+  document.getElementById('session-focus').textContent=session.exercise.focus;
+  document.getElementById('session-target').textContent=session.exercise.targetReps;
+  document.getElementById('session-reps').textContent='0';
+  document.getElementById('session-score').textContent='--%';
+  document.getElementById('session-state').textContent='Idle';
+  document.getElementById('session-feedback').textContent='Activate your camera to begin this exercise.';
+  document.getElementById('session-overlay').classList.add('open');
+}
+
+function closeSession(){
+  document.getElementById('session-overlay').classList.remove('open');
+  sessionActive=false;
+  if(mediaStream){mediaStream.getTracks().forEach(t=>t.stop());mediaStream=null}
+  pose=null;
+  pulseFrames=[];
+
+  if(session.reps>0){
+    userState.totalSessions++;
+    userState.totalReps+=session.reps;
+    updateStreak();
+    const day=new Date().getDay();
+    userState.weekly[day]=(userState.weekly[day]||0)+session.reps;
+    const avgForm=session.formScores.length?Math.round(session.formScores.reduce((a,b)=>a+b,0)/session.formScores.length):null;
+    userState.history.unshift({name:session.exercise.name,reps:session.reps,date:new Date().toISOString(),form:avgForm});
+    if(userState.history.length>20)userState.history.pop();
+    if(avgForm)userState.formHistory.push(avgForm);
+    saveUser();
+    updateNavStreak();
+    updateDashboard();
+  }
+
+  const video=document.getElementById('session-video'),sk=document.getElementById('skeleton-canvas');
+  video.style.display='none';sk.style.display='none';
+  document.getElementById('session-hud').style.display='none';
+  document.getElementById('session-msg').style.display='flex';
+}
+
+async function startSessionCamera(){
+  const video=document.getElementById('session-video'),sk=document.getElementById('skeleton-canvas');
+  const msg=document.getElementById('session-msg');
+  try{
+    mediaStream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:1280},facingMode:'user'},audio:false});
+    video.srcObject=mediaStream;
+    await video.play();
+    video.style.display='block';sk.style.display='block';msg.style.display='none';
+
+    const ex=session.exercise;
+    const hud=document.getElementById('session-hud'),hudDot=document.getElementById('hud-dot'),hudLabel=document.getElementById('hud-label');
+    hudDot.style.color=diffColors[ex.difficulty]||'#3d9eff';
+    hudLabel.textContent=ex.focus.toUpperCase()+' — TRACKING';
+    hud.style.display='flex';
+
+    pose=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});
+    pose.setOptions({modelComplexity:2,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:.6,minTrackingConfidence:.6});
+    pose.onResults(onPoseResults);
+    sessionActive=true;
+    const loop=async()=>{
+      if(!sessionActive)return;
+      if(video.readyState>=2){try{await pose.send({image:video})}catch{}}
+      if(sessionActive)requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }catch(e){
+    console.error('Camera error:',e);
+    msg.innerHTML=`<div style="text-align:center"><div style="color:#ef4444;font-weight:700;margin-bottom:8px">Camera Access Denied</div><div>Allow camera access in your browser, then try again.</div></div>`;
+  }
+}
+
+function onPoseResults(results){
+  const sk=document.getElementById('skeleton-canvas');
+  const skCtx=sk.getContext('2d');
+  const w=sk.offsetWidth,h=sk.offsetHeight;
+  if(sk.width!==w||sk.height!==h){sk.width=w;sk.height=h}
+
+  if(!results.poseLandmarks){
+    skCtx.clearRect(0,0,w,h);
+    document.getElementById('session-state').textContent='No pose';
+    return;
+  }
+  const lm=results.poseLandmarks,ex=session.exercise;
+  const pa=analyzePosture(lm);
+
+  const det=Detectors[ex.detection];
+  if(!det)return;
+  const res=det(lm,session.state);
+  session.state=res.state;
+
+  drawPoseFocused(skCtx,results,w,h,res,pa);
+
+  if(res.event==='rep'){
+    session.reps++;
+    const repEl=document.getElementById('session-reps');
+    repEl.textContent=session.reps;
+    if(session.reps>=ex.targetReps){
+      document.getElementById('session-feedback').textContent=`Target reached! ${ex.targetReps} reps complete.`;
+    }
+    const jm=ex.jointMap;
+    if(jm)pulseJoints(lm,w,h,jm.primary||[],"#00e5a0");
+  }
+
+  document.getElementById('session-state').textContent=res.state.charAt(0).toUpperCase()+res.state.slice(1);
+  const score=ex.detection==='posture'?(res.score||pa.score):pa.score;
+  document.getElementById('session-score').textContent=score+'%';
+  session.formScores.push(score);
+
+  const feedbackEl=document.getElementById('session-feedback');
+  if(res.feedback&&session.reps<ex.targetReps)feedbackEl.textContent=res.feedback;
+  const needsAttention=res.state==='wait'||score<60;
+  feedbackEl.classList.toggle('warn',needsAttention);
+}
+
+</script>
+
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div>
+      <div class="footer-brand">
+        <img src="pahlogo/pahlogo.jpeg" alt="PAH">
+        <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.04em"><span>P</span>AH</div>
+      </div>
+      <p class="footer-desc">Clinical-grade AI physiotherapy that corrects your posture and guides your rehabilitation — anywhere, anytime, zero compromise on accuracy.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Platform</div>
+      <div class="footer-links">
+        <a href="#exercises">Exercises</a>
+        <a href="#ai-coach">AI Coach</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="index.html#joint-focus">Conditions</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Research</a>
+        <a href="#">Careers</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Contact</div>
+      <div class="footer-links">
+        <span>hello@physioathome.ai</span>
+        <span>+92 21 000 0000</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 PAH &ndash; Physio At Home. All rights reserved.</span>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> PAH – Conditions We Treat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+<style>
+:root{ --brand:#e11d48; --accent:#fb7185; }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:#fff;background:#000;overflow-x:hidden}
+h1,h2,h3{font-family:'Poppins',sans-serif}
+
+#joint-focus{position:relative}
+.jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
+
+#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none}
+
+.jf-overlay-grad{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(15,23,42,.1) 0%,rgba(15,23,42,0) 35%,rgba(15,23,42,.85) 100%);
+}
+
+/* highlight dot */
+.jf-dot{
+  position:absolute;width:14px;height:14px;border-radius:50%;
+  background:var(--brand);box-shadow:0 0 0 4px rgba(225,29,72,.25),0 0 16px rgba(225,29,72,.7);
+  opacity:0;pointer-events:none;z-index:4;transform:translate(-50%,-50%);
+  transition:opacity .4s ease,left .8s ease,top .8s ease;
+}
+.jf-dot.active{opacity:1;animation:jfDotPulse 1.8s ease-in-out infinite}
+@keyframes jfDotPulse{0%,100%{box-shadow:0 0 0 4px rgba(225,29,72,.25),0 0 16px rgba(225,29,72,.7)}50%{box-shadow:0 0 0 9px rgba(225,29,72,.12),0 0 22px rgba(225,29,72,.9)}}
+
+.jf-line{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:3;opacity:0;transition:opacity .4s ease;
+}
+.jf-line.active{opacity:1}
+.jf-line line{stroke:var(--brand);stroke-width:1.5;stroke-dasharray:4 4}
+
+/* DEBUG CONSOLE */
+#jf-debug{
+  position:fixed;bottom:10px;left:10px;z-index:9999;background:rgba(0,0,0,.7);
+  color:var(--accent);font-family:monospace;font-size:.75rem;padding:8px 12px;border-radius:8px;
+}
+#jf-debug-toggle{
+  pointer-events:auto;cursor:pointer;background:var(--brand);color:#fff;border:none;
+  border-radius:6px;padding:4px 10px;font-size:.75rem;font-family:monospace;margin-right:8px;
+}
+#jf-debug-catch{
+  position:absolute;inset:0;z-index:50;cursor:crosshair;display:none;
+}
+#jf-debug-catch.on{display:block}
+.jf-sticky.debug #sketchfab-frame{pointer-events:none}
+
+.jf-overlay{
+  position:absolute;right:0;bottom:0;z-index:5;
+  width:min(560px,92vw);
+  padding:48px 56px;
+  text-align:right;
+  pointer-events:none;
+}
+@media(max-width:768px){.jf-overlay{padding:28px 24px;text-align:left;width:100%}}
+
+.jf-tag{display:inline-block;font-weight:700;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+.jf-title{font-size:clamp(2.4rem,6vw,5rem);font-weight:900;line-height:1;margin-bottom:14px;letter-spacing:-.02em;text-transform:uppercase}
+.jf-desc{color:#cbd5e1;font-size:1rem;line-height:1.75;margin-bottom:18px;margin-left:auto}
+@media(max-width:768px){.jf-desc{margin-left:0}}
+.jf-conditions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;justify-content:flex-end}
+@media(max-width:768px){.jf-conditions{justify-content:flex-start}}
+.jf-cond-pill{font-size:.74rem;font-weight:600;color:var(--brand);background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.35);padding:5px 14px;border-radius:100px}
+
+.jf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:#0f172a;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#64748b;transition:opacity .6s;}
+.jf-loading.hide{opacity:0;pointer-events:none}
+
+.jf-panels{position:relative;margin-top:-100vh}
+.jf-panel{height:100vh}
+
+.jf-exercises-btn{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:100;
+  background:var(--brand);color:#fff;text-decoration:none;
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;
+  letter-spacing:.08em;text-transform:uppercase;
+  padding:12px 32px;border-radius:100px;
+  box-shadow:0 8px 24px rgba(225,29,72,.4);
+  transition:transform .2s,box-shadow .2s;
+}
+.jf-exercises-btn:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 12px 28px rgba(225,29,72,.55)}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 32px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.04em}
+.nav-logo img{width:38px;height:38px;border-radius:10px;object-fit:cover}
+.nav-logo span{color:var(--brand)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-link{color:#cbd5e1;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.04em;transition:color .2s}
+.nav-link:hover{color:#fff}
+.nav-cta{
+  background:var(--brand);color:#fff;text-decoration:none;
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.05em;
+  padding:8px 20px;border-radius:100px;transition:opacity .2s;
+}
+.nav-cta:hover{opacity:.88}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* ACCOUNT GATE */
+.gate-overlay{
+  position:fixed;inset:0;z-index:9999;background:#000;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.gate-overlay.hidden{display:none}
+.gate-box{
+  width:100%;max-width:440px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:40px 32px;
+}
+.gate-logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:8px}
+.gate-logo img{width:48px;height:48px;border-radius:12px;object-fit:cover}
+.gate-logo span{color:var(--brand)}
+.gate-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.4rem;text-align:center;margin-bottom:6px}
+.gate-sub{color:#94a3b8;font-size:.85rem;text-align:center;margin-bottom:28px}
+.gate-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.gate-field{display:flex;flex-direction:column;gap:6px}
+.gate-field label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;font-weight:600}
+.gate-field input,.gate-field select{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;
+  padding:10px 12px;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;
+}
+.gate-field input:focus,.gate-field select:focus{outline:none;border-color:var(--brand)}
+.gate-submit{
+  margin-top:10px;width:100%;padding:13px;border-radius:12px;border:none;
+  background:var(--brand);color:#fff;font-family:'Poppins',sans-serif;font-weight:700;
+  font-size:.9rem;letter-spacing:.04em;cursor:pointer;transition:opacity .2s;
+}
+.gate-submit:hover{opacity:.88}
+.gate-error{color:var(--accent);font-size:.78rem;text-align:center;margin-top:10px;display:none}
+
+/* FOOTER */
+.site-footer{padding:64px 24px 32px;border-top:1px solid rgba(255,255,255,.08);background:#000;position:relative;z-index:6}
+.footer-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto 40px}
+@media(max-width:768px){.footer-cols{grid-template-columns:1fr 1fr}}
+.footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.footer-brand img{width:38px;height:38px;border-radius:10px;object-fit:cover}
+.footer-brand span{color:var(--brand)}
+.footer-desc{color:#94a3b8;font-size:.85rem;line-height:1.7;max-width:290px}
+.footer-heading{font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px}
+.footer-links{display:flex;flex-direction:column;gap:10px}
+.footer-links a{color:#94a3b8;text-decoration:none;font-size:.85rem;transition:color .2s}
+.footer-links a:hover{color:#fff}
+.footer-links span{color:#94a3b8;font-size:.85rem}
+.footer-bottom{
+  max-width:1200px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.footer-bottom span{color:#94a3b8;font-size:.72rem;font-family:monospace}
+.footer-bottom-links{display:flex;gap:22px}
+.footer-bottom-links a{color:#94a3b8;text-decoration:none;font-size:.72rem;font-family:monospace}
+.footer-bottom-links a:hover{color:#fff}
+</style>
+</head>
+<body>
+  
+
+<div class="gate-overlay" id="gate-overlay">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <img src="pah.png" alt="">
+      <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.04em"><span>P</span>AH</div>
+    </div>
+    <div class="gate-title">Create Your Account</div>
+    <div class="gate-sub">Tell us about yourself so we can personalize your recovery plan.</div>
+    <form id="gate-form">
+      <div class="gate-row">
+        <div class="gate-field">
+          <label for="gate-name">Name</label>
+          <input type="text" id="gate-name" required placeholder="Your name">
+        </div>
+        <div class="gate-field">
+          <label for="gate-gender">Gender</label>
+          <select id="gate-gender" required>
+            <option value="" disabled selected>Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="gate-row">
+        <div class="gate-field">
+          <label for="gate-age">Age</label>
+          <input type="number" id="gate-age" required min="5" max="120" placeholder="Years">
+        </div>
+        <div class="gate-field">
+          <label for="gate-weight">Weight (kg)</label>
+          <input type="number" id="gate-weight" required min="10" max="300" placeholder="kg">
+        </div>
+      </div>
+      <div class="gate-row" style="grid-template-columns:1fr">
+        <div class="gate-field">
+          <label for="gate-height">Height (cm)</label>
+          <input type="number" id="gate-height" required min="50" max="260" placeholder="cm">
+        </div>
+      </div>
+      <button type="submit" class="gate-submit">Create Account &amp; Continue</button>
+      <div class="gate-error" id="gate-error">Please fill in all fields.</div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  const overlay = document.getElementById('gate-overlay');
+  const form = document.getElementById('gate-form');
+  const error = document.getElementById('gate-error');
+  const account = JSON.parse(localStorage.getItem('pah_account') || 'null');
+  if(account){ overlay.classList.add('hidden'); }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    const name = document.getElementById('gate-name').value.trim();
+    const gender = document.getElementById('gate-gender').value;
+    const age = document.getElementById('gate-age').value;
+    const weight = document.getElementById('gate-weight').value;
+    const height = document.getElementById('gate-height').value;
+    if(!name || !gender || !age || !weight || !height){
+      error.style.display = 'block';
+      return false;
+    }
+    localStorage.setItem('pah_account', JSON.stringify({name, gender, age, weight, height}));
+    overlay.classList.add('hidden');
+    return false;
+  });
+})();
+</script>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo"><img src="pahlogo/pahlogo.jpeg" alt="PAH"><span>P</span>AH</a>
+  <div class="nav-links">
+    <a href="#joint-focus" class="nav-link">Conditions</a>
+    <a href="exercises.html#exercises" class="nav-link">Exercises</a>
+    <a href="exercises.html#ai-coach" class="nav-link">AI Coach</a>
+    <a href="exercises.html#dashboard" class="nav-link">Dashboard</a>
+  </div>
+  <a href="exercises.html" class="nav-cta">Exercises</a>
+</nav>
+
+<section id="joint-focus">
+  <div class="jf-sticky" id="jf-sticky">
+    <iframe id="sketchfab-frame" title="Human Bones and Muscles"
+      src="https://sketchfab.com/models/85636205977d44878fc729fde5b77cd3/embed?autostart=1&ui_infos=0&ui_inspector=0&ui_watermark=0&ui_annotations=0&transparent=1"
+      allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking
+      execution-while-out-of-viewport execution-while-not-rendered web-share>
+    </iframe>
+    <div class="jf-overlay-grad"></div>
+    <div class="jf-loading" id="jf-loading">Loading 3D Model…</div>
+
+    <svg class="jf-line" id="jf-line"><line id="jf-line-el" x1="0" y1="0" x2="0" y2="0"/></svg>
+    <div class="jf-dot" id="jf-dot"></div>
+    <div id="jf-debug-catch"></div>
+
+    <div class="jf-overlay" id="jf-overlay">
+      <div class="jf-tag" id="ov-tag">01 · Neck</div>
+      <h1 class="jf-title" id="ov-title">Cervical Spine</h1>
+      <div class="jf-conditions" id="ov-pills"></div>
+      <p class="jf-desc" id="ov-desc"></p>
+    </div>
+  </div>
+
+  <div class="jf-panels">
+    <!-- camera: position [x,y,z], target [x,y,z] -->
+    <div class="jf-panel" data-joint="cervical"
+      data-cam="0.009,0.407,0.486|0.007,-0.021,0.479" data-ring-x="50" data-ring-y="20"
+      data-tag="01 · Neck" data-title="Cervical Spine"
+      data-pills="Cervical Spondylosis,Whiplash,Forward Head Posture"
+      data-desc="Neck pain and stiffness are often driven by prolonged screen time and poor posture, leading to muscle tightness, reduced range of motion, and nerve irritation at C5–C6."></div>
+
+    <div class="jf-panel" data-joint="thoracic"
+      data-cam="0.017,0.558,0.264|-0.088,-0.005,0.282" data-ring-x="50" data-ring-y="38"
+      data-tag="02 · Mid Back" data-title="Thoracic Spine"
+      data-pills="Postural Kyphosis,Rib Dysfunction,Mid-Back Stiffness"
+      data-desc="Limited thoracic mobility restricts shoulder and neck function alike. We address rounded-shoulder posture, rib joint restrictions, and breathing mechanics."></div>
+
+    <div class="jf-panel" data-joint="lumbar"
+      data-cam="0.041,0.924,0.302|-0.064,-0.005,0.201" data-ring-x="50" data-ring-y="52"
+      data-tag="03 · Lower Back" data-title="Lumbar Spine"
+      data-pills="Disc Herniation,Sciatica,Lower Back Stiffness"
+      data-desc="Lumbar disc issues at L4–L5 can cause radiating leg pain, numbness, and stiffness. Decompression techniques combined with core stability relieve pressure and prevent recurrence."></div>
+
+    <div class="jf-panel" data-joint="shoulder"
+      data-cam="-0.577,0.185,0.401|-0.041,0.012,0.328" data-ring-x="55" data-ring-y="45"
+      data-tag="04 · Upper Limb" data-title="Shoulder"
+      data-pills="Rotator Cuff Injury,Impingement Syndrome,Frozen Shoulder"
+      data-desc="Rotator cuff strains and shoulder impingement limit overhead reach and disrupt sleep. We restore range of motion and rebuild strength through graded loading."></div>
+
+    <div class="jf-panel" data-joint="elbow"
+      data-cam="-0.512,0.382,0.006|-0.133,-0.128,0.276" data-ring-x="74" data-ring-y="50"
+      data-tag="05 · Upper Limb" data-title="Elbow"
+      data-pills="Tennis Elbow,Golfer's Elbow,Tendinopathy"
+      data-desc="Repetitive strain at the elbow leads to tendon pain on the inner or outer forearm. Load management and progressive strengthening rebuild tendon resilience."></div>
+
+    <div class="jf-panel" data-joint="wrist"
+      data-cam="-0.778,0.102,-0.043|-0.154,-0.177,-0.119" data-ring-x="78" data-ring-y="68"
+      data-tag="06 · Hand" data-title="Wrist &amp; Hand"
+      data-pills="Carpal Tunnel Syndrome,De Quervain's,Wrist Sprains"
+      data-desc="Numbness, tingling, and wrist pain often stem from nerve compression or repetitive strain. Treatment focuses on nerve gliding, joint mobility, and ergonomic correction."></div>
+
+    <div class="jf-panel" data-joint="hip"
+      data-cam="0.068,0.474,-0.098|-0.154,-0.177,-0.119" data-ring-x="50" data-ring-y="60"
+      data-tag="07 · Lower Limb" data-title="Hip &amp; Pelvis"
+      data-pills="Hip Flexor Tightness,Gluteal Weakness,Pelvic Floor Dysfunction"
+      data-desc="Hip and pelvic issues affect gait, balance, and lower back loading — especially important for post-partum recovery and women's health physiotherapy."></div>
+
+    <div class="jf-panel" data-joint="knee"
+      data-cam="0.229,-0.409,-0.644|0.115,0.017,-0.513" data-ring-x="56" data-ring-y="78"
+      data-tag="08 · Lower Limb" data-title="Knee"
+      data-pills="Knee Osteoarthritis,Patellar Tracking,ACL Rehab"
+      data-desc="From early-stage arthritis to post-surgical ACL recovery, knee rehab focuses on quadriceps strength, joint stability, and restoring confident movement."></div>
+
+    <div class="jf-panel" data-joint="ankle"
+      data-cam="-0.331,-0.316,-0.793|0.19,0.125,-0.801" data-ring-x="56" data-ring-y="92"
+      data-tag="09 · Lower Limb" data-title="Ankle &amp; Foot"
+      data-pills="Ankle Sprains,Plantar Fasciitis,Achilles Tendinopathy"
+      data-desc="Ankle instability and heel pain affect every step. We rebuild strength, balance, and proprioception to prevent re-injury and get you back on your feet."></div>
+  </div>
+</section>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const dot = document.getElementById('jf-dot');
+const lineSvg = document.getElementById('jf-line');
+const lineEl = document.getElementById('jf-line-el');
+const overlay = document.getElementById('jf-overlay');
+const sticky = document.getElementById('jf-sticky');
+const ovTag = document.getElementById('ov-tag');
+const ovTitle = document.getElementById('ov-title');
+const ovPills = document.getElementById('ov-pills');
+const ovDesc = document.getElementById('ov-desc');
+const loadingEl = document.getElementById('jf-loading');
+
+let sketchfabApi = null;
+
+// Init Sketchfab Viewer API
+const iframe = document.getElementById('sketchfab-frame');
+const client = new Sketchfab(iframe);
+client.init('85636205977d44878fc729fde5b77cd3', {
+  autostart: 1,
+  ui_infos: 0,
+  ui_inspector: 0,
+  ui_watermark: 0,
+  ui_annotations: 0,
+  transparent: 1,
+  success: function(api){
+    sketchfabApi = api;
+    api.start();
+    api.addEventListener('viewerready', function(){
+      loadingEl.classList.add('hide');
+      focusJoint(panels[0], true);
+    });
+  },
+  error: function(){
+    loadingEl.textContent = 'Unable to load 3D model';
+  }
+});
+
+function setCamera(camStr, instant){
+  if(!sketchfabApi) return;
+  const [posStr, targetStr] = camStr.split('|');
+  const position = posStr.split(',').map(Number);
+  const target = targetStr.split(',').map(Number);
+  sketchfabApi.setCameraLookAt(position, target, instant ? 0 : 1.2, function(){});
+}
+
+function focusJoint(panel, instant){
+  setCamera(panel.dataset.cam, instant);
+
+  const w = sticky.offsetWidth, h = sticky.offsetHeight;
+  const x = parseFloat(panel.dataset.ringX);
+  const y = parseFloat(panel.dataset.ringY);
+
+  const dotX = x/100*w, dotY = y/100*h;
+  dot.style.left = dotX + 'px';
+  dot.style.top = dotY + 'px';
+  dot.classList.add('active');
+
+  const ovRect = overlay.getBoundingClientRect();
+  const stickyRect = sticky.getBoundingClientRect();
+  const targetX = ovRect.left - stickyRect.left;
+  const targetY = ovRect.top - stickyRect.top + 24;
+
+  lineEl.setAttribute('x1', dotX);
+  lineEl.setAttribute('y1', dotY);
+  lineEl.setAttribute('x2', targetX);
+  lineEl.setAttribute('y2', targetY);
+  lineSvg.classList.add('active');
+
+  ovTag.textContent = panel.dataset.tag;
+  ovTitle.innerHTML = panel.dataset.title;
+  ovDesc.textContent = panel.dataset.desc;
+  ovPills.innerHTML = panel.dataset.pills.split(',').map(p => `<span class="jf-cond-pill">${p}</span>`).join('');
+
+  gsap.fromTo('#jf-overlay', {opacity:0, y:16}, {opacity:1, y:0, duration:.6, ease:'power2.out'});
+}
+
+const panels = document.querySelectorAll('.jf-panel');
+
+panels.forEach(panel => {
+  ScrollTrigger.create({
+    trigger: panel,
+    start: 'top center',
+    end: 'bottom center',
+    onEnter: () => focusJoint(panel),
+    onEnterBack: () => focusJoint(panel)
+  });
+});
+
+window.addEventListener('resize', () => {
+  if(dot.classList.contains('active')) ScrollTrigger.refresh();
+});
+
+// DEBUG CONSOLE - press "d" to toggle cursor-coord catcher overlay
+// while on: mousemove shows ring-x/ring-y %, click logs data-ring-x/y attr to console
+const debugCatch = document.getElementById('jf-debug-catch');
+const debugText = document.getElementById('jf-debug-text');
+const debugToggle = document.getElementById('jf-debug-toggle');
+debugToggle.addEventListener('click', () => {
+  debugCatch.classList.toggle('on');
+  sticky.classList.toggle('debug');
+  debugText.textContent = debugCatch.classList.contains('on')
+    ? 'DEBUG ON - move/click to get ring-x/ring-y' : 'ring-x: -  ring-y: -';
+});
+debugCatch.addEventListener('mousemove', (e) => {
+  const rect = sticky.getBoundingClientRect();
+  const xPct = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+  const yPct = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+  debugText.textContent = `ring-x: ${xPct}  ring-y: ${yPct}`;
+});
+debugCatch.addEventListener('click', (e) => {
+  const rect = sticky.getBoundingClientRect();
+  const xPct = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+  const yPct = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+  console.log(`data-ring-x="${xPct}" data-ring-y="${yPct}"`);
+});
+
+</script>
+
+<footer class="site-footer">
+  <div class="footer-cols">
+    <div>
+      <div class="footer-brand">
+        <img src="pahlogo/pahlogo.jpeg" alt="PAH">
+        <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.04em"><span>P</span>AH</div>
+      </div>
+      <p class="footer-desc">Clinical-grade AI physiotherapy that corrects your posture and guides your rehabilitation — anywhere, anytime, zero compromise on accuracy.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Platform</div>
+      <div class="footer-links">
+        <a href="exercises.html#exercises">Exercises</a>
+        <a href="exercises.html#ai-coach">AI Coach</a>
+        <a href="exercises.html#dashboard">Dashboard</a>
+        <a href="#joint-focus">Conditions</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Research</a>
+        <a href="#">Careers</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-heading">Contact</div>
+      <div class="footer-links">
+        <span>hello@physioathome.ai</span>
+        <span>+92 21 000 0000</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 PAH &ndash; Physio At Home. All rights reserved.</span>
+    <div class="footer-bottom-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
