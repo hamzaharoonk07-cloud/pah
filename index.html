@@ -170,51 +170,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 <body>
   
 
-<div class="gate-overlay" id="gate-overlay">
-  <div class="gate-box">
-    <div class="gate-logo">
-      <img src="pah.jpeg" alt="">
-      <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.04em"><span>P</span>AH</div>
-    </div>
-    <div class="gate-title">Create Your Account</div>
-    <div class="gate-sub">Tell us about yourself so we can personalize your recovery plan.</div>
-    <form id="gate-form">
-      <div class="gate-row">
-        <div class="gate-field">
-          <label for="gate-name">Name</label>
-          <input type="text" id="gate-name" required placeholder="Your name">
-        </div>
-        <div class="gate-field">
-          <label for="gate-gender">Gender</label>
-          <select id="gate-gender" required>
-            <option value="" disabled selected>Select</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="gate-row">
-        <div class="gate-field">
-          <label for="gate-age">Age</label>
-          <input type="number" id="gate-age" required min="5" max="120" placeholder="Years">
-        </div>
-        <div class="gate-field">
-          <label for="gate-weight">Weight (kg)</label>
-          <input type="number" id="gate-weight" required min="10" max="300" placeholder="kg">
-        </div>
-      </div>
-      <div class="gate-row" style="grid-template-columns:1fr">
-        <div class="gate-field">
-          <label for="gate-height">Height (cm)</label>
-          <input type="number" id="gate-height" required min="50" max="260" placeholder="cm">
-        </div>
-      </div>
-      <button type="submit" class="gate-submit">Create Account &amp; Continue</button>
-      <div class="gate-error" id="gate-error">Please fill in all fields.</div>
-    </form>
-  </div>
-</div>
+
 
 <script>
 (function(){
