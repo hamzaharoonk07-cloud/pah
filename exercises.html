@@ -439,8 +439,8 @@ a{text-decoration:none;color:inherit}
 @keyframes tyd{0%,100%{opacity:.3}50%{opacity:1}}
 
 /* ═══ SESSION FULLSCREEN ═══ */
-#sess{position:fixed;inset:0;z-index:2000;background:#000;display:none}
-#sess.open{display:block}
+#sess{position:fixed;inset:0;z-index:2000;background:#000;opacity:0;visibility:hidden;transition:opacity .3s ease}
+#sess.open{opacity:1;visibility:visible}
 #s-vid{
   position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;transform:scaleX(-1);z-index:1;
@@ -468,6 +468,17 @@ a{text-decoration:none;color:inherit}
   transition:background .2s;flex-shrink:0;
 }
 .sh-close:hover{background:rgba(255,255,255,.18)}
+.voice-toggle-btn{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;
+  display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s;
+}
+.voice-toggle-btn svg{width:15px;height:15px}
+.voice-toggle-btn:hover{background:rgba(255,255,255,.18)}
+.voice-toggle-btn .ic-off{display:none}
+.voice-toggle-btn.muted{background:rgba(225,29,72,.16);border-color:rgba(225,29,72,.35);color:var(--accent)}
+.voice-toggle-btn.muted .ic-on{display:none}
+.voice-toggle-btn.muted .ic-off{display:block}
 /* HUD pill */
 .s-hud{
   position:absolute;top:76px;left:18px;z-index:10;
@@ -498,11 +509,18 @@ a{text-decoration:none;color:inherit}
 @keyframes rfa{0%{opacity:1;transform:translate(-50%,-50%) scale(.5)}60%{transform:translate(-50%,-58%) scale(1.3);opacity:1}100%{transform:translate(-50%,-75%) scale(1.2);opacity:0}}
 /* Pre-start */
 .s-pre{
-  position:absolute;inset:0;z-index:9;
+  position:absolute;inset:0;z-index:9;overflow-y:auto;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:16px;text-align:center;padding:28px;
-  background:linear-gradient(135deg,#060610,#100020);
+  background:radial-gradient(ellipse at 50% 0%,#140018,#060610 60%);
+  transition:opacity .38s ease,transform .38s ease;
 }
+.s-pre.exiting{opacity:0;transform:scale(.97);pointer-events:none}
+.s-pre-grid{
+  display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:36px;
+  max-width:840px;width:100%;align-items:center;margin:auto;
+}
+.s-pre-info{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
 .s-pre-icon{
   width:80px;height:80px;border-radius:50%;
   background:rgba(225,29,72,.1);border:2px solid rgba(225,29,72,.3);
@@ -511,6 +529,73 @@ a{text-decoration:none;color:inherit}
 .s-pre-icon svg{width:36px;height:36px;stroke:var(--accent)}
 .s-pre h2{font-size:1.15rem;font-weight:800}
 .s-pre p{color:var(--muted);font-size:.83rem;line-height:1.7;max-width:360px}
+.s-pre-meta{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.s-pre-meta span{
+  font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 12px;border-radius:100px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);color:var(--muted);
+}
+
+/* Demo / movement-preview panel */
+.demo-panel{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);
+  border-radius:20px;padding:14px;backdrop-filter:blur(10px);
+  animation:demoPanelIn .5s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes demoPanelIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.demo-panel-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px}
+.demo-panel-lbl{
+  display:flex;align-items:center;gap:7px;font-size:.63rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);
+}
+.demo-dot-live{width:6px;height:6px;border-radius:50%;background:#00e5a0;box-shadow:0 0 8px #00e5a0;animation:cdblink 2s infinite;flex-shrink:0}
+.demo-replay-btn{
+  width:28px;height:28px;border-radius:50%;background:rgba(225,29,72,.1);
+  border:1px solid rgba(225,29,72,.25);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;
+}
+.demo-replay-btn:hover{background:rgba(225,29,72,.22);transform:rotate(-45deg)}
+.demo-replay-btn svg{width:13px;height:13px}
+#demo-canvas,#demo-canvas-live{
+  width:100%;aspect-ratio:1;display:block;border-radius:14px;
+  background:radial-gradient(circle at 50% 38%,rgba(225,29,72,.08),rgba(255,255,255,.015) 70%);
+}
+.demo-caption{
+  margin-top:12px;font-size:.8rem;color:#e2e8f0;line-height:1.55;text-align:center;
+  min-height:2.6em;display:flex;align-items:center;justify-content:center;padding:0 4px;
+}
+.demo-dots{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
+.demo-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);transition:background .3s,transform .3s}
+.demo-dots span.on{background:var(--brand);transform:scale(1.3);box-shadow:0 0 8px rgba(225,29,72,.6)}
+
+/* Watch-demo trigger during live tracking */
+.demo-live-trigger{
+  position:absolute;top:118px;left:18px;z-index:10;
+  background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:#fff;
+  border-radius:100px;padding:7px 15px 7px 12px;font-family:'Poppins',sans-serif;
+  font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;transition:background .2s,border-color .2s;
+}
+.demo-live-trigger svg{width:11px;height:11px}
+.demo-live-trigger:hover{background:rgba(225,29,72,.25);border-color:rgba(225,29,72,.4)}
+
+/* Full demo replay overlay */
+.demo-overlay{
+  position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+  background:rgba(3,3,6,.88);backdrop-filter:blur(6px);padding:24px;
+}
+.demo-overlay.open{display:flex;animation:demoOverlayIn .25s ease both}
+@keyframes demoOverlayIn{from{opacity:0}to{opacity:1}}
+.demo-overlay-card{
+  width:100%;max-width:340px;background:rgba(14,14,20,.97);border:1px solid rgba(255,255,255,.1);
+  border-radius:22px;padding:18px;box-shadow:0 30px 80px rgba(0,0,0,.6);
+  animation:demoPanelIn .3s cubic-bezier(.2,.8,.2,1) both;
+}
+.demo-overlay-close{
+  width:100%;margin-top:14px;padding:12px;border-radius:100px;border:none;
+  background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
+  font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;
+}
 .s-cam-btn{
   padding:14px 36px;border-radius:100px;border:none;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
@@ -519,6 +604,8 @@ a{text-decoration:none;color:inherit}
   box-shadow:0 8px 28px rgba(225,29,72,.45);transition:transform .2s,box-shadow .2s;
 }
 .s-cam-btn:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(225,29,72,.6)}
+.s-cam-btn:active{transform:translateY(0) scale(.97)}
+.sh-close:active,.voice-toggle-btn:active,.demo-replay-btn:active,.demo-overlay-close:active,.demo-live-trigger:active{transform:scale(.93)}
 .s-cam-btn svg{width:18px;height:18px;stroke:#fff}
 /* Instruction panel */
 .s-instr{
@@ -548,6 +635,8 @@ a{text-decoration:none;color:inherit}
 }
 .s-fb.good{background:rgba(0,229,160,.1);border-color:rgba(0,229,160,.28);color:#00e5a0}
 .s-fb.warn{background:rgba(239,68,68,.13);border-color:rgba(239,68,68,.35);color:#fca5a5}
+.s-fb.pulse{animation:fbPulse .5s ease}
+@keyframes fbPulse{0%{transform:scale(.97)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
 /* 3D model panel */
 .model-panel{
   position:absolute;bottom:120px;right:16px;z-index:10;
@@ -611,6 +700,9 @@ a{text-decoration:none;color:inherit}
   .s-ang{right:6px}
   .model-panel{width:110px;height:190px;bottom:130px}
   .s-instr{max-width:260px;font-size:.72rem}
+  .s-pre-grid{grid-template-columns:1fr;gap:20px}
+  .demo-panel{max-width:280px;margin:0 auto}
+  .demo-live-trigger{top:auto;bottom:150px;left:14px}
 }
 @media(max-width:540px){
   .footer-cols{grid-template-columns:1fr}
@@ -873,7 +965,13 @@ a{text-decoration:none;color:inherit}
       <div class="sh-name" id="sh-name">Exercise</div>
       <div class="sh-area" id="sh-area">Focus Area</div>
     </div>
-    <button class="sh-close" onclick="endSession()">End Session</button>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <button class="voice-toggle-btn" id="voice-toggle-btn" onclick="VoiceCoach.toggle()" aria-label="Mute voice coach" title="Mute voice coach">
+        <svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>
+        <svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      </button>
+      <button class="sh-close" onclick="endSession()">End Session</button>
+    </div>
   </div>
 
   <!-- HUD -->
@@ -881,6 +979,12 @@ a{text-decoration:none;color:inherit}
     <span class="hdot" id="hdot"></span>
     <span id="hud-txt">AI TRACKING ACTIVE</span>
   </div>
+
+  <!-- Watch demo trigger (during live tracking) -->
+  <button class="demo-live-trigger" id="demo-live-trigger" onclick="openDemoOverlay()" style="display:none" title="Replay movement preview">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg>
+    Watch Demo
+  </button>
 
   <!-- instruction strip -->
   <div class="s-instr" id="s-instr" style="display:none"></div>
@@ -920,15 +1024,47 @@ a{text-decoration:none;color:inherit}
 
   <!-- Pre-start screen -->
   <div class="s-pre" id="s-pre">
-    <div class="s-pre-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+    <div class="s-pre-grid">
+      <div class="demo-panel">
+        <div class="demo-panel-hd">
+          <span class="demo-panel-lbl"><span class="demo-dot-live"></span>Movement Preview</span>
+          <button class="demo-replay-btn" onclick="replayDemo()" title="Replay preview" aria-label="Replay preview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+          </button>
+        </div>
+        <canvas id="demo-canvas" width="320" height="320"></canvas>
+        <div class="demo-caption" id="demo-caption">Loading preview…</div>
+        <div class="demo-dots" id="demo-dots"></div>
+      </div>
+      <div class="s-pre-info">
+        <div class="s-pre-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        </div>
+        <h2 id="s-pre-h">Ready to Track?</h2>
+        <div class="s-pre-meta" id="s-pre-meta"></div>
+        <p>Your camera feed stays on your device. MediaPipe AI runs locally — nothing is uploaded.</p>
+        <button class="s-cam-btn" onclick="startCamera()">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+          Activate Camera and Begin
+        </button>
+      </div>
     </div>
-    <h2 id="s-pre-h">Ready to Track?</h2>
-    <p>Your camera feed stays on your device. MediaPipe AI runs locally — nothing is uploaded.</p>
-    <button class="s-cam-btn" onclick="startCamera()">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-      Activate Camera and Begin
-    </button>
+  </div>
+
+  <!-- Demo replay overlay (available mid-session) -->
+  <div class="demo-overlay" id="demo-overlay">
+    <div class="demo-overlay-card">
+      <div class="demo-panel-hd">
+        <span class="demo-panel-lbl"><span class="demo-dot-live"></span>Movement Preview</span>
+        <button class="demo-replay-btn" onclick="replayDemo()" title="Replay preview" aria-label="Replay preview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+        </button>
+      </div>
+      <canvas id="demo-canvas-live" width="320" height="320"></canvas>
+      <div class="demo-caption" id="demo-caption-live">Loading preview…</div>
+      <div class="demo-dots" id="demo-dots-live"></div>
+      <button class="demo-overlay-close" onclick="closeDemoOverlay()">Continue Session</button>
+    </div>
   </div>
 
   <!-- Footer stats -->
@@ -1132,6 +1268,232 @@ const ACTIVE_MUSCLES={
   balance:['lCalf','rCalf','lAnkle','rAnkle','core','lGlute','rGlute'],
   posture:['head','neck','trapUp','lShoulder','rShoulder','core','lumbar','lGlute','rGlute']
 };
+
+// ═══════════════════════════════════════════════════════════
+// MOVEMENT-PREVIEW DEMO — scripted "ghost" avatar shown before
+// and during a session, narrated by VoiceCoach. No video assets;
+// built entirely from the same joint/bone model as the live 3D avatar.
+// ═══════════════════════════════════════════════════════════
+const DEMO_REST={
+  head:{x:.5,y:.10},neck:{x:.5,y:.20},
+  leftShoulder:{x:.39,y:.22},rightShoulder:{x:.61,y:.22},
+  leftElbow:{x:.33,y:.38},rightElbow:{x:.67,y:.38},
+  leftWrist:{x:.29,y:.53},rightWrist:{x:.71,y:.53},
+  pelvis:{x:.5,y:.55},
+  leftHip:{x:.435,y:.56},rightHip:{x:.565,y:.56},
+  leftKnee:{x:.42,y:.75},rightKnee:{x:.58,y:.75},
+  leftAnkle:{x:.41,y:.92},rightAnkle:{x:.59,y:.92},
+  leftFoot:{x:.36,y:.955},rightFoot:{x:.64,y:.955}
+};
+const DEMO_BONES=[
+  ['neck','leftShoulder'],['neck','rightShoulder'],
+  ['leftShoulder','leftElbow'],['rightShoulder','rightElbow'],
+  ['leftElbow','leftWrist'],['rightElbow','rightWrist'],
+  ['neck','pelvis'],
+  ['pelvis','leftHip'],['pelvis','rightHip'],
+  ['leftHip','leftKnee'],['rightHip','rightKnee'],
+  ['leftKnee','leftAnkle'],['rightKnee','rightAnkle'],
+  ['leftAnkle','leftFoot'],['rightAnkle','rightFoot']
+];
+function dPose(overrides){
+  const p={};
+  for(const k in DEMO_REST)p[k]={...DEMO_REST[k]};
+  if(overrides)for(const k in overrides)p[k]={...p[k],...overrides[k]};
+  return p;
+}
+function shiftAllY(dy){
+  const o={};
+  for(const k in DEMO_REST)o[k]={y:DEMO_REST[k].y+dy};
+  return o;
+}
+function lerpPoseObjs(a,b,t){
+  const out={};
+  for(const k in a){const A=a[k],B=b[k]||A;out[k]={x:lerp(A.x,B.x,t),y:lerp(A.y,B.y,t)};}
+  return out;
+}
+function easeInOutSine(x){return -(Math.cos(Math.PI*Math.max(0,Math.min(1,x)))-1)/2;}
+
+const DEMO_DEFS={
+  neck_tilt:{kind:'hold',peak:{head:{x:.40,y:.115}},steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold 3 seconds'],highlight:['head','neck']},
+  neck_side:{kind:'hold',peak:{head:{x:.40,y:.115}},steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold'],highlight:['head','neck']},
+  chin_tuck:{kind:'hold',peak:{head:{x:.5,y:.135}},steps:['Start with a neutral head position','Draw chin straight back — hold 5 seconds'],highlight:['head','neck']},
+  shoulder_roll:{kind:'param',period:2400,param:(theta)=>{const dx=.035*Math.sin(theta),dy=-.03*(1-Math.cos(theta));
+      return{leftShoulder:{x:DEMO_REST.leftShoulder.x+dx,y:DEMO_REST.leftShoulder.y+dy},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx,y:DEMO_REST.rightShoulder.y+dy},
+             leftElbow:{x:DEMO_REST.leftElbow.x+dx*.7,y:DEMO_REST.leftElbow.y+dy*.7},rightElbow:{x:DEMO_REST.rightElbow.x+dx*.7,y:DEMO_REST.rightElbow.y+dy*.7}};},
+    steps:['Roll both shoulders in large backward circles'],highlight:['leftShoulder','rightShoulder']},
+  arm_raise:{kind:'hold',peak:{leftElbow:{x:.37,y:.10},leftWrist:{x:.40,y:.02},rightElbow:{x:.63,y:.10},rightWrist:{x:.60,y:.02}},
+    steps:['Arms relaxed at your sides','Raise both arms fully overhead — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
+  wall_angel:{kind:'hold',peak:{leftElbow:{x:.35,y:.14},leftWrist:{x:.37,y:.04},rightElbow:{x:.65,y:.14},rightWrist:{x:.63,y:.04}},
+    steps:['Back flat against wall, arms in a W','Slide arms up into a Y — hold'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
+  pendulum:{kind:'param',period:2200,base:{rightElbow:{x:.64,y:.42}},param:(theta)=>({rightWrist:{x:.66+.05*Math.sin(theta),y:.60+.03*Math.cos(theta)}}),
+    steps:['Lean forward, let the arm hang loose — small gravity-driven circles'],highlight:['rightShoulder','rightWrist']},
+  wrist:{kind:'param',period:2000,base:{leftElbow:{x:.30,y:.40},rightElbow:{x:.70,y:.40}},
+    param:(theta)=>{const o=.045*Math.sin(theta);return{leftWrist:{x:.16,y:.40+o},rightWrist:{x:.84,y:.40-o}};},
+    steps:['Extend arms forward, flex wrist up and down'],highlight:['leftWrist','rightWrist']},
+  thoracic_rot:{kind:'param',period:2800,param:(theta,s)=>{const dx=.05*s;
+      return{leftShoulder:{x:DEMO_REST.leftShoulder.x-dx,y:DEMO_REST.leftShoulder.y+Math.abs(dx)*.3},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx,y:DEMO_REST.rightShoulder.y+Math.abs(dx)*.3},
+             leftElbow:{x:DEMO_REST.leftElbow.x-dx*.8},rightElbow:{x:DEMO_REST.rightElbow.x+dx*.8}};},
+    steps:['Rotate upper body fully to each side, hips stay forward'],highlight:['leftShoulder','rightShoulder']},
+  mckenzie:{kind:'hold',base:{leftWrist:{x:.44,y:.56},rightWrist:{x:.56,y:.56},leftElbow:{x:.40,y:.46},rightElbow:{x:.60,y:.46}},
+    peak:{neck:{x:.5,y:.175},head:{x:.52,y:.065},leftShoulder:{x:.39,y:.195},rightShoulder:{x:.61,y:.195}},
+    steps:['Hands on lower back, stand tall','Arch backward gently — hold 3 seconds'],highlight:['neck','pelvis']},
+  catcow:{kind:'hold',base:{neck:{x:.5,y:.175},head:{x:.5,y:.06}},
+    peak:{neck:{x:.5,y:.235},head:{x:.5,y:.16},pelvis:{x:.5,y:.54},leftShoulder:{x:.40,y:.25},rightShoulder:{x:.60,y:.25}},
+    steps:['Arch your spine fully — cow','Round your spine fully — cat'],highlight:['neck','pelvis']},
+  hip_hinge:{kind:'hold',peak:{neck:{x:.5,y:.34},head:{x:.5,y:.24},leftShoulder:{x:.39,y:.35},rightShoulder:{x:.61,y:.35},
+      leftElbow:{x:.35,y:.47},rightElbow:{x:.65,y:.47},leftWrist:{x:.33,y:.58},rightWrist:{x:.67,y:.58},
+      leftHip:{x:.42,y:.555},rightHip:{x:.58,y:.555},leftKnee:{x:.41,y:.74},rightKnee:{x:.59,y:.74}},
+    steps:['Stand tall, feet shoulder-width','Push hips back, spine flat, hinge forward'],highlight:['pelvis','leftHip','rightHip']},
+  hamstring:{kind:'hold',peak:{neck:{x:.5,y:.42},head:{x:.5,y:.33},leftShoulder:{x:.40,y:.43},rightShoulder:{x:.60,y:.43},
+      leftElbow:{x:.38,y:.56},rightElbow:{x:.62,y:.56},leftWrist:{x:.40,y:.70},rightWrist:{x:.60,y:.70}},
+    steps:['Stand tall, hip-width stance','Hinge forward, reach toward the floor — hold 5 seconds'],highlight:['leftKnee','rightKnee']},
+  slr:{kind:'hold',peak:{rightKnee:{x:.60,y:.60},rightAnkle:{x:.63,y:.46},rightFoot:{x:.65,y:.44}},
+    steps:['Stand tall against a wall','Raise straight leg to hip height — hold 2 seconds'],highlight:['rightHip','rightKnee']},
+  glute_bridge:{kind:'hold',base:{leftKnee:{x:.42,y:.70},rightKnee:{x:.58,y:.70}},
+    peak:{pelvis:{x:.5,y:.515},leftHip:{x:.435,y:.525},rightHip:{x:.565,y:.525}},
+    steps:['Lying down, knees bent (shown standing for clarity)','Drive hips up, squeeze glutes — hold'],highlight:['pelvis','leftHip','rightHip']},
+  lateral_raise:{kind:'hold',peak:{rightKnee:{x:.68,y:.75},rightAnkle:{x:.75,y:.92},rightFoot:{x:.78,y:.955}},
+    steps:['Stand tall, feet together','Raise leg straight out to the side — hold'],highlight:['rightHip','rightKnee']},
+  hip_abduction:{kind:'hold',peak:{rightKnee:{x:.68,y:.75},rightAnkle:{x:.75,y:.92},rightFoot:{x:.78,y:.955}},
+    steps:['Stand tall, feet together','Raise leg straight out to the side — hold'],highlight:['rightHip','rightKnee']},
+  knee_chest:{kind:'hold',peak:{rightKnee:{x:.52,y:.46},rightAnkle:{x:.50,y:.40},rightFoot:{x:.49,y:.42}},
+    steps:['Stand tall','Pull one knee up toward your chest — hold 3 seconds'],highlight:['rightHip','rightKnee']},
+  calf_raise:{kind:'hold',peak:shiftAllY(-.03),
+    steps:['Stand flat on both feet','Rise fully onto tiptoes — hold at the top'],highlight:['leftAnkle','rightAnkle']},
+  ankle_circle:{kind:'param',period:2400,param:(theta)=>({rightFoot:{x:.64+.035*Math.cos(theta),y:.955+.025*Math.sin(theta)}}),
+    steps:['Rotate ankle in full circles, both directions'],highlight:['rightAnkle']},
+  tke:{kind:'hold',base:{rightKnee:{x:.585,y:.73},rightAnkle:{x:.56,y:.86},rightFoot:{x:.55,y:.89}},
+    peak:{rightKnee:{x:DEMO_REST.rightKnee.x,y:DEMO_REST.rightKnee.y},rightAnkle:{x:DEMO_REST.rightAnkle.x,y:DEMO_REST.rightAnkle.y},rightFoot:{x:DEMO_REST.rightFoot.x,y:DEMO_REST.rightFoot.y}},
+    steps:['Start with a slight knee bend','Straighten knee fully, contract the quad — hold'],highlight:['rightKnee']},
+  prone_hip:{kind:'hold',peak:{rightAnkle:{x:.62,y:.85},rightFoot:{x:.65,y:.83}},
+    steps:['Lying face down (shown standing for clarity)','Extend leg straight back and up — hold'],highlight:['rightHip']},
+  sit_stand:{kind:'hold',peak:{pelvis:{x:.5,y:.63},leftHip:{x:.435,y:.635},rightHip:{x:.565,y:.635},
+      leftKnee:{x:.40,y:.72},rightKnee:{x:.60,y:.72},neck:{x:.5,y:.28},head:{x:.5,y:.19},leftShoulder:{x:.39,y:.30},rightShoulder:{x:.61,y:.30}},
+    steps:['Seated position, feet flat','Rise to standing without using your hands'],highlight:['pelvis','leftKnee','rightKnee']},
+  balance:{kind:'param',period:3200,base:{rightKnee:{x:.55,y:.70},rightAnkle:{x:.53,y:.78},rightFoot:{x:.52,y:.80}},
+    param:(theta,s)=>{const dx=.015*s;return{leftShoulder:{x:DEMO_REST.leftShoulder.x+dx},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx},
+      leftHip:{x:DEMO_REST.leftHip.x+dx},pelvis:{x:.5+dx}};},
+    steps:['Balance on one leg, fix your gaze ahead'],highlight:['leftAnkle']},
+  posture:{kind:'static',steps:['Stand naturally, arms relaxed — we scan your alignment'],highlight:[]},
+  _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
+};
+
+let demoState=null;
+
+function poseForDemo(det,elapsedMs){
+  const def=DEMO_DEFS[det]||DEMO_DEFS._default;
+  if(def.kind==='static')return{pose:dPose(def.base),stepIdx:0};
+  if(def.kind==='param'){
+    const period=def.period||2600;
+    const theta=(elapsedMs%period)/period*Math.PI*2;
+    const s=Math.sin(theta);
+    const over=def.param?def.param(theta,s):null;
+    return{pose:dPose({...(def.base||{}),...(over||{})}),stepIdx:0};
+  }
+  const H1=def.holdMs||650,MV=def.moveMs||850,H2=def.peakHoldMs||1000;
+  const cycle=H1+MV+H2+MV;
+  const t=elapsedMs%cycle;
+  const basePose=dPose(def.base);
+  const peakPose=dPose({...(def.base||{}),...(def.peak||{})});
+  let pose,stepIdx;
+  if(t<H1){pose=basePose;stepIdx=0;}
+  else if(t<H1+MV){pose=lerpPoseObjs(basePose,peakPose,easeInOutSine((t-H1)/MV));stepIdx=0;}
+  else if(t<H1+MV+H2){pose=peakPose;stepIdx=1;}
+  else{pose=lerpPoseObjs(peakPose,basePose,easeInOutSine((t-H1-MV-H2)/MV));stepIdx=1;}
+  return{pose,stepIdx};
+}
+
+function drawDemoPose(ctx,W,H,pose,highlightSet,isStatic){
+  ctx.clearRect(0,0,W,H);
+  const pad=W*0.1;
+  function pt(name){const j=pose[name];return{x:pad+j.x*(W-pad*2),y:pad*.6+j.y*(H-pad*1.2)};}
+
+  DEMO_BONES.forEach(([a,b])=>{
+    const A=pt(a),B=pt(b);
+    const hi=highlightSet.has(a)||highlightSet.has(b);
+    ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);
+    ctx.lineCap='round';
+    if(hi){
+      const g=ctx.createLinearGradient(A.x,A.y,B.x,B.y);
+      g.addColorStop(0,'rgba(225,29,72,.95)');g.addColorStop(1,'rgba(251,113,133,.95)');
+      ctx.strokeStyle=g;ctx.lineWidth=5;ctx.shadowColor='rgba(225,29,72,.65)';ctx.shadowBlur=12;
+    }else{
+      ctx.strokeStyle='rgba(255,255,255,.22)';ctx.lineWidth=3;ctx.shadowBlur=0;
+    }
+    ctx.stroke();ctx.shadowBlur=0;
+  });
+
+  Object.keys(pose).forEach(name=>{
+    if(name==='pelvis'||name==='neck')return;
+    const P=pt(name),hi=highlightSet.has(name);
+    ctx.beginPath();ctx.arc(P.x,P.y,hi?7:4,0,Math.PI*2);
+    if(hi){ctx.shadowColor='#e11d48';ctx.shadowBlur=14;}
+    ctx.fillStyle=hi?'#e11d48':'rgba(255,255,255,.45)';ctx.fill();ctx.shadowBlur=0;
+  });
+
+  const hp=pt('head');
+  ctx.beginPath();ctx.arc(hp.x,hp.y,W*0.052,0,Math.PI*2);
+  ctx.fillStyle='rgba(255,255,255,.08)';ctx.fill();
+  ctx.strokeStyle=highlightSet.has('head')?'rgba(225,29,72,.7)':'rgba(255,255,255,.2)';
+  ctx.lineWidth=1.5;ctx.stroke();
+
+  if(isStatic){
+    const sweepT=(performance.now()%2600)/2600;
+    const sy=pad*.6+sweepT*(H-pad*1.2);
+    const g=ctx.createLinearGradient(0,sy-14,0,sy+14);
+    g.addColorStop(0,'rgba(0,229,160,0)');g.addColorStop(.5,'rgba(0,229,160,.16)');g.addColorStop(1,'rgba(0,229,160,0)');
+    ctx.fillStyle=g;ctx.fillRect(0,sy-14,W,28);
+  }
+}
+
+function updateDemoUI(def,stepIdx){
+  const capTxt=(def.steps&&def.steps[stepIdx])||(def.steps?def.steps[0]:'');
+  ['demo-caption','demo-caption-live'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=capTxt;});
+  const n=(def.steps||['']).length;
+  const dotsHtml=Array.from({length:n}).map((_,i)=>`<span class="${i===stepIdx?'on':''}"></span>`).join('');
+  ['demo-dots','demo-dots-live'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=dotsHtml;});
+}
+
+function demoLoop(ts){
+  if(!demoState||!demoState.playing)return;
+  const elapsed=ts-demoState.startTs;
+  const def=DEMO_DEFS[demoState.det]||DEMO_DEFS._default;
+  const{pose,stepIdx}=poseForDemo(demoState.det,elapsed);
+  const highlightSet=new Set(def.highlight||[]);
+  ['demo-canvas','demo-canvas-live'].forEach(id=>{
+    const cv=document.getElementById(id);
+    if(!cv||cv.offsetParent===null)return;
+    drawDemoPose(cv.getContext('2d'),cv.width,cv.height,pose,highlightSet,def.kind==='static');
+  });
+  if(stepIdx!==demoState.lastStepIdx){demoState.lastStepIdx=stepIdx;updateDemoUI(def,stepIdx);}
+  demoState.raf=requestAnimationFrame(demoLoop);
+}
+
+function startDemo(ex){
+  if(!ex)return;
+  stopDemo();
+  const def=DEMO_DEFS[ex.det]||DEMO_DEFS._default;
+  demoState={det:ex.det,playing:true,startTs:performance.now(),raf:null,lastStepIdx:-1};
+  updateDemoUI(def,0);
+  demoState.raf=requestAnimationFrame(demoLoop);
+  VoiceCoach.speak(ex.name+'. '+ex.desc,{priority:true});
+}
+function stopDemo(){
+  if(demoState&&demoState.raf)cancelAnimationFrame(demoState.raf);
+  demoState=null;
+}
+function replayDemo(){
+  if(sessEx)startDemo(sessEx);
+}
+function openDemoOverlay(){
+  document.getElementById('demo-overlay').classList.add('open');
+  if(sessEx)startDemo(sessEx);
+}
+function closeDemoOverlay(){
+  document.getElementById('demo-overlay').classList.remove('open');
+  stopDemo();
+  VoiceCoach.stop();
+}
 
 // ═══════════════════════════════════════════════════════════
 // USER STATE
@@ -1850,8 +2212,58 @@ const AIChat={
 let poseModel=null,poseLoaded=false,camStream=null;
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral';
 let formScores=[],lastLM=null,raf=null,sessActive=false;
-let angleBuffer=[];
-const SMOOTH=6;
+let emaAngle=null,lastRepAt=0;
+const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
+const REP_DEBOUNCE_MS=550; // minimum time between counted reps — filters jitter-driven double counts
+
+// ═══════════════════════════════════════════════════════════
+// VOICE COACH — Web Speech API, fully on-device (no API key, no upload)
+// ═══════════════════════════════════════════════════════════
+const VoiceCoach=(function(){
+  const supported='speechSynthesis' in window;
+  let enabled=true;
+  try{enabled=JSON.parse(localStorage.getItem('pah_voice_on')??'true');}catch(e){}
+  let voice=null;
+  function pickVoice(){
+    if(!supported)return;
+    const voices=window.speechSynthesis.getVoices();
+    if(!voices.length)return;
+    voice=voices.find(v=>/en/i.test(v.lang)&&/female|samantha|zira|natural|google/i.test(v.name))
+      ||voices.find(v=>/en/i.test(v.lang))
+      ||voices[0];
+  }
+  if(supported){
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged=pickVoice;
+  }
+  function speak(text,{priority=false}={}){
+    if(!supported||!enabled||!text)return;
+    if(priority)window.speechSynthesis.cancel();
+    else if(window.speechSynthesis.speaking)return; // drop rather than queue — keeps live cues from stacking up
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=1.03;u.pitch=1.0;u.volume=1;
+    if(voice)u.voice=voice;
+    window.speechSynthesis.speak(u);
+  }
+  function stop(){if(supported)window.speechSynthesis.cancel();}
+  function setEnabled(v){
+    enabled=v;
+    localStorage.setItem('pah_voice_on',JSON.stringify(enabled));
+    if(!enabled)stop();
+    syncVoiceBtn();
+  }
+  function toggle(){setEnabled(!enabled);return enabled;}
+  function syncVoiceBtn(){
+    document.querySelectorAll('.voice-toggle-btn').forEach(btn=>{
+      btn.style.display=supported?'flex':'none';
+      btn.classList.toggle('muted',!enabled);
+      btn.setAttribute('aria-label',enabled?'Mute voice coach':'Unmute voice coach');
+      btn.title=enabled?'Mute voice coach':'Unmute voice coach';
+    });
+  }
+  return{speak,stop,toggle,setEnabled,syncVoiceBtn,get enabled(){return enabled;},get supported(){return supported;}};
+})();
+VoiceCoach.syncVoiceBtn();
 
 // ── Camera Diagnostics Logger ──
 const CamDiag={
@@ -1863,7 +2275,8 @@ const CamDiag={
 };
 
 function openSession(idx){
-  sessEx=EX[idx];sessReps=0;sessScore=100;repPhase='neutral';formScores=[];angleBuffer=[];avatarJoints={};
+  sessEx=EX[idx];sessReps=0;sessScore=100;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;avatarJoints={};
+  lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
   document.getElementById('s-score').textContent='—%';
@@ -1871,7 +2284,12 @@ function openSession(idx){
   document.getElementById('sh-name').textContent=sessEx.name;
   document.getElementById('sh-area').textContent=sessEx.area;
   document.getElementById('s-pre-h').textContent='Ready: '+sessEx.name;
-  document.getElementById('s-pre').style.display='flex';
+  document.getElementById('s-pre-meta').innerHTML=
+    `<span style="color:${DC[sessEx.diff]};border-color:${DC[sessEx.diff]}40">${sessEx.diff}</span>`+
+    `<span>${sessEx.area}</span><span>${sessEx.reps} reps target</span>`;
+  const preEl=document.getElementById('s-pre');
+  preEl.classList.remove('exiting');
+  preEl.style.display='flex';
   document.getElementById('s-hud').style.display='none';
   document.getElementById('hdot').style.color='#f59e0b';
   document.getElementById('hud-txt').textContent='STARTING CAMERA';
@@ -1879,13 +2297,17 @@ function openSession(idx){
   document.getElementById('s-ang').classList.remove('vis');
   document.getElementById('model-panel').style.display='none';
   document.getElementById('s-instr').style.display='none';
+  document.getElementById('demo-live-trigger').style.display='none';
   setFB('Activate your camera to begin the session.','');
   document.getElementById('sess').classList.add('open');
   document.body.style.overflow='hidden';
+  startDemo(sessEx);
 }
 
 function endSession(){
   sessActive=false;
+  VoiceCoach.stop();
+  stopDemo();
   if(raf){cancelAnimationFrame(raf);raf=null;}
   if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
   const vid=document.getElementById('s-vid');
@@ -1913,7 +2335,9 @@ function endSession(){
 
 // ── CAMERA with full mobile compatibility & diagnostics ──
 async function startCamera(){
-  document.getElementById('s-pre').style.display='none';
+  const preEl0=document.getElementById('s-pre');
+  preEl0.classList.add('exiting');
+  setTimeout(()=>{if(preEl0.classList.contains('exiting'))preEl0.style.display='none';},380);
   document.getElementById('s-hud').style.display='flex';
 
   // 1. HTTPS check
@@ -2007,11 +2431,14 @@ async function startCamera(){
 
   // 7. UI state
   document.getElementById('s-ring').style.display='flex';
+  document.getElementById('demo-live-trigger').style.display='flex';
   document.getElementById('s-instr').style.display='block';
   document.getElementById('s-instr').textContent=sessEx.desc;
   document.getElementById('hdot').style.color='#00e5a0';
   document.getElementById('hud-txt').textContent='AI TRACKING ACTIVE';
   setFB('Stand so your full body is visible. Ensure good lighting.','');
+  stopDemo();
+  VoiceCoach.speak('Camera is live. Stand back so your full body is visible.',{priority:true});
 
   sessActive=true;
   await loadPoseModel();
@@ -2019,7 +2446,9 @@ async function startCamera(){
 }
 
 function showCamError(title,msg){
-  document.getElementById('s-pre').style.display='flex';
+  const preEl=document.getElementById('s-pre');
+  preEl.classList.remove('exiting');
+  preEl.style.display='flex';
   document.getElementById('s-pre-h').textContent=title;
   const p=document.getElementById('s-pre').querySelector('p');
   p.innerHTML=msg+' <a href="#" onclick="showCameraDiagnostics();return false;" style="color:var(--brand);text-decoration:underline;">View Diagnostics</a>';
@@ -2115,8 +2544,8 @@ function initPose(){
     smoothLandmarks:true,
     enableSegmentation:false,
     smoothSegmentation:false,
-    minDetectionConfidence:0.5,
-    minTrackingConfidence:0.5
+    minDetectionConfidence:0.65,
+    minTrackingConfidence:0.65
   });
   poseModel.onResults(onPoseResults);
   poseLoaded=true;
@@ -2456,9 +2885,8 @@ function angleDeg(A,B,C){
   return Math.abs(Math.atan2(Math.abs(cross),dot)*180/Math.PI);
 }
 function smoothAngle(val){
-  angleBuffer.push(val);
-  if(angleBuffer.length>SMOOTH)angleBuffer.shift();
-  return angleBuffer.reduce((a,b)=>a+b,0)/angleBuffer.length;
+  emaAngle=emaAngle==null?val:emaAngle+(val-emaAngle)*EMA_ALPHA;
+  return emaAngle;
 }
 function setAngle(deg,lbl){
   const perc=Math.min(deg/180,1);
@@ -2474,17 +2902,33 @@ function setRing(score){
   document.getElementById('ring-c').style.stroke=col;
   document.getElementById('ring-t').textContent=Math.round(score)+'%';
 }
+let lastVoiceMsg='',lastVoiceAt=0,lastFbMsg='';
 function setFB(msg,cls){
   const el=document.getElementById('s-fb');
   el.textContent=msg;el.className='s-fb'+(cls?' '+cls:'');
+  if(msg!==lastFbMsg){
+    lastFbMsg=msg;
+    el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');
+  }
+  if(cls==='good'||cls==='warn'){
+    const now=performance.now();
+    if(msg!==lastVoiceMsg||now-lastVoiceAt>7000){
+      VoiceCoach.speak(msg,{priority:cls==='warn'});
+      lastVoiceMsg=msg;lastVoiceAt=now;
+    }
+  }
 }
 function setPhase(txt){document.getElementById('s-phase').textContent=txt;}
 function doRep(){
+  const now=performance.now();
+  if(now-lastRepAt<REP_DEBOUNCE_MS)return; // guards against noise flicker double-counting a single rep
+  lastRepAt=now;
   sessReps++;
   document.getElementById('s-reps').textContent=sessReps;
   formScores.push(sessScore);
   const fl=document.getElementById('rep-flash');
   fl.textContent=sessReps;fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');
+  VoiceCoach.speak('Rep '+sessReps);
   if(sessReps>=sessEx.reps){
     setFB('Target of '+sessEx.reps+' reps reached. You can continue or end the session.','good');
     toast('Target reached — '+sessReps+' reps completed.');
@@ -2645,19 +3089,6 @@ function analyzeExercise(lm,W,H){
     }else{updateScore(84);}
   }
 
-  else if(det==='hamstring'){
-    if(!safe(lm,11,23,25))return;
-    const hipFlex=smoothAngle(angleDeg(lm[11],lm[23],lm[25]));
-    setAngle(hipFlex,'Hip Flex');
-    if(hipFlex<90){
-      if(repPhase==='standing'){repPhase='bent';setFB('Hold the stretch — 5 seconds. Feel the hamstring pull.','good');}
-      updateScore(94);setPhase('Stretching');
-    }else if(hipFlex>155&&repPhase==='bent'){
-      repPhase='standing';doRep();setFB('Stand tall and hinge again.','');
-    }else{
-      setFB('Hinge at hips with flat back. Reach toward the floor.','');updateScore(76);
-    }
-  }
   else if(det==='hamstring'){
     if(!safe(lm,11,23,25))return;
     const hipFlex=smoothAngle(angleDeg(lm[11],lm[23],lm[25]));
