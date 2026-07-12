@@ -149,24 +149,35 @@ a{text-decoration:none;color:inherit}
   gap:16px;max-width:1320px;margin:0 auto;padding:0 24px 80px;
 }
 .ex-card{
+  --ac:var(--brand);
   background:rgba(10,10,16,1);border:1px solid rgba(255,255,255,.07);
   border-radius:20px;padding:24px;transition:border-color .3s,transform .3s,box-shadow .3s;
   position:relative;overflow:hidden;
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 44px -30px rgba(0,0,0,.7);
+}
+.ex-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--ac),transparent 85%);opacity:.6;transition:opacity .3s;
 }
 .ex-card::after{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(225,29,72,.06),transparent 60%);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 8%,transparent),transparent 60%);
   opacity:0;transition:opacity .3s;pointer-events:none;
 }
-.ex-card:hover{border-color:rgba(225,29,72,.35);transform:translateY(-3px);box-shadow:0 16px 48px rgba(225,29,72,.1)}
+.ex-card:hover{border-color:color-mix(in srgb,var(--ac) 40%,transparent);transform:translateY(-3px);box-shadow:0 20px 52px -20px color-mix(in srgb,var(--ac) 35%,transparent)}
+.ex-card:hover::before{opacity:1}
 .ex-card:hover::after{opacity:1}
 .ex-card.hidden{display:none}
+.ex-idx{
+  position:absolute;top:14px;right:18px;font-family:'Poppins',sans-serif;font-weight:800;
+  font-size:1.7rem;color:rgba(255,255,255,.05);letter-spacing:-.02em;line-height:1;user-select:none;
+}
 .ex-icon{
   width:44px;height:44px;border-radius:12px;
-  background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.2);
+  background:color-mix(in srgb,var(--ac) 14%,transparent);border:1px solid color-mix(in srgb,var(--ac) 28%,transparent);
   display:flex;align-items:center;justify-content:center;margin-bottom:14px;
 }
-.ex-icon svg{width:20px;height:20px;stroke:var(--brand)}
+.ex-icon svg{width:20px;height:20px;stroke:var(--ac)}
 .ex-top{display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap}
 .ex-area{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .ex-badge{font-size:.64rem;font-weight:700;padding:2px 9px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase}
@@ -209,10 +220,11 @@ a{text-decoration:none;color:inherit}
 .hosp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
 .hosp-card{
   background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);
-  border-radius:20px;overflow:hidden;transition:border-color .25s,transform .25s;
+  border-radius:20px;overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s;
   display:flex;flex-direction:column;
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 44px -30px rgba(0,0,0,.7);
 }
-.hosp-card:hover{border-color:rgba(225,29,72,.35);transform:translateY(-4px)}
+.hosp-card:hover{border-color:rgba(225,29,72,.35);transform:translateY(-4px);box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 26px 52px -24px rgba(225,29,72,.16)}
 .hosp-top{
   padding:28px 24px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;
   background:#f8fafc; /* WHITE BACKGROUND for logo clarity */
@@ -270,14 +282,19 @@ a{text-decoration:none;color:inherit}
   margin-bottom:6px;
 }
 .who-stat-lbl{font-size:.68rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600;line-height:1.5}
-.who-stat-src{font-size:.58rem;color:var(--submuted);margin-top:6px}
+.who-stat-src{
+  display:block;font-size:.58rem;color:var(--submuted);margin-top:10px;
+  text-decoration:none;transition:color .2s;
+}
+.who-stat-src:hover{color:var(--accent)}
 
 /* ═══ RESEARCH CARDS ═══ */
 .research-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
 .research-card{
   background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);
-  border-radius:20px;padding:24px;transition:border-color .25s,transform .25s;
+  border-radius:20px;padding:24px;transition:border-color .25s,transform .25s,box-shadow .25s;
   position:relative;overflow:hidden;
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 24px 44px -30px rgba(0,0,0,.7);
 }
 .research-card:hover{border-color:rgba(225,29,72,.35);transform:translateY(-3px)}
 .research-card::before{
@@ -306,83 +323,23 @@ a{text-decoration:none;color:inherit}
 }
 .research-fact svg{width:14px;height:14px;stroke:var(--green);flex-shrink:0;margin-top:1px}
 .research-fact strong{color:#00e5a0;font-weight:700}
+.research-src{
+  display:inline-flex;align-items:center;gap:4px;margin-top:13px;
+  font-size:.68rem;font-weight:700;color:var(--brand);text-decoration:none;
+  letter-spacing:.02em;transition:color .2s,gap .2s;
+}
+.research-src:hover{color:var(--accent);gap:7px}
+.who-badge{
+  display:inline-flex;align-items:center;gap:7px;margin-bottom:14px;
+  padding:6px 16px;border-radius:100px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);font-size:.68rem;font-weight:600;color:var(--muted);
+}
+.who-badge strong{color:#fff;font-weight:800}
+.who-badge svg{width:13px;height:13px;stroke:#00e5a0;flex-shrink:0}
 
 @media(max-width:768px){
   .who-stats-bar{grid-template-columns:repeat(2,1fr)}
   .research-grid{grid-template-columns:1fr}
-}
-
-/* ═══ PRODUCTS ═══ */
-#products{background:#060608}
-.prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-@keyframes prodFadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-@keyframes prodFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.04)}}
-@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,160,.35)}60%{box-shadow:0 0 0 7px rgba(0,229,160,0)}}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
-@keyframes imgGlow{0%,100%{opacity:.18}50%{opacity:.42}}
-
-.prod-card{
-  background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);
-  border-radius:20px;overflow:hidden;
-  transition:border-color .3s,transform .3s,box-shadow .3s;
-  animation:prodFadeUp .55s ease both;
-}
-.prod-card:hover{border-color:rgba(59,130,246,.4);transform:translateY(-4px);box-shadow:0 18px 48px rgba(59,130,246,.1)}
-.prod-img{
-  width:100%;aspect-ratio:1;
-  background:linear-gradient(135deg,#0d0d1a,#1a0a24);
-  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
-}
-.prod-img::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 60%,rgba(59,130,246,.22),transparent 70%);
-  animation:imgGlow 3s ease-in-out infinite;pointer-events:none;
-}
-.prod-img svg{width:64px;height:64px;opacity:.8;animation:prodFloat 4s ease-in-out infinite;position:relative;z-index:1}
-.prod-img-badge{
-  position:absolute;top:10px;left:10px;font-size:.6rem;font-weight:700;
-  padding:3px 10px;border-radius:100px;letter-spacing:.07em;text-transform:uppercase;z-index:2;
-}
-.bs{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#f59e0b}
-.nw{background:rgba(0,229,160,.12);border:1px solid rgba(0,229,160,.3);color:#00e5a0}
-.ht{background:rgba(225,29,72,.12);border:1px solid rgba(225,29,72,.3);color:var(--accent)}
-.prod-body{padding:16px 18px}
-.prod-rec-tag{
-  display:inline-flex;align-items:center;gap:5px;margin-bottom:9px;
-  font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:#00e5a0;padding:3px 11px;border-radius:100px;
-  background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.18);
-  animation:recPulse 2.8s ease-in-out infinite;
-}
-.prod-rec-tag svg{width:9px;height:9px;stroke:#00e5a0;flex-shrink:0}
-.prod-cat{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:5px}
-.prod-name{font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem;margin-bottom:7px;line-height:1.3}
-.prod-desc{color:var(--muted);font-size:.76rem;line-height:1.6;margin-bottom:11px}
-.prod-uses{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px}
-.prod-use{font-size:.61rem;padding:2px 8px;border-radius:5px;background:rgba(225,29,72,.07);color:var(--accent);font-weight:600}
-.prod-stars{display:flex;align-items:center;gap:4px;margin-bottom:13px}
-.prod-stars svg{width:11px;height:11px;fill:#f59e0b;stroke:none}
-.prod-stars span{font-size:.76rem;font-weight:700}
-.prod-stars small{color:var(--muted);font-size:.7rem}
-.prod-find-btn{
-  width:100%;padding:11px 14px;border-radius:100px;
-  border:1px solid rgba(59,130,246,.3);
-  background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(139,92,246,.1));
-  color:#93c5fd;font-family:'Poppins',sans-serif;font-weight:700;font-size:.76rem;
-  letter-spacing:.04em;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  position:relative;overflow:hidden;
-  transition:border-color .3s,color .3s,transform .2s,background .3s;
-}
-.prod-find-btn::after{
-  content:'';position:absolute;top:0;left:0;height:100%;width:50%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
-  animation:shimmer 2.2s ease-in-out infinite;pointer-events:none;
-}
-.prod-find-btn svg{width:13px;height:13px;stroke:currentColor;flex-shrink:0}
-.prod-find-btn:hover{
-  border-color:rgba(59,130,246,.6);color:#fff;transform:scale(1.02);
-  background:linear-gradient(135deg,rgba(59,130,246,.22),rgba(139,92,246,.22));
 }
 
 /* ═══ DASHBOARD ═══ */
@@ -403,7 +360,8 @@ a{text-decoration:none;color:inherit}
 .dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
 .dash-m{
   background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:22px;
-  transition:border-color .25s,transform .25s;
+  transition:border-color .25s,transform .25s,box-shadow .25s;
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 20px 36px -28px rgba(0,0,0,.7);
 }
 .dash-m:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
 .dash-m-ic{
@@ -414,7 +372,7 @@ a{text-decoration:none;color:inherit}
 .dash-m-val{font-size:2.1rem;font-weight:800;font-family:'Poppins',sans-serif;color:#fff;line-height:1}
 .dash-m-lbl{font-size:.7rem;color:var(--muted);margin-top:6px}
 .dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.dash-card{background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:22px}
+.dash-card{background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:22px;box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 20px 36px -28px rgba(0,0,0,.7)}
 .dash-card-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:18px;display:flex;align-items:center;gap:7px}
 .dash-card-t svg{width:15px;height:15px;stroke:var(--brand)}
 #weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:6px}
@@ -695,15 +653,16 @@ a{text-decoration:none;color:inherit}
 /* 3D model panel */
 .model-panel{
   position:absolute;bottom:120px;right:16px;z-index:10;
-  width:140px;height:240px;
-  background:rgba(0,0,0,.7);backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;
+  width:172px;height:284px;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.12);border-radius:16px;overflow:hidden;
 }
 .model-panel-lbl{
-  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:2;
   font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);white-space:nowrap;
+  color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:5px;
 }
+.model-panel-lbl .mpl-dot{width:5px;height:5px;border-radius:50%;background:#00e5a0;box-shadow:0 0 6px #00e5a0;animation:cdblink 1.6s infinite;flex-shrink:0}
 #model-canvas{width:100%;height:100%;display:block}
 
 /* ═══ FOOTER ═══ */
@@ -728,7 +687,7 @@ a{text-decoration:none;color:inherit}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   outline:2px solid var(--brand);outline-offset:2px;border-radius:4px;
 }
-.ex-start-btn:active,.hosp-btn:active,.prod-find-btn:active,.pill:active,.gate-btn:active{transform:scale(.97)}
+.ex-start-btn:active,.hosp-btn:active,.pill:active,.gate-btn:active{transform:scale(.97)}
 .nl{position:relative}
 .nl::after{content:'';position:absolute;left:13px;right:13px;bottom:1px;height:2px;background:var(--brand);border-radius:2px;transform:scaleX(0);transition:transform .25s ease}
 .nl:hover::after{transform:scaleX(1)}
@@ -757,11 +716,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 @media(max-width:768px){
   .nav-links{display:none}.ham{display:flex}
   #navbar{padding:0 18px}
-  .docs-grid,.prod-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
   .s-ang{right:6px}
-  .model-panel{width:110px;height:190px;bottom:130px}
+  .model-panel{width:128px;height:212px;bottom:130px}
   .s-instr{max-width:260px;font-size:.72rem}
   .s-pre-grid{grid-template-columns:1fr;gap:20px}
   .demo-panel{max-width:280px;margin:0 auto}
@@ -770,7 +728,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 @media(max-width:540px){
   .footer-cols{grid-template-columns:1fr}
   #ex-grid{grid-template-columns:1fr}
-  .docs-grid,.prod-grid{grid-template-columns:1fr}
   .s-stat-v{font-size:1.1rem}
   .gate-wrap{padding:28px 22px}
   .frow{grid-template-columns:1fr}
@@ -819,7 +776,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <a href="#hero" class="nl">Exercises</a>
     <a href="#hospitals" class="nl">Hospitals</a>
     <a href="#research" class="nl">Research</a>
-    <a href="#products" class="nl">Products</a>
     <a href="#dashboard" class="nl">Dashboard</a>
   </div>
   <div class="nav-right">
@@ -841,7 +797,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <a href="#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
   <a href="#hospitals" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
   <a href="#research" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
-  <a href="#products" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Products</a>
+  <a href="#dashboard" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Dashboard</a>
 </div>
 
 <!-- ══════════ HERO ══════════ -->
@@ -892,19 +848,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <span class="sec-tag">WHO Evidence & Global Data</span>
     <h2 class="sec-h">The Science Behind <span>Rehabilitation</span></h2>
     <p class="sec-p">All PAH protocols are built on evidence from the World Health Organization, peer-reviewed clinical trials, and systematic reviews. These are the facts driving modern rehabilitation practice worldwide.</p>
-    
+    <div class="who-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Every statistic below is sourced from <strong>who.int</strong> — tap any citation to verify it yourself.
+    </div>
     <div class="who-stats-bar" id="who-stats-bar"></div>
     <div class="research-grid" id="research-grid"></div>
-  </div>
-</section>
-
-<!-- ══════════ PRODUCTS ══════════ -->
-<section class="section" id="products" style="background:#060608">
-  <div class="sec-in">
-    <span class="sec-tag">Clinician-Recommended Equipment</span>
-    <h2 class="sec-h">Essential Gear for <span> Home Care</span></h2>
-    <p class="sec-p">Equipment used by our registered physiotherapists and recommended for home rehabilitation. Every product is clinically validated for safety and efficacy.</p>
-    <div class="prod-grid" id="prod-grid"></div>
   </div>
 </section>
 
@@ -1032,7 +981,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 
   <!-- 3D Muscle Model panel -->
   <div class="model-panel" id="model-panel" style="display:none">
-    <div class="model-panel-lbl">Muscle Activation</div>
+    <div class="model-panel-lbl"><span class="mpl-dot"></span>Muscle Activation — Live</div>
     <canvas id="model-canvas"></canvas>
   </div>
 
@@ -1120,6 +1069,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <a href="#hero">Exercises</a>
         <a href="#hospitals">Hospitals</a>
         <a href="#research">Research</a>
+        <a href="#dashboard">Dashboard</a>
         <a href="index.html">3D Body Map</a>
       </div>
     </div>
@@ -1240,7 +1190,7 @@ const AVATAR_JOINTS={
 const AVATAR_NECK={type:'mid',indices:[11,12]};
 const AVATAR_PELVIS={type:'mid',indices:[23,24]};
 let avatarJoints={};
-const AVATAR_SMOOTH=0.22; // 60 FPS responsive yet stable
+const AVATAR_SMOOTH=0.34; // snappy but stable — high enough that live movement is unmistakable
 
 function getRawJoint(lm,name){
   if(name==='neck'){
@@ -1633,7 +1583,7 @@ const EX=[
     desc:'Gently tilt head side to side, holding 3 seconds at end range. Shoulders completely relaxed.',
     note:'First-line treatment for cervical spondylosis and tension headaches. Mobilizes facet joints.',
     muscles:['Upper Trapezius','SCM','Scalenes'],
-    angles:{main:[0,7,8],pivot:0,threshold:{lo:5,hi:15}},
+    angles:{main:[0,7,8],pivot:0,threshold:{lo:15,hi:40}},
     joints:{p:[0,7,8,11,12],s:[13,14],lk:[[0,7],[0,8],[7,8],[7,11],[8,12]],sk:[[11,13],[12,14]]}},
   {name:'Chin Tucks',area:'Forward Head Posture',diff:'Beginner',tags:['Neck'],reps:15,det:'chin_tuck',
     desc:'Draw chin straight backward (double-chin motion). Hold 5 seconds. Keep eyes level throughout.',
@@ -1737,8 +1687,11 @@ const ICONS=[
   'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
 ];
 
+const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
+
 document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>`
-<div class="ex-card" data-i="${i}">
+<div class="ex-card" data-i="${i}" style="--ac:${AREA_COLOR[ex.tags[0]]||'var(--brand)'}">
+  <span class="ex-idx">${String(i+1).padStart(2,'0')}</span>
   <div class="ex-icon">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="${ICONS[i]||ICONS[0]}"/>
@@ -1846,16 +1799,15 @@ document.getElementById('hosp-grid').innerHTML=HOSPITALS.map(h=>`
   </div>
 </div>`).join('');
 
-const starsSVG='<svg viewBox="0 0 24 24"><path d="M12 2l3 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7-.73L12 2z"/></svg>'.repeat(5);
 
 // ═══════════════════════════════════════════════════════════
 // WHO RESEARCH & EVIDENCE
 // ═══════════════════════════════════════════════════════════
 const WHO_STATS=[
-  {num:'2.6B',lbl:'People worldwide who could benefit from rehabilitation',src:'WHO Global Burden of Disease 2021'},
-  {num:'1 in 3',lbl:'People globally may need rehabilitation at some point',src:'WHO Rehabilitation 2030 Initiative'},
-  {num:'79.4%',lbl:'Increase in years lived with disability (1990–2021)',src:'WHO EB158/26 Report 2025'},
-  {num:'568M',lbl:'People living with low back pain — the leading cause',src:'WHO Global Burden of Disease 2021'}
+  {num:'2.4B',lbl:'People currently living with a condition that may benefit from rehabilitation',src:'WHO Rehabilitation Fact Sheet, 2023',url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'},
+  {num:'1 in 3',lbl:'People globally may need rehabilitation at some point in their life',src:'WHO Rehabilitation 2030 Initiative',url:'https://www.who.int/initiatives/rehabilitation-2030'},
+  {num:'619M',lbl:'People living with low back pain — the world\'s leading cause of disability',src:'WHO Low Back Pain Fact Sheet, 2023',url:'https://www.who.int/news-room/fact-sheets/detail/low-back-pain'},
+  {num:'<10',lbl:'Skilled rehabilitation workers per million people in many lower-income countries',src:'WHO Rehabilitation Fact Sheet, 2023',url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'}
 ];
 
 const RESEARCH=[
@@ -1864,42 +1816,48 @@ const RESEARCH=[
     tag:'WHO Initiative',
     desc:'Launched in February 2017, this WHO initiative addresses the profound unmet need for rehabilitation worldwide. It establishes 10 priority areas including leadership, workforce development, financing, and integrating rehabilitation into universal health coverage.',
     fact:'Rehabilitation is now recognized as an essential health service for achieving Universal Health Coverage (UHC).',
-    icon:'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'
+    icon:'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
+    url:'https://www.who.int/initiatives/rehabilitation-2030'
   },
   {
     title:'Global Unmet Need for Rehabilitation',
     tag:'WHO Statistics',
-    desc:'In 2021, 2.6 billion individuals worldwide were living with a health condition that could benefit from rehabilitation — contributing to 340 million years lived with disability. This figure increased by 79.4% between 1990 and 2021.',
-    fact:'Musculoskeletal disorders are the greatest contributor to global rehabilitation needs, with low back pain affecting 568 million people.',
-    icon:'M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z'
+    desc:'An estimated 2.4 billion people worldwide are currently living with a health condition that may benefit from rehabilitation. In many low- and middle-income countries, more than half of those who need it do not receive it.',
+    fact:'Musculoskeletal disorders are the greatest contributor to global rehabilitation needs, with low back pain affecting 619 million people.',
+    icon:'M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z',
+    url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'
   },
   {
     title:'WHA76.6: Historic Resolution',
     tag:'Global Policy',
     desc:'In May 2023, the World Health Assembly passed resolution WHA76.6 — the first time in 75 years that rehabilitation was recognized as a core global public health priority. It mandates WHO to develop global rehabilitation targets and indicators for 2030.',
-    fact:'WHO is developing a baseline report on Member State rehabilitation capacity, to be published by end of 2026.',
-    icon:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'
+    fact:'WHO now supports roughly 78 countries directly in strengthening their national rehabilitation services.',
+    icon:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+    url:'https://www.who.int/initiatives/rehabilitation-2030'
   },
   {
-    title:'Effective Coverage of Rehabilitation',
-    tag:'WHO Metrics',
-    desc:'WHO selected chronic primary low back pain as the first tracer condition to measure effective coverage of rehabilitation. This includes three components: service need, utilization, and quality of outcomes measured via WHODAS 2.0.',
-    fact:'Low back pain is responsible for 7.4% of all global years lived with disability — the single largest contributor.',
-    icon:'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z'
+    title:'Low Back Pain: The Leading Cause of Disability',
+    tag:'WHO Fact Sheet',
+    desc:'Low back pain is the single leading cause of disability worldwide. WHO projects cases will rise from 619 million today to 843 million by 2050 as populations age and grow.',
+    fact:'About 90% of low back pain cases are "non-specific" — meaning no single structural cause is found, and movement-based rehabilitation is the primary treatment.',
+    icon:'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z',
+    url:'https://www.who.int/news-room/fact-sheets/detail/low-back-pain'
   },
   {
     title:'Physiotherapy Access Gap',
-    tag:'World Bank / WHO',
-    desc:'The World Report on Disability found that 20% of people with disabilities needed physiotherapy, but only 6% received it. WHO estimates that more than half the population in many countries does not receive essential rehabilitation services.',
-    fact:'There is a significant shortage of rehabilitation workforce, particularly in low- and middle-income countries and remote areas.',
-    icon:'M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z'
+    tag:'WHO Workforce Data',
+    desc:'Many low- and middle-income countries have fewer than 10 skilled rehabilitation practitioners per million people — far below what is needed to meet demand.',
+    fact:'This shortage is a central reason WHO promotes accessible, evidence-based home rehabilitation programs like guided exercise therapy.',
+    icon:'M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z',
+    url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'
   },
   {
-    title:'Rehabilitation in Emergencies',
-    tag:'Crisis Response',
-    desc:'WHO emphasizes that rehabilitation must be integrated into emergency preparedness and response. Conflict zones like Syria and Ukraine face acute rehabilitation needs including traumatic injury, amputation, and stroke requiring complex multidisciplinary care.',
-    fact:'WHO is working to expand the tracer model beyond low back pain to include stroke, trauma, and amputation for crisis settings.',
-    icon:'M22 12h-4l-3 9L9 3l-3 9H2'
+    title:'An Aging World Needs More Rehabilitation',
+    tag:'WHO Projections',
+    desc:'The number of people aged over 60 is projected to double by 2050 — driving sustained growth in demand for rehabilitation and physiotherapy services worldwide.',
+    fact:'WHO frames accessible rehabilitation as essential infrastructure for healthy aging, not an optional add-on to healthcare.',
+    icon:'M22 12h-4l-3 9L9 3l-3 9H2',
+    url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'
   }
 ];
 
@@ -1909,7 +1867,7 @@ document.getElementById('who-stats-bar').innerHTML=WHO_STATS.map(s=>`
 <div class="who-stat">
   <div class="who-stat-num">${s.num}</div>
   <div class="who-stat-lbl">${s.lbl}</div>
-  <div class="who-stat-src">Source: ${s.src}</div>
+  <a class="who-stat-src" href="${s.url}" target="_blank" rel="noopener noreferrer">Source: ${s.src} ↗</a>
 </div>`).join('');
 
 document.getElementById('research-grid').innerHTML=RESEARCH.map(r=>`
@@ -1926,53 +1884,10 @@ document.getElementById('research-grid').innerHTML=RESEARCH.map(r=>`
     ${checkSVG}
     <span><strong>WHO Fact:</strong> ${r.fact}</span>
   </div>
+  <a class="research-src" href="${r.url}" target="_blank" rel="noopener noreferrer">View source on who.int ↗</a>
 </div>`).join('');
 
 
-
-// ═══════════════════════════════════════════════════════════
-// PRODUCTS
-// ═══════════════════════════════════════════════════════════
-const PRODS=[
-  {name:'TheraBand Resistance Set',cat:'Resistance Bands',desc:'5-level latex resistance band set. Essential for progressive strength and flexibility exercises across all joints.',uses:['Shoulder Rehab','Hip Strengthening','Knee OA'],badge:'bs',bl:'Best Seller',price:'PKR 2,400',old:'PKR 3,200',rating:4.8,reviews:412,
-    svg :'<path d="M4 14s1-1 4-1 5 2 8 2 4-1 4-1V7s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="21" x2="4" y2="14"/><line x1="20" y1="21" x2="20" y2="14"/>'},
-  {name:'High-Density Foam Roller',cat:'Myofascial Release',desc:'Grid-texture EVA roller. Releases trigger points, reduces DOMS, and improves thoracic mobility.',uses:['IT Band','Thoracic Spine','Calf Tightness'],badge:'bs',bl:'Best Seller',price:'PKR 3,800',old:'PKR 5,000',rating:4.6,reviews:287,
-    svg:'<rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="8" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="16" cy="12" r="1"/>'},
-  {name:'Lumbar Support Cushion',cat:'Ergonomic Support',desc:'Memory foam lumbar roll with adjustable strap. Maintains natural lordosis during prolonged sitting.',uses:['L4-L5 Support','Office Use','Driving'],badge:'nw',bl:'New',price:'PKR 4,200',old:'PKR 5,500',rating:4.9,reviews:143,
-    svg:'<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'},
-  {name:'TENS and EMS Dual Unit',cat:'Electrotherapy',desc:'Portable 2-channel TENS/EMS device with 20 programs. Clinical-equivalent pain relief for home use.',uses:['Chronic Pain','Muscle Re-education','Post-Surgical'],badge:'ht',bl:'Hot',price:'PKR 8,500',old:'PKR 11,000',rating:4.7,reviews:198,
-    svg:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'},
-  {name:'Posture Corrector Brace',cat:'Postural Aid',desc:'Medical-grade clavicle brace for thoracic kyphosis correction. Breathable, adjustable, discreet.',uses:['Kyphosis','Forward Head','Upper Back'],badge:'nw',bl:'New',price:'PKR 3,200',old:'PKR 4,000',rating:4.4,reviews:96,
-    svg:'<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'},
-  {name:'Hot and Cold Gel Pack',cat:'Thermal Therapy',desc:'Reusable gel pack — heats or freezes in minutes. Molds to any body part. Clinical standard.',uses:['Acute Injury','Muscle Spasm','Inflammation'],badge:'bs',bl:'Best Seller',price:'PKR 1,800',old:'PKR 2,400',rating:4.8,reviews:534,
-    svg:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>'},
-  {name:'Wobble Balance Board',cat:'Proprioception Training',desc:'Wooden wobble board for ankle and knee rehabilitation. Graded instability for progressive training.',uses:['Ankle Rehab','Knee Stability','Core Balance'],badge:'',bl:'',price:'PKR 5,600',old:'PKR 7,000',rating:4.6,reviews:74,
-    svg:'<ellipse cx="12" cy="17" rx="10" ry="3"/><line x1="12" y1="17" x2="12" y2="7"/><circle cx="12" cy="5" r="2"/>'},
-  {name:'Cervical Traction Device',cat:'Cervical Therapy',desc:'Inflatable cervical traction collar. Decompresses C-spine facet joints and discs safely at home.',uses:['Cervical Spondylosis','Disc Herniation','Neck Pain'],badge:'ht',bl:'Hot',price:'PKR 6,200',old:'PKR 8,000',rating:4.5,reviews:162,
-    svg:'<path d="M12 5v14M5 12l7-7 7 7"/>'}
-];
-
-document.getElementById('prod-grid').innerHTML=PRODS.map((p,i)=>`
-<div class="prod-card" style="animation-delay:${i*0.07}s">
-  <div class="prod-img">
-    ${p.badge?`<div class="prod-img-badge ${p.badge}">${p.bl}</div>`:''}
-    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(93,156,255,.65)" stroke-width="1.5" stroke-linecap="round">
-      ${p.svg}
-    </svg>
-  </div>
-  <div class="prod-body">
-    <div class="prod-rec-tag">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      Physio Recommended
-    </div>
-    <div class="prod-cat">${p.cat}</div>
-    <div class="prod-name">${p.name}</div>
-    <p class="prod-desc">${p.desc}</p>
-    <div class="prod-uses">${p.uses.map(u=>`<span class="prod-use">${u}</span>`).join('')}</div>
-    <div class="prod-stars">${starsSVG}<span>${p.rating}</span><small>(${p.reviews} reviews)</small></div>
-   
-  </div>
-</div>`).join('');
 
 // ═══════════════════════════════════════════════════════════
 // SCROLL REVEAL — subtle entrance for cards/section headers
@@ -2002,7 +1917,7 @@ document.getElementById('prod-grid').innerHTML=PRODS.map((p,i)=>`
 // AI COACH — Fixed with fallback engine & retry logic
 // ═══════════════════════════════════════════════════════════
 const AIChat={
-  hist:[{role:'system',content:'You are PAH Clinical AI Physiotherapist. You ONLY discuss physiotherapy: pain, injuries, exercises, and rehabilitation. If asked about anything else, politely decline and redirect the user to ask a physiotherapy question — do not answer unrelated questions under any circumstances. Give structured evidence-based rehabilitation advice. Format: 1) Brief Clinical Assessment 2) Recommended Exercises (from the PAH library) 3) Home Management Tips 4) Red Flags and When to See a Physiotherapist. Use clear paragraphs. Max 280 words. Be professional and empathetic.'}],
+  hist:[{role:'system',content:"You are PAH Clinical AI Physiotherapist. You ONLY discuss physiotherapy: pain, injuries, exercises, and rehabilitation. If asked about anything else, politely decline and redirect the user to ask a physiotherapy question — do not answer unrelated questions under any circumstances. On the FIRST message describing a problem, give a structured response: 1) Brief Clinical Assessment 2) 1-2 Recommended Exercises (from the PAH library) 3) One or two tailored management tips 4) Red flags only if severity is genuinely high. Keep it under 150 words — do not include a section that isn't relevant to what was actually described. On any FOLLOW-UP message, do NOT repeat the assessment — just answer the specific follow-up directly in 1-3 sentences."}],
   busy:false,
   retryCount:0,
   maxRetries:2,
@@ -2103,6 +2018,15 @@ const AIChat={
   fallbackResponse(userMsg){
     const msg=(userMsg||'').toLowerCase();
 
+    // Only the FIRST message in a conversation gets the full assessment. Anything
+    // after that is a follow-up and gets a short, single, focused answer instead
+    // of re-dumping the whole template again.
+    const userTurns=this.hist.filter(h=>h.role==='user').length;
+    if(userTurns>1){
+      this.shortFollowUp(msg);
+      return;
+    }
+
     // Parse clinical metadata from user message
     let location='general';
     let severity=5;
@@ -2146,39 +2070,58 @@ const AIChat={
     else if(msg.includes('bursitis'))condition='bursitis';
     else if(msg.includes('spondylosis')||msg.includes('stenosis'))condition='degenerative spine';
 
-    // Match exercises from PAH library
+    // Match exercises from PAH library — pick the 2 most relevant, not a full dump
     const recEx=EX.filter(e=>{
       const text=(e.name+' '+e.area+' '+e.desc+' '+e.tags.join(' ')+' '+e.muscles.join(' ')).toLowerCase();
       return text.includes(location)||e.tags.some(t=>t.toLowerCase()===location);
-    }).slice(0,4);
+    }).slice(0,2);
 
-    let exList='';
+    // Tailored management tips — only the ones actually relevant to this case, not a fixed checklist
+    const tips=[];
+    const acuteLike=duration==='acute'||duration.includes('day')||(duration.includes('week')&&parseInt(duration)<=2);
+    if(acuteLike)tips.push('Ice the area for 15 minutes at a time for the first 48-72 hours to calm inflammation.');
+    else tips.push('Heat for 10-15 minutes before moving helps loosen a stiff, longer-standing ache like this.');
+    if(['neck','wrist','back'].includes(location))tips.push('Since this is aggravated by posture, check your desk/phone height — micro-breaks every 30 minutes make a real difference.');
+    if(condition==='disc herniation'||condition==='degenerative spine')tips.push('Avoid prolonged forward bending or heavy lifting until this settles — movements that centralize the pain (bring it closer to your spine) are a good sign.');
+    if(severity<=4)tips.push('Mild presentations like this usually respond well to staying gently active rather than resting completely.');
+
+    const severityLine=severity>7
+      ?`A ${severity}/10 is significant — I'd get this looked at by a physiotherapist in person within a day or two. In the meantime, keep movement gentle and pain-free only.`
+      :severity>4
+      ?`At ${severity}/10, this is a reasonable candidate for home rehab, started gently and progressed as it allows.`
+      :`At ${severity}/10 this sounds mild-to-moderate — the exercises below with consistency should help.`;
+
+    let exBlock='';
     if(recEx.length){
-      exList=recEx.map((e,i)=>`${i+1}. **${e.name}** — ${e.desc} (${e.diff}, ${e.reps===1?'Hold':e.reps+' reps'})`).join('\n');
-    }else{
-      exList='1. **Gentle Range of Motion** — Move the affected joint slowly within a pain-free range, 10 repetitions.\n2. **Isometric Holds** — Contract surrounding muscles without moving the joint, 5-second holds, 8 reps.\n3. **Diaphragmatic Breathing** — 10 slow deep breaths to reduce muscular tension and pain perception.';
+      exBlock='\n\nWorth trying from the PAH library:\n'+recEx.map(e=>`- **${e.name}** — ${e.desc}`).join('\n');
     }
 
-    const redFlags=[
-      'Progressive weakness, numbness, or tingling in limbs',
-      'Loss of bladder or bowel control',
-      'Severe trauma, fall, or accident',
-      'Fever, night sweats, or unexplained weight loss with pain',
-      'Pain that is constant, unrelenting, or wakes you at night',
-      'Inability to bear weight or perform basic movements'
-    ];
+    const tipsBlock=tips.length?'\n\n'+tips.slice(0,severity>7?1:2).map(t=>t).join(' '):'';
 
-    const severityText=severity>7?'high-severity':severity>4?'moderate-severity':'low-severity';
-    const recText=severity>7
-      ?'Given the high pain severity, I strongly recommend an in-person physiotherapy assessment within 24-48 hours. Home exercises should be gentle and pain-free only.'
-      :severity>4
-      ?'This is appropriate for supervised home rehabilitation. Start with low intensity and progress gradually.'
-      :'This appears manageable with home rehabilitation. Focus on mobility and gradual strengthening.';
+    const redFlagLine=severity>7
+      ?'\n\nSee a doctor sooner rather than later if you notice numbness, weakness, or pain that wakes you at night.'
+      :'';
 
-    const response=`**1. Clinical Assessment**\nYou described **${location} ${condition}** with a severity of **${severity}/10** for **${duration}**. This is a ${severityText} presentation. ${recText}\n\n**2. Recommended Exercises from PAH Library**\n${exList}\n\n**3. Home Management Protocol**\n- **Thermal therapy:** ${duration.includes('week')&&parseInt(duration)>6?'Heat before exercise, ice after if swollen.':'Ice 15 min for acute pain; heat 15 min for stiffness.'}\n- **Activity modification:** Avoid movements that reproduce symptoms. Do not push through sharp pain.\n- **Positioning:** Maintain neutral spine. Use supportive pillows for sleep.\n- **Ergonomics:** Adjust workstation height. Take micro-breaks every 30 minutes.\n- **Progression:** Increase reps or hold time by 10% every 3-4 days if pain allows.\n\n**4. Red Flags — Seek Immediate Care If:**\n${redFlags.slice(0,4).map(f=>'- '+f).join('\n')}\n\n*Disclaimer: This is an AI-generated rehabilitation guide. For persistent, worsening, or complex symptoms, consult a registered physiotherapist or physician.*`;
+    const response=`You mentioned **${location} ${condition}**, ${severity}/10, for ${duration}. ${severityLine}${exBlock}${tipsBlock}${redFlagLine}\n\n*This is general guidance, not a diagnosis — for anything persistent or worsening, see a registered physiotherapist.*`;
 
     this.hist.push({role:'assistant',content:response});
     this.addMsg('bot',response);
+    this.busy=false;
+  },
+
+  shortFollowUp(msg){
+    let reply;
+    if(/\bice\b|cold/.test(msg))reply="Ice for about 15 minutes at a time works best in the first 48-72 hours. After that, heat tends to help more with stiffness.";
+    else if(/heat|warm/.test(msg))reply="Heat for 10-15 minutes before exercising loosens things up well — just skip it on a fresh, swollen injury.";
+    else if(/how long|when.*better|recover|improve/.test(msg))reply="Mild-to-moderate cases usually improve noticeably within 2-4 weeks of consistent exercise. No change after that? Time to see a physiotherapist in person.";
+    else if(/work|desk|sit|sitting|office|screen/.test(msg))reply="Get up and move every 30 minutes, and keep your screen at eye level — posture load adds up fast over a workday.";
+    else if(/worse|worried|scared|serious|danger/.test(msg))reply="If it's getting worse, or you notice numbness, weakness, or pain that wakes you at night, please see a doctor or physiotherapist rather than waiting it out.";
+    else if(/sleep|night|bed|pillow/.test(msg))reply="A supportive pillow position that keeps the area neutral overnight helps — avoid positions that reproduce the pain.";
+    else if(/how many|reps|sets|often|frequency/.test(msg))reply="Once or twice a day is a good starting frequency — quality of movement matters more than volume early on.";
+    else if(/thank/.test(msg))reply="You're welcome — take it steady, and come back if anything changes.";
+    else reply="Could you tell me a bit more specifically what you'd like to know — icing vs. heat, timeline, or a particular movement?";
+    this.hist.push({role:'assistant',content:reply});
+    this.addMsg('bot',reply);
     this.busy=false;
   }
 };
@@ -2190,6 +2133,7 @@ let poseModel=null,poseLoaded=false,camStream=null;
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral';
 let formScores=[],lastLM=null,raf=null,sessActive=false;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
+let ankleCirclePrevTheta=null,ankleCircleAccum=0; // true angular-sweep tracking for ankle_circle
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
 const REP_DEBOUNCE_MS=550; // minimum time between counted reps — filters jitter-driven double counts
 function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();}}
@@ -2254,7 +2198,8 @@ const CamDiag={
 };
 
 function openSession(idx){
-  sessEx=EX[idx];sessReps=0;sessScore=100;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;avatarJoints={};
+  sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
+  ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2307,7 +2252,7 @@ function endSession(){
     u.recent=u.recent||[];
     u.recent.unshift({name:sessEx.name,reps:sessReps,form:avgF,date:now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})});
     if(u.recent.length>10)u.recent=u.recent.slice(0,10);
-    saveU(u);renderNavStreak();
+    saveU(u);renderDash();renderNavStreak();
     toast('Session saved — '+sessReps+' reps at '+avgF+'% form.');
   }
 }
@@ -2405,7 +2350,7 @@ async function startCamera(){
   cv.style.display='block';
 
   const mc=document.getElementById('model-canvas');
-  mc.width=140;mc.height=240;
+  mc.width=172;mc.height=284;
   document.getElementById('model-panel').style.display='block';
 
   // 7. UI state
@@ -2754,11 +2699,11 @@ function draw3DModel(lm){
     const B=pos(b);
     if(!A||!B)return;
     ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);
-    ctx.strokeStyle='rgba(255,255,255,0.14)';
-    ctx.lineWidth=3;
+    ctx.strokeStyle='rgba(255,255,255,0.32)';
+    ctx.lineWidth=3.5;
     ctx.stroke();
-    ctx.beginPath();ctx.arc(A.x,A.y,2.5,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.35)';
+    ctx.beginPath();ctx.arc(A.x,A.y,3,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.55)';
     ctx.fill();
   });
 
@@ -2863,14 +2808,58 @@ function angleDeg(A,B,C){
   const cross=ax*cy-ay*cx;
   return Math.abs(Math.atan2(Math.abs(cross),dot)*180/Math.PI);
 }
+// Real angle (degrees) of vector A->B measured from vertical "up" — used where a true
+// joint-angle triple isn't anatomically available but the motion is a clean lean/tilt.
+function angleFromVertical(A,B){
+  const dx=B.x-A.x,dy=B.y-A.y;
+  return Math.abs(Math.atan2(dx,-dy)*180/Math.PI);
+}
+let angleRawBuf=[];
 function smoothAngle(val){
-  emaAngle=emaAngle==null?val:emaAngle+(val-emaAngle)*EMA_ALPHA;
+  // Median-of-3 rejects single-frame pose-estimation spikes before EMA smoothing —
+  // real motion still comes through immediately, but jitter/noise doesn't.
+  angleRawBuf.push(val);
+  if(angleRawBuf.length>3)angleRawBuf.shift();
+  const median=[...angleRawBuf].sort((a,b)=>a-b)[Math.floor((angleRawBuf.length-1)/2)];
+  emaAngle=emaAngle==null?median:emaAngle+(median-emaAngle)*EMA_ALPHA;
   return emaAngle;
 }
-function setAngle(deg,lbl){
+// Genuine form score from measured angle vs. this exercise's real target range —
+// replaces hardcoded per-branch constants. 'hold' rewards sitting inside [lo,hi];
+// 'oscillate' rewards reaching close to either extreme (full range of motion).
+function scoreHold(val,lo,hi){
+  if(val>=lo&&val<=hi)return 100;
+  const dist=val<lo?lo-val:val-hi;
+  return Math.max(0,100-(dist/Math.max(hi-lo,10))*140);
+}
+function scoreOscillate(val,lo,hi){
+  const nearest=Math.min(Math.abs(val-lo),Math.abs(val-hi));
+  const span=Math.max(hi-lo,10);
+  return Math.max(0,100-(nearest/span)*90);
+}
+// Detects genuine stillness (not just "holding the target") so an idle, unengaged
+// body doesn't keep showing a leftover/false score.
+let motionHistory=[];
+function trackStillness(val){
+  const now=performance.now();
+  motionHistory.push({t:now,v:val});
+  while(motionHistory.length&&now-motionHistory[0].t>1200)motionHistory.shift();
+  if(motionHistory.length<8)return false; // not enough samples yet — don't false-flag at session start
+  const vals=motionHistory.map(p=>p.v);
+  return(Math.max(...vals)-Math.min(...vals))<3; // <3° of wobble over 1.2s = not moving
+}
+function isIdleHold(val,lo,hi){
+  return trackStillness(val)&&!(val>=lo&&val<=hi);
+}
+function isIdleOscillate(val,lo,hi){
+  const span=Math.max(hi-lo,10);
+  const nearExtreme=Math.abs(val-lo)<span*0.15||Math.abs(val-hi)<span*0.15;
+  return trackStillness(val)&&!nearExtreme;
+}
+function setAngle(deg,lbl,unit='°'){
   const perc=Math.min(deg/180,1);
   document.getElementById('ang-c').style.strokeDashoffset=232.5*(1-perc);
-  document.getElementById('ang-t').textContent=Math.round(deg)+'°';
+  document.getElementById('ang-t').textContent=Math.round(deg)+unit;
   document.getElementById('ang-l').textContent=lbl;
   document.getElementById('s-ang').classList.add('vis');
 }
@@ -2914,7 +2903,7 @@ function doRep(){
   }
 }
 function updateScore(s){
-  sessScore=Math.round(sessScore*0.65+s*0.35);
+  sessScore=Math.round(sessScore*0.5+s*0.5); // responsive blend — real changes show up in ~3-4 frames, not a slow decay
   document.getElementById('s-score').textContent=sessScore+'%';
   setRing(sessScore);
 }
@@ -2927,22 +2916,23 @@ function safe(lm,...idx){return idx.every(i=>lm[i]&&vis(lm[i]));}
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
+  const{lo,hi}=sessEx.angles.threshold;
 
   if(det==='neck_tilt'){
     if(!safe(lm,0,11,12))return;
     const nose=lm[0],lS=lm[11],rS=lm[12];
-    const shouldMidX=(lS.x+rS.x)/2;
-    const tilt=Math.abs(nose.x-shouldMidX)*100;
-    const raw=smoothAngle(tilt);
-    setAngle(raw*6,'Tilt');
-    if(raw>4){
+    const shoulderMid={x:(lS.x+rS.x)/2,y:(lS.y+rS.y)/2};
+    const raw=smoothAngle(angleFromVertical(shoulderMid,nose)); // real deviation from vertical, degrees
+    setAngle(raw,'Tilt');
+    if(raw>lo){
       if(repPhase==='neutral'){setRepPhase('tilted');setFB('Good tilt — hold this position for 3 seconds.','good');}
-      updateScore(100-Math.max(0,raw-15)*3);setPhase('Stretching');
-    }else if(raw<1.5&&repPhase==='tilted'){
+      updateScore(scoreHold(raw,lo,hi));setPhase('Stretching');
+    }else if(raw<lo*0.35&&repPhase==='tilted'){
       if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Good — return and tilt the other side.','');}
       else{setRepPhase('neutral');setFB('Hold the tilt a little longer for full credit.','warn');}
     }else{
       setFB('Slowly tilt your head to one side, hold 3 seconds.','');setPhase('Ready');
+      updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));
     }
   }
 
@@ -2950,17 +2940,17 @@ function analyzeExercise(lm,W,H){
     if(!safe(lm,0,7,8))return;
     const nose=lm[0];
     const earMidX=(lm[7].x+lm[8].x)/2;
-    const retraction=(earMidX-nose.x)*100;
-    const raw=smoothAngle(Math.abs(retraction));
-    setAngle(raw*8,'Retraction');
-    if(retraction>2){
+    const retraction=smoothAngle(Math.abs((earMidX-nose.x)*100));
+    setAngle(retraction,'Retraction','');
+    if(retraction>lo){
       if(repPhase==='neutral'){setRepPhase('tucked');setFB('Good chin tuck — hold 5 seconds. Keep eyes level.','good');}
-      updateScore(88+Math.min(12,raw));setPhase('Tucked');
-    }else if(retraction<0.5&&repPhase==='tucked'){
+      updateScore(scoreHold(retraction,lo,hi));setPhase('Tucked');
+    }else if(retraction<lo*0.3&&repPhase==='tucked'){
       if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Release and repeat the tuck motion.','');}
       else{setRepPhase('neutral');setFB('Hold the tuck a little longer for full credit.','warn');}
     }else{
       setFB('Draw your chin straight backward — like making a double chin.','');setPhase('Ready');
+      updateScore(isIdleHold(retraction,lo,hi)?0:scoreHold(retraction,lo,hi));
     }
   }
 
@@ -2970,9 +2960,10 @@ function analyzeExercise(lm,W,H){
     const rAng=angleDeg(lm[24],lm[12],lm[14]);
     const avg=smoothAngle((lAng+rAng)/2);
     setAngle(avg,'Shoulder');
-    if(avg>100&&repPhase!=='up'){repPhase='up';setPhase('Rolling Up');updateScore(90);}
+    if(avg>100&&repPhase!=='up'){repPhase='up';setPhase('Rolling Up');}
     else if(avg<55&&repPhase==='up'){repPhase='down';doRep();setFB('Good circle — keep rolling!','good');}
-    else{setFB('Roll shoulders in large backward circles. Full range.','');updateScore(80);}
+    else{setFB('Roll shoulders in large backward circles. Full range.','');}
+    updateScore(isIdleOscillate(avg,lo,hi)?0:scoreOscillate(avg,lo,hi));
   }
 
   else if(det==='pendulum'){
@@ -2980,7 +2971,7 @@ function analyzeExercise(lm,W,H){
     const ang=angleDeg(lm[11],lm[13],lm[15]);
     const raw=smoothAngle(ang);
     setAngle(raw,'Swing');
-    updateScore(raw>10&&raw<50?95:75);
+    updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));
     setFB('Let the arm hang loose. Small gravity-driven circles. No muscle force.','good');
     if(raw>15&&repPhase==='neutral'){repPhase='swing';}
     else if(raw<8&&repPhase==='swing'){repPhase='neutral';doRep();}
@@ -2990,10 +2981,11 @@ function analyzeExercise(lm,W,H){
     if(!safe(lm,13,15,17))return;
     const ang=smoothAngle(angleDeg(lm[13],lm[15],lm[17]));
     setAngle(ang,'Wrist');
-    if(ang>140){if(repPhase!=='ext'){repPhase='ext';setFB('Full extension — now flex down.','good');}updateScore(92);}
+    if(ang>140){if(repPhase!=='ext'){repPhase='ext';setFB('Full extension — now flex down.','good');}}
     else if(ang<50&&repPhase==='ext'){repPhase='flex';doRep();setFB('Good — extend again.','');}
-    else if(ang<50){setFB('Flex wrist fully downward.','');updateScore(78);}
-    else{setFB('Extend wrist fully upward, then flex fully downward.','');updateScore(80);setPhase('Moving');}
+    else if(ang<50){setFB('Flex wrist fully downward.','');}
+    else{setFB('Extend wrist fully upward, then flex fully downward.','');setPhase('Moving');}
+    updateScore(isIdleOscillate(ang,lo,hi)?0:scoreOscillate(ang,lo,hi));
   }
 
   else if(det==='mckenzie'||det==='catcow'){
@@ -3001,72 +2993,87 @@ function analyzeExercise(lm,W,H){
     const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23]));
     setAngle(spineAng,'Spine');
     if(det==='mckenzie'){
+      const extension=Math.max(0,180-spineAng); // real degrees of backward extension from neutral
       if(spineAng<165){
         if(repPhase==='neutral'){setRepPhase('extended');setFB('Good backward extension — hold 3 seconds.','good');}
-        updateScore(93);setPhase('Extended');
+        updateScore(scoreHold(extension,lo,hi));setPhase('Extended');
       }else if(spineAng>172&&repPhase==='extended'){
         if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Stand tall and repeat the extension.','');}
         else{setRepPhase('neutral');setFB('Hold the extension a little longer for full credit.','warn');}
       }else{
-        setFB('Place hands on lower back and gently arch backward.','');updateScore(72);
+        setFB('Place hands on lower back and gently arch backward.','');
+        updateScore(isIdleHold(extension,lo,hi)?0:scoreHold(extension,lo,hi));
       }
     }else{
+      const dev=Math.abs(180-spineAng); // degrees away from neutral, either direction
       if(spineAng<160){
         if(repPhase!=='arch'){setRepPhase('arch');setFB('Good arch (cow) — now round into cat position.','good');}
-        updateScore(92);setPhase('Cow');
+        updateScore(scoreHold(dev,15,40));setPhase('Cow');
       }else if(spineAng>175&&repPhase==='arch'){
         if(phaseAge()>350){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
         else{setFB('Hold each position briefly, in rhythm with your breath.','warn');}
       }else if(spineAng>175){
-        setFB('Arch your spine fully — look upward gently.','');updateScore(78);
+        setFB('Arch your spine fully — look upward gently.','');
+        updateScore(isIdleHold(dev,15,40)?0:scoreHold(dev,15,40));
       }else{
-        setFB('Move fluidly between full arch and full round. Breathe with each.','');updateScore(82);
+        setFB('Move fluidly between full arch and full round. Breathe with each.','');
+        updateScore(isIdleHold(dev,15,40)?0:scoreHold(dev,15,40));
       }
     }
   }
 
   else if(det==='knee_chest'){
     if(!safe(lm,23,25,27))return;
-    const kneeY=lm[25].y,hipY=lm[23].y;
-    const lift=smoothAngle(Math.max(0,(hipY-kneeY)*120));
-    setAngle(lift,'Lift');
-    if(lift>25){
+    const kneeAng=smoothAngle(angleDeg(lm[23],lm[25],lm[27])); // real knee-flexion angle, hip(23)-knee(25)-ankle(27)
+    setAngle(kneeAng,'Knee Flex');
+    if(kneeAng<hi){
       if(repPhase==='down'){setRepPhase('up');setFB('Good — pull knee toward chest. Hold 3 seconds.','good');}
-      updateScore(92);setPhase('Up');
-    }else if(lift<8&&repPhase==='up'){
+      updateScore(scoreHold(kneeAng,lo,hi));setPhase('Up');
+    }else if(kneeAng>150&&repPhase==='up'){
       if(phaseAge()>450){setRepPhase('down');doRep();setFB('Lower and raise the other knee.','');}
       else{setRepPhase('down');setFB('Hold the lift a little longer for full credit.','warn');}
     }else{
-      setFB('Stand tall. Pull one knee up toward your chest.','');updateScore(72);
+      setFB('Stand tall. Pull one knee up toward your chest.','');
+      updateScore(isIdleHold(kneeAng,lo,hi)?0:scoreHold(kneeAng,lo,hi));
     }
   }
 
   else if(det==='calf_raise'){
-    if(!safe(lm,25,27,29,31))return;
-    const heelY=lm[29].y;
-    const ankleY=lm[27].y;
-    const rise=smoothAngle(Math.max(0,(heelY-ankleY)*150));
-    setAngle(rise,'Rise');
-    if(rise>12){
+    if(!safe(lm,25,27,29))return;
+    const ang=smoothAngle(angleDeg(lm[25],lm[27],lm[29])); // real shin-to-heel (ankle) angle
+    setAngle(ang,'Ankle');
+    if(ang>hi){
       if(repPhase==='down'){setRepPhase('up');setFB('Full plantarflexion — hold at top.','good');}
-      updateScore(97);setPhase('Up');
-    }else if(rise<3&&repPhase==='up'){
+      updateScore(scoreHold(ang,lo,hi));setPhase('Up');
+    }else if(ang<lo&&repPhase==='up'){
       if(phaseAge()>350){setRepPhase('down');doRep();setFB('Lower slowly over 3 seconds.','');}
       else{setRepPhase('down');setFB('Pause at the top a little longer next time.','warn');}
     }else{
-      setFB('Rise fully onto tiptoes. Pause at the top for 1 second.','');updateScore(75);
+      setFB('Rise fully onto tiptoes. Pause at the top for 1 second.','');
+      updateScore(isIdleHold(ang,lo,hi)?0:scoreHold(ang,lo,hi));
     }
   }
 
   else if(det==='ankle_circle'){
-    if(!safe(lm,27,29,31))return;
-    const toeX=lm[31].x,ankleX=lm[27].x;
-    const circ=smoothAngle(Math.abs(toeX-ankleX)*120);
-    setAngle(circ*3,'Rotation');
-    updateScore(82);
-    setFB('Rotate ankle in full circles — 10 each direction per foot.','good');
-    if(circ>8&&repPhase==='neutral'){repPhase='moving';}
-    else if(circ<3&&repPhase==='moving'){repPhase='neutral';doRep();}
+    if(!safe(lm,27,31))return;
+    const ankle=lm[27],foot=lm[31];
+    const theta=Math.atan2(foot.y-ankle.y,foot.x-ankle.x);
+    if(ankleCirclePrevTheta!=null){
+      let delta=theta-ankleCirclePrevTheta;
+      if(delta>Math.PI)delta-=2*Math.PI;
+      if(delta<-Math.PI)delta+=2*Math.PI;
+      ankleCircleAccum+=delta;
+    }
+    ankleCirclePrevTheta=theta;
+    const sweptDeg=Math.abs(ankleCircleAccum)*180/Math.PI;
+    setAngle(Math.min(sweptDeg,360),'Rotation');
+    const radius=Math.hypot(foot.x-ankle.x,foot.y-ankle.y);
+    const angularSpeed=trackStillness(sweptDeg)?0:1; // reuses the same stillness window on cumulative sweep
+    const moving=radius>0.025&&angularSpeed>0;
+    updateScore(moving?96:0);
+    setFB(moving?'Good circular motion — keep going.':'Rotate your ankle to begin — make the circle bigger.',moving?'good':'warn');
+    setPhase('Circling ('+Math.round(Math.min(sweptDeg,360))+'°)');
+    if(sweptDeg>=340){doRep();ankleCircleAccum=0;}
   }
 }
 </script>
