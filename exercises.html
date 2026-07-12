@@ -650,23 +650,25 @@ a{text-decoration:none;color:inherit}
 .s-fb.warn{background:rgba(239,68,68,.13);border-color:rgba(239,68,68,.35);color:#fca5a5}
 .s-fb.pulse{animation:fbPulse .5s ease}
 @keyframes fbPulse{0%{transform:scale(.97)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
-/* 3D model panel */
-.model-panel{
-  position:absolute;bottom:120px;right:16px;z-index:10;
-  width:172px;height:284px;
-  background:rgba(0,0,0,.72);backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.12);border-radius:16px;overflow:hidden;
-}
-.model-panel-lbl{
-  position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:2;
-  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:5px;
-}
-.model-panel-lbl .mpl-dot{width:5px;height:5px;border-radius:50%;background:#00e5a0;box-shadow:0 0 6px #00e5a0;animation:cdblink 1.6s infinite;flex-shrink:0}
-#model-canvas{width:100%;height:100%;display:block}
-
 /* ═══ FOOTER ═══ */
-.footer{padding:54px 24px 28px;border-top:1px solid rgba(255,255,255,.06);background:#000}
+.footer{
+  position:relative;padding:0 24px 28px;background:#000;
+  border-top:1px solid rgba(255,255,255,.06);overflow:hidden;
+}
+.footer::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(225,29,72,.5),transparent);
+}
+.f-badges{
+  max-width:1320px;margin:0 auto;padding:26px 0 30px;
+  display:flex;flex-wrap:wrap;gap:12px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:38px;
+}
+.f-badge{
+  display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:100px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  font-size:.74rem;color:#cbd5e1;font-weight:500;
+}
+.f-badge svg{width:14px;height:14px;stroke:#00e5a0;flex-shrink:0}
 .footer-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;max-width:1320px;margin:0 auto 34px}
 .f-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .f-brand img{width:34px;height:34px;border-radius:8px;object-fit:cover}
@@ -676,12 +678,14 @@ a{text-decoration:none;color:inherit}
 .f-hd{font-family:'Poppins',sans-serif;font-weight:700;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:13px}
 .f-lks{display:flex;flex-direction:column;gap:9px}
 .f-lks a,.f-lks span{color:var(--muted);font-size:.79rem;transition:color .2s}
-.f-lks a:hover{color:#fff}
+.f-lks a:hover{color:#fff;padding-left:2px}
+.f-lks a{transition:color .2s,padding-left .2s}
 .f-bot{max-width:1320px;margin:0 auto;padding-top:20px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .f-bot span{color:var(--submuted);font-size:.69rem}
 .f-bot-lks{display:flex;gap:18px}
 .f-bot-lks a{color:var(--submuted);font-size:.69rem;transition:color .2s}
 .f-bot-lks a:hover{color:#fff}
+@media(max-width:540px){.f-badges{gap:8px}.f-badge{font-size:.68rem;padding:7px 13px}}
 
 /* ═══ INTERACTION CONSISTENCY ═══ */
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
@@ -719,7 +723,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
   .s-ang{right:6px}
-  .model-panel{width:128px;height:212px;bottom:130px}
   .s-instr{max-width:260px;font-size:.72rem}
   .s-pre-grid{grid-template-columns:1fr;gap:20px}
   .demo-panel{max-width:280px;margin:0 auto}
@@ -979,12 +982,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     </svg>
   </div>
 
-  <!-- 3D Muscle Model panel -->
-  <div class="model-panel" id="model-panel" style="display:none">
-    <div class="model-panel-lbl"><span class="mpl-dot"></span>Muscle Activation — Live</div>
-    <canvas id="model-canvas"></canvas>
-  </div>
-
   <!-- Rep counter flash -->
   <div class="rep-flash" id="rep-flash"></div>
 
@@ -1055,6 +1052,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 
 <!-- ══════════ FOOTER ══════════ -->
 <footer class="footer">
+  <div class="f-badges">
+    <div class="f-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Camera never leaves your device
+    </div>
+    <div class="f-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      No account or signup required
+    </div>
+    <div class="f-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Research sourced directly from who.int
+    </div>
+  </div>
   <div class="footer-cols">
     <div>
       <div class="f-brand">
@@ -1077,7 +1088,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <div class="f-hd">Company</div>
       <div class="f-lks">
         <a href="#">About PAH</a>
-        <a href="#">Research</a>
         <a href="#">Careers</a>
       </div>
     </div>
@@ -1174,100 +1184,6 @@ window.addEventListener('scroll',()=>{
 function lerp(a,b,t){return a+(b-a)*t;}
 function lerpPoint(p1,p2,t){return{x:lerp(p1.x,p2.x,t),y:lerp(p1.y,p2.y,t)};}
 function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
-
-// ═══════════════════════════════════════════════════════════
-// AVATAR SYSTEM — Real-time joint smoothing & bone hierarchy
-// ═══════════════════════════════════════════════════════════
-const AVATAR_JOINTS={
-  head:0,leftShoulder:11,rightShoulder:12,
-  leftElbow:13,rightElbow:14,
-  leftWrist:15,rightWrist:16,
-  leftHip:23,rightHip:24,
-  leftKnee:25,rightKnee:26,
-  leftAnkle:27,rightAnkle:28,
-  leftFoot:31,rightFoot:32
-};
-const AVATAR_NECK={type:'mid',indices:[11,12]};
-const AVATAR_PELVIS={type:'mid',indices:[23,24]};
-let avatarJoints={};
-const AVATAR_SMOOTH=0.34; // snappy but stable — high enough that live movement is unmistakable
-
-function getRawJoint(lm,name){
-  if(name==='neck'){
-    const pts=AVATAR_NECK.indices.map(i=>lm[i]).filter(p=>p&&typeof p.visibility==='number'&&p.visibility>0.3);
-    if(!pts.length)return null;
-    return{x:pts.reduce((a,p)=>a+p.x,0)/pts.length,y:pts.reduce((a,p)=>a+p.y,0)/pts.length,visibility:0.8};
-  }
-  if(name==='pelvis'){
-    const pts=AVATAR_PELVIS.indices.map(i=>lm[i]).filter(p=>p&&typeof p.visibility==='number'&&p.visibility>0.3);
-    if(!pts.length)return null;
-    return{x:pts.reduce((a,p)=>a+p.x,0)/pts.length,y:pts.reduce((a,p)=>a+p.y,0)/pts.length,visibility:0.8};
-  }
-  const idx=AVATAR_JOINTS[name];
-  if(idx==null)return null;
-  const p=lm[idx];
-  return(p&&typeof p.visibility==='number'&&p.visibility>0.3)?p:null;
-}
-
-function updateAvatarJoints(lm){
-  const allNames=Object.keys(AVATAR_JOINTS).concat(['neck','pelvis']);
-  for(const name of allNames){
-    const raw=getRawJoint(lm,name);
-    if(!raw)continue;
-    if(!avatarJoints[name]){
-      avatarJoints[name]={x:raw.x,y:raw.y,active:true};
-    }else{
-      avatarJoints[name].x=lerp(avatarJoints[name].x,raw.x,AVATAR_SMOOTH);
-      avatarJoints[name].y=lerp(avatarJoints[name].y,raw.y,AVATAR_SMOOTH);
-      avatarJoints[name].active=true;
-    }
-  }
-}
-
-// Muscle attachments now follow joints dynamically
-const MUSCLE_ATTACHMENTS={
-  head:   {type:'joint',joint:'head',w:0.13,h:0.11},
-  neck:   {type:'joint',joint:'neck',w:0.07,h:0.06},
-  trapUp: {type:'joint',joint:'neck',w:0.22,h:0.07},
-  lShoulder:{type:'joint',joint:'leftShoulder',w:0.1,h:0.08},
-  rShoulder:{type:'joint',joint:'rightShoulder',w:0.1,h:0.08},
-  chest:  {type:'lerp',from:'neck',to:'pelvis',t:0.25,w:0.2,h:0.12},
-  rhomboid:{type:'lerp',from:'neck',to:'pelvis',t:0.3,w:0.16,h:0.08},
-  lBicep: {type:'lerp',from:'leftShoulder',to:'leftElbow',t:0.4,w:0.07,h:0.1},
-  rBicep: {type:'lerp',from:'rightShoulder',to:'rightElbow',t:0.4,w:0.07,h:0.1},
-  lForearm:{type:'lerp',from:'leftElbow',to:'leftWrist',t:0.4,w:0.06,h:0.09},
-  rForearm:{type:'lerp',from:'rightElbow',to:'rightWrist',t:0.4,w:0.06,h:0.09},
-  core:   {type:'lerp',from:'neck',to:'pelvis',t:0.5,w:0.16,h:0.1},
-  lLat:   {type:'lerp',from:'leftShoulder',to:'leftHip',t:0.35,w:0.08,h:0.1},
-  rLat:   {type:'lerp',from:'rightShoulder',to:'rightHip',t:0.35,w:0.08,h:0.1},
-  lumbar: {type:'lerp',from:'neck',to:'pelvis',t:0.7,w:0.14,h:0.08},
-  lGlute: {type:'joint',joint:'leftHip',w:0.1,h:0.08},
-  rGlute: {type:'joint',joint:'rightHip',w:0.1,h:0.08},
-  lQuad:  {type:'lerp',from:'leftHip',to:'leftKnee',t:0.45,w:0.09,h:0.11},
-  rQuad:  {type:'lerp',from:'rightHip',to:'rightKnee',t:0.45,w:0.09,h:0.11},
-  lHam:   {type:'lerp',from:'leftHip',to:'leftKnee',t:0.45,w:0.07,h:0.1},
-  rHam:   {type:'lerp',from:'rightHip',to:'rightKnee',t:0.45,w:0.07,h:0.1},
-  lCalf:  {type:'lerp',from:'leftKnee',to:'leftAnkle',t:0.45,w:0.07,h:0.1},
-  rCalf:  {type:'lerp',from:'rightKnee',to:'rightAnkle',t:0.45,w:0.07,h:0.1},
-  lAnkle: {type:'joint',joint:'leftAnkle',w:0.06,h:0.05},
-  rAnkle: {type:'joint',joint:'rightAnkle',w:0.06,h:0.05}
-};
-
-// ═══════════════════════════════════════════════════════════
-// ACTIVE MUSCLE MAPPING — Maps exercise det keys to active muscles
-// ═══════════════════════════════════════════════════════════
-const ACTIVE_MUSCLES={
-  neck_tilt:['head','neck','trapUp','lShoulder','rShoulder'],
-  chin_tuck:['head','neck','trapUp'],
-  shoulder_roll:['lShoulder','rShoulder','lBicep','rBicep','trapUp'],
-  pendulum:['lShoulder','rShoulder','lBicep','rBicep'],
-  wrist:['lForearm','rForearm','lBicep','rBicep'],
-  mckenzie:['lumbar','core','lGlute','rGlute'],
-  catcow:['core','lumbar','rhomboid','lLat','rLat'],
-  knee_chest:['lGlute','rGlute','core','lQuad','rQuad'],
-  calf_raise:['lCalf','rCalf','lAnkle','rAnkle'],
-  ankle_circle:['lAnkle','rAnkle','lCalf','rCalf']
-};
 
 // ═══════════════════════════════════════════════════════════
 // MOVEMENT-PREVIEW DEMO — scripted "ghost" avatar shown before
@@ -1924,7 +1840,7 @@ const AIChat={
 
   isPhysioRelated(msg){
     const greeting=/^(hi|hello|hey|hiya|yo|thanks|thank you|ok|okay|sure|yes|no)[.!?]*$/i;
-    const physioTerms=/pain|ache|sore|stiff|injur|sprain|strain|fractur|surgery|post-?op|rehab|physio|therap|exercis|stretch|mobility|posture|recover|swelling|inflam|arthrit|disc|spine|spinal|nerve|tendon|ligament|muscle|joint|weak|numb|tingl|range of motion|balance|fall risk|neck|shoulder|\bback\b|hip|knee|ankle|wrist|elbow|\bfoot\b|feet|\bhand\b|\bleg\b|\barm\b|core|glute|hamstring|quad|calf|cervical|lumbar|thoracic|sciatic/i;
+    const physioTerms=/pain|ache|sore|stiff|injur|sprain|strain|fractur|surgery|post-?op|rehab|physio|therap|exercis|stretch|mobility|posture|recover|swelling|inflam|arthrit|disc|spine|spinal|nerve|tendon|ligament|muscle|joint|weak|numb|tingl|range of motion|balance|fall risk|neck|shoulder|\bback\b|\bhip\b|knee|ankle|wrist|elbow|\bfoot\b|feet|\bhand\b|\bleg\b|\barm\b|\bcore\b|glute|hamstring|quad|\bcalf\b|cervical|lumbar|thoracic|sciatic/i;
     return greeting.test(msg.trim())||physioTerms.test(msg.toLowerCase());
   },
 
@@ -2027,6 +1943,13 @@ const AIChat={
       return;
     }
 
+    // Word-boundary match — plain .includes() lets short keywords like "oa" false-positive
+    // inside unrelated words ("approach", "load"). Short tokens get a boundary; longer,
+    // low-collision phrases can stay as cheap substring checks.
+    function kwMatch(m,kw){
+      return kw.length<=3&&!kw.includes(' ')?new RegExp('\\b'+kw+'\\b','i').test(m):m.includes(kw);
+    }
+
     // Parse clinical metadata from user message
     let location='general';
     let severity=5;
@@ -2045,7 +1968,7 @@ const AIChat={
     };
 
     for(const[loc,keywords]of Object.entries(locations)){
-      if(keywords.some(k=>msg.includes(k))){location=loc;break;}
+      if(keywords.some(k=>kwMatch(msg,k))){location=loc;break;}
     }
 
     const sevMatch=msg.match(/(\d+)\s*\/\s*10|severity\s*(\d+)|(\d+)\s*out\s*of\s*10|(\d+)\/10/i);
@@ -2060,15 +1983,15 @@ const AIChat={
     }else if(msg.includes('chronic')||msg.includes('long term')){duration='chronic';}
     else if(msg.includes('acute')){duration='acute';}
 
-    if(msg.includes('herniation')||msg.includes('disc')||msg.includes('slipped disc'))condition='disc herniation';
-    else if(msg.includes('oa')||msg.includes('osteoarthritis')||msg.includes('degenerative'))condition='osteoarthritis';
-    else if(msg.includes('sprain')||msg.includes('strain'))condition='sprain';
-    else if(msg.includes('tendinitis')||msg.includes('tendinopathy')||msg.includes('tendinosis'))condition='tendinopathy';
-    else if(msg.includes('fracture')||msg.includes('broken'))condition='post-fracture';
-    else if(msg.includes('stroke')||msg.includes('neuro'))condition='neurological';
-    else if(msg.includes('surgery')||msg.includes('post-op')||msg.includes('operative'))condition='post-surgical';
-    else if(msg.includes('bursitis'))condition='bursitis';
-    else if(msg.includes('spondylosis')||msg.includes('stenosis'))condition='degenerative spine';
+    if(kwMatch(msg,'herniation')||kwMatch(msg,'disc')||msg.includes('slipped disc'))condition='disc herniation';
+    else if(kwMatch(msg,'oa')||kwMatch(msg,'osteoarthritis')||kwMatch(msg,'degenerative'))condition='osteoarthritis';
+    else if(kwMatch(msg,'sprain')||kwMatch(msg,'strain'))condition='sprain';
+    else if(kwMatch(msg,'tendinitis')||kwMatch(msg,'tendinopathy')||kwMatch(msg,'tendinosis'))condition='tendinopathy';
+    else if(kwMatch(msg,'fracture')||kwMatch(msg,'broken'))condition='post-fracture';
+    else if(kwMatch(msg,'stroke')||kwMatch(msg,'neuro'))condition='neurological';
+    else if(kwMatch(msg,'surgery')||msg.includes('post-op')||kwMatch(msg,'operative'))condition='post-surgical';
+    else if(kwMatch(msg,'bursitis'))condition='bursitis';
+    else if(kwMatch(msg,'spondylosis')||kwMatch(msg,'stenosis'))condition='degenerative spine';
 
     // Match exercises from PAH library — pick the 2 most relevant, not a full dump
     const recEx=EX.filter(e=>{
@@ -2219,7 +2142,6 @@ function openSession(idx){
   document.getElementById('hud-txt').textContent='STARTING CAMERA';
   document.getElementById('s-ring').style.display='none';
   document.getElementById('s-ang').classList.remove('vis');
-  document.getElementById('model-panel').style.display='none';
   document.getElementById('s-instr').style.display='none';
   document.getElementById('demo-live-trigger').style.display='none';
   setFB('Activate your camera to begin the session.','');
@@ -2239,7 +2161,6 @@ function endSession(){
   document.getElementById('s-canvas').style.display='none';
   document.getElementById('sess').classList.remove('open');
   document.body.style.overflow='';
-  avatarJoints={};
 
   if(sessReps>0&&sessEx){
     const u=loadU();
@@ -2348,10 +2269,6 @@ async function startCamera(){
   cv.width=vw;
   cv.height=vh;
   cv.style.display='block';
-
-  const mc=document.getElementById('model-canvas');
-  mc.width=172;mc.height=284;
-  document.getElementById('model-panel').style.display='block';
 
   // 7. UI state
   document.getElementById('s-ring').style.display='flex';
@@ -2525,7 +2442,6 @@ function onPoseResults(results){
     if(lastLM){
       ctx.globalAlpha=0.35;
       drawSkeleton(ctx,lastLM,cv.width,cv.height);
-      draw3DModel(lastLM);
       ctx.globalAlpha=1.0;
       setFB('Body not fully visible. Please step back into frame.','warn');
     }
@@ -2535,11 +2451,7 @@ function onPoseResults(results){
   const lm=results.poseLandmarks;
   lastLM=lm;
 
-  // Update smoothed avatar joints
-  updateAvatarJoints(lm);
-
   drawSkeleton(ctx,lm,cv.width,cv.height);
-  draw3DModel(lm);
   analyzeExercise(lm,cv.width,cv.height);
 }
 
@@ -2632,171 +2544,6 @@ function drawSkeleton(ctx,lm,W,H){
   ctx.restore();
 }
 
-// ═══════════════════════════════════════════════════════════
-// 3D MUSCLE AVATAR — Real-time landmark-driven
-// ═══════════════════════════════════════════════════════════
-let modelPulse=0;
-
-function draw3DModel(lm){
-  const mc=document.getElementById('model-canvas');
-  if(!mc)return;
-  const ctx=mc.getContext('2d');
-  const W=mc.width;
-  const H=mc.height;
-  ctx.clearRect(0,0,W,H);
-
-  const hasJoints=Object.keys(avatarJoints).length>0;
-  if(!hasJoints){
-    drawStaticAvatar(ctx,W,H);
-    return;
-  }
-
-  modelPulse+=0.06;
-  const activeMuscles=new Set(sessEx?ACTIVE_MUSCLES[sessEx.det]||[]:[]);
-  const scoreNorm=sessScore/100;
-  const activeColor=scoreNorm>0.7?[0,229,160]:scoreNorm>0.4?[245,158,11]:[239,68,68];
-
-  // Mirror to match the mirrored video feed
-  ctx.save();
-  ctx.translate(W,0);
-  ctx.scale(-1,1);
-
-  function pos(jointName){
-    const j=avatarJoints[jointName];
-    if(!j||!j.active)return null;
-    const marginX=0.12;
-    const marginY=0.04;
-    return{
-      x:(j.x*(1-2*marginX)+marginX)*W,
-      y:(j.y*(1-2*marginY)+marginY)*H
-    };
-  }
-
-  function posBetween(a,b,t=0.5){
-    const A=pos(a);
-    const B=pos(b);
-    if(!A||!B)return null;
-    return{x:lerp(A.x,B.x,t),y:lerp(A.y,B.y,t)};
-  }
-
-  // Draw bones
-  const bones=[
-    ['neck','leftShoulder'],['neck','rightShoulder'],
-    ['leftShoulder','leftElbow'],['rightShoulder','rightElbow'],
-    ['leftElbow','leftWrist'],['rightElbow','rightWrist'],
-    ['neck','pelvis'],
-    ['pelvis','leftHip'],['pelvis','rightHip'],
-    ['leftHip','leftKnee'],['rightHip','rightKnee'],
-    ['leftKnee','leftAnkle'],['rightKnee','rightAnkle'],
-    ['leftAnkle','leftFoot'],['rightAnkle','rightFoot']
-  ];
-
-  ctx.lineCap='round';
-  ctx.lineJoin='round';
-
-  bones.forEach(([a,b])=>{
-    const A=pos(a);
-    const B=pos(b);
-    if(!A||!B)return;
-    ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);
-    ctx.strokeStyle='rgba(255,255,255,0.32)';
-    ctx.lineWidth=3.5;
-    ctx.stroke();
-    ctx.beginPath();ctx.arc(A.x,A.y,3,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.55)';
-    ctx.fill();
-  });
-
-  // Draw muscles attached to joints/bones
-  Object.entries(MUSCLE_ATTACHMENTS).forEach(([name,att])=>{
-    let center=null;
-    if(att.type==='joint')center=pos(att.joint);
-    else if(att.type==='lerp')center=posBetween(att.from,att.to,att.t);
-    if(!center)return;
-
-    const isActive=activeMuscles.has(name);
-    const pulse=isActive?(0.6+Math.sin(modelPulse)*0.4):0;
-    const w=att.w*W;
-    const h=att.h*H;
-
-    ctx.save();
-    ctx.translate(center.x,center.y);
-
-    const bg=ctx.createRadialGradient(0,0,0,0,0,Math.max(w,h)/2);
-    if(isActive){
-      const[r,g,b]=activeColor;
-      const alpha=0.15+pulse*0.35;
-      bg.addColorStop(0,`rgba(${r},${g},${b},${alpha})`);
-      bg.addColorStop(1,`rgba(${r},${g},${b},0.02)`);
-    }else{
-      bg.addColorStop(0,'rgba(255,255,255,0.06)');
-      bg.addColorStop(1,'rgba(255,255,255,0.01)');
-    }
-
-    ctx.beginPath();
-    ctx.ellipse(0,0,w/2,h/2,0,0,Math.PI*2);
-    ctx.fillStyle=bg;
-    ctx.fill();
-
-    if(isActive){
-      const[r,g,b]=activeColor;
-      ctx.strokeStyle=`rgba(${r},${g},${b},${0.5+pulse*0.5})`;
-      ctx.lineWidth=1.5;
-      ctx.shadowColor=`rgb(${r},${g},${b})`;
-      ctx.shadowBlur=8;
-      ctx.stroke();
-      ctx.shadowBlur=0;
-
-      ctx.setLineDash([2,3]);
-      ctx.strokeStyle=`rgba(${r},${g},${b},${0.2+pulse*0.3})`;
-      ctx.lineWidth=0.8;
-      for(let i=-1;i<=1;i++){
-        ctx.beginPath();
-        ctx.moveTo(i*w*0.2,-h/2*0.7);
-        ctx.lineTo(i*w*0.2,h/2*0.7);
-        ctx.stroke();
-      }
-      ctx.setLineDash([]);
-    }else{
-      ctx.strokeStyle='rgba(255,255,255,0.08)';
-      ctx.lineWidth=0.8;
-      ctx.stroke();
-    }
-    ctx.restore();
-  });
-
-  // Head
-  const headPos=pos('head');
-  if(headPos){
-    ctx.beginPath();
-    ctx.arc(headPos.x,headPos.y,W*0.075,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.08)';
-    ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,0.15)';
-    ctx.lineWidth=1;
-    ctx.stroke();
-  }
-
-  ctx.restore();
-}
-
-function drawStaticAvatar(ctx,W,H){
-  // Minimal standby avatar when no tracking yet
-  ctx.strokeStyle='rgba(255,255,255,0.08)';
-  ctx.lineWidth=2;
-  ctx.beginPath();
-  ctx.arc(W/2,H*0.12,W*0.08,0,Math.PI*2);
-  ctx.moveTo(W/2,H*0.2);ctx.lineTo(W/2,H*0.55);
-  ctx.moveTo(W/2,H*0.3);ctx.lineTo(W*0.25,H*0.22);
-  ctx.moveTo(W/2,H*0.3);ctx.lineTo(W*0.75,H*0.22);
-  ctx.moveTo(W/2,H*0.55);ctx.lineTo(W*0.3,H*0.85);
-  ctx.moveTo(W/2,H*0.55);ctx.lineTo(W*0.7,H*0.85);
-  ctx.stroke();
-  ctx.fillStyle='rgba(255,255,255,0.5)';
-  ctx.font='600 10px Inter,sans-serif';
-  ctx.textAlign='center';
-  ctx.fillText('Waiting for body...',W/2,H*0.96);
-}
 
 // ═══════════════════════════════════════════════════════════
 // ANGLE & MATH HELPERS
