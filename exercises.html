@@ -101,8 +101,14 @@ a{text-decoration:none;color:inherit}
 .mob-menu .nl{font-size:.88rem;padding:11px 12px}
 
 /* ═══ HERO ═══ */
-#hero{padding:100px 24px 56px;text-align:center}
-.hero-inner{max-width:800px;margin:0 auto}
+#hero{padding:100px 24px 56px;text-align:center;position:relative;overflow:hidden}
+.hero-inner{max-width:800px;margin:0 auto;position:relative;z-index:1}
+.hero-blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0;animation:blobFloat 16s ease-in-out infinite}
+.hero-blob.b1{width:420px;height:420px;top:-180px;left:-120px;background:radial-gradient(circle,rgba(225,29,72,.28),transparent 70%)}
+.hero-blob.b2{width:380px;height:380px;top:-120px;right:-140px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%);animation-delay:-6s}
+.hero-blob.b3{width:300px;height:300px;bottom:-160px;left:40%;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 70%);animation-delay:-11s}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.08)}}
+@media(prefers-reduced-motion:reduce){.hero-blob{animation:none}}
 .hero-tag{
   display:inline-flex;align-items:center;gap:7px;
   font-weight:700;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
@@ -192,6 +198,11 @@ a{text-decoration:none;color:inherit}
 .sec-h{font-size:clamp(1.8rem,4.5vw,3rem);font-weight:900;line-height:1.1;margin-bottom:12px;letter-spacing:-.02em}
 .sec-h span{color:var(--brand)}
 .sec-p{color:var(--muted);font-size:.92rem;line-height:1.78;max-width:560px;margin-bottom:44px}
+
+/* ═══ SCROLL REVEAL ═══ */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
 /* ═══ HOSPITALS ═══ */
 #hospitals{background:linear-gradient(180deg,#060608,#0a0010)}
@@ -375,51 +386,90 @@ a{text-decoration:none;color:inherit}
 }
 
 /* ═══ DASHBOARD ═══ */
-#dashboard{background:linear-gradient(180deg,#060608,#0a0010)}
 .dash-greet{
-  background:rgba(225,29,72,.07);border:1px solid rgba(225,29,72,.15);
-  border-radius:16px;padding:22px 26px;margin-bottom:28px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  background:rgba(225,29,72,.06);border:1px solid rgba(225,29,72,.16);
+  border-radius:20px;padding:24px 28px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;
 }
-.dash-greet-text h3{font-size:1.1rem;font-weight:800;margin-bottom:3px}
-.dash-greet-text p{color:var(--muted);font-size:.82rem}
-.dash-greet-badge{
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  border-radius:100px;padding:7px 18px;font-family:'Poppins',sans-serif;font-weight:700;
-  font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:7px;
+.dash-greet-text h3{font-size:1.2rem;font-weight:800;margin-bottom:4px}
+.dash-greet-text p{color:var(--muted);font-size:.83rem}
+.dash-streak-ring{position:relative;width:64px;height:64px;flex-shrink:0}
+.dash-streak-ring svg{width:64px;height:64px}
+.dash-streak-ring-txt{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-.dash-greet-badge svg{width:14px;height:14px;stroke:var(--accent)}
-.dash-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:16px}
-.dash-m{background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px}
-.dash-m-lbl{font-size:.59rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:700;display:flex;align-items:center;gap:5px}
-.dash-m-lbl svg{width:12px;height:12px;stroke:var(--muted)}
-.dash-m-val{font-size:2rem;font-weight:800;font-family:'Poppins',sans-serif;color:var(--brand)}
-.dash-m-sub{font-size:.69rem;color:var(--muted);margin-top:4px}
-.dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.dash-card{background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px}
-.dash-card-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.dash-streak-ring-txt strong{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.05rem;line-height:1;color:#fff}
+.dash-streak-ring-txt span{font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.dash-m{
+  background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:22px;
+  transition:border-color .25s,transform .25s;
+}
+.dash-m:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
+.dash-m-ic{
+  width:36px;height:36px;border-radius:10px;background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:14px;
+}
+.dash-m-ic svg{width:17px;height:17px;stroke:var(--brand)}
+.dash-m-val{font-size:2.1rem;font-weight:800;font-family:'Poppins',sans-serif;color:#fff;line-height:1}
+.dash-m-lbl{font-size:.7rem;color:var(--muted);margin-top:6px}
+.dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dash-card{background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:22px}
+.dash-card-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:18px;display:flex;align-items:center;gap:7px}
 .dash-card-t svg{width:15px;height:15px;stroke:var(--brand)}
-#weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:5px}
-.wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%}
-.wbar-track{width:100%;background:rgba(255,255,255,.03);border-radius:3px;flex:1;position:relative;overflow:hidden}
-.wbar-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--brand),var(--accent));border-radius:3px;transition:height 1.2s ease}
-.wbar-lbl{font-size:.59rem;color:var(--muted);font-weight:600}
-#recent-list{display:flex;flex-direction:column;gap:6px}
-.recent-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}
+#weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:6px}
+.wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+.wbar-track{width:100%;background:rgba(255,255,255,.03);border-radius:4px;flex:1;position:relative;overflow:hidden}
+.wbar-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--brand),var(--accent));border-radius:4px;transition:height 1.2s cubic-bezier(.2,.8,.2,1)}
+.wbar-lbl{font-size:.6rem;color:var(--muted);font-weight:600}
+#recent-list{display:flex;flex-direction:column;gap:7px}
+.recent-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);transition:border-color .2s}
+.recent-row:hover{border-color:rgba(225,29,72,.25)}
 .recent-name{font-weight:700;font-size:.79rem}
 .recent-date{font-size:.6rem;color:var(--muted);margin-top:1px}
 .recent-reps{font-size:.9rem;font-weight:800;color:var(--brand);text-align:right}
 .recent-form{font-size:.6rem;color:var(--muted);text-align:right;margin-top:1px}
 .dash-empty{color:var(--muted);font-size:.78rem;text-align:center;padding:24px 0}
+@media(max-width:1024px){.dash-metrics{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.dash-grid2{grid-template-columns:1fr}}
+@media(max-width:540px){.dash-metrics{grid-template-columns:1fr 1fr}}
 
-/* ═══ AI COACH ═══ */
-#ai-coach{background:#060608}
-.coach-wrap{background:rgba(10,10,18,1);border:1px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:520px;max-width:900px;margin:0 auto}
+/* ═══ FLOATING AI COACH WIDGET ═══ */
+.coach-fab{
+  position:fixed;bottom:24px;right:24px;z-index:800;
+  width:58px;height:58px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 32px rgba(225,29,72,.45);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
+}
+.coach-fab:hover{transform:scale(1.07);box-shadow:0 14px 40px rgba(225,29,72,.6)}
+.coach-fab svg{width:24px;height:24px;stroke:#fff;transition:opacity .15s,transform .2s}
+.coach-fab .ic-close{position:absolute;top:50%;left:50%;margin:-12px 0 0 -12px;opacity:0;transform:rotate(-45deg) scale(.7)}
+.coach-fab.open .ic-chat{opacity:0;transform:rotate(45deg) scale(.7)}
+.coach-fab.open .ic-close{opacity:1;transform:rotate(0) scale(1)}
+.coach-fab-badge{
+  position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;
+  background:#00e5a0;border:2px solid #060608;
+}
+.coach-panel{
+  position:fixed;bottom:94px;right:24px;z-index:799;
+  width:min(370px,calc(100vw - 32px));height:min(560px,calc(100vh - 130px));
+  background:rgba(10,10,18,.98);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.09);border-radius:20px;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);
+  opacity:0;transform:translateY(16px) scale(.97);pointer-events:none;
+  transition:opacity .25s ease,transform .25s cubic-bezier(.2,.8,.2,1);
+  transform-origin:bottom right;
+}
+.coach-panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.coach-wrap{background:transparent;display:flex;flex-direction:column;height:100%}
 .coach-head{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:12px}
 .coach-av{width:36px;height:36px;border-radius:10px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:.8rem;flex-shrink:0}
 .coach-online{display:flex;align-items:center;gap:5px;margin-top:2px;font-size:.61rem;color:#00e5a0}
 .cdot{width:6px;height:6px;border-radius:50%;background:#00e5a0;animation:cdblink 2s infinite}
 @keyframes cdblink{0%,100%{opacity:1}50%{opacity:.3}}
+.coach-scope-note{font-size:.62rem;color:var(--submuted);padding:0 14px 10px;line-height:1.5}
 #chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
 .cm{max-width:88%;padding:11px 14px;border-radius:14px;font-size:.81rem;line-height:1.65}
 .cm.bot{background:rgba(255,255,255,.04);align-self:flex-start;border:1px solid rgba(255,255,255,.06)}
@@ -432,11 +482,16 @@ a{text-decoration:none;color:inherit}
 #chat-in{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:11px;padding:10px 14px;color:#fff;font-family:'Inter',sans-serif;font-size:.81rem;outline:none}
 #chat-in:focus{border-color:var(--brand)}
 #chat-in::placeholder{color:var(--muted)}
-.chat-send{background:var(--brand);color:#fff;border:none;border-radius:11px;padding:10px 15px;display:flex;align-items:center;justify-content:center}
+.chat-send{background:var(--brand);color:#fff;border:none;border-radius:11px;padding:10px 15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .chat-send svg{width:15px;height:15px;stroke:#fff;fill:none}
 .tydot{width:7px;height:7px;border-radius:50%;background:var(--brand);display:inline-block;margin-right:3px;animation:tyd 1s ease-in-out infinite}
 .tydot:nth-child(2){animation-delay:.15s}.tydot:nth-child(3){animation-delay:.3s}
 @keyframes tyd{0%,100%{opacity:.3}50%{opacity:1}}
+@media(max-width:540px){
+  .coach-panel{right:16px;bottom:88px;width:calc(100vw - 32px)}
+  .coach-fab{right:16px;bottom:18px}
+  #scroll-top{right:82px;bottom:24px}
+}
 
 /* ═══ SESSION FULLSCREEN ═══ */
 #sess{position:fixed;inset:0;z-index:2000;background:#000;opacity:0;visibility:hidden;transition:opacity .3s ease}
@@ -669,6 +724,15 @@ a{text-decoration:none;color:inherit}
 .f-bot-lks a{color:var(--submuted);font-size:.69rem;transition:color .2s}
 .f-bot-lks a:hover{color:#fff}
 
+/* ═══ INTERACTION CONSISTENCY ═══ */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--brand);outline-offset:2px;border-radius:4px;
+}
+.ex-start-btn:active,.hosp-btn:active,.prod-find-btn:active,.pill:active,.gate-btn:active{transform:scale(.97)}
+.nl{position:relative}
+.nl::after{content:'';position:absolute;left:13px;right:13px;bottom:1px;height:2px;background:var(--brand);border-radius:2px;transform:scaleX(0);transition:transform .25s ease}
+.nl:hover::after{transform:scaleX(1)}
+
 /* ═══ UTILITIES ═══ */
 .toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);
@@ -679,7 +743,7 @@ a{text-decoration:none;color:inherit}
 }
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 #scroll-top{
-  position:fixed;bottom:24px;right:24px;z-index:400;
+  position:fixed;bottom:30px;right:92px;z-index:400;
   width:40px;height:40px;border-radius:50%;background:var(--brand);border:none;color:#fff;
   display:none;align-items:center;justify-content:center;
   box-shadow:0 4px 18px rgba(225,29,72,.4);transition:transform .2s;
@@ -689,11 +753,10 @@ a{text-decoration:none;color:inherit}
 #scroll-top svg{width:16px;height:16px;stroke:#fff}
 
 /* ═══ RESPONSIVE ═══ */
-@media(max-width:1024px){.dash-metrics{grid-template-columns:repeat(2,1fr)}.footer-cols{grid-template-columns:1fr 1fr}}
+@media(max-width:1024px){.footer-cols{grid-template-columns:1fr 1fr}}
 @media(max-width:768px){
   .nav-links{display:none}.ham{display:flex}
   #navbar{padding:0 18px}
-  .dash-grid2{grid-template-columns:1fr}
   .docs-grid,.prod-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
@@ -708,7 +771,6 @@ a{text-decoration:none;color:inherit}
   .footer-cols{grid-template-columns:1fr}
   #ex-grid{grid-template-columns:1fr}
   .docs-grid,.prod-grid{grid-template-columns:1fr}
-  .dash-metrics{grid-template-columns:1fr 1fr}
   .s-stat-v{font-size:1.1rem}
   .gate-wrap{padding:28px 22px}
   .frow{grid-template-columns:1fr}
@@ -756,9 +818,8 @@ a{text-decoration:none;color:inherit}
   <div class="nav-links">
     <a href="#hero" class="nl">Exercises</a>
     <a href="#hospitals" class="nl">Hospitals</a>
-    <a href="#researche" class="nl">Researches</a>
+    <a href="#research" class="nl">Research</a>
     <a href="#products" class="nl">Products</a>
-    <a href="#ai-coach" class="nl">AI Coach</a>
     <a href="#dashboard" class="nl">Dashboard</a>
   </div>
   <div class="nav-right">
@@ -778,18 +839,20 @@ a{text-decoration:none;color:inherit}
 </nav>
 <div class="mob-menu" id="mob-nav">
   <a href="#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
-  <a href="#doctors" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Doctors</a>
+  <a href="#hospitals" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
+  <a href="#research" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
   <a href="#products" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Products</a>
-  <a href="#ai-coach" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">AI Coach</a>
-  <a href="#dashboard" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Dashboard</a>
 </div>
 
 <!-- ══════════ HERO ══════════ -->
 <section id="hero">
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="hero-blob b3"></div>
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Clinical AI Tracking · 3D Muscle Map · 25 Exercises
+      Clinical AI Tracking · 3D Muscle Map · 10 Exercises
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">Good <span id="hero-time">day</span>, <strong id="hero-name">—</strong>. Ready for your session?</div>
     <h1 class="hero-h">Your <span>Recovery</span><br>Guided by AI</h1>
@@ -799,15 +862,13 @@ a{text-decoration:none;color:inherit}
     </div>
     <div class="pills" id="pills">
       <button class="pill on" data-f="all" onclick="setPill(this,'all')">All</button>
-      <button class="pill" data-f="Beginner" onclick="setPill(this,'Beginner')">Beginner</button>
-      <button class="pill" data-f="Intermediate" onclick="setPill(this,'Intermediate')">Intermediate</button>
-      <button class="pill" data-f="Advanced" onclick="setPill(this,'Advanced')">Advanced</button>
       <button class="pill" data-f="Neck" onclick="setPill(this,'Neck')">Neck</button>
       <button class="pill" data-f="Shoulder" onclick="setPill(this,'Shoulder')">Shoulder</button>
       <button class="pill" data-f="Back" onclick="setPill(this,'Back')">Back</button>
       <button class="pill" data-f="Hip" onclick="setPill(this,'Hip')">Hip</button>
       <button class="pill" data-f="Knee" onclick="setPill(this,'Knee')">Knee</button>
       <button class="pill" data-f="Ankle" onclick="setPill(this,'Ankle')">Ankle</button>
+      <button class="pill" data-f="Wrist" onclick="setPill(this,'Wrist')">Wrist</button>
     </div>
   </div>
 </section>
@@ -847,92 +908,48 @@ a{text-decoration:none;color:inherit}
   </div>
 </section>
 
-<!-- ══════════ AI COACH ══════════ -->
-<section class="section" id="ai-coach" style="background:linear-gradient(180deg,#060608,#0a0010)">
-  <div class="sec-in" style="max-width:920px">
-    <span class="sec-tag">AI Physiotherapist</span>
-    <h2 class="sec-h">Describe Your <span>Pain</span></h2>
-    <p class="sec-p">Tell our AI your pain location, severity (1-10), and duration. It builds a personalized evidence-based rehabilitation program instantly.</p>
-    <div class="coach-wrap">
-      <div class="coach-head">
-        <div class="coach-av">AI</div>
-        <div>
-          <div style="font-weight:800;font-size:.92rem;font-family:'Poppins',sans-serif">PAH Clinical AI</div>
-          <div class="coach-online"><span class="cdot"></span>Online — Evidence-Based Protocol</div>
-        </div>
-      </div>
-      <div id="chat-msgs">
-        <div class="cm bot"><strong>PAH Clinical AI</strong>Hello! Describe your pain — location, severity (1-10), and how long you have had it. I will build a personalized rehabilitation program based on clinical evidence.</div>
-        <div class="cm bot"><strong>Quick Start</strong>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
-            <span class="qchip" onclick="AIChat.send('lower back pain L4-L5 disc herniation severity 7/10 for 3 weeks')">L4-L5 Back Pain</span>
-            <span class="qchip" onclick="AIChat.send('neck pain cervical spondylosis stiffness severity 6/10')">Cervical Neck</span>
-            <span class="qchip" onclick="AIChat.send('shoulder pain rotator cuff impingement severity 5/10')">Shoulder</span>
-            <span class="qchip" onclick="AIChat.send('knee pain osteoarthritis severity 6/10')">Knee OA</span>
-            <span class="qchip" onclick="AIChat.send('hip pain gluteal tightness sciatic nerve severity 5/10')">Hip and Sciatic</span>
-            <span class="qchip" onclick="AIChat.send('ankle sprain grade 2 rehabilitation 2 weeks post injury')">Ankle Sprain</span>
-          </div>
-        </div>
-      </div>
-      <div class="chat-row">
-        <input id="chat-in" type="text" placeholder="e.g. lower back pain 7/10 for 3 weeks..." onkeypress="if(event.key==='Enter')AIChat.send()">
-        <button class="chat-send" onclick="AIChat.send()">
-          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ DASHBOARD ══════════ -->
-<section class="section" id="dashboard" style="background:#060608">
+<section class="section" id="dashboard" style="background:linear-gradient(180deg,#060608,#0a0010)">
   <div class="sec-in">
     <span class="sec-tag">Your Recovery Dashboard</span>
     <h2 class="sec-h">Track Your <span>Progress</span></h2>
+    <p class="sec-p">Every session you complete is saved on this device — no account needed. Watch your streak, reps, and form score build over time.</p>
+
     <div class="dash-greet" id="dash-greet">
       <div class="dash-greet-text">
         <h3 id="dash-greet-h">Welcome to PAH</h3>
         <p id="dash-greet-p">Your rehabilitation journey starts here.</p>
       </div>
-      <div class="dash-greet-badge">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor" stroke="none"/></svg>
-        <span id="dash-streak-badge">0 day streak</span>
+      <div class="dash-streak-ring" id="dash-streak-ring">
+        <svg viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="27" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"/>
+          <circle id="dash-ring-c" cx="32" cy="32" r="27" fill="none" stroke="url(#dashRingGrad)" stroke-width="5"
+            stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 32 32)"
+            style="transition:stroke-dashoffset .8s ease"/>
+          <defs><linearGradient id="dashRingGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e11d48"/><stop offset="100%" stop-color="#fb7185"/></linearGradient></defs>
+        </svg>
+        <div class="dash-streak-ring-txt"><strong id="dash-streak-num">0</strong><span>day streak</span></div>
       </div>
     </div>
+
     <div class="dash-metrics">
       <div class="dash-m">
-        <div class="dash-m-lbl">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Day Streak
-        </div>
-        <div class="dash-m-val" id="d-streak">0</div>
-        <div class="dash-m-sub">consecutive days</div>
-      </div>
-      <div class="dash-m">
-        <div class="dash-m-lbl">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Sessions
-        </div>
+        <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
         <div class="dash-m-val" id="d-sessions">0</div>
-        <div class="dash-m-sub">total completed</div>
+        <div class="dash-m-lbl">Sessions Completed</div>
       </div>
       <div class="dash-m">
-        <div class="dash-m-lbl">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          Total Reps
-        </div>
+        <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
         <div class="dash-m-val" id="d-reps">0</div>
-        <div class="dash-m-sub">reps performed</div>
+        <div class="dash-m-lbl">Total Reps Performed</div>
       </div>
       <div class="dash-m">
-        <div class="dash-m-lbl">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          Form Score
-        </div>
-        <div class="dash-m-val" id="d-form">--</div>
-        <div class="dash-m-sub">average accuracy</div>
+        <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="dash-m-val" id="d-form">—</div>
+        <div class="dash-m-lbl">Average Form Score</div>
       </div>
     </div>
+
     <div class="dash-grid2">
       <div class="dash-card">
         <div class="dash-card-t">
@@ -1101,8 +1118,8 @@ a{text-decoration:none;color:inherit}
       <div class="f-hd">Platform</div>
       <div class="f-lks">
         <a href="#hero">Exercises</a>
-        <a href="#ai-coach">AI Coach</a>
-        <a href="#dashboard">Dashboard</a>
+        <a href="#hospitals">Hospitals</a>
+        <a href="#research">Research</a>
         <a href="index.html">3D Body Map</a>
       </div>
     </div>
@@ -1134,6 +1151,42 @@ a{text-decoration:none;color:inherit}
   <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
 </button>
 
+<!-- ══════════ FLOATING AI COACH ══════════ -->
+<div class="coach-panel" id="coach-panel">
+  <div class="coach-wrap">
+    <div class="coach-head">
+      <div class="coach-av">AI</div>
+      <div>
+        <div style="font-weight:800;font-size:.92rem;font-family:'Poppins',sans-serif">PAH Clinical AI</div>
+        <div class="coach-online"><span class="cdot"></span>Online — Evidence-Based Protocol</div>
+      </div>
+    </div>
+    <div class="coach-scope-note">Physiotherapy questions only — pain, injuries, exercises and rehabilitation.</div>
+    <div id="chat-msgs">
+      <div class="cm bot"><strong>PAH Clinical AI</strong>Hello! Describe your pain — location, severity (1-10), and how long you have had it. I will build a personalized rehabilitation program based on clinical evidence.</div>
+      <div class="cm bot"><strong>Quick Start</strong>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
+          <span class="qchip" onclick="AIChat.send('neck pain cervical spondylosis stiffness severity 6/10')">Neck Pain</span>
+          <span class="qchip" onclick="AIChat.send('shoulder pain rotator cuff impingement severity 5/10')">Shoulder Pain</span>
+          <span class="qchip" onclick="AIChat.send('lower back pain L4-L5 disc herniation severity 7/10 for 3 weeks')">Back Pain</span>
+          <span class="qchip" onclick="AIChat.send('ankle sprain grade 2 rehabilitation 2 weeks post injury')">Ankle Sprain</span>
+        </div>
+      </div>
+    </div>
+    <div class="chat-row">
+      <input id="chat-in" type="text" placeholder="e.g. lower back pain 7/10 for 3 weeks..." onkeypress="if(event.key==='Enter')AIChat.send()">
+      <button class="chat-send" onclick="AIChat.send()">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+<button class="coach-fab" id="coach-fab" onclick="toggleCoach()" aria-label="Open AI physiotherapy coach" title="Ask the AI physio coach">
+  <span class="coach-fab-badge"></span>
+  <svg class="ic-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+  <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+</button>
+
 <!-- ══════════════════════════════════════════════════════════
      MEDIAPIPE POSE (loaded async after DOM ready)
 ══════════════════════════════════════════════════════════════ -->
@@ -1151,6 +1204,17 @@ function toast(msg,d=2800){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),d);
+}
+
+// ── Floating AI Coach open/close ──
+function toggleCoach(open){
+  const panel=document.getElementById('coach-panel');
+  const fab=document.getElementById('coach-fab');
+  const willOpen=typeof open==='boolean'?open:!panel.classList.contains('open');
+  panel.classList.toggle('open',willOpen);
+  fab.classList.toggle('open',willOpen);
+  fab.setAttribute('aria-label',willOpen?'Close AI physiotherapy coach':'Open AI physiotherapy coach');
+  if(willOpen)setTimeout(()=>document.getElementById('chat-in').focus(),260);
 }
 window.addEventListener('scroll',()=>{
   document.getElementById('scroll-top').classList.toggle('vis',window.scrollY>400);
@@ -1244,29 +1308,15 @@ const MUSCLE_ATTACHMENTS={
 // ═══════════════════════════════════════════════════════════
 const ACTIVE_MUSCLES={
   neck_tilt:['head','neck','trapUp','lShoulder','rShoulder'],
-  neck_side:['head','neck','trapUp','lShoulder','rShoulder'],
   chin_tuck:['head','neck','trapUp'],
   shoulder_roll:['lShoulder','rShoulder','lBicep','rBicep','trapUp'],
-  arm_raise:['lShoulder','rShoulder','lBicep','rBicep','lLat','rLat','trapUp'],
   pendulum:['lShoulder','rShoulder','lBicep','rBicep'],
   wrist:['lForearm','rForearm','lBicep','rBicep'],
-  thoracic_rot:['core','lumbar','lLat','rLat','lShoulder','rShoulder'],
   mckenzie:['lumbar','core','lGlute','rGlute'],
   catcow:['core','lumbar','rhomboid','lLat','rLat'],
-  hip_hinge:['lumbar','core','lGlute','rGlute','lHam','rHam'],
-  hamstring:['lHam','rHam','lumbar','lGlute','rGlute','lCalf','rCalf'],
-  slr:['lQuad','rQuad','core','lGlute','rGlute'],
-  glute_bridge:['lGlute','rGlute','lHam','rHam','core','lumbar'],
-  lateral_raise:['lGlute','rGlute','core'],
   knee_chest:['lGlute','rGlute','core','lQuad','rQuad'],
   calf_raise:['lCalf','rCalf','lAnkle','rAnkle'],
-  ankle_circle:['lAnkle','rAnkle','lCalf','rCalf'],
-  wall_angel:['lShoulder','rShoulder','trapUp','rhomboid','lBicep','rBicep'],
-  tke:['lQuad','rQuad','lGlute','rGlute'],
-  prone_hip:['lGlute','rGlute','lumbar','lHam','rHam'],
-  sit_stand:['lQuad','rQuad','lGlute','rGlute','core'],
-  balance:['lCalf','rCalf','lAnkle','rAnkle','core','lGlute','rGlute'],
-  posture:['head','neck','trapUp','lShoulder','rShoulder','core','lumbar','lGlute','rGlute']
+  ankle_circle:['lAnkle','rAnkle','lCalf','rCalf']
 };
 
 // ═══════════════════════════════════════════════════════════
@@ -1315,66 +1365,28 @@ function easeInOutSine(x){return -(Math.cos(Math.PI*Math.max(0,Math.min(1,x)))-1
 
 const DEMO_DEFS={
   neck_tilt:{kind:'hold',peak:{head:{x:.40,y:.115}},steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold 3 seconds'],highlight:['head','neck']},
-  neck_side:{kind:'hold',peak:{head:{x:.40,y:.115}},steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold'],highlight:['head','neck']},
   chin_tuck:{kind:'hold',peak:{head:{x:.5,y:.135}},steps:['Start with a neutral head position','Draw chin straight back — hold 5 seconds'],highlight:['head','neck']},
   shoulder_roll:{kind:'param',period:2400,param:(theta)=>{const dx=.035*Math.sin(theta),dy=-.03*(1-Math.cos(theta));
       return{leftShoulder:{x:DEMO_REST.leftShoulder.x+dx,y:DEMO_REST.leftShoulder.y+dy},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx,y:DEMO_REST.rightShoulder.y+dy},
              leftElbow:{x:DEMO_REST.leftElbow.x+dx*.7,y:DEMO_REST.leftElbow.y+dy*.7},rightElbow:{x:DEMO_REST.rightElbow.x+dx*.7,y:DEMO_REST.rightElbow.y+dy*.7}};},
     steps:['Roll both shoulders in large backward circles'],highlight:['leftShoulder','rightShoulder']},
-  arm_raise:{kind:'hold',peak:{leftElbow:{x:.37,y:.10},leftWrist:{x:.40,y:.02},rightElbow:{x:.63,y:.10},rightWrist:{x:.60,y:.02}},
-    steps:['Arms relaxed at your sides','Raise both arms fully overhead — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
-  wall_angel:{kind:'hold',peak:{leftElbow:{x:.35,y:.14},leftWrist:{x:.37,y:.04},rightElbow:{x:.65,y:.14},rightWrist:{x:.63,y:.04}},
-    steps:['Back flat against wall, arms in a W','Slide arms up into a Y — hold'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
   pendulum:{kind:'param',period:2200,base:{rightElbow:{x:.64,y:.42}},param:(theta)=>({rightWrist:{x:.66+.05*Math.sin(theta),y:.60+.03*Math.cos(theta)}}),
     steps:['Lean forward, let the arm hang loose — small gravity-driven circles'],highlight:['rightShoulder','rightWrist']},
   wrist:{kind:'param',period:2000,base:{leftElbow:{x:.30,y:.40},rightElbow:{x:.70,y:.40}},
     param:(theta)=>{const o=.045*Math.sin(theta);return{leftWrist:{x:.16,y:.40+o},rightWrist:{x:.84,y:.40-o}};},
     steps:['Extend arms forward, flex wrist up and down'],highlight:['leftWrist','rightWrist']},
-  thoracic_rot:{kind:'param',period:2800,param:(theta,s)=>{const dx=.05*s;
-      return{leftShoulder:{x:DEMO_REST.leftShoulder.x-dx,y:DEMO_REST.leftShoulder.y+Math.abs(dx)*.3},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx,y:DEMO_REST.rightShoulder.y+Math.abs(dx)*.3},
-             leftElbow:{x:DEMO_REST.leftElbow.x-dx*.8},rightElbow:{x:DEMO_REST.rightElbow.x+dx*.8}};},
-    steps:['Rotate upper body fully to each side, hips stay forward'],highlight:['leftShoulder','rightShoulder']},
   mckenzie:{kind:'hold',base:{leftWrist:{x:.44,y:.56},rightWrist:{x:.56,y:.56},leftElbow:{x:.40,y:.46},rightElbow:{x:.60,y:.46}},
     peak:{neck:{x:.5,y:.175},head:{x:.52,y:.065},leftShoulder:{x:.39,y:.195},rightShoulder:{x:.61,y:.195}},
     steps:['Hands on lower back, stand tall','Arch backward gently — hold 3 seconds'],highlight:['neck','pelvis']},
   catcow:{kind:'hold',base:{neck:{x:.5,y:.175},head:{x:.5,y:.06}},
     peak:{neck:{x:.5,y:.235},head:{x:.5,y:.16},pelvis:{x:.5,y:.54},leftShoulder:{x:.40,y:.25},rightShoulder:{x:.60,y:.25}},
     steps:['Arch your spine fully — cow','Round your spine fully — cat'],highlight:['neck','pelvis']},
-  hip_hinge:{kind:'hold',peak:{neck:{x:.5,y:.34},head:{x:.5,y:.24},leftShoulder:{x:.39,y:.35},rightShoulder:{x:.61,y:.35},
-      leftElbow:{x:.35,y:.47},rightElbow:{x:.65,y:.47},leftWrist:{x:.33,y:.58},rightWrist:{x:.67,y:.58},
-      leftHip:{x:.42,y:.555},rightHip:{x:.58,y:.555},leftKnee:{x:.41,y:.74},rightKnee:{x:.59,y:.74}},
-    steps:['Stand tall, feet shoulder-width','Push hips back, spine flat, hinge forward'],highlight:['pelvis','leftHip','rightHip']},
-  hamstring:{kind:'hold',peak:{neck:{x:.5,y:.42},head:{x:.5,y:.33},leftShoulder:{x:.40,y:.43},rightShoulder:{x:.60,y:.43},
-      leftElbow:{x:.38,y:.56},rightElbow:{x:.62,y:.56},leftWrist:{x:.40,y:.70},rightWrist:{x:.60,y:.70}},
-    steps:['Stand tall, hip-width stance','Hinge forward, reach toward the floor — hold 5 seconds'],highlight:['leftKnee','rightKnee']},
-  slr:{kind:'hold',peak:{rightKnee:{x:.60,y:.60},rightAnkle:{x:.63,y:.46},rightFoot:{x:.65,y:.44}},
-    steps:['Stand tall against a wall','Raise straight leg to hip height — hold 2 seconds'],highlight:['rightHip','rightKnee']},
-  glute_bridge:{kind:'hold',base:{leftKnee:{x:.42,y:.70},rightKnee:{x:.58,y:.70}},
-    peak:{pelvis:{x:.5,y:.515},leftHip:{x:.435,y:.525},rightHip:{x:.565,y:.525}},
-    steps:['Lying down, knees bent (shown standing for clarity)','Drive hips up, squeeze glutes — hold'],highlight:['pelvis','leftHip','rightHip']},
-  lateral_raise:{kind:'hold',peak:{rightKnee:{x:.68,y:.75},rightAnkle:{x:.75,y:.92},rightFoot:{x:.78,y:.955}},
-    steps:['Stand tall, feet together','Raise leg straight out to the side — hold'],highlight:['rightHip','rightKnee']},
-  hip_abduction:{kind:'hold',peak:{rightKnee:{x:.68,y:.75},rightAnkle:{x:.75,y:.92},rightFoot:{x:.78,y:.955}},
-    steps:['Stand tall, feet together','Raise leg straight out to the side — hold'],highlight:['rightHip','rightKnee']},
   knee_chest:{kind:'hold',peak:{rightKnee:{x:.52,y:.46},rightAnkle:{x:.50,y:.40},rightFoot:{x:.49,y:.42}},
     steps:['Stand tall','Pull one knee up toward your chest — hold 3 seconds'],highlight:['rightHip','rightKnee']},
   calf_raise:{kind:'hold',peak:shiftAllY(-.03),
     steps:['Stand flat on both feet','Rise fully onto tiptoes — hold at the top'],highlight:['leftAnkle','rightAnkle']},
   ankle_circle:{kind:'param',period:2400,param:(theta)=>({rightFoot:{x:.64+.035*Math.cos(theta),y:.955+.025*Math.sin(theta)}}),
     steps:['Rotate ankle in full circles, both directions'],highlight:['rightAnkle']},
-  tke:{kind:'hold',base:{rightKnee:{x:.585,y:.73},rightAnkle:{x:.56,y:.86},rightFoot:{x:.55,y:.89}},
-    peak:{rightKnee:{x:DEMO_REST.rightKnee.x,y:DEMO_REST.rightKnee.y},rightAnkle:{x:DEMO_REST.rightAnkle.x,y:DEMO_REST.rightAnkle.y},rightFoot:{x:DEMO_REST.rightFoot.x,y:DEMO_REST.rightFoot.y}},
-    steps:['Start with a slight knee bend','Straighten knee fully, contract the quad — hold'],highlight:['rightKnee']},
-  prone_hip:{kind:'hold',peak:{rightAnkle:{x:.62,y:.85},rightFoot:{x:.65,y:.83}},
-    steps:['Lying face down (shown standing for clarity)','Extend leg straight back and up — hold'],highlight:['rightHip']},
-  sit_stand:{kind:'hold',peak:{pelvis:{x:.5,y:.63},leftHip:{x:.435,y:.635},rightHip:{x:.565,y:.635},
-      leftKnee:{x:.40,y:.72},rightKnee:{x:.60,y:.72},neck:{x:.5,y:.28},head:{x:.5,y:.19},leftShoulder:{x:.39,y:.30},rightShoulder:{x:.61,y:.30}},
-    steps:['Seated position, feet flat','Rise to standing without using your hands'],highlight:['pelvis','leftKnee','rightKnee']},
-  balance:{kind:'param',period:3200,base:{rightKnee:{x:.55,y:.70},rightAnkle:{x:.53,y:.78},rightFoot:{x:.52,y:.80}},
-    param:(theta,s)=>{const dx=.015*s;return{leftShoulder:{x:DEMO_REST.leftShoulder.x+dx},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx},
-      leftHip:{x:DEMO_REST.leftHip.x+dx},pelvis:{x:.5+dx}};},
-    steps:['Balance on one leg, fix your gaze ahead'],highlight:['leftAnkle']},
-  posture:{kind:'static',steps:['Stand naturally, arms relaxed — we scan your alignment'],highlight:[]},
   _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
 };
 
@@ -1545,10 +1557,11 @@ function initApp(acc){
   document.getElementById('dash-greet-h').textContent='Good '+time+', '+first;
   document.getElementById('dash-greet-p').textContent=
     u.sessions===0
-      ?'Your rehabilitation journey starts today. Complete your first session below.'
+      ?'Your rehabilitation journey starts today. Complete your first session above.'
       :'You have completed '+u.sessions+' sessions and '+u.reps+' total reps. Keep going!';
   renderDash();
   renderNavStreak();
+  greetReturningUser(first,u);
 }
 
 function renderNavStreak(){
@@ -1557,7 +1570,6 @@ function renderNavStreak(){
     document.getElementById('nav-streak').style.display='flex';
     document.getElementById('nav-streak-val').textContent=u.streak;
   }
-  document.getElementById('dash-streak-badge').textContent=u.streak+' day streak';
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1565,13 +1577,15 @@ function renderNavStreak(){
 // ═══════════════════════════════════════════════════════════
 function renderDash(){
   const u=loadU();
-  document.getElementById('d-streak').textContent=u.streak;
+  document.getElementById('dash-streak-num').textContent=u.streak;
+  const ringPerc=Math.min(u.streak/14,1); // full ring at a 2-week streak
+  document.getElementById('dash-ring-c').style.strokeDashoffset=169.6*(1-ringPerc);
   document.getElementById('d-sessions').textContent=u.sessions;
   document.getElementById('d-reps').textContent=u.reps;
   const avg=u.formScores.length
     ?Math.round(u.formScores.reduce((a,b)=>a+b,0)/u.formScores.length)
     :null;
-  document.getElementById('d-form').textContent=avg!=null?avg+'%':'--';
+  document.getElementById('d-form').textContent=avg!=null?avg+'%':'—';
 
   const days=['M','T','W','T','F','S','S'];
   const maxR=Math.max(...u.weeklyReps,1);
@@ -1591,6 +1605,21 @@ function renderDash(){
       <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.date}</div></div>
       <div><div class="recent-reps">${r.reps} reps</div><div class="recent-form">${r.form}% form</div></div>
     </div>`).join('');
+}
+
+// ── Returning-user greeting (once per browser session) ──
+function greetReturningUser(first,u){
+  if(sessionStorage.getItem('pah_greeted'))return;
+  sessionStorage.setItem('pah_greeted','1');
+  const msg=u.sessions===0
+    ?`Welcome, ${first}! Pick an exercise below to start your first session.`
+    :u.streak>0
+    ?`Welcome back, ${first}! You're on a ${u.streak}-day streak — nice work.`
+    :`Welcome back, ${first}! Ready to continue your recovery?`;
+  setTimeout(()=>{
+    toast(msg,4200);
+    VoiceCoach.speak(msg,{priority:false});
+  },700);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1618,12 +1647,6 @@ const EX=[
     muscles:['Deltoid','Upper Trapezius','Rhomboids','Serratus Anterior'],
     angles:{main:[11,13,15],pivot:11,threshold:{lo:30,hi:120}},
     joints:{p:[11,12,13,14],s:[7,8,15,16],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12]]}},
-  {name:'Arm Raise Overhead',area:'Shoulder Flexion',diff:'Intermediate',tags:['Shoulder'],reps:15,det:'arm_raise',
-    desc:'Raise both arms overhead slowly. Hold 2 seconds at top. Lower with 3-second control.',
-    note:'Assesses full shoulder ROM. Stretches latissimus dorsi. Mobilizes thoracolumbar fascia.',
-    muscles:['Deltoid','Rotator Cuff','Latissimus Dorsi'],
-    angles:{main:[23,11,13],pivot:11,threshold:{lo:60,hi:160}},
-    joints:{p:[11,12,13,14,15,16],s:[7,8],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12]]}},
   {name:'Pendulum Swing',area:'Shoulder Decompression',diff:'Beginner',tags:['Shoulder'],reps:20,det:'pendulum',
     desc:'Lean forward slightly. Let one arm hang free. Swing in small circles using gravity, not muscle.',
     note:'Codman pendulum. Decompresses glenohumeral joint. Primary treatment for frozen shoulder.',
@@ -1636,12 +1659,6 @@ const EX=[
     muscles:['Wrist Flexors','Wrist Extensors','Pronator Teres'],
     angles:{main:[13,15,17],pivot:15,threshold:{lo:20,hi:160}},
     joints:{p:[13,14,15,16,17,18],s:[11,12],lk:[[13,15],[14,16],[15,17],[16,18]],sk:[[11,13],[12,14]]}},
-  {name:'Thoracic Rotation',area:'Thoracic Spine',diff:'Intermediate',tags:['Back'],reps:12,det:'thoracic_rot',
-    desc:'Keep hips squared forward. Rotate upper torso fully to each side. Hold 2 seconds at end range.',
-    note:'Core L4-L5 mobilizer. Reduces discogenic pain. Restores thoracolumbar rhythm.',
-    muscles:['Erector Spinae','Multifidus','External Oblique'],
-    angles:{main:[11,23,24],pivot:23,threshold:{lo:5,hi:25}},
-    joints:{p:[11,12,23,24],s:[7,8,25,26],lk:[[11,12],[11,23],[12,24],[23,24]],sk:[[7,11],[8,12],[23,25],[24,26]]}},
   {name:'McKenzie Extension',area:'Lumbar L4-L5',diff:'Beginner',tags:['Back'],reps:10,det:'mckenzie',
     desc:'Place hands on lower back. Gently arch backward. Hold 3 seconds at end range. Stand tall between reps.',
     note:'McKenzie method. Primary treatment for L4-L5 disc herniation. Centralizes radiating leg pain.',
@@ -1654,36 +1671,6 @@ const EX=[
     muscles:['Erector Spinae','Rectus Abdominis','Multifidus'],
     angles:{main:[7,11,23],pivot:11,threshold:{lo:0,hi:20}},
     joints:{p:[0,7,8,11,12,23,24],s:[25,26],lk:[[0,7],[0,8],[7,8],[7,11],[8,12],[11,12],[11,23],[12,24],[23,24]],sk:[[23,25],[24,26]]}},
-  {name:'Hip Hinge',area:'Lumbar and Glutes',diff:'Intermediate',tags:['Back','Hip'],reps:12,det:'hip_hinge',
-    desc:'Feet shoulder-width. Push hips backward. Keep spine completely flat throughout. Return controlled.',
-    note:'Foundation of safe lifting. Reduces lumbar disc stress. Essential for L4-L5 protection.',
-    muscles:['Gluteus Maximus','Hamstrings','Erector Spinae'],
-    angles:{main:[11,23,25],pivot:23,threshold:{lo:70,hi:120}},
-    joints:{p:[11,12,23,24,25,26],s:[7,8,27,28],lk:[[11,12],[11,23],[12,24],[23,24],[23,25],[24,26]],sk:[[7,11],[8,12],[25,27],[26,28]]}},
-  {name:'Hamstring Stretch',area:'Posterior Chain',diff:'Intermediate',tags:['Hip','Back'],reps:8,det:'hamstring',
-    desc:'Feet hip-width. Hinge at hips with flat back. Reach toward floor. Hold 5 seconds per rep.',
-    note:'Reduces lumbar load. Essential for L4-L5 and sciatic nerve root tension relief.',
-    muscles:['Hamstrings','Gastrocnemius','Lumbar Fascia'],
-    angles:{main:[11,23,25],pivot:23,threshold:{lo:60,hi:90}},
-    joints:{p:[23,24,25,26,27,28],s:[11,12],lk:[[23,24],[23,25],[24,26],[25,27],[26,28]],sk:[[11,23],[12,24]]}},
-  {name:'Straight Leg Raise',area:'Hip Flexors and Quad',diff:'Advanced',tags:['Hip','Knee'],reps:12,det:'slr',
-    desc:'Stand against wall. Raise one straight leg to hip height. Hold 2 seconds. Alternate sides.',
-    note:'Activates iliopsoas and quadriceps. Clinical SLR equivalent. Safe for knee osteoarthritis.',
-    muscles:['Iliopsoas','Rectus Femoris','Tensor Fasciae Latae'],
-    angles:{main:[23,25,27],pivot:25,threshold:{lo:140,hi:175}},
-    joints:{p:[23,24,25,26],s:[11,12,27,28],lk:[[23,24],[23,25],[24,26],[25,27],[26,28]],sk:[[11,23],[12,24]]}},
-  {name:'Glute Bridge',area:'Hip Extensors and Core',diff:'Intermediate',tags:['Hip','Back'],reps:15,det:'glute_bridge',
-    desc:'Drive through heels, squeeze glutes powerfully, pause 2 seconds at top. Lower controlled.',
-    note:'Activates gluteus maximus. Reduces chronic low back pain. Key L4-L5 stabilizer.',
-    muscles:['Gluteus Maximus','Hamstrings','Transversus Abdominis'],
-    angles:{main:[11,23,25],pivot:23,threshold:{lo:130,hi:170}},
-    joints:{p:[23,24,25,26],s:[11,12,27,28],lk:[[23,24],[23,25],[24,26],[25,27],[26,28]],sk:[[11,23],[12,24]]}},
-  {name:'Lateral Leg Raise',area:'Hip Abductors',diff:'Intermediate',tags:['Hip','Knee'],reps:12,det:'lateral_raise',
-    desc:'Stand tall. Raise one leg directly sideways. No trunk lean. Hold 1 second. Toes pointing forward.',
-    note:'Activates gluteus medius. Critical for hip stability, knee valgus prevention, gait correction.',
-    muscles:['Gluteus Medius','Tensor Fasciae Latae','Hip Abductors'],
-    angles:{main:[23,25,27],pivot:25,threshold:{lo:10,hi:40}},
-    joints:{p:[23,24,25,26],s:[11,12],lk:[[23,24],[23,25],[24,26]],sk:[[11,23],[12,24]]}},
   {name:'Knee to Chest',area:'Hip Flexors and Lumbar',diff:'Beginner',tags:['Hip','Back','Knee'],reps:12,det:'knee_chest',
     desc:'Stand tall. Pull knee toward chest and hold 3 seconds. Standing leg slightly bent. Alternate.',
     note:'Hip flexor stretch with balance. Reduces anterior pelvic tilt and lumbar compression.',
@@ -1701,55 +1688,7 @@ const EX=[
     note:'Restores talocrural mobility. Prevents recurrent sprains. Improves gait mechanics.',
     muscles:['Peroneals','Tibialis Anterior','Gastrocnemius'],
     angles:{main:[25,27,31],pivot:27,threshold:{lo:80,hi:140}},
-    joints:{p:[27,28,29,30,31,32],s:[25,26],lk:[[27,29],[28,30],[29,31],[30,32]],sk:[[25,27],[26,28]]}},
-  {name:'Wall Angels',area:'Scapular and Thoracic',diff:'Intermediate',tags:['Shoulder','Back'],reps:10,det:'wall_angel',
-    desc:'Arms in goalpost position against wall. Slide arms overhead. Maintain full back contact throughout.',
-    note:'Activates lower trapezius and serratus anterior. Corrects scapular winging and forward head.',
-    muscles:['Lower Trapezius','Serratus Anterior','Rhomboids'],
-    angles:{main:[23,11,13],pivot:11,threshold:{lo:60,hi:150}},
-    joints:{p:[11,12,13,14,15,16],s:[7,8],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12]]}},
-  {name:'Side Neck Stretch',area:'Upper Trapezius',diff:'Beginner',tags:['Neck','Shoulder'],reps:8,det:'neck_side',
-    desc:'Drop ear toward shoulder. Add gentle overpressure with same-side hand. Hold 20 seconds each side.',
-    note:'Lengthens upper trapezius and scalenes. Relieves tension headaches and cervicogenic pain.',
-    muscles:['Upper Trapezius','SCM','Levator Scapulae'],
-    angles:{main:[0,7,8],pivot:0,threshold:{lo:5,hi:20}},
-    joints:{p:[0,7,8,11,12],s:[13,14],lk:[[0,7],[0,8],[7,8],[7,11],[8,12],[11,12]],sk:[[11,13],[12,14]]}},
-  {name:'Standing Hip Abduction',area:'Gluteus Medius',diff:'Intermediate',tags:['Hip'],reps:12,det:'hip_abduction',
-    desc:'Hold support. Lift leg directly sideways 30-45 degrees. Keep toes forward. Slow 3-second return.',
-    note:'Strengthens hip abductors. Key for IT band syndrome, hip OA, and Trendelenburg gait correction.',
-    muscles:['Gluteus Medius','Gluteus Minimus','TFL'],
-    angles:{main:[24,26,28],pivot:26,threshold:{lo:15,hi:45}},
-    joints:{p:[23,24,25,26],s:[11,12],lk:[[23,24],[23,25],[24,26]],sk:[[11,23],[12,24]]}},
-  {name:'Terminal Knee Extension',area:'Quadriceps VMO',diff:'Intermediate',tags:['Knee'],reps:15,det:'tke',
-    desc:'Slight knee bend. Straighten knee fully by contracting quad. Do not hyperextend. Hold 2 seconds.',
-    note:'Activates VMO. Critical for patellofemoral pain, post-ACL rehab, and knee OA management.',
-    muscles:['Vastus Medialis','Rectus Femoris','Quadriceps'],
-    angles:{main:[23,25,27],pivot:25,threshold:{lo:150,hi:175}},
-    joints:{p:[25,26,27,28],s:[23,24],lk:[[25,27],[26,28]],sk:[[23,25],[24,26]]}},
-  {name:'Prone Hip Extension',area:'Gluteal Strengthening',diff:'Intermediate',tags:['Hip','Back'],reps:12,det:'prone_hip',
-    desc:'Standing. Extend one leg backward keeping knee straight. Squeeze glute at top. Hold 2 seconds.',
-    note:'Targets gluteus maximus. Reduces anterior pelvic tilt. Protects lumbar spine under load.',
-    muscles:['Gluteus Maximus','Hamstrings','Multifidus'],
-    angles:{main:[11,23,25],pivot:23,threshold:{lo:160,hi:185}},
-    joints:{p:[23,24,25,26],s:[11,12,27,28],lk:[[23,24],[23,25],[24,26],[25,27],[26,28]],sk:[[11,23],[12,24]]}},
-  {name:'Seated to Stand',area:'Functional Rehabilitation',diff:'Intermediate',tags:['Knee','Hip','Back'],reps:10,det:'sit_stand',
-    desc:'Rise from seated position without using hands. Lead with chest up. Control descent fully.',
-    note:'Key functional movement. Reduces fall risk. Strengthens quads, glutes, and core simultaneously.',
-    muscles:['Quadriceps','Gluteus Maximus','Core Stabilizers'],
-    angles:{main:[11,23,25],pivot:23,threshold:{lo:80,hi:160}},
-    joints:{p:[11,12,23,24,25,26],s:[7,8,27,28],lk:[[11,12],[11,23],[12,24],[23,24],[23,25],[24,26]],sk:[[7,11],[8,12],[25,27],[26,28]]}},
-  {name:'Single Leg Balance',area:'Proprioception and Stability',diff:'Advanced',tags:['Ankle','Knee','Hip'],reps:6,det:'balance',
-    desc:'Stand on one leg. Eyes open 30 seconds, then eyes closed 15 seconds. Switch legs.',
-    note:'Improves proprioception and neuromuscular control. Essential for ankle sprain and knee rehab.',
-    muscles:['Peroneal Muscles','Tibialis','Gluteus Medius','Core'],
-    angles:{main:[23,25,27],pivot:25,threshold:{lo:160,hi:180}},
-    joints:{p:[25,26,27,28,29,30],s:[23,24],lk:[[25,27],[26,28],[27,29],[28,30]],sk:[[23,25],[24,26]]}},
-  {name:'Postural Screen',area:'Full Body Assessment',diff:'Beginner',tags:['Neck','Shoulder','Back','Hip','Knee'],reps:1,det:'posture',
-    desc:'Stand naturally. Hold for 10 seconds. AI performs a complete clinical postural analysis.',
-    note:'Full clinical screen of cervical, thoracic, lumbar, and pelvic alignment simultaneously.',
-    muscles:['All Postural Muscles','Core','Erector Spinae'],
-    angles:{main:[7,11,23],pivot:11,threshold:{lo:0,hi:5}},
-    joints:{p:[0,7,8,11,12,23,24,25,26],s:[13,14,15,16,27,28],lk:[[0,7],[0,8],[7,8],[7,11],[8,12],[11,12],[11,23],[12,24],[23,24],[23,25],[24,26]],sk:[[11,13],[12,14],[13,15],[14,16],[25,27],[26,28]]}}
+    joints:{p:[27,28,29,30,31,32],s:[25,26],lk:[[27,29],[28,30],[29,31],[30,32]],sk:[[25,27],[26,28]]}}
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -2036,13 +1975,47 @@ document.getElementById('prod-grid').innerHTML=PRODS.map((p,i)=>`
 </div>`).join('');
 
 // ═══════════════════════════════════════════════════════════
+// SCROLL REVEAL — subtle entrance for cards/section headers
+// ═══════════════════════════════════════════════════════════
+(function initScrollReveal(){
+  const targets=document.querySelectorAll('.ex-card,.hosp-card,.research-card,.who-stat,.sec-tag,.sec-h,.sec-p');
+  if(!('IntersectionObserver' in window)){targets.forEach(el=>el.classList.add('in'));return;}
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  let group=null,idx=0;
+  targets.forEach(el=>{
+    if(el.parentElement!==group){group=el.parentElement;idx=0;}
+    el.classList.add('reveal');
+    el.style.transitionDelay=Math.min(idx*55,330)+'ms';
+    idx++;
+    io.observe(el);
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════
 // AI COACH — Fixed with fallback engine & retry logic
 // ═══════════════════════════════════════════════════════════
 const AIChat={
-  hist:[{role:'system',content:'You are PAH Clinical AI Physiotherapist. Give structured evidence-based rehabilitation advice. Format: 1) Brief Clinical Assessment 2) Recommended Exercises (from the PAH library) 3) Home Management Tips 4) Red Flags and When to See a Physiotherapist. Use clear paragraphs. Max 280 words. Be professional and empathetic.'}],
+  hist:[{role:'system',content:'You are PAH Clinical AI Physiotherapist. You ONLY discuss physiotherapy: pain, injuries, exercises, and rehabilitation. If asked about anything else, politely decline and redirect the user to ask a physiotherapy question — do not answer unrelated questions under any circumstances. Give structured evidence-based rehabilitation advice. Format: 1) Brief Clinical Assessment 2) Recommended Exercises (from the PAH library) 3) Home Management Tips 4) Red Flags and When to See a Physiotherapist. Use clear paragraphs. Max 280 words. Be professional and empathetic.'}],
   busy:false,
   retryCount:0,
   maxRetries:2,
+
+  isPhysioRelated(msg){
+    const greeting=/^(hi|hello|hey|hiya|yo|thanks|thank you|ok|okay|sure|yes|no)[.!?]*$/i;
+    const physioTerms=/pain|ache|sore|stiff|injur|sprain|strain|fractur|surgery|post-?op|rehab|physio|therap|exercis|stretch|mobility|posture|recover|swelling|inflam|arthrit|disc|spine|spinal|nerve|tendon|ligament|muscle|joint|weak|numb|tingl|range of motion|balance|fall risk|neck|shoulder|\bback\b|hip|knee|ankle|wrist|elbow|\bfoot\b|feet|\bhand\b|\bleg\b|\barm\b|core|glute|hamstring|quad|calf|cervical|lumbar|thoracic|sciatic/i;
+    return greeting.test(msg.trim())||physioTerms.test(msg.toLowerCase());
+  },
+
+  offTopicReply(){
+    return "I'm PAH's physiotherapy assistant, so I can only help with pain, injuries, exercises, and rehabilitation. Try describing a symptom — for example, \"lower back pain, 6/10, for 2 weeks.\"";
+  },
 
   send(txt){
     const inp=document.getElementById('chat-in');
@@ -2050,6 +2023,10 @@ const AIChat={
     if(!msg||this.busy)return;
     inp.value='';
     this.addMsg('user',msg);
+    if(!this.isPhysioRelated(msg)){
+      this.addMsg('bot',this.offTopicReply());
+      return;
+    }
     this.hist.push({role:'user',content:msg});
     this.retryCount=0;
     this.showTyping();
@@ -2212,9 +2189,11 @@ const AIChat={
 let poseModel=null,poseLoaded=false,camStream=null;
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral';
 let formScores=[],lastLM=null,raf=null,sessActive=false;
-let emaAngle=null,lastRepAt=0;
+let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
 const REP_DEBOUNCE_MS=550; // minimum time between counted reps — filters jitter-driven double counts
+function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();}}
+function phaseAge(){return performance.now()-phaseChangedAt;}
 
 // ═══════════════════════════════════════════════════════════
 // VOICE COACH — Web Speech API, fully on-device (no API key, no upload)
@@ -2275,7 +2254,7 @@ const CamDiag={
 };
 
 function openSession(idx){
-  sessEx=EX[idx];sessReps=0;sessScore=100;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;avatarJoints={};
+  sessEx=EX[idx];sessReps=0;sessScore=100;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;avatarJoints={};
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2328,7 +2307,7 @@ function endSession(){
     u.recent=u.recent||[];
     u.recent.unshift({name:sessEx.name,reps:sessReps,form:avgF,date:now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})});
     if(u.recent.length>10)u.recent=u.recent.slice(0,10);
-    saveU(u);renderDash();renderNavStreak();
+    saveU(u);renderNavStreak();
     toast('Session saved — '+sessReps+' reps at '+avgF+'% form.');
   }
 }
@@ -2949,19 +2928,19 @@ function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
 
-  if(det==='neck_tilt'||det==='neck_side'){
+  if(det==='neck_tilt'){
     if(!safe(lm,0,11,12))return;
     const nose=lm[0],lS=lm[11],rS=lm[12];
     const shouldMidX=(lS.x+rS.x)/2;
-    const shouldMidY=(lS.y+rS.y)/2;
     const tilt=Math.abs(nose.x-shouldMidX)*100;
     const raw=smoothAngle(tilt);
     setAngle(raw*6,'Tilt');
     if(raw>4){
-      if(repPhase==='neutral'){repPhase='tilted';setFB('Good tilt — hold this position for 3 seconds.','good');}
+      if(repPhase==='neutral'){setRepPhase('tilted');setFB('Good tilt — hold this position for 3 seconds.','good');}
       updateScore(100-Math.max(0,raw-15)*3);setPhase('Stretching');
     }else if(raw<1.5&&repPhase==='tilted'){
-      repPhase='neutral';doRep();setFB('Good — return and tilt the other side.','');
+      if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Good — return and tilt the other side.','');}
+      else{setRepPhase('neutral');setFB('Hold the tilt a little longer for full credit.','warn');}
     }else{
       setFB('Slowly tilt your head to one side, hold 3 seconds.','');setPhase('Ready');
     }
@@ -2975,41 +2954,25 @@ function analyzeExercise(lm,W,H){
     const raw=smoothAngle(Math.abs(retraction));
     setAngle(raw*8,'Retraction');
     if(retraction>2){
-      if(repPhase==='neutral'){repPhase='tucked';setFB('Good chin tuck — hold 5 seconds. Keep eyes level.','good');}
+      if(repPhase==='neutral'){setRepPhase('tucked');setFB('Good chin tuck — hold 5 seconds. Keep eyes level.','good');}
       updateScore(88+Math.min(12,raw));setPhase('Tucked');
     }else if(retraction<0.5&&repPhase==='tucked'){
-      repPhase='neutral';doRep();setFB('Release and repeat the tuck motion.','');
+      if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Release and repeat the tuck motion.','');}
+      else{setRepPhase('neutral');setFB('Hold the tuck a little longer for full credit.','warn');}
     }else{
       setFB('Draw your chin straight backward — like making a double chin.','');setPhase('Ready');
     }
   }
 
-  else if(det==='shoulder_roll'||det==='arm_raise'||det==='wall_angel'){
+  else if(det==='shoulder_roll'){
     if(!safe(lm,11,12,13,14))return;
     const lAng=angleDeg(lm[23],lm[11],lm[13]);
     const rAng=angleDeg(lm[24],lm[12],lm[14]);
     const avg=smoothAngle((lAng+rAng)/2);
-    const symErr=Math.abs(lAng-rAng);
     setAngle(avg,'Shoulder');
-
-    if(det==='arm_raise'||det==='wall_angel'){
-      if(avg>150){
-        if(repPhase!=='up'){repPhase='up';setFB('Arms fully overhead — hold 2 seconds. Excellent range!','good');}
-        updateScore(Math.max(70,100-symErr*2));setPhase('Up');
-      }else if(avg<70&&repPhase==='up'){
-        repPhase='down';doRep();setFB('Lower complete — raise again with control.','');
-      }else if(avg<70){
-        setFB('Raise both arms straight overhead. Keep core braced.','');setPhase('Rising');
-        updateScore(72);
-      }else{
-        setFB('Continue raising — aim for full overhead position.','');updateScore(80);
-      }
-      if(symErr>25){setFB('Both arms should move equally — check symmetry.','warn');}
-    }else{
-      if(avg>100&&repPhase!=='up'){repPhase='up';setPhase('Rolling Up');updateScore(90);}
-      else if(avg<55&&repPhase==='up'){repPhase='down';doRep();setFB('Good circle — keep rolling!','good');}
-      else{setFB('Roll shoulders in large backward circles. Full range.','');updateScore(80);}
-    }
+    if(avg>100&&repPhase!=='up'){repPhase='up';setPhase('Rolling Up');updateScore(90);}
+    else if(avg<55&&repPhase==='up'){repPhase='down';doRep();setFB('Good circle — keep rolling!','good');}
+    else{setFB('Roll shoulders in large backward circles. Full range.','');updateScore(80);}
   }
 
   else if(det==='pendulum'){
@@ -3033,120 +2996,32 @@ function analyzeExercise(lm,W,H){
     else{setFB('Extend wrist fully upward, then flex fully downward.','');updateScore(80);setPhase('Moving');}
   }
 
-  else if(det==='thoracic_rot'){
-    if(!safe(lm,11,12,23,24))return;
-    const shoulderDiff=lm[11].z-lm[12].z;
-    const raw=smoothAngle(Math.abs(shoulderDiff)*100);
-    setAngle(raw*3,'Rotation');
-    if(raw>8){
-      if(repPhase==='neutral'){repPhase='rotated';setFB('Good rotation — hold 2 seconds at end range.','good');}
-      updateScore(90);setPhase('Rotating');
-    }else if(raw<2&&repPhase==='rotated'){
-      repPhase='neutral';doRep();setFB('Good — rotate the other direction now.','');
-    }else{
-      setFB('Rotate upper body fully to one side. Keep hips facing forward.','');updateScore(75);
-    }
-  }
-
   else if(det==='mckenzie'||det==='catcow'){
     if(!safe(lm,7,11,23))return;
     const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23]));
     setAngle(spineAng,'Spine');
     if(det==='mckenzie'){
       if(spineAng<165){
-        if(repPhase==='neutral'){repPhase='extended';setFB('Good backward extension — hold 3 seconds.','good');}
+        if(repPhase==='neutral'){setRepPhase('extended');setFB('Good backward extension — hold 3 seconds.','good');}
         updateScore(93);setPhase('Extended');
       }else if(spineAng>172&&repPhase==='extended'){
-        repPhase='neutral';doRep();setFB('Stand tall and repeat the extension.','');
+        if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Stand tall and repeat the extension.','');}
+        else{setRepPhase('neutral');setFB('Hold the extension a little longer for full credit.','warn');}
       }else{
         setFB('Place hands on lower back and gently arch backward.','');updateScore(72);
       }
     }else{
       if(spineAng<160){
-        if(repPhase!=='arch'){repPhase='arch';setFB('Good arch (cow) — now round into cat position.','good');}
+        if(repPhase!=='arch'){setRepPhase('arch');setFB('Good arch (cow) — now round into cat position.','good');}
         updateScore(92);setPhase('Cow');
       }else if(spineAng>175&&repPhase==='arch'){
-        repPhase='round';doRep();setFB('Good cat — arch into cow again.','');
+        if(phaseAge()>350){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
+        else{setFB('Hold each position briefly, in rhythm with your breath.','warn');}
       }else if(spineAng>175){
         setFB('Arch your spine fully — look upward gently.','');updateScore(78);
       }else{
         setFB('Move fluidly between full arch and full round. Breathe with each.','');updateScore(82);
       }
-    }
-  }
-
-  else if(det==='hip_hinge'){
-    if(!safe(lm,11,23,25))return;
-    const hipAng=smoothAngle(angleDeg(lm[11],lm[23],lm[25]));
-    setAngle(hipAng,'Hip Hinge');
-    if(hipAng<110){
-      if(repPhase==='standing'){repPhase='hinged';setFB('Good hip hinge — keep back flat. Squeeze glutes to return.','good');}
-      updateScore(92);setPhase('Hinged');
-    }else if(hipAng>160&&repPhase==='hinged'){
-      repPhase='standing';doRep();setFB('Good rep — hinge again.','');
-    }else if(hipAng>160){
-      repPhase='standing';setFB('Push hips backward. Spine stays completely flat.','');updateScore(74);
-    }else{updateScore(84);}
-  }
-
-  else if(det==='hamstring'){
-    if(!safe(lm,11,23,25))return;
-    const hipFlex=smoothAngle(angleDeg(lm[11],lm[23],lm[25]));
-    setAngle(hipFlex,'Hip Flex');
-    if(hipFlex<90){
-      if(repPhase==='standing'){repPhase='bent';setFB('Hold the stretch — 5 seconds. Feel the hamstring pull.','good');}
-      updateScore(94);setPhase('Stretching');
-    }else if(hipFlex>155&&repPhase==='bent'){
-      repPhase='standing';doRep();setFB('Stand tall and hinge again.','');
-    }else{
-      setFB('Hinge at hips with flat back. Reach toward the floor.','');updateScore(76);
-    }
-  }
-
-  else if(det==='slr'){
-    if(!safe(lm,23,25,27))return;
-    const kneeAng=smoothAngle(angleDeg(lm[23],lm[25],lm[27]));
-    setAngle(kneeAng,'Knee');
-    if(!safe(lm,11,23))return;
-    const hipLift=1-(lm[25].y);
-    if(hipLift>0.55&&kneeAng>160){
-      if(repPhase==='down'){repPhase='up';setFB('Leg raised and straight — hold 2 seconds.','good');}
-      updateScore(95);setPhase('Raised');
-    }else if(hipLift<0.45&&repPhase==='up'){
-      repPhase='down';doRep();setFB('Raise the other leg.','');
-    }else{
-      setFB('Raise one leg to hip height keeping the knee fully straight.','');updateScore(75);
-    }
-  }
-
-  else if(det==='glute_bridge'){
-    if(!safe(lm,11,23,25,27))return;
-    const hipAng=smoothAngle(angleDeg(lm[11],lm[23],lm[25]));
-    const kneeAng=angleDeg(lm[23],lm[25],lm[27]);
-    setAngle(hipAng,'Hip');
-    if(hipAng>155&&kneeAng>80&&kneeAng<110){
-      if(repPhase==='down'){repPhase='up';setFB('Full bridge — squeeze glutes hard. Hold 2 seconds.','good');}
-      updateScore(96);setPhase('Top');
-    }else if(hipAng<130&&repPhase==='up'){
-      repPhase='down';doRep();setFB('Lower controlled. Drive up again.','');
-    }else{
-      setFB('Drive hips up powerfully through your heels. Squeeze glutes at the top.','');updateScore(75);
-    }
-  }
-
-  else if(det==='lateral_raise'||det==='hip_abduction'){
-    if(!safe(lm,23,24,25,26))return;
-    const hipWidth=Math.abs(lm[25].x-lm[26].x);
-    const baseWidth=Math.abs(lm[23].x-lm[24].x);
-    const abduction=smoothAngle((hipWidth-baseWidth)*200);
-    setAngle(abduction*2,'Abduction');
-    if(abduction>12){
-      if(repPhase==='neutral'){repPhase='abducted';setFB('Good lateral raise — hold 1 second. No trunk lean.','good');}
-      updateScore(92);setPhase('Raised');
-    }else if(abduction<3&&repPhase==='abducted'){
-      repPhase='neutral';doRep();setFB('Good — raise the other side.','');
-    }else{
-      setFB('Raise leg directly sideways. Keep toes pointing forward. No leaning.','');updateScore(74);
     }
   }
 
@@ -3156,10 +3031,11 @@ function analyzeExercise(lm,W,H){
     const lift=smoothAngle(Math.max(0,(hipY-kneeY)*120));
     setAngle(lift,'Lift');
     if(lift>25){
-      if(repPhase==='down'){repPhase='up';setFB('Good — pull knee toward chest. Hold 3 seconds.','good');}
+      if(repPhase==='down'){setRepPhase('up');setFB('Good — pull knee toward chest. Hold 3 seconds.','good');}
       updateScore(92);setPhase('Up');
     }else if(lift<8&&repPhase==='up'){
-      repPhase='down';doRep();setFB('Lower and raise the other knee.','');
+      if(phaseAge()>450){setRepPhase('down');doRep();setFB('Lower and raise the other knee.','');}
+      else{setRepPhase('down');setFB('Hold the lift a little longer for full credit.','warn');}
     }else{
       setFB('Stand tall. Pull one knee up toward your chest.','');updateScore(72);
     }
@@ -3172,10 +3048,11 @@ function analyzeExercise(lm,W,H){
     const rise=smoothAngle(Math.max(0,(heelY-ankleY)*150));
     setAngle(rise,'Rise');
     if(rise>12){
-      if(repPhase==='down'){repPhase='up';setFB('Full plantarflexion — hold at top.','good');}
+      if(repPhase==='down'){setRepPhase('up');setFB('Full plantarflexion — hold at top.','good');}
       updateScore(97);setPhase('Up');
     }else if(rise<3&&repPhase==='up'){
-      repPhase='down';doRep();setFB('Lower slowly over 3 seconds.','');
+      if(phaseAge()>350){setRepPhase('down');doRep();setFB('Lower slowly over 3 seconds.','');}
+      else{setRepPhase('down');setFB('Pause at the top a little longer next time.','warn');}
     }else{
       setFB('Rise fully onto tiptoes. Pause at the top for 1 second.','');updateScore(75);
     }
@@ -3190,82 +3067,6 @@ function analyzeExercise(lm,W,H){
     setFB('Rotate ankle in full circles — 10 each direction per foot.','good');
     if(circ>8&&repPhase==='neutral'){repPhase='moving';}
     else if(circ<3&&repPhase==='moving'){repPhase='neutral';doRep();}
-  }
-
-  else if(det==='tke'){
-    if(!safe(lm,23,25,27))return;
-    const kAng=smoothAngle(angleDeg(lm[23],lm[25],lm[27]));
-    setAngle(kAng,'Knee');
-    if(kAng>165){
-      if(repPhase!=='extended'){repPhase='extended';setFB('Knee fully extended — hold 2 seconds. Do not hyperextend.','good');}
-      updateScore(94);setPhase('Extended');
-    }else if(kAng<145&&repPhase==='extended'){
-      repPhase='bent';doRep();setFB('Bend slightly and extend again.','');
-    }else{
-      setFB('Straighten knee fully by contracting the quad muscle firmly.','');updateScore(74);
-    }
-  }
-
-  else if(det==='sit_stand'){
-    if(!safe(lm,11,23,25))return;
-    const hipAng=smoothAngle(angleDeg(lm[11],lm[23],lm[25]));
-    setAngle(hipAng,'Hip');
-    if(hipAng>160){
-      if(repPhase!=='standing'){repPhase='standing';setFB('Standing — good. Lower yourself with control.','good');}
-      updateScore(90);setPhase('Standing');
-    }else if(hipAng<100&&repPhase==='standing'){
-      repPhase='seated';doRep();setFB('Rise again without using your hands.','');
-    }else{
-      setFB('Rise from your seat. Lead with chest. Do not use your hands.','');updateScore(78);
-    }
-  }
-
-  else if(det==='balance'){
-    if(!safe(lm,23,25,27,11,12))return;
-    const lsx=lm[11].x,rsx=lm[12].x;
-    const lhx=lm[23].x,rhx=lm[24].x;
-    const sway=smoothAngle(Math.abs((lsx+rsx)/2-(lhx+rhx)/2)*100);
-    setAngle(sway*5,'Sway');
-    const stability=Math.max(40,100-sway*8);
-    updateScore(stability);
-    if(sway<4){setFB('Excellent balance — minimal sway detected.','good');setPhase('Balanced');}
-    else if(sway<10){setFB('Good — reduce sway. Fix gaze on a stationary point ahead.','');setPhase('Swaying');}
-    else{setFB('Too much sway. Focus eyes on a point. Engage your core.','warn');setPhase('Unstable');}
-    if(sessReps===0){setTimeout(()=>{if(sessActive)doRep();},8000);}
-  }
-
-  else if(det==='posture'){
-    if(!safe(lm,11,12,23,24,7,8))return;
-    const sLev=Math.abs(lm[11].y-lm[12].y)*100;
-    const hLev=Math.abs(lm[23].y-lm[24].y)*100;
-    const headFwd=(lm[0].z-(lm[11].z+lm[12].z)/2)*60;
-    const spineAng=angleDeg(lm[7],lm[11],lm[23]);
-    setAngle(spineAng,'Spine');
-    let score=100;
-    let issues=[];
-    if(sLev>2.5){score-=20;issues.push('shoulder elevation asymmetry');}
-    if(hLev>2.5){score-=20;issues.push('hip tilt');}
-    if(headFwd>8){score-=15;issues.push('forward head posture');}
-    if(spineAng<160){score-=15;issues.push('lumbar flexion');}
-    updateScore(score);
-    if(issues.length===0){setFB('Excellent posture — symmetrical alignment across all planes.','good');}
-    else{setFB('Detected: '+issues.join(', ')+'. Corrections suggested.','warn');}
-    setPhase('Scanning');
-    if(sessReps===0){setTimeout(()=>{if(sessActive)doRep();},6000);}
-  }
-
-  else if(det==='prone_hip'){
-    if(!safe(lm,23,25,27))return;
-    const ang=smoothAngle(angleDeg(lm[11],lm[23],lm[25]));
-    setAngle(ang,'Hip Ext');
-    if(ang>175){
-      if(repPhase!=='extended'){repPhase='extended';setFB('Good hip extension — squeeze glute. Hold 2 seconds.','good');}
-      updateScore(92);setPhase('Extended');
-    }else if(ang<165&&repPhase==='extended'){
-      repPhase='neutral';doRep();setFB('Return and extend the other side.','');
-    }else{
-      setFB('Extend one leg backward keeping the knee straight. Squeeze glute at top.','');updateScore(74);
-    }
   }
 }
 </script>
