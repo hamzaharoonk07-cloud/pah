@@ -2195,7 +2195,7 @@ const CamDiag={
 
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
-  ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];
+  ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];visLossStreak=0;
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2751,13 +2751,20 @@ function updateScore(s){
   document.getElementById('s-score').textContent=sessScore+'%';
   setRing(sessScore);
 }
-function vis(pt){return pt&&typeof pt.visibility==='number'&&pt.visibility>0.4;}
+function vis(pt){return pt&&typeof pt.visibility==='number'&&pt.visibility>0.35;}
 function safe(lm,...idx){return idx.every(i=>lm[i]&&vis(lm[i]));}
 // Wraps safe() so that whenever the joints this exercise needs aren't actually
-// visible, score/angle immediately reflect that (zeroed) instead of freezing
-// at their last good value.
+// visible, score/angle reflect that (zeroed) instead of freezing at their last
+// good value. Requires several CONSECUTIVE bad frames before declaring "Lost" —
+// a single low-confidence frame is normal MediaPipe noise (very common on
+// elbow/wrist landmarks during overhead reaches) and must not flash a false
+// tracking-loss state while the user is actually moving correctly.
+let visLossStreak=0;
+const VIS_LOSS_GRACE=6; // ~200ms at 30fps
 function requireVisible(lm,...idx){
-  if(safe(lm,...idx))return true;
+  if(safe(lm,...idx)){visLossStreak=0;return true;}
+  visLossStreak++;
+  if(visLossStreak<VIS_LOSS_GRACE)return true; // brief dip — keep using the last landmarks, don't flag yet
   updateScore(0);
   setAngle(0,'—','');
   setFB('Body not fully visible — step back so the tracked joints are in frame.','warn');
@@ -2969,7 +2976,11 @@ function analyzeExercise(lm,W,H){
   }
 
   else if(det==='bilateral_raise'){
-    if(!requireVisible(lm,11,12,13,14,23,24))return;
+    // Only the torso (shoulders/hips) gates "Lost" — elbows routinely dip below the
+    // visibility threshold for a frame or two right as arms go overhead and near/above
+    // the top of frame, which must not flash a false loss while the rep is done correctly.
+    if(!requireVisible(lm,11,12,23,24))return;
+    if(!safe(lm,13,14))return; // core is fine, just skip this frame rather than reset anything
     const lAng=angleDeg(lm[23],lm[11],lm[13]);
     const rAng=angleDeg(lm[24],lm[12],lm[14]);
     const avg=smoothAngle((lAng+rAng)/2);

@@ -24,19 +24,41 @@ function createAnatomyViewer(container, opts){
   const rim=new THREE.DirectionalLight(0xfb7185,0.55);rim.position.set(-3,1.5,-2.5);scene.add(rim);
   const fill=new THREE.DirectionalLight(0x60a5fa,0.35);fill.position.set(3,-1,-2);scene.add(fill);
 
-  let center=new THREE.Vector3(),radius=2,angle=0,model=null,raf=null;
+  let center=new THREE.Vector3(),radius=2,angle=0,model=null,raf=null,bbox=null;
+  // Current vs. target orbit focus — lets focusRegion() retarget smoothly without
+  // needing hand-guessed per-model coordinates (everything is derived from the
+  // model's own real bounding box, so it's always framed correctly).
+  let curCenter=new THREE.Vector3(),curRadius=2;
+  let targetCenter=new THREE.Vector3(),targetRadius=2;
 
   function fit(object){
     const box=new THREE.Box3().setFromObject(object);
     const size=box.getSize(new THREE.Vector3());
     center=box.getCenter(new THREE.Vector3());
+    bbox={min:box.min.clone(),max:box.max.clone(),size:size.clone(),center:center.clone()};
     const maxDim=Math.max(size.x,size.y,size.z)||1;
     const fov=camera.fov*(Math.PI/180);
     radius=Math.abs(maxDim/Math.sin(fov/2))*0.62;
+    curCenter.copy(center);curRadius=radius;
+    targetCenter.copy(center);targetRadius=radius;
     camera.near=radius/100;camera.far=radius*20;
     camera.position.set(center.x,center.y+size.y*0.05,center.z+radius);
     camera.lookAt(center);
     camera.updateProjectionMatrix();
+  }
+
+  // fracY: 0=bottom of model, 1=top. zoom: smaller=closer. Framing is computed
+  // from the model's actual measured height, not guessed absolute coordinates,
+  // so it's correct for whatever model is loaded.
+  function focusRegion(fracY,zoom){
+    if(!bbox)return;
+    targetCenter.set(bbox.center.x,bbox.min.y+bbox.size.y*fracY,bbox.center.z);
+    targetRadius=Math.max(bbox.size.y*(zoom!=null?zoom:0.55),bbox.size.y*0.12);
+  }
+  function resetRegion(){
+    if(!bbox)return;
+    targetCenter.copy(center);
+    targetRadius=radius;
   }
 
   const loader=new THREE.GLTFLoader();
@@ -54,9 +76,12 @@ function createAnatomyViewer(container, opts){
   function tick(){
     raf=requestAnimationFrame(tick);
     angle+=rotateSpeed;
-    camera.position.x=center.x+Math.sin(angle)*radius;
-    camera.position.z=center.z+Math.cos(angle)*radius;
-    camera.lookAt(center);
+    curCenter.lerp(targetCenter,0.06);
+    curRadius+=(targetRadius-curRadius)*0.06;
+    camera.position.x=curCenter.x+Math.sin(angle)*curRadius;
+    camera.position.z=curCenter.z+Math.cos(angle)*curRadius;
+    camera.position.y=curCenter.y+curRadius*0.05;
+    camera.lookAt(curCenter);
     renderer.render(scene,camera);
   }
 
@@ -78,7 +103,7 @@ function createAnatomyViewer(container, opts){
   }
 
   return{
-    pause:pause,resume:resume,resize:resize,dispose:dispose,
+    pause:pause,resume:resume,resize:resize,dispose:dispose,focusRegion:focusRegion,resetRegion:resetRegion,
     get camera(){return camera;},get center(){return center;},get radius(){return radius;},get loaded(){return!!model;}
   };
 }
