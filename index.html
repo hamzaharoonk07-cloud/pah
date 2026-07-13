@@ -1,3 +1,6 @@
+index.html
+1
+100%
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,9 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="anatomy-viewer.js"></script>
+<script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
 <style>
 :root{ --brand:#e11d48; --accent:#fb7185; }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -21,7 +22,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 #joint-focus{position:relative}
 .jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
 
-#anatomy-frame{position:absolute;inset:0;width:100%;height:100%;background:#050508}
+#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none}
 
 .jf-overlay-grad{
   position:absolute;inset:0;z-index:2;pointer-events:none;
@@ -58,7 +59,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   position:absolute;inset:0;z-index:50;cursor:crosshair;display:none;
 }
 #jf-debug-catch.on{display:block}
-.jf-sticky.debug #anatomy-frame{pointer-events:none}
+.jf-sticky.debug #sketchfab-frame{pointer-events:none}
 
 .jf-overlay{
   position:absolute;right:0;bottom:0;z-index:5;
@@ -76,6 +77,9 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 .jf-conditions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;justify-content:flex-end}
 @media(max-width:768px){.jf-conditions{justify-content:flex-start}}
 .jf-cond-pill{font-size:.74rem;font-weight:600;color:var(--brand);background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.35);padding:5px 14px;border-radius:100px}
+
+.jf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:#0f172a;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#64748b;transition:opacity .6s;}
+.jf-loading.hide{opacity:0;pointer-events:none}
 
 .jf-panels{position:relative;margin-top:-100vh}
 .jf-panel{height:100vh}
@@ -110,22 +114,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   padding:8px 20px;border-radius:100px;transition:opacity .2s;
 }
 .nav-cta:hover{opacity:.88}
-.nav-ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer;background:none;border:none}
-.nav-ham span{display:block;width:20px;height:2px;background:#fff;border-radius:1px}
-.nav-mob-menu{
-  display:none;position:fixed;top:62px;left:0;right:0;z-index:199;
-  background:rgba(0,0,0,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);
-  padding:12px 20px;flex-direction:column;gap:2px;
-}
-.nav-mob-menu.open{display:flex}
-.nav-mob-menu a{color:#cbd5e1;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;padding:12px 6px;border-radius:8px;transition:background .2s}
-.nav-mob-menu a:hover{background:rgba(255,255,255,.06);color:#fff}
-@media(max-width:768px){
-  .nav-links{display:none}
-  .nav-cta{display:none}
-  .nav-ham{display:flex}
-  .navbar{padding:14px 18px}
-}
+@media(max-width:768px){.nav-links{display:none}}
 
 /* ACCOUNT GATE */
 .gate-overlay{
@@ -179,11 +168,6 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 .footer-bottom-links{display:flex;gap:22px}
 .footer-bottom-links a{color:#94a3b8;text-decoration:none;font-size:.72rem;font-family:monospace}
 .footer-bottom-links a:hover{color:#fff}
-@media(max-width:540px){
-  .gate-row{grid-template-columns:1fr}
-  .gate-box{padding:28px 22px}
-  .footer-cols{grid-template-columns:1fr}
-}
 </style>
 </head>
 <body>
@@ -221,24 +205,22 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   <a href="index.html" class="nav-logo"><img src="pah.jpeg" alt="PAH" height="100px" width="60"><span>P</span>AH</a>
   <div class="nav-links">
     <a href="#joint-focus" class="nav-link">Conditions</a>
-    <a href="exercises.html#hero" class="nav-link">Exercises</a>
+    <a href="exercises.html#exercises" class="nav-link">Exercises</a>
+    <a href="exercises.html#ai-coach" class="nav-link">AI Coach</a>
     <a href="exercises.html#dashboard" class="nav-link">Dashboard</a>
   </div>
   <a href="exercises.html" class="nav-cta">Exercises</a>
-  <button class="nav-ham" id="nav-ham" onclick="document.getElementById('nav-mob-menu').classList.toggle('open')" aria-label="Open menu">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
-<div class="nav-mob-menu" id="nav-mob-menu">
-  <a href="#joint-focus" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Conditions</a>
-  <a href="exercises.html#hero" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Exercises</a>
-  <a href="exercises.html#dashboard" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Dashboard</a>
-</div>
 
 <section id="joint-focus">
   <div class="jf-sticky" id="jf-sticky">
-    <div id="anatomy-frame" title="Human Male Muscular Anatomy Model"></div>
+    <iframe id="sketchfab-frame" title="Human Bones and Muscles"
+      src="https://sketchfab.com/models/85636205977d44878fc729fde5b77cd3/embed?autostart=1&ui_infos=0&ui_inspector=0&ui_watermark=0&ui_annotations=0&transparent=1"
+      allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking
+      execution-while-out-of-viewport execution-while-not-rendered web-share>
+    </iframe>
     <div class="jf-overlay-grad"></div>
+    <div class="jf-loading" id="jf-loading">Loading 3D Model…</div>
 
     <svg class="jf-line" id="jf-line"><line id="jf-line-el" x1="0" y1="0" x2="0" y2="0"/></svg>
     <div class="jf-dot" id="jf-dot"></div>
@@ -253,57 +235,57 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   </div>
 
   <div class="jf-panels">
-    <!-- region: fraction of model height (0=feet,1=head), computed from the model's real bounding box -->
+    <!-- camera: position [x,y,z], target [x,y,z] -->
     <div class="jf-panel" data-joint="cervical"
-      data-region="0.90" data-zoom="0.35" data-ring-x="50" data-ring-y="20"
+      data-cam="0.009,0.407,0.486|0.007,-0.021,0.479" data-ring-x="50" data-ring-y="20"
       data-tag="01 · Neck" data-title="Cervical Spine"
       data-pills="Cervical Spondylosis,Whiplash,Forward Head Posture"
       data-desc="Neck pain and stiffness are often driven by prolonged screen time and poor posture, leading to muscle tightness, reduced range of motion, and nerve irritation at C5–C6."></div>
 
     <div class="jf-panel" data-joint="thoracic"
-      data-region="0.72" data-zoom="0.5" data-ring-x="50" data-ring-y="38"
+      data-cam="0.017,0.558,0.264|-0.088,-0.005,0.282" data-ring-x="50" data-ring-y="38"
       data-tag="02 · Mid Back" data-title="Thoracic Spine"
       data-pills="Postural Kyphosis,Rib Dysfunction,Mid-Back Stiffness"
       data-desc="Limited thoracic mobility restricts shoulder and neck function alike. We address rounded-shoulder posture, rib joint restrictions, and breathing mechanics."></div>
 
     <div class="jf-panel" data-joint="lumbar"
-      data-region="0.56" data-zoom="0.5" data-ring-x="50" data-ring-y="52"
+      data-cam="0.041,0.924,0.302|-0.064,-0.005,0.201" data-ring-x="50" data-ring-y="52"
       data-tag="03 · Lower Back" data-title="Lumbar Spine"
       data-pills="Disc Herniation,Sciatica,Lower Back Stiffness"
       data-desc="Lumbar disc issues at L4–L5 can cause radiating leg pain, numbness, and stiffness. Decompression techniques combined with core stability relieve pressure and prevent recurrence."></div>
 
     <div class="jf-panel" data-joint="shoulder"
-      data-region="0.82" data-zoom="0.4" data-ring-x="55" data-ring-y="45"
+      data-cam="-0.577,0.185,0.401|-0.041,0.012,0.328" data-ring-x="55" data-ring-y="45"
       data-tag="04 · Upper Limb" data-title="Shoulder"
       data-pills="Rotator Cuff Injury,Impingement Syndrome,Frozen Shoulder"
       data-desc="Rotator cuff strains and shoulder impingement limit overhead reach and disrupt sleep. We restore range of motion and rebuild strength through graded loading."></div>
 
     <div class="jf-panel" data-joint="elbow"
-      data-region="0.62" data-zoom="0.3" data-ring-x="74" data-ring-y="50"
+      data-cam="-0.512,0.382,0.006|-0.133,-0.128,0.276" data-ring-x="74" data-ring-y="50"
       data-tag="05 · Upper Limb" data-title="Elbow"
       data-pills="Tennis Elbow,Golfer's Elbow,Tendinopathy"
       data-desc="Repetitive strain at the elbow leads to tendon pain on the inner or outer forearm. Load management and progressive strengthening rebuild tendon resilience."></div>
 
     <div class="jf-panel" data-joint="wrist"
-      data-region="0.47" data-zoom="0.25" data-ring-x="78" data-ring-y="68"
+      data-cam="-0.778,0.102,-0.043|-0.154,-0.177,-0.119" data-ring-x="78" data-ring-y="68"
       data-tag="06 · Hand" data-title="Wrist &amp; Hand"
       data-pills="Carpal Tunnel Syndrome,De Quervain's,Wrist Sprains"
       data-desc="Numbness, tingling, and wrist pain often stem from nerve compression or repetitive strain. Treatment focuses on nerve gliding, joint mobility, and ergonomic correction."></div>
 
     <div class="jf-panel" data-joint="hip"
-      data-region="0.50" data-zoom="0.45" data-ring-x="50" data-ring-y="60"
+      data-cam="0.068,0.474,-0.098|-0.154,-0.177,-0.119" data-ring-x="50" data-ring-y="60"
       data-tag="07 · Lower Limb" data-title="Hip &amp; Pelvis"
       data-pills="Hip Flexor Tightness,Gluteal Weakness,Pelvic Floor Dysfunction"
       data-desc="Hip and pelvic issues affect gait, balance, and lower back loading — especially important for post-partum recovery and women's health physiotherapy."></div>
 
     <div class="jf-panel" data-joint="knee"
-      data-region="0.26" data-zoom="0.3" data-ring-x="56" data-ring-y="78"
+      data-cam="0.229,-0.409,-0.644|0.115,0.017,-0.513" data-ring-x="56" data-ring-y="78"
       data-tag="08 · Lower Limb" data-title="Knee"
       data-pills="Knee Osteoarthritis,Patellar Tracking,ACL Rehab"
       data-desc="From early-stage arthritis to post-surgical ACL recovery, knee rehab focuses on quadriceps strength, joint stability, and restoring confident movement."></div>
 
     <div class="jf-panel" data-joint="ankle"
-      data-region="0.04" data-zoom="0.25" data-ring-x="56" data-ring-y="92"
+      data-cam="-0.331,-0.316,-0.793|0.19,0.125,-0.801" data-ring-x="56" data-ring-y="92"
       data-tag="09 · Lower Limb" data-title="Ankle &amp; Foot"
       data-pills="Ankle Sprains,Plantar Fasciitis,Achilles Tendinopathy"
       data-desc="Ankle instability and heel pain affect every step. We rebuild strength, balance, and proprioception to prevent re-injury and get you back on your feet."></div>
@@ -322,17 +304,43 @@ const ovTag = document.getElementById('ov-tag');
 const ovTitle = document.getElementById('ov-title');
 const ovPills = document.getElementById('ov-pills');
 const ovDesc = document.getElementById('ov-desc');
+const loadingEl = document.getElementById('jf-loading');
 
-// Offline 3D model — runs entirely locally, no network/iframe dependency.
-// Camera framing per body region is computed from the model's own real bounding
-// box (fraction of its measured height), not guessed absolute coordinates — so
-// it's correct regardless of this model's actual scale/proportions.
-const anatomyViewer = createAnatomyViewer(document.getElementById('anatomy-frame'),{
-  onLoaded:function(){ focusJoint(panels[0], true); }
+let sketchfabApi = null;
+
+// Init Sketchfab Viewer API
+const iframe = document.getElementById('sketchfab-frame');
+const client = new Sketchfab(iframe);
+client.init('85636205977d44878fc729fde5b77cd3', {
+  autostart: 1,
+  ui_infos: 0,
+  ui_inspector: 0,
+  ui_watermark: 0,
+  ui_annotations: 0,
+  transparent: 1,
+  success: function(api){
+    sketchfabApi = api;
+    api.start();
+    api.addEventListener('viewerready', function(){
+      loadingEl.classList.add('hide');
+      focusJoint(panels[0], true);
+    });
+  },
+  error: function(){
+    loadingEl.textContent = 'Unable to load 3D model';
+  }
 });
 
+function setCamera(camStr, instant){
+  if(!sketchfabApi) return;
+  const [posStr, targetStr] = camStr.split('|');
+  const position = posStr.split(',').map(Number);
+  const target = targetStr.split(',').map(Number);
+  sketchfabApi.setCameraLookAt(position, target, instant ? 0 : 1.2, function(){});
+}
+
 function focusJoint(panel, instant){
-  anatomyViewer.focusRegion(parseFloat(panel.dataset.region), parseFloat(panel.dataset.zoom));
+  setCamera(panel.dataset.cam, instant);
 
   const w = sticky.offsetWidth, h = sticky.offsetHeight;
   const x = parseFloat(panel.dataset.ringX);
@@ -416,7 +424,8 @@ debugCatch.addEventListener('click', (e) => {
     <div>
       <div class="footer-heading">Platform</div>
       <div class="footer-links">
-        <a href="exercises.html#hero">Exercises</a>
+        <a href="exercises.html#exercises">Exercises</a>
+        <a href="exercises.html#ai-coach">AI Coach</a>
         <a href="exercises.html#dashboard">Dashboard</a>
         <a href="#joint-focus">Conditions</a>
       </div>
@@ -438,7 +447,7 @@ debugCatch.addEventListener('click', (e) => {
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 PAH &ndash; Physio At Home. All rights reserved. 3D model by Chenzoss (Sketchfab), CC-BY-4.0.</span>
+    <span>&copy; 2026 PAH &ndash; Physio At Home. All rights reserved.</span>
     <div class="footer-bottom-links">
       <a href="#">Privacy</a>
       <a href="#">Terms</a>
