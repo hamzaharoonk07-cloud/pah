@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PAH – AI Physiotherapy</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="anatomy-viewer.js"></script>
 <style>
 :root{
   --brand:#e11d48;--accent:#fb7185;--green:#00e5a0;--yellow:#f59e0b;--blue:#3b82f6;
@@ -122,24 +125,19 @@ a{text-decoration:none;color:inherit}
 }
 .hero-sub{color:var(--muted);font-size:.95rem;line-height:1.8;max-width:560px;margin:0 auto 28px}
 .hero-welcome{
-  position:relative;display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
-  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
-  border-radius:100px;padding:7px 22px 7px 7px;font-size:.85rem;color:#cbd5e1;
-  animation:heroWelcomeIn .6s cubic-bezier(.2,.8,.2,1) both;
-  box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 12px 32px -18px rgba(225,29,72,.5);
+  display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
+  background:rgba(225,29,72,.06);border:1px solid rgba(225,29,72,.25);
+  border-radius:100px;padding:6px 22px 6px 6px;font-size:.85rem;color:#cbd5e1;
+  animation:heroWelcomeIn .5s cubic-bezier(.2,.8,.2,1) both;
+  box-shadow:0 10px 28px -16px rgba(225,29,72,.55);
 }
-@keyframes heroWelcomeIn{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:none}}
-.hero-welcome::before{
-  content:'';position:absolute;inset:-1px;border-radius:100px;padding:1px;z-index:-1;
-  background:linear-gradient(135deg,rgba(225,29,72,.6),transparent 40%,transparent 60%,rgba(251,113,133,.5));
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;
-}
+@keyframes heroWelcomeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .hero-welcome-av{
-  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Poppins',sans-serif;font-weight:800;font-size:.72rem;
+  font-family:'Poppins',sans-serif;font-weight:800;font-size:.75rem;
+  box-shadow:0 2px 8px rgba(225,29,72,.5);
 }
 .hero-welcome strong{color:#fff}
 .search-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
@@ -665,6 +663,24 @@ a{text-decoration:none;color:inherit}
 .s-fb.warn{background:rgba(239,68,68,.13);border-color:rgba(239,68,68,.35);color:#fca5a5}
 .s-fb.pulse{animation:fbPulse .5s ease}
 @keyframes fbPulse{0%{transform:scale(.97)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
+/* Real 3D anatomy reference — offline Three.js, local GLB, no network dependency */
+.model-panel{
+  position:absolute;bottom:120px;right:16px;z-index:10;
+  width:190px;height:308px;
+  background:rgba(0,0,0,.72);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.12);border-radius:16px;overflow:hidden;
+}
+.model-panel-lbl{
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:2;
+  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.8);white-space:nowrap;display:flex;align-items:center;gap:5px;
+}
+.model-panel-lbl .mpl-dot{width:5px;height:5px;border-radius:50%;background:#00e5a0;box-shadow:0 0 6px #00e5a0;animation:cdblink 1.6s infinite;flex-shrink:0}
+#anatomy-frame-live{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.model-panel-attr{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;padding:4px 8px;
+  font-size:.5rem;color:rgba(255,255,255,.4);background:rgba(0,0,0,.5);text-align:center;
+}
 /* ═══ FOOTER ═══ */
 .footer{
   position:relative;padding:0 24px 28px;background:#000;
@@ -738,6 +754,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
   .s-ang{right:6px}
+  .model-panel{width:140px;height:228px;bottom:130px}
   .s-instr{max-width:260px;font-size:.72rem}
   .s-pre-grid{grid-template-columns:1fr;gap:20px}
   .demo-panel{max-width:280px;margin:0 auto}
@@ -998,6 +1015,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <text id="ang-t" x="45" y="50" text-anchor="middle" fill="#fff" font-family="Poppins" font-weight="800" font-size="14">0°</text>
       <text id="ang-l" x="45" y="64" text-anchor="middle" fill="#94a3b8" font-family="Inter" font-size="7">Angle</text>
     </svg>
+  </div>
+
+  <!-- Real 3D anatomy reference model — offline, local GLB, no network dependency -->
+  <div class="model-panel" id="model-panel" style="display:none">
+    <div class="model-panel-lbl"><span class="mpl-dot"></span>Muscle Reference</div>
+    <div id="anatomy-frame-live" title="Human Muscular Anatomy"></div>
+    <div class="model-panel-attr">Model: Chenzoss / Sketchfab · CC-BY-4.0</div>
   </div>
 
   <!-- Rep counter flash -->
@@ -2193,6 +2217,7 @@ function openSession(idx){
   document.getElementById('s-ang').classList.remove('vis');
   document.getElementById('s-instr').style.display='none';
   document.getElementById('demo-live-trigger').style.display='none';
+  document.getElementById('model-panel').style.display='none';
   setFB('Activate your camera to begin the session.','');
   document.getElementById('sess').classList.add('open');
   document.body.style.overflow='hidden';
@@ -2203,6 +2228,7 @@ function endSession(){
   sessActive=false;
   VoiceCoach.stop();
   stopDemo();
+  pauseAnatomyOrbit();
   if(raf){cancelAnimationFrame(raf);raf=null;}
   if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
   const vid=document.getElementById('s-vid');
@@ -2225,6 +2251,22 @@ function endSession(){
     saveU(u);renderDash();renderNavStreak();
     toast('Session saved — '+sessReps+' reps at '+avgF+'% form.');
   }
+}
+
+// ── Real 3D anatomy reference — offline Three.js, local GLB, loaded once and reused ──
+let anatomyViewerLive=null,anatomyInitStarted=false;
+function initAnatomyModel(){
+  if(anatomyViewerLive){anatomyViewerLive.resume();return;}
+  if(anatomyInitStarted)return;
+  anatomyInitStarted=true;
+  const container=document.getElementById('anatomy-frame-live');
+  if(!container||typeof createAnatomyViewer==='undefined'){anatomyInitStarted=false;return;}
+  anatomyViewerLive=createAnatomyViewer(container,{
+    onError:function(){console.warn('Anatomy reference model failed to load.');}
+  });
+}
+function pauseAnatomyOrbit(){
+  if(anatomyViewerLive)anatomyViewerLive.pause();
 }
 
 // ── CAMERA with full mobile compatibility & diagnostics ──
@@ -2328,6 +2370,8 @@ async function startCamera(){
   document.getElementById('hdot').style.color='#00e5a0';
   document.getElementById('hud-txt').textContent='AI TRACKING ACTIVE';
   setFB('Stand so your full body is visible. Ensure good lighting.','');
+  document.getElementById('model-panel').style.display='block';
+  initAnatomyModel();
   stopDemo();
   VoiceCoach.speak('Camera is live. Stand back so your full body is visible.',{priority:true});
 
