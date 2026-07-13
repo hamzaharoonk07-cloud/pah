@@ -111,7 +111,22 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   padding:8px 20px;border-radius:100px;transition:opacity .2s;
 }
 .nav-cta:hover{opacity:.88}
-@media(max-width:768px){.nav-links{display:none}}
+.nav-ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer;background:none;border:none}
+.nav-ham span{display:block;width:20px;height:2px;background:#fff;border-radius:1px}
+.nav-mob-menu{
+  display:none;position:fixed;top:62px;left:0;right:0;z-index:199;
+  background:rgba(0,0,0,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);
+  padding:12px 20px;flex-direction:column;gap:2px;
+}
+.nav-mob-menu.open{display:flex}
+.nav-mob-menu a{color:#cbd5e1;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;padding:12px 6px;border-radius:8px;transition:background .2s}
+.nav-mob-menu a:hover{background:rgba(255,255,255,.06);color:#fff}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-ham{display:flex}
+  .navbar{padding:14px 18px}
+}
 
 /* ACCOUNT GATE */
 .gate-overlay{
@@ -165,6 +180,11 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 .footer-bottom-links{display:flex;gap:22px}
 .footer-bottom-links a{color:#94a3b8;text-decoration:none;font-size:.72rem;font-family:monospace}
 .footer-bottom-links a:hover{color:#fff}
+@media(max-width:540px){
+  .gate-row{grid-template-columns:1fr}
+  .gate-box{padding:28px 22px}
+  .footer-cols{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -202,17 +222,24 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   <a href="index.html" class="nav-logo"><img src="pah.jpeg" alt="PAH" height="100px" width="60"><span>P</span>AH</a>
   <div class="nav-links">
     <a href="#joint-focus" class="nav-link">Conditions</a>
-    <a href="exercises.html#exercises" class="nav-link">Exercises</a>
-    <a href="exercises.html#ai-coach" class="nav-link">AI Coach</a>
+    <a href="exercises.html#hero" class="nav-link">Exercises</a>
     <a href="exercises.html#dashboard" class="nav-link">Dashboard</a>
   </div>
   <a href="exercises.html" class="nav-cta">Exercises</a>
+  <button class="nav-ham" id="nav-ham" onclick="document.getElementById('nav-mob-menu').classList.toggle('open')" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="nav-mob-menu" id="nav-mob-menu">
+  <a href="#joint-focus" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Conditions</a>
+  <a href="exercises.html#hero" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Exercises</a>
+  <a href="exercises.html#dashboard" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Dashboard</a>
+</div>
 
 <section id="joint-focus">
   <div class="jf-sticky" id="jf-sticky">
-    <iframe id="sketchfab-frame" title="Human Bones and Muscles"
-      src="https://sketchfab.com/models/85636205977d44878fc729fde5b77cd3/embed?autostart=1&ui_infos=0&ui_inspector=0&ui_watermark=0&ui_annotations=0&transparent=1"
+    <iframe id="sketchfab-frame" title="Human Male Muscular Anatomy Model"
+      src="https://sketchfab.com/models/cbcec316d70f49f69b9032682f80b05d/embed?autostart=1&ui_infos=0&ui_inspector=0&ui_watermark=0&ui_annotations=0&transparent=1"
       allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking
       execution-while-out-of-viewport execution-while-not-rendered web-share>
     </iframe>
@@ -308,7 +335,7 @@ let sketchfabApi = null;
 // Init Sketchfab Viewer API
 const iframe = document.getElementById('sketchfab-frame');
 const client = new Sketchfab(iframe);
-client.init('85636205977d44878fc729fde5b77cd3', {
+client.init('cbcec316d70f49f69b9032682f80b05d', {
   autostart: 1,
   ui_infos: 0,
   ui_inspector: 0,
@@ -421,8 +448,7 @@ debugCatch.addEventListener('click', (e) => {
     <div>
       <div class="footer-heading">Platform</div>
       <div class="footer-links">
-        <a href="exercises.html#exercises">Exercises</a>
-        <a href="exercises.html#ai-coach">AI Coach</a>
+        <a href="exercises.html#hero">Exercises</a>
         <a href="exercises.html#dashboard">Dashboard</a>
         <a href="#joint-focus">Conditions</a>
       </div>
@@ -444,7 +470,7 @@ debugCatch.addEventListener('click', (e) => {
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 PAH &ndash; Physio At Home. All rights reserved.</span>
+    <span>&copy; 2026 PAH &ndash; Physio At Home. All rights reserved. 3D model by Chenzoss (Sketchfab), CC-BY-4.0.</span>
     <div class="footer-bottom-links">
       <a href="#">Privacy</a>
       <a href="#">Terms</a>
