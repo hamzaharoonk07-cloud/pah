@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PAH – AI Physiotherapy</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
 <style>
 :root{
   --brand:#e11d48;--accent:#fb7185;--green:#00e5a0;--yellow:#f59e0b;--blue:#3b82f6;
@@ -123,9 +122,24 @@ a{text-decoration:none;color:inherit}
 }
 .hero-sub{color:var(--muted);font-size:.95rem;line-height:1.8;max-width:560px;margin:0 auto 28px}
 .hero-welcome{
-  display:inline-block;margin-bottom:20px;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  border-radius:100px;padding:8px 20px;font-size:.85rem;color:#cbd5e1;
+  position:relative;display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;padding:7px 22px 7px 7px;font-size:.85rem;color:#cbd5e1;
+  animation:heroWelcomeIn .6s cubic-bezier(.2,.8,.2,1) both;
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 12px 32px -18px rgba(225,29,72,.5);
+}
+@keyframes heroWelcomeIn{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:none}}
+.hero-welcome::before{
+  content:'';position:absolute;inset:-1px;border-radius:100px;padding:1px;z-index:-1;
+  background:linear-gradient(135deg,rgba(225,29,72,.6),transparent 40%,transparent 60%,rgba(251,113,133,.5));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;
+}
+.hero-welcome-av{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:800;font-size:.72rem;
 }
 .hero-welcome strong{color:#fff}
 .search-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
@@ -651,24 +665,6 @@ a{text-decoration:none;color:inherit}
 .s-fb.warn{background:rgba(239,68,68,.13);border-color:rgba(239,68,68,.35);color:#fca5a5}
 .s-fb.pulse{animation:fbPulse .5s ease}
 @keyframes fbPulse{0%{transform:scale(.97)}45%{transform:scale(1.02)}100%{transform:scale(1)}}
-/* Real 3D anatomy reference (Sketchfab-hosted model) */
-.model-panel{
-  position:absolute;bottom:120px;right:16px;z-index:10;
-  width:190px;height:308px;
-  background:rgba(0,0,0,.72);backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.12);border-radius:16px;overflow:hidden;
-}
-.model-panel-lbl{
-  position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:2;
-  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.8);white-space:nowrap;display:flex;align-items:center;gap:5px;
-}
-.model-panel-lbl .mpl-dot{width:5px;height:5px;border-radius:50%;background:#00e5a0;box-shadow:0 0 6px #00e5a0;animation:cdblink 1.6s infinite;flex-shrink:0}
-#sketchfab-anatomy-frame{position:absolute;inset:0;width:100%;height:100%;border:none;pointer-events:none}
-.model-panel-attr{
-  position:absolute;bottom:0;left:0;right:0;z-index:2;padding:4px 8px;
-  font-size:.5rem;color:rgba(255,255,255,.4);background:rgba(0,0,0,.5);text-align:center;
-}
 /* ═══ FOOTER ═══ */
 .footer{
   position:relative;padding:0 24px 28px;background:#000;
@@ -742,7 +738,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
   .s-ang{right:6px}
-  .model-panel{width:140px;height:228px;bottom:130px}
   .s-instr{max-width:260px;font-size:.72rem}
   .s-pre-grid{grid-template-columns:1fr;gap:20px}
   .demo-panel{max-width:280px;margin:0 auto}
@@ -833,7 +828,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
       Clinical AI Tracking · 3D Muscle Map · 14 Exercises
     </div>
-    <div class="hero-welcome" id="hero-welcome" style="display:none">Good <span id="hero-time">day</span>, <strong id="hero-name">—</strong>. Ready for your session?</div>
+    <div class="hero-welcome" id="hero-welcome" style="display:none">
+      <span class="hero-welcome-av" id="hero-welcome-av">P</span>
+      <span>Good <span id="hero-time">day</span>, <strong id="hero-name">—</strong>. Ready for your session?</span>
+    </div>
     <h1 class="hero-h">Your <span>Recovery</span><br>Guided by AI</h1>
     <p class="hero-sub">Physio-approved exercises with real-time MediaPipe pose tracking, live form scoring, and 3D muscle activation — all private, all on your device.</p>
     <div class="search-row">
@@ -1000,16 +998,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <text id="ang-t" x="45" y="50" text-anchor="middle" fill="#fff" font-family="Poppins" font-weight="800" font-size="14">0°</text>
       <text id="ang-l" x="45" y="64" text-anchor="middle" fill="#94a3b8" font-family="Inter" font-size="7">Angle</text>
     </svg>
-  </div>
-
-  <!-- Real 3D anatomy reference model (Sketchfab-hosted) -->
-  <div class="model-panel" id="model-panel" style="display:none">
-    <div class="model-panel-lbl"><span class="mpl-dot"></span>Muscle Reference</div>
-    <iframe id="sketchfab-anatomy-frame" title="Human Muscular Anatomy"
-      src="https://sketchfab.com/models/cbcec316d70f49f69b9032682f80b05d/embed?autostart=1&ui_infos=0&ui_inspector=0&ui_watermark=0&ui_annotations=0&ui_controls=0&transparent=1&autospin=0.35"
-      allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking
-      execution-while-out-of-viewport execution-while-not-rendered></iframe>
-    <div class="model-panel-attr">Model: Chenzoss / Sketchfab · CC-BY-4.0</div>
   </div>
 
   <!-- Rep counter flash -->
@@ -1455,6 +1443,7 @@ function initApp(acc){
   document.getElementById('hero-welcome').style.display='inline-block';
   document.getElementById('hero-time').textContent=time;
   document.getElementById('hero-name').textContent=first;
+  document.getElementById('hero-welcome-av').textContent=first.charAt(0).toUpperCase();
   const u=loadU();
   document.getElementById('dash-greet-h').textContent='Good '+time+', '+first;
   document.getElementById('dash-greet-p').textContent=
@@ -1531,7 +1520,7 @@ const DC={Beginner:'#00e5a0',Intermediate:'#f59e0b',Advanced:'#ef4444'};
 const DD={Beginner:1,Intermediate:2,Advanced:3};
 
 const EX=[
-  {name:'Cervical Tilt',area:'Cervical Spine',diff:'Beginner',tags:['Neck'],reps:12,det:'neck_tilt',
+  {name:'Neck Tilt Stretch',area:'Cervical Spine',diff:'Beginner',tags:['Neck'],reps:12,det:'neck_tilt',
     desc:'Gently tilt head side to side, holding 3 seconds at end range. Shoulders completely relaxed.',
     note:'First-line treatment for cervical spondylosis and tension headaches. Mobilizes facet joints.',
     muscles:['Upper Trapezius','SCM','Scalenes'],
@@ -1555,13 +1544,13 @@ const EX=[
     muscles:['Rotator Cuff','Biceps Brachii','Infraspinatus'],
     angles:{main:[11,13,15],pivot:11,threshold:{lo:10,hi:45}},
     joints:{p:[11,13,15],s:[12,14,16],lk:[[11,13],[13,15]],sk:[[12,14],[14,16]]}},
-  {name:'Wrist Flexion and Extension',area:'Wrist and Forearm',diff:'Beginner',tags:['Wrist'],reps:20,det:'wrist',
+  {name:'Wrist Stretch',area:'Wrist and Forearm',diff:'Beginner',tags:['Wrist'],reps:20,det:'wrist',
     desc:'Extend arms forward. Flex wrist down then extend up fully. Slow and controlled motion.',
     note:'Improves radioulnar mobility. Prevents carpal tunnel progression. Reduces forearm tightness.',
     muscles:['Wrist Flexors','Wrist Extensors','Pronator Teres'],
     angles:{main:[13,15,17],pivot:15,threshold:{lo:20,hi:160}},
     joints:{p:[13,14,15,16,17,18],s:[11,12],lk:[[13,15],[14,16],[15,17],[16,18]],sk:[[11,13],[12,14]]}},
-  {name:'McKenzie Extension',area:'Lumbar L4-L5',diff:'Beginner',tags:['Back'],reps:10,det:'mckenzie',
+  {name:'Gentle Back Arch',area:'Lower Back',diff:'Beginner',tags:['Back'],reps:10,det:'mckenzie',
     desc:'Place hands on lower back. Gently arch backward. Hold 3 seconds at end range. Stand tall between reps.',
     note:'McKenzie method. Primary treatment for L4-L5 disc herniation. Centralizes radiating leg pain.',
     muscles:['Erector Spinae','Multifidus','Quadratus Lumborum'],
@@ -1591,13 +1580,13 @@ const EX=[
     muscles:['Peroneals','Tibialis Anterior','Gastrocnemius'],
     angles:{main:[25,27,31],pivot:27,threshold:{lo:80,hi:140}},
     joints:{p:[27,28,29,30,31,32],s:[25,26],lk:[[27,29],[28,30],[29,31],[30,32]],sk:[[25,27],[26,28]]}},
-  {name:'Side Neck Stretch',area:'Upper Trapezius',diff:'Beginner',tags:['Neck','Shoulder'],reps:10,det:'neck_tilt',
+  {name:'Ear to Shoulder Stretch',area:'Upper Trapezius',diff:'Beginner',tags:['Neck','Shoulder'],reps:10,det:'neck_tilt',
     desc:'Drop one ear toward the shoulder. Add gentle overpressure with the same-side hand if comfortable. Hold, then switch sides.',
     note:'Lengthens upper trapezius and scalenes. Relieves tension headaches and cervicogenic pain.',
     muscles:['Upper Trapezius','SCM','Levator Scapulae'],
     angles:{main:[0,7,8],pivot:0,threshold:{lo:15,hi:40}},
     joints:{p:[0,7,8,11,12],s:[13,14],lk:[[0,7],[0,8],[7,8],[7,11],[8,12]],sk:[[11,13],[12,14]]}},
-  {name:'Postural Screen',area:'Full Body Assessment',diff:'Beginner',tags:['Neck','Shoulder','Back','Hip','Knee'],reps:1,det:'posture',
+  {name:'Posture Check',area:'Full Body Assessment',diff:'Beginner',tags:['Neck','Shoulder','Back','Hip','Knee'],reps:1,det:'posture',
     desc:'Stand naturally, arms relaxed. Hold for 6 seconds while the AI scans shoulder level, hip level, forward head, and spinal alignment.',
     note:'Quick clinical screen of cervical, thoracic, lumbar, and pelvic alignment — useful before choosing which exercises to focus on.',
     muscles:['All Postural Muscles','Core','Erector Spinae'],
@@ -1609,7 +1598,7 @@ const EX=[
     muscles:['Quadratus Lumborum','External Oblique','Latissimus Dorsi'],
     angles:{main:[23,11,12],pivot:23,threshold:{lo:15,hi:35}},
     joints:{p:[11,12,23,24],s:[0,25,26],lk:[[11,12],[11,23],[12,24],[23,24]],sk:[[0,11],[0,12],[23,25],[24,26]]}},
-  {name:'Bilateral Arm Raise',area:'Shoulder Flexion (Both Arms)',diff:'Beginner',tags:['Shoulder'],reps:12,det:'bilateral_raise',
+  {name:'Arms Overhead Raise',area:'Shoulder Flexion (Both Arms)',diff:'Beginner',tags:['Shoulder'],reps:12,det:'bilateral_raise',
     desc:'Stand tall, arms at your sides. Raise both arms forward and up overhead together, slowly and with control. Lower with the same control.',
     note:'Gentle bilateral shoulder flexion. Builds shoulder mobility and coordination — a good starting point before more demanding single-arm shoulder work.',
     muscles:['Anterior Deltoid','Upper Trapezius','Serratus Anterior'],
@@ -2204,7 +2193,6 @@ function openSession(idx){
   document.getElementById('s-ang').classList.remove('vis');
   document.getElementById('s-instr').style.display='none';
   document.getElementById('demo-live-trigger').style.display='none';
-  document.getElementById('model-panel').style.display='none';
   setFB('Activate your camera to begin the session.','');
   document.getElementById('sess').classList.add('open');
   document.body.style.overflow='hidden';
@@ -2215,7 +2203,6 @@ function endSession(){
   sessActive=false;
   VoiceCoach.stop();
   stopDemo();
-  pauseAnatomyOrbit();
   if(raf){cancelAnimationFrame(raf);raf=null;}
   if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
   const vid=document.getElementById('s-vid');
@@ -2241,46 +2228,6 @@ function endSession(){
 }
 
 // ── CAMERA with full mobile compatibility & diagnostics ──
-// ── Real 3D anatomy reference (Sketchfab-hosted, loaded once and reused) ──
-let anatomyApi=null,anatomyInitStarted=false,anatomyOrbitRaf=null;
-function initAnatomyModel(){
-  if(anatomyApi){resumeAnatomyOrbit();return;}
-  if(anatomyInitStarted)return;
-  anatomyInitStarted=true;
-  const iframe=document.getElementById('sketchfab-anatomy-frame');
-  if(!iframe||typeof Sketchfab==='undefined'){anatomyInitStarted=false;return;}
-  const client=new Sketchfab(iframe);
-  client.init('cbcec316d70f49f69b9032682f80b05d',{
-    autostart:1,ui_infos:0,ui_inspector:0,ui_watermark:0,ui_annotations:0,ui_controls:0,transparent:1,
-    success:function(api){
-      anatomyApi=api;
-      api.start();
-      api.addEventListener('viewerready',resumeAnatomyOrbit);
-    },
-    error:function(){console.warn('Anatomy reference model failed to load.');}
-  });
-}
-// Continuously orbits the camera around whatever framing Sketchfab auto-computed for
-// this model, so it visibly rotates regardless of the model's actual scale/proportions.
-function resumeAnatomyOrbit(){
-  if(!anatomyApi||anatomyOrbitRaf)return;
-  anatomyApi.getCameraLookAt(function(err,camera){
-    if(err||!camera||!camera.position||!camera.target)return;
-    const p=camera.position,t=camera.target;
-    const radius=Math.hypot(p[0]-t[0],p[2]-t[2])||2;
-    let angle=Math.atan2(p[2]-t[2],p[0]-t[0]);
-    function tick(){
-      if(!sessActive){anatomyOrbitRaf=null;return;}
-      angle+=0.0025;
-      anatomyApi.setCameraLookAt([t[0]+Math.cos(angle)*radius,p[1],t[2]+Math.sin(angle)*radius],t,0);
-      anatomyOrbitRaf=requestAnimationFrame(tick);
-    }
-    tick();
-  });
-}
-function pauseAnatomyOrbit(){
-  if(anatomyOrbitRaf){cancelAnimationFrame(anatomyOrbitRaf);anatomyOrbitRaf=null;}
-}
 
 async function startCamera(){
   const preEl0=document.getElementById('s-pre');
@@ -2381,8 +2328,6 @@ async function startCamera(){
   document.getElementById('hdot').style.color='#00e5a0';
   document.getElementById('hud-txt').textContent='AI TRACKING ACTIVE';
   setFB('Stand so your full body is visible. Ensure good lighting.','');
-  document.getElementById('model-panel').style.display='block';
-  initAnatomyModel();
   stopDemo();
   VoiceCoach.speak('Camera is live. Stand back so your full body is visible.',{priority:true});
 
@@ -2794,7 +2739,7 @@ function analyzeExercise(lm,W,H){
       if(repPhase==='neutral'){setRepPhase('tilted');setFB('Good tilt — hold this position for 3 seconds.','good');}
       updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));setPhase('Stretching');
     }else if(raw<lo*0.35&&repPhase==='tilted'){
-      if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Good — return and tilt the other side.','');}
+      if(phaseAge()>1800){setRepPhase('neutral');doRep();setFB('Good — return and tilt the other side.','');}
       else{setRepPhase('neutral');setFB('Hold the tilt a little longer for full credit.','warn');}
     }else{
       setFB('Slowly tilt your head to one side, hold 3 seconds.','');setPhase('Ready');
@@ -2812,7 +2757,7 @@ function analyzeExercise(lm,W,H){
       if(repPhase==='neutral'){setRepPhase('tucked');setFB('Good chin tuck — hold 5 seconds. Keep eyes level.','good');}
       updateScore(isIdleHold(retraction,lo,hi)?0:scoreHold(retraction,lo,hi));setPhase('Tucked');
     }else if(retraction<lo*0.3&&repPhase==='tucked'){
-      if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Release and repeat the tuck motion.','');}
+      if(phaseAge()>2500){setRepPhase('neutral');doRep();setFB('Release and repeat the tuck motion.','');}
       else{setRepPhase('neutral');setFB('Hold the tuck a little longer for full credit.','warn');}
     }else{
       setFB('Draw your chin straight backward — like making a double chin.','');setPhase('Ready');
@@ -2864,7 +2809,7 @@ function analyzeExercise(lm,W,H){
         if(repPhase==='neutral'){setRepPhase('extended');setFB('Good backward extension — hold 3 seconds.','good');}
         updateScore(isIdleHold(extension,lo,hi)?0:scoreHold(extension,lo,hi));setPhase('Extended');
       }else if(spineAng>172&&repPhase==='extended'){
-        if(phaseAge()>500){setRepPhase('neutral');doRep();setFB('Stand tall and repeat the extension.','');}
+        if(phaseAge()>1800){setRepPhase('neutral');doRep();setFB('Stand tall and repeat the extension.','');}
         else{setRepPhase('neutral');setFB('Hold the extension a little longer for full credit.','warn');}
       }else{
         setFB('Place hands on lower back and gently arch backward.','');
@@ -2876,7 +2821,7 @@ function analyzeExercise(lm,W,H){
         if(repPhase!=='arch'){setRepPhase('arch');setFB('Good arch (cow) — now round into cat position.','good');}
         updateScore(isIdleHold(dev,15,40)?0:scoreHold(dev,15,40));setPhase('Cow');
       }else if(spineAng>175&&repPhase==='arch'){
-        if(phaseAge()>350){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
+        if(phaseAge()>700){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
         else{setFB('Hold each position briefly, in rhythm with your breath.','warn');}
       }else if(spineAng>175){
         setFB('Arch your spine fully — look upward gently.','');
@@ -2896,7 +2841,7 @@ function analyzeExercise(lm,W,H){
       if(repPhase!=='up'){setRepPhase('up');setFB('Good — pull knee toward chest. Hold 3 seconds.','good');}
       updateScore(isIdleHold(kneeAng,lo,hi)?0:scoreHold(kneeAng,lo,hi));setPhase('Up');
     }else if(kneeAng>150&&repPhase==='up'){
-      if(phaseAge()>450){setRepPhase('down');doRep();setFB('Lower and raise the other knee.','');}
+      if(phaseAge()>1800){setRepPhase('down');doRep();setFB('Lower and raise the other knee.','');}
       else{setRepPhase('down');setFB('Hold the lift a little longer for full credit.','warn');}
     }else{
       setFB('Stand tall. Pull one knee up toward your chest.','');
@@ -2912,7 +2857,7 @@ function analyzeExercise(lm,W,H){
       if(repPhase!=='up'){setRepPhase('up');setFB('Full plantarflexion — hold at top.','good');}
       updateScore(isIdleHold(ang,lo,hi)?0:scoreHold(ang,lo,hi));setPhase('Up');
     }else if(ang<lo&&repPhase==='up'){
-      if(phaseAge()>350){setRepPhase('down');doRep();setFB('Lower slowly over 3 seconds.','');}
+      if(phaseAge()>700){setRepPhase('down');doRep();setFB('Lower slowly over 3 seconds.','');}
       else{setRepPhase('down');setFB('Pause at the top a little longer next time.','warn');}
     }else{
       setFB('Rise fully onto tiptoes. Pause at the top for 1 second.','');
@@ -2952,7 +2897,7 @@ function analyzeExercise(lm,W,H){
       if(repPhase==='neutral'){setRepPhase('bent');setFB('Good side bend — hold 2 seconds.','good');}
       updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));setPhase('Bending');
     }else if(raw<lo*0.35&&repPhase==='bent'){
-      if(phaseAge()>450){setRepPhase('neutral');doRep();setFB('Good — return upright and bend the other side.','');}
+      if(phaseAge()>1500){setRepPhase('neutral');doRep();setFB('Good — return upright and bend the other side.','');}
       else{setRepPhase('neutral');setFB('Hold the bend a little longer for full credit.','warn');}
     }else{
       setFB('Stand tall, slide one hand down your leg to bend sideways.','');setPhase('Ready');
@@ -2992,7 +2937,7 @@ function analyzeExercise(lm,W,H){
       updateScore(isIdleHold(avg,lo,hi)?0:Math.max(0,scoreHold(avg,lo,hi)-penalty));setPhase('Raised');
       if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
     }else if(avg<40&&repPhase==='up'){
-      if(phaseAge()>400){setRepPhase('down');doRep();setFB('Lower complete — raise again with control.','');}
+      if(phaseAge()>1200){setRepPhase('down');doRep();setFB('Lower complete — raise again with control.','');}
       else{setRepPhase('down');setFB('Lower a little slower for full credit.','warn');}
     }else{
       setFB('Raise both arms forward and up together, nice and slow.','');

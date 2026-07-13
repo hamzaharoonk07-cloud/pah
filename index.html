@@ -8,7 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="anatomy-viewer.js"></script>
 <style>
 :root{ --brand:#e11d48; --accent:#fb7185; }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -19,7 +21,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 #joint-focus{position:relative}
 .jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
 
-#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none}
+#anatomy-frame{position:absolute;inset:0;width:100%;height:100%;background:#050508}
 
 .jf-overlay-grad{
   position:absolute;inset:0;z-index:2;pointer-events:none;
@@ -56,7 +58,7 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   position:absolute;inset:0;z-index:50;cursor:crosshair;display:none;
 }
 #jf-debug-catch.on{display:block}
-.jf-sticky.debug #sketchfab-frame{pointer-events:none}
+.jf-sticky.debug #anatomy-frame{pointer-events:none}
 
 .jf-overlay{
   position:absolute;right:0;bottom:0;z-index:5;
@@ -74,9 +76,6 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 .jf-conditions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;justify-content:flex-end}
 @media(max-width:768px){.jf-conditions{justify-content:flex-start}}
 .jf-cond-pill{font-size:.74rem;font-weight:600;color:var(--brand);background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.35);padding:5px 14px;border-radius:100px}
-
-.jf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:#0f172a;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#64748b;transition:opacity .6s;}
-.jf-loading.hide{opacity:0;pointer-events:none}
 
 .jf-panels{position:relative;margin-top:-100vh}
 .jf-panel{height:100vh}
@@ -238,13 +237,8 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 
 <section id="joint-focus">
   <div class="jf-sticky" id="jf-sticky">
-    <iframe id="sketchfab-frame" title="Human Male Muscular Anatomy Model"
-      src="https://sketchfab.com/models/cbcec316d70f49f69b9032682f80b05d/embed?autostart=1&ui_infos=0&ui_inspector=0&ui_watermark=0&ui_annotations=0&transparent=1"
-      allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking
-      execution-while-out-of-viewport execution-while-not-rendered web-share>
-    </iframe>
+    <div id="anatomy-frame" title="Human Male Muscular Anatomy Model"></div>
     <div class="jf-overlay-grad"></div>
-    <div class="jf-loading" id="jf-loading">Loading 3D Model…</div>
 
     <svg class="jf-line" id="jf-line"><line id="jf-line-el" x1="0" y1="0" x2="0" y2="0"/></svg>
     <div class="jf-dot" id="jf-dot"></div>
@@ -328,44 +322,16 @@ const ovTag = document.getElementById('ov-tag');
 const ovTitle = document.getElementById('ov-title');
 const ovPills = document.getElementById('ov-pills');
 const ovDesc = document.getElementById('ov-desc');
-const loadingEl = document.getElementById('jf-loading');
 
-let sketchfabApi = null;
-
-// Init Sketchfab Viewer API
-const iframe = document.getElementById('sketchfab-frame');
-const client = new Sketchfab(iframe);
-client.init('cbcec316d70f49f69b9032682f80b05d', {
-  autostart: 1,
-  ui_infos: 0,
-  ui_inspector: 0,
-  ui_watermark: 0,
-  ui_annotations: 0,
-  transparent: 1,
-  success: function(api){
-    sketchfabApi = api;
-    api.start();
-    api.addEventListener('viewerready', function(){
-      loadingEl.classList.add('hide');
-      focusJoint(panels[0], true);
-    });
-  },
-  error: function(){
-    loadingEl.textContent = 'Unable to load 3D model';
-  }
+// Offline 3D model — runs entirely locally, no network/iframe dependency.
+// The camera auto-frames and continuously rotates rather than jumping to
+// hand-tuned per-joint positions, since those were tuned for a different
+// model and can't be safely reused here.
+const anatomyViewer = createAnatomyViewer(document.getElementById('anatomy-frame'),{
+  onLoaded:function(){ focusJoint(panels[0], true); }
 });
 
-function setCamera(camStr, instant){
-  if(!sketchfabApi) return;
-  const [posStr, targetStr] = camStr.split('|');
-  const position = posStr.split(',').map(Number);
-  const target = targetStr.split(',').map(Number);
-  sketchfabApi.setCameraLookAt(position, target, instant ? 0 : 1.2, function(){});
-}
-
 function focusJoint(panel, instant){
-  setCamera(panel.dataset.cam, instant);
-
   const w = sticky.offsetWidth, h = sticky.offsetHeight;
   const x = parseFloat(panel.dataset.ringX);
   const y = parseFloat(panel.dataset.ringY);
