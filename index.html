@@ -3,30 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> PAH – Conditions We Treat</title>
+<title>PhysioSync – Conditions We Treat</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="anatomy-viewer.js"></script>
 <style>
-:root{ --brand:#e11d48; --accent:#fb7185; }
+:root{
+  --brand:#e11d48;--accent:#fb7185;--purple:#8b5cf6;
+  --bg:#000;--bg-strong:#000;--heading:#fff;--text:#fff;--muted:#cbd5e1;--submuted:#94a3b8;
+  --glass:rgba(0,0,0,.7);--glass-strong:rgba(0,0,0,.96);
+  --w04:rgba(255,255,255,.04);--w05:rgba(255,255,255,.05);--w06:rgba(255,255,255,.06);
+  --w08:rgba(255,255,255,.08);--w10:rgba(255,255,255,.1);
+}
+:root[data-theme="light"]{
+  --bg:#f4f5f7;--bg-strong:#ffffff;--heading:#0f172a;--text:#1e293b;--muted:#475569;--submuted:#64748b;
+  --glass:rgba(255,255,255,.85);--glass-strong:rgba(255,255,255,.97);
+  --w04:rgba(15,23,42,.045);--w05:rgba(15,23,42,.055);--w06:rgba(15,23,42,.065);
+  --w08:rgba(15,23,42,.09);--w10:rgba(15,23,42,.12);
+}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
-body{font-family:'Inter',sans-serif;color:#fff;background:#000;overflow-x:hidden;width:100%;max-width:100vw}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;width:100%;max-width:100vw;transition:background .3s ease,color .3s ease}
 h1,h2,h3{font-family:'Poppins',sans-serif}
 
 #joint-focus{position:relative}
-.jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
+.jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:var(--bg-strong)}
 
-#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none}
+#anatomy-frame{position:absolute;inset:0;width:100%;height:100%;background:var(--bg-strong)}
 
 .jf-overlay-grad{
   position:absolute;inset:0;z-index:2;pointer-events:none;
   background:linear-gradient(180deg,rgba(15,23,42,.1) 0%,rgba(15,23,42,0) 35%,rgba(15,23,42,.85) 100%);
 }
 
-/* highlight dot */
 .jf-dot{
   position:absolute;width:14px;height:14px;border-radius:50%;
   background:var(--brand);box-shadow:0 0 0 4px rgba(225,29,72,.25),0 0 16px rgba(225,29,72,.7);
@@ -43,7 +58,6 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 .jf-line.active{opacity:1}
 .jf-line line{stroke:var(--brand);stroke-width:1.5;stroke-dasharray:4 4}
 
-/* DEBUG CONSOLE */
 #jf-debug{
   position:fixed;bottom:10px;left:10px;z-index:9999;background:rgba(0,0,0,.7);
   color:var(--accent);font-family:monospace;font-size:.75rem;padding:8px 12px;border-radius:8px;
@@ -52,11 +66,9 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   pointer-events:auto;cursor:pointer;background:var(--brand);color:#fff;border:none;
   border-radius:6px;padding:4px 10px;font-size:.75rem;font-family:monospace;margin-right:8px;
 }
-#jf-debug-catch{
-  position:absolute;inset:0;z-index:50;cursor:crosshair;display:none;
-}
+#jf-debug-catch{position:absolute;inset:0;z-index:50;cursor:crosshair;display:none}
 #jf-debug-catch.on{display:block}
-.jf-sticky.debug #sketchfab-frame{pointer-events:none}
+.jf-sticky.debug #anatomy-frame{pointer-events:none}
 
 .jf-overlay{
   position:absolute;right:0;bottom:0;z-index:5;
@@ -68,78 +80,85 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 @media(max-width:768px){.jf-overlay{padding:28px 24px;text-align:left;width:100%}}
 
 .jf-tag{display:inline-block;font-weight:700;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
-.jf-title{font-size:clamp(2.4rem,6vw,5rem);font-weight:900;line-height:1;margin-bottom:14px;letter-spacing:-.02em;text-transform:uppercase}
-.jf-desc{color:#cbd5e1;font-size:1rem;line-height:1.75;margin-bottom:18px;margin-left:auto}
+.jf-title{font-size:clamp(2.4rem,6vw,5rem);font-weight:900;line-height:1;margin-bottom:14px;letter-spacing:-.02em;text-transform:uppercase;color:var(--heading)}
+.jf-desc{color:var(--muted);font-size:1rem;line-height:1.75;margin-bottom:18px;margin-left:auto}
 @media(max-width:768px){.jf-desc{margin-left:0}}
 .jf-conditions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;justify-content:flex-end}
 @media(max-width:768px){.jf-conditions{justify-content:flex-start}}
 .jf-cond-pill{font-size:.74rem;font-weight:600;color:var(--brand);background:rgba(225,29,72,.15);border:1px solid rgba(225,29,72,.35);padding:5px 14px;border-radius:100px}
 
-.jf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:#0f172a;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#64748b;transition:opacity .6s;}
-.jf-loading.hide{opacity:0;pointer-events:none}
-
 .jf-panels{position:relative;margin-top:-100vh}
 .jf-panel{height:100vh}
-
-.jf-exercises-btn{
-  position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:100;
-  background:var(--brand);color:#fff;text-decoration:none;
-  font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;
-  letter-spacing:.08em;text-transform:uppercase;
-  padding:12px 32px;border-radius:100px;
-  box-shadow:0 8px 24px rgba(225,29,72,.4);
-  transition:transform .2s,box-shadow .2s;
-}
-.jf-exercises-btn:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 12px 28px rgba(225,29,72,.55)}
 
 /* NAVBAR */
 .navbar{
   position:fixed;top:0;left:0;right:0;z-index:200;
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 32px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:14px 32px;background:var(--glass);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--w06);
 }
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.04em}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--heading);font-family:'Poppins',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.04em}
 .nav-logo img{width:38px;height:38px;border-radius:10px;object-fit:cover}
 .nav-logo span{
-  background:linear-gradient(100deg,var(--brand),var(--accent),#8b5cf6,var(--brand));
+  background:linear-gradient(100deg,var(--brand),var(--accent),var(--purple),var(--brand));
   background-size:300% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   animation:navGradShift 7s ease-in-out infinite;
 }
 @keyframes navGradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @media(prefers-reduced-motion:reduce){.nav-logo span{animation:none}}
 .nav-links{display:flex;align-items:center;gap:28px}
-.nav-link{color:#cbd5e1;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.04em;transition:color .2s}
-.nav-link:hover{color:#fff}
+.nav-link{color:var(--muted);text-decoration:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;letter-spacing:.04em;transition:color .2s}
+.nav-link:hover{color:var(--heading)}
 .nav-cta{
   background:var(--brand);color:#fff;text-decoration:none;
   font-family:'Poppins',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.05em;
   padding:8px 20px;border-radius:100px;transition:opacity .2s;
 }
 .nav-cta:hover{opacity:.88}
-@media(max-width:768px){.nav-links{display:none}}
+.theme-tgl{
+  display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;
+  background:var(--w05);border:1px solid var(--w10);color:var(--heading);cursor:pointer;
+  transition:all .2s;flex-shrink:0;margin-left:14px;
+}
+.theme-tgl:hover{background:var(--w08)}
+.nav-ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer;background:none;border:none;margin-left:10px}
+.nav-ham span{display:block;width:20px;height:2px;background:var(--heading);border-radius:1px}
+.nav-mob-menu{
+  display:none;position:fixed;top:62px;left:0;right:0;z-index:199;
+  background:var(--glass-strong);backdrop-filter:blur(12px);border-bottom:1px solid var(--w08);
+  padding:12px 20px;flex-direction:column;gap:2px;
+}
+.nav-mob-menu.open{display:flex}
+.nav-mob-menu a{color:var(--muted);text-decoration:none;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;padding:12px 6px;border-radius:8px;transition:background .2s}
+.nav-mob-menu a:hover{background:var(--w06);color:var(--heading)}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-ham{display:flex}
+  .navbar{padding:14px 18px}
+}
 
 /* ACCOUNT GATE */
 .gate-overlay{
-  position:fixed;inset:0;z-index:9999;background:#000;
+  position:fixed;inset:0;z-index:9999;background:var(--bg-strong);
   display:flex;align-items:center;justify-content:center;padding:24px;
 }
 .gate-overlay.hidden{display:none}
 .gate-box{
-  width:100%;max-width:440px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  width:100%;max-width:440px;background:var(--w04);border:1px solid var(--w08);
   border-radius:20px;padding:40px 32px;
 }
 .gate-logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:8px}
 .gate-logo img{width:48px;height:48px;border-radius:12px;object-fit:cover}
 .gate-logo span{color:var(--brand)}
-.gate-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.4rem;text-align:center;margin-bottom:6px}
-.gate-sub{color:#94a3b8;font-size:.85rem;text-align:center;margin-bottom:28px}
+.gate-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.4rem;text-align:center;margin-bottom:6px;color:var(--heading)}
+.gate-sub{color:var(--submuted);font-size:.85rem;text-align:center;margin-bottom:28px}
 .gate-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .gate-field{display:flex;flex-direction:column;gap:6px}
-.gate-field label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;font-weight:600}
+.gate-field label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--submuted);font-weight:600}
 .gate-field input,.gate-field select{
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;
-  padding:10px 12px;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;
+  background:var(--w05);border:1px solid var(--w10);border-radius:10px;
+  padding:10px 12px;color:var(--heading);font-family:'Inter',sans-serif;font-size:.9rem;
 }
 .gate-field input:focus,.gate-field select:focus{outline:none;border-color:var(--brand)}
 .gate-submit{
@@ -151,36 +170,66 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
 .gate-error{color:var(--accent);font-size:.78rem;text-align:center;margin-top:10px;display:none}
 
 /* FOOTER */
-.site-footer{padding:64px 24px 32px;border-top:1px solid rgba(255,255,255,.08);background:#000;position:relative;z-index:6}
-.footer-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1200px;margin:0 auto 40px}
+.site-footer{padding:46px 24px 28px;border-top:1px solid var(--w08);background:var(--bg-strong);position:relative;z-index:6}
+.footer-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;max-width:1200px;margin:0 auto 28px}
 @media(max-width:768px){.footer-cols{grid-template-columns:1fr 1fr}}
 .footer-brand{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .footer-brand img{width:38px;height:38px;border-radius:10px;object-fit:cover}
 .footer-brand span{color:var(--brand)}
-.footer-desc{color:#94a3b8;font-size:.85rem;line-height:1.7;max-width:290px}
-.footer-heading{font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px}
+.footer-desc{color:var(--submuted);font-size:.85rem;line-height:1.7;max-width:290px}
+.footer-heading{font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--heading);margin-bottom:16px}
 .footer-links{display:flex;flex-direction:column;gap:10px}
-.footer-links a{color:#94a3b8;text-decoration:none;font-size:.85rem;transition:color .2s}
-.footer-links a:hover{color:#fff}
-.footer-links span{color:#94a3b8;font-size:.85rem}
+.footer-links a{color:var(--submuted);text-decoration:none;font-size:.85rem;transition:color .2s}
+.footer-links a:hover{color:var(--heading)}
+.footer-links span{color:var(--submuted);font-size:.85rem}
 .footer-bottom{
-  max-width:1200px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);
+  max-width:1200px;margin:0 auto;padding-top:16px;border-top:1px solid var(--w08);
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
 }
-.footer-bottom span{color:#94a3b8;font-size:.72rem;font-family:monospace}
+.footer-bottom span{color:var(--submuted);font-size:.72rem;font-family:monospace}
 .footer-soc{display:flex;gap:12px}
-.footer-soc a{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#94a3b8;transition:all .2s}
+.footer-soc a{width:30px;height:30px;border-radius:50%;background:var(--w05);border:1px solid var(--w08);display:flex;align-items:center;justify-content:center;color:var(--submuted);transition:all .2s}
 .footer-soc a svg{width:15px;height:15px}
 .footer-soc a:hover{color:#fff;background:var(--brand);border-color:var(--brand)}
 .footer-bottom-links{display:flex;gap:22px}
-.footer-bottom-links a{color:#94a3b8;text-decoration:none;font-size:.72rem;font-family:monospace}
-.footer-bottom-links a:hover{color:#fff}
+.footer-bottom-links a{color:var(--submuted);text-decoration:none;font-size:.72rem;font-family:monospace}
+.footer-bottom-links a:hover{color:var(--heading)}
+@media(max-width:540px){
+  .gate-row{grid-template-columns:1fr}
+  .gate-box{padding:28px 22px}
+  .footer-cols{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-  
 
-
+<div class="gate-overlay" id="gate-overlay">
+  <div class="gate-box">
+    <div class="gate-logo">
+      <img src="pah.jpeg" alt="PhysioSync" onerror="this.style.display='none'">
+      <span style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.2rem">PhysioSync</span>
+    </div>
+    <div class="gate-title">Welcome to PhysioSync</div>
+    <p class="gate-sub">A few quick details so we can personalize your plan.</p>
+    <form id="gate-form">
+      <div class="gate-row">
+        <div class="gate-field"><label>Name</label><input id="gate-name" type="text" placeholder="Your name"></div>
+        <div class="gate-field"><label>Gender</label>
+          <select id="gate-gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="gate-row">
+        <div class="gate-field"><label>Age</label><input id="gate-age" type="number" placeholder="Age"></div>
+        <div class="gate-field"><label>Weight (kg)</label><input id="gate-weight" type="number" placeholder="Weight"></div>
+      </div>
+      <div class="gate-row" style="grid-template-columns:1fr">
+        <div class="gate-field"><label>Height (cm)</label><input id="gate-height" type="number" placeholder="Height"></div>
+      </div>
+      <button class="gate-submit" type="submit">Get Started</button>
+      <div class="gate-error" id="gate-error">Please fill in all fields.</div>
+    </form>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -206,27 +255,46 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
     return false;
   });
 })();
+function syncThemeIcon(){
+  const light=document.documentElement.getAttribute('data-theme')==='light';
+  const sun=document.getElementById('theme-ic-sun'),moon=document.getElementById('theme-ic-moon');
+  if(sun&&moon){sun.style.display=light?'block':'none';moon.style.display=light?'none':'block';}
+}
+function toggleTheme(){
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  if(isLight){document.documentElement.removeAttribute('data-theme');localStorage.setItem('pah-theme','dark');}
+  else{document.documentElement.setAttribute('data-theme','light');localStorage.setItem('pah-theme','light');}
+  syncThemeIcon();
+}
+syncThemeIcon();
 </script>
 
 <nav class="navbar">
-  <a href="index.html" class="nav-logo"><img src="pah.jpeg" alt="PAH" height="100px" width="60"><span>P</span>AH</a>
+  <a href="index.html" class="nav-logo"><img src="pah.jpeg" alt="PhysioSync" height="100px" width="60"><span>Physio</span>Sync</a>
   <div class="nav-links">
     <a href="#joint-focus" class="nav-link">Conditions</a>
-    <a href="exercises.html#exercises" class="nav-link">Exercises</a>
+    <a href="exercises.html#hero" class="nav-link">Exercises</a>
     <a href="exercises.html#dashboard" class="nav-link">Dashboard</a>
   </div>
   <a href="exercises.html" class="nav-cta">Exercises</a>
+  <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+    <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+  </button>
+  <button class="nav-ham" id="nav-ham" onclick="document.getElementById('nav-mob-menu').classList.toggle('open')" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="nav-mob-menu" id="nav-mob-menu">
+  <a href="#joint-focus" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Conditions</a>
+  <a href="exercises.html#hero" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Exercises</a>
+  <a href="exercises.html#dashboard" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Dashboard</a>
+</div>
 
 <section id="joint-focus">
   <div class="jf-sticky" id="jf-sticky">
-    <iframe id="sketchfab-frame" title="Human Bones and Muscles"
-      src="https://sketchfab.com/models/85636205977d44878fc729fde5b77cd3/embed?autostart=1&ui_infos=0&ui_inspector=0&ui_watermark=0&ui_annotations=0&transparent=1"
-      allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking
-      execution-while-out-of-viewport execution-while-not-rendered web-share>
-    </iframe>
+    <div id="anatomy-frame" title="Human Male Muscular Anatomy Model"></div>
     <div class="jf-overlay-grad"></div>
-    <div class="jf-loading" id="jf-loading">Loading 3D Model…</div>
 
     <svg class="jf-line" id="jf-line"><line id="jf-line-el" x1="0" y1="0" x2="0" y2="0"/></svg>
     <div class="jf-dot" id="jf-dot"></div>
@@ -241,57 +309,57 @@ h1,h2,h3{font-family:'Poppins',sans-serif}
   </div>
 
   <div class="jf-panels">
-    <!-- camera: position [x,y,z], target [x,y,z] -->
+    <!-- region: fraction of model height (0=feet,1=head), computed from the model's real bounding box -->
     <div class="jf-panel" data-joint="cervical"
-      data-cam="0.009,0.407,0.486|0.007,-0.021,0.479" data-ring-x="50" data-ring-y="20"
+      data-region="0.90" data-zoom="0.35" data-ring-x="50" data-ring-y="20"
       data-tag="01 · Neck" data-title="Cervical Spine"
       data-pills="Cervical Spondylosis,Whiplash,Forward Head Posture"
       data-desc="Neck pain and stiffness are often driven by prolonged screen time and poor posture, leading to muscle tightness, reduced range of motion, and nerve irritation at C5–C6."></div>
 
     <div class="jf-panel" data-joint="thoracic"
-      data-cam="0.017,0.558,0.264|-0.088,-0.005,0.282" data-ring-x="50" data-ring-y="38"
+      data-region="0.72" data-zoom="0.5" data-ring-x="50" data-ring-y="38"
       data-tag="02 · Mid Back" data-title="Thoracic Spine"
       data-pills="Postural Kyphosis,Rib Dysfunction,Mid-Back Stiffness"
       data-desc="Limited thoracic mobility restricts shoulder and neck function alike. We address rounded-shoulder posture, rib joint restrictions, and breathing mechanics."></div>
 
     <div class="jf-panel" data-joint="lumbar"
-      data-cam="0.041,0.924,0.302|-0.064,-0.005,0.201" data-ring-x="50" data-ring-y="52"
+      data-region="0.56" data-zoom="0.5" data-ring-x="50" data-ring-y="52"
       data-tag="03 · Lower Back" data-title="Lumbar Spine"
       data-pills="Disc Herniation,Sciatica,Lower Back Stiffness"
       data-desc="Lumbar disc issues at L4–L5 can cause radiating leg pain, numbness, and stiffness. Decompression techniques combined with core stability relieve pressure and prevent recurrence."></div>
 
     <div class="jf-panel" data-joint="shoulder"
-      data-cam="-0.577,0.185,0.401|-0.041,0.012,0.328" data-ring-x="55" data-ring-y="45"
+      data-region="0.82" data-zoom="0.4" data-ring-x="55" data-ring-y="45"
       data-tag="04 · Upper Limb" data-title="Shoulder"
       data-pills="Rotator Cuff Injury,Impingement Syndrome,Frozen Shoulder"
       data-desc="Rotator cuff strains and shoulder impingement limit overhead reach and disrupt sleep. We restore range of motion and rebuild strength through graded loading."></div>
 
     <div class="jf-panel" data-joint="elbow"
-      data-cam="-0.512,0.382,0.006|-0.133,-0.128,0.276" data-ring-x="74" data-ring-y="50"
+      data-region="0.62" data-zoom="0.3" data-ring-x="74" data-ring-y="50"
       data-tag="05 · Upper Limb" data-title="Elbow"
       data-pills="Tennis Elbow,Golfer's Elbow,Tendinopathy"
       data-desc="Repetitive strain at the elbow leads to tendon pain on the inner or outer forearm. Load management and progressive strengthening rebuild tendon resilience."></div>
 
     <div class="jf-panel" data-joint="wrist"
-      data-cam="-0.778,0.102,-0.043|-0.154,-0.177,-0.119" data-ring-x="78" data-ring-y="68"
+      data-region="0.47" data-zoom="0.25" data-ring-x="78" data-ring-y="68"
       data-tag="06 · Hand" data-title="Wrist &amp; Hand"
       data-pills="Carpal Tunnel Syndrome,De Quervain's,Wrist Sprains"
       data-desc="Numbness, tingling, and wrist pain often stem from nerve compression or repetitive strain. Treatment focuses on nerve gliding, joint mobility, and ergonomic correction."></div>
 
     <div class="jf-panel" data-joint="hip"
-      data-cam="0.068,0.474,-0.098|-0.154,-0.177,-0.119" data-ring-x="50" data-ring-y="60"
+      data-region="0.50" data-zoom="0.45" data-ring-x="50" data-ring-y="60"
       data-tag="07 · Lower Limb" data-title="Hip &amp; Pelvis"
       data-pills="Hip Flexor Tightness,Gluteal Weakness,Pelvic Floor Dysfunction"
       data-desc="Hip and pelvic issues affect gait, balance, and lower back loading — especially important for post-partum recovery and women's health physiotherapy."></div>
 
     <div class="jf-panel" data-joint="knee"
-      data-cam="0.229,-0.409,-0.644|0.115,0.017,-0.513" data-ring-x="56" data-ring-y="78"
+      data-region="0.26" data-zoom="0.3" data-ring-x="56" data-ring-y="78"
       data-tag="08 · Lower Limb" data-title="Knee"
       data-pills="Knee Osteoarthritis,Patellar Tracking,ACL Rehab"
       data-desc="From early-stage arthritis to post-surgical ACL recovery, knee rehab focuses on quadriceps strength, joint stability, and restoring confident movement."></div>
 
     <div class="jf-panel" data-joint="ankle"
-      data-cam="-0.331,-0.316,-0.793|0.19,0.125,-0.801" data-ring-x="56" data-ring-y="92"
+      data-region="0.04" data-zoom="0.25" data-ring-x="56" data-ring-y="92"
       data-tag="09 · Lower Limb" data-title="Ankle &amp; Foot"
       data-pills="Ankle Sprains,Plantar Fasciitis,Achilles Tendinopathy"
       data-desc="Ankle instability and heel pain affect every step. We rebuild strength, balance, and proprioception to prevent re-injury and get you back on your feet."></div>
@@ -310,43 +378,17 @@ const ovTag = document.getElementById('ov-tag');
 const ovTitle = document.getElementById('ov-title');
 const ovPills = document.getElementById('ov-pills');
 const ovDesc = document.getElementById('ov-desc');
-const loadingEl = document.getElementById('jf-loading');
 
-let sketchfabApi = null;
-
-// Init Sketchfab Viewer API
-const iframe = document.getElementById('sketchfab-frame');
-const client = new Sketchfab(iframe);
-client.init('85636205977d44878fc729fde5b77cd3', {
-  autostart: 1,
-  ui_infos: 0,
-  ui_inspector: 0,
-  ui_watermark: 0,
-  ui_annotations: 0,
-  transparent: 1,
-  success: function(api){
-    sketchfabApi = api;
-    api.start();
-    api.addEventListener('viewerready', function(){
-      loadingEl.classList.add('hide');
-      focusJoint(panels[0], true);
-    });
-  },
-  error: function(){
-    loadingEl.textContent = 'Unable to load 3D model';
-  }
+// Offline 3D model — runs entirely locally, no network/iframe dependency.
+// Camera framing per body region is computed from the model's own real bounding
+// box (fraction of its measured height), not guessed absolute coordinates — so
+// it's correct regardless of this model's actual scale/proportions.
+const anatomyViewer = createAnatomyViewer(document.getElementById('anatomy-frame'),{
+  onLoaded:function(){ focusJoint(panels[0], true); }
 });
 
-function setCamera(camStr, instant){
-  if(!sketchfabApi) return;
-  const [posStr, targetStr] = camStr.split('|');
-  const position = posStr.split(',').map(Number);
-  const target = targetStr.split(',').map(Number);
-  sketchfabApi.setCameraLookAt(position, target, instant ? 0 : 1.2, function(){});
-}
-
 function focusJoint(panel, instant){
-  setCamera(panel.dataset.cam, instant);
+  anatomyViewer.focusRegion(parseFloat(panel.dataset.region), parseFloat(panel.dataset.zoom));
 
   const w = sticky.offsetWidth, h = sticky.offsetHeight;
   const x = parseFloat(panel.dataset.ringX);
@@ -391,47 +433,21 @@ panels.forEach(panel => {
 window.addEventListener('resize', () => {
   if(dot.classList.contains('active')) ScrollTrigger.refresh();
 });
-
-// DEBUG CONSOLE - press "d" to toggle cursor-coord catcher overlay
-// while on: mousemove shows ring-x/ring-y %, click logs data-ring-x/y attr to console
-const debugCatch = document.getElementById('jf-debug-catch');
-const debugText = document.getElementById('jf-debug-text');
-const debugToggle = document.getElementById('jf-debug-toggle');
-debugToggle.addEventListener('click', () => {
-  debugCatch.classList.toggle('on');
-  sticky.classList.toggle('debug');
-  debugText.textContent = debugCatch.classList.contains('on')
-    ? 'DEBUG ON - move/click to get ring-x/ring-y' : 'ring-x: -  ring-y: -';
-});
-debugCatch.addEventListener('mousemove', (e) => {
-  const rect = sticky.getBoundingClientRect();
-  const xPct = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-  const yPct = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-  debugText.textContent = `ring-x: ${xPct}  ring-y: ${yPct}`;
-});
-debugCatch.addEventListener('click', (e) => {
-  const rect = sticky.getBoundingClientRect();
-  const xPct = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-  const yPct = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-  console.log(`data-ring-x="${xPct}" data-ring-y="${yPct}"`);
-});
-
 </script>
 
 <footer class="site-footer">
   <div class="footer-cols">
     <div>
       <div class="footer-brand">
-        <img src="pah.jpeg" alt="PAH">
-        <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.04em"><span>P</span>AH</div>
+        <img src="pah.jpeg" alt="PhysioSync">
+        <div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:.04em"><span>Physio</span>Sync</div>
       </div>
       <p class="footer-desc">Clinical-grade AI physiotherapy that corrects your posture and guides your rehabilitation — anywhere, anytime, zero compromise on accuracy.</p>
     </div>
     <div>
       <div class="footer-heading">Platform</div>
       <div class="footer-links">
-        <a href="exercises.html#exercises">Exercises</a>
-        <a href="exercises.html#ai-coach">AI Coach</a>
+        <a href="exercises.html#hero">Exercises</a>
         <a href="exercises.html#dashboard">Dashboard</a>
         <a href="#joint-focus">Conditions</a>
       </div>
@@ -447,18 +463,18 @@ debugCatch.addEventListener('click', (e) => {
     <div>
       <div class="footer-heading">Contact</div>
       <div class="footer-links">
-        <span>hello@physioathome.ai</span>
+        <span>hello@physiosync.ai</span>
         <span>+92 21 000 0000</span>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 PAH &ndash; Physio At Home. All rights reserved.</span>
+    <span>&copy; 2026 PhysioSync. All rights reserved.</span>
     <div class="footer-soc">
-      <a href="https://facebook.com/pahphysio" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
-      <a href="https://instagram.com/pahphysio" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
-      <a href="https://twitter.com/pahphysio" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
-      <a href="https://linkedin.com/company/pahphysio" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
+      <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
+      <a href="https://instagram.com/physiosync" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
+      <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
     </div>
     <div class="footer-bottom-links">
       <a href="#">Privacy</a>

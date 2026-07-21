@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>PAH – AI Physiotherapy</title>
+<title>PhysioSync – AI Physiotherapy</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -132,6 +132,7 @@ a{text-decoration:none;color:inherit}
 .hero-blob.b3{width:300px;height:300px;bottom:-160px;left:40%;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 70%);animation-delay:-11s}
 @keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.08)}}
 @media(prefers-reduced-motion:reduce){.hero-blob{animation:none}}
+:root[data-theme="light"] .hero-blob,:root[data-theme="light"] .sec-blob{opacity:.4}
 .hero-tag{
   display:inline-flex;align-items:center;gap:7px;
   font-weight:700;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
@@ -218,8 +219,6 @@ a{text-decoration:none;color:inherit}
 .ex-top{display:flex;align-items:center;gap:7px;margin-bottom:8px;flex-wrap:wrap}
 .ex-area{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .ex-badge{font-size:.64rem;font-weight:700;padding:2px 9px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase}
-.ex-dots{display:flex;gap:3px;margin-left:auto}
-.ex-dot{width:6px;height:6px;border-radius:50%}
 .ex-name{font-size:1.1rem;font-weight:800;margin-bottom:8px;letter-spacing:-.01em}
 .ex-desc{color:var(--submuted);font-size:.82rem;line-height:1.65;margin-bottom:12px}
 .ex-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:11px}
@@ -769,11 +768,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 /* ═══ UTILITIES ═══ */
 .toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);
-  background:rgba(15,15,22,.97);border:1px solid var(--w10);
-  border-radius:100px;padding:10px 22px;color:#fff;font-size:.79rem;font-weight:600;
+  background:var(--glass);border:1px solid var(--w10);backdrop-filter:blur(14px);
+  border-radius:100px;padding:10px 22px 10px 18px;color:var(--heading);font-size:.79rem;font-weight:600;
   z-index:9000;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;
   opacity:0;white-space:nowrap;pointer-events:none;
+  box-shadow:0 12px 32px -12px rgba(0,0,0,.35);
+  display:flex;align-items:center;gap:9px;
 }
+.toast::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--brand);box-shadow:0 0 8px var(--brand);flex-shrink:0}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 #scroll-top{
   position:fixed;bottom:94px;right:33px;z-index:400;
@@ -791,6 +793,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   .nav-links{display:none}.ham{display:flex}
   .nav-home{display:none}
   #navbar{padding:0 18px}
+  .nav-logo{font-size:.92rem}
+  .nav-logo img{width:28px;height:28px}
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
   .s-ang{right:6px}
@@ -815,8 +819,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 <div id="gate">
   <div class="gate-wrap">
     <div class="gate-logo-row">
-      <img src="pahlogo/pahlogo.jpeg" alt="PAH" onerror="this.style.display='none'">
-      <div class="gate-logo-text"><span>P</span>AH Physio</div>
+      <img src="pahlogo/pahlogo.jpeg" alt="PhysioSync" onerror="this.style.display='none'">
+      <div class="gate-logo-text"><span>Physio</span>Sync</div>
     </div>
     <h2 class="gate-h">Create Your Profile</h2>
     <p class="gate-sub">Set up your recovery profile to get personalized guidance.</p>
@@ -844,8 +848,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 <!-- ══════════ NAVBAR ══════════ -->
 <nav id="navbar">
   <a href="index.html" class="nav-logo">
-    <img src="pah.jpeg" alt="PAH" onerror="this.style.display='none'">
-    <span>P</span>AH
+    <img src="pah.jpeg" alt="PhysioSync" onerror="this.style.display='none'">
+    <span>Physio</span>Sync
   </a>
   <div class="nav-links">
     <a href="#hero" class="nl">Exercises</a>
@@ -921,7 +925,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="sec-in">
     <span class="sec-tag"></span>
     <h2 class="sec-h">For Cases That Need <span>Medical Clearance</span></h2>
-    <p class="sec-p">PAH is partnered with leading hospitals across Pakistan to provide seamless in-person care when home rehabilitation requires clinical intervention.</p>
+    <p class="sec-p">PhysioSync is partnered with leading hospitals across Pakistan to provide seamless in-person care when home rehabilitation requires clinical intervention.</p>
     <div class="hosp-grid" id="hosp-grid"></div>
   </div>
 </section>
@@ -933,7 +937,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="sec-in">
     <span class="sec-tag">WHO Evidence & Global Data</span>
     <h2 class="sec-h">The Science Behind <span>Rehabilitation</span></h2>
-    <p class="sec-p">All PAH protocols are built on evidence from the World Health Organization, peer-reviewed clinical trials, and systematic reviews. These are the facts driving modern rehabilitation practice worldwide.</p>
+    <p class="sec-p">All PhysioSync protocols are built on evidence from the World Health Organization, peer-reviewed clinical trials, and systematic reviews. These are the facts driving modern rehabilitation practice worldwide.</p>
     <div class="who-badge">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       Every statistic below is sourced from <strong>who.int</strong> — tap any citation to verify it yourself.
@@ -953,7 +957,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 
     <div class="dash-greet" id="dash-greet">
       <div class="dash-greet-text">
-        <h3 id="dash-greet-h">Welcome to PAH</h3>
+        <h3 id="dash-greet-h">Welcome to PhysioSync</h3>
         <p id="dash-greet-p">Your rehabilitation journey starts here.</p>
       </div>
       <div class="dash-streak-ring" id="dash-streak-ring">
@@ -1160,8 +1164,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="footer-cols">
     <div>
       <div class="f-brand">
-        <img src="pah.jpeg" alt="PAH" onerror="this.style.display='none'">
-        <div class="f-brand-name"><span>P</span>AH Physio</div>
+        <img src="pah.jpeg" alt="PhysioSync" onerror="this.style.display='none'">
+        <div class="f-brand-name"><span>Physio</span>Sync</div>
       </div>
       <p class="f-desc">Clinical-grade AI physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
     </div>
@@ -1178,26 +1182,26 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <div>
       <div class="f-hd">Company</div>
       <div class="f-lks">
-        <a href="#">About PAH</a>
+        <a href="#">About PhysioSync</a>
         <a href="#">Careers</a>
       </div>
     </div>
     <div>
       <div class="f-hd">Contact</div>
       <div class="f-lks">
-        <span>hello@physioathome.ai</span>
+        <span>hello@physiosync.ai</span>
         <span>+92 21 000 0000</span>
         <span>Karachi, Pakistan</span>
       </div>
     </div>
   </div>
   <div class="f-bot">
-    <span>&copy; 2026 PAH Physio At Home. All rights reserved.</span>
+    <span>&copy; 2026 PhysioSync. All rights reserved.</span>
     <div class="f-soc">
-      <a href="https://facebook.com/pahphysio" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
-      <a href="https://instagram.com/pahphysio" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
-      <a href="https://twitter.com/pahphysio" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
-      <a href="https://linkedin.com/company/pahphysio" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
+      <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
+      <a href="https://instagram.com/physiosync" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
+      <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
     </div>
     <div class="f-bot-lks"><a href="#">Privacy</a><a href="#">Terms</a></div>
   </div>
@@ -1214,13 +1218,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <div class="coach-head">
       <div class="coach-av">AI</div>
       <div>
-        <div style="font-weight:800;font-size:.92rem;font-family:'Poppins',sans-serif">PAH Clinical AI</div>
+        <div style="font-weight:800;font-size:.92rem;font-family:'Poppins',sans-serif">PhysioSync Clinical AI</div>
         <div class="coach-online"><span class="cdot"></span>Online — Evidence-Based Protocol</div>
       </div>
     </div>
     <div class="coach-scope-note">Physiotherapy questions only — pain, injuries, exercises and rehabilitation.</div>
     <div id="chat-msgs">
-      <div class="cm bot"><strong>PAH Clinical AI</strong>Hello! Describe your pain — location, severity (1-10), and how long you have had it. I will build a personalized rehabilitation program based on clinical evidence.</div>
+      <div class="cm bot"><strong>PhysioSync Clinical AI</strong>Hello! Describe your pain — location, severity (1-10), and how long you have had it. I will build a personalized rehabilitation program based on clinical evidence.</div>
       <div class="cm bot"><strong>Quick Start</strong>
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
           <span class="qchip" onclick="AIChat.send('neck pain cervical spondylosis stiffness severity 6/10')">Neck Pain</span>
@@ -1612,7 +1616,6 @@ function greetReturningUser(first,u){
 // EXERCISES DATA
 // ═══════════════════════════════════════════════════════════
 const DC={Beginner:'#00e5a0',Intermediate:'#f59e0b',Advanced:'#ef4444'};
-const DD={Beginner:1,Intermediate:2,Advanced:3};
 
 const EX=[
   {name:'Neck Tilt Stretch',area:'Cervical Spine',diff:'Beginner',tags:['Neck'],reps:12,det:'neck_tilt',
@@ -1719,33 +1722,23 @@ function filterEx(){
   });
 }
 
-const ICONS=[
-  'M12 5v14M5 12l7-7 7 7',
-  'M3 12h18M3 6h18M3 18h18',
-  'M4 4v5h.582m15.356 2A8 8 0 004.582 9m0 0H9',
-  'M5 10l7-7m0 0l7 7m-7-7v18',
-  'M12 22V12M6 12l6-6 6 6',
-  'M4 14s1-1 4-1 5 2 8 2 4-1 4-1',
-  'M8 7l4-4 4 4m0 6l-4 4-4-4',
-  'M19 14l-7 7m0 0l-7-7m7 7V3',
-  'M3 12h18M3 6h18M3 18h18',
-  'M19 14l-7 7m0 0l-7-7m7 7V3',
-  'M19 14l-7 7m0 0l-7-7m7 7V3',
-  'M5 11l7-7 7 7M5 19l7-7 7 7',
-  'M3 6l3 1m0 0l-3 9',
-  'M5 12h14',
-  'M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z',
-  'M12 19V5M5 12l7 7 7-7',
-  'M4 4v5h.582m15.356 2A8 8 0 004.582 9',
-  'M12 2l3 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l7-.73L12 2z',
-  'M12 5v14M5 12l7-7 7 7',
-  'M5 12h14',
-  'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2',
-  'M19 14l-7 7m0 0l-7-7m7 7V3',
-  'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2',
-  'M12 22V12M8 12h8',
-  'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
-];
+// One deliberate icon per movement type (not a rotating grab-bag) so the glyph
+// actually communicates what the exercise is at a glance.
+const ICON_BY_DET={
+  neck_tilt:'M6 18L18 6M18 6H10M18 6v8', // lean/tilt arrow
+  chin_tuck:'M9 14l-5-5 5-5M4 9h10a5 5 0 015 5v6', // retraction curl-back
+  shoulder_roll:'M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3', // full-circle repeat
+  pendulum:'M6 4h12M12 4v6l6 10M12 10l-6 10', // hanging swing
+  wrist:'M7 15l5 5 5-5M7 9l5-5 5 5', // extend/flex chevrons
+  mckenzie:'M4 17Q12 3 20 17', // backward arch
+  catcow:'M4 8Q12 2 20 8M4 16Q12 22 20 16', // arch + round
+  knee_chest:'M4 20h6a4 4 0 004-4V4M8 8l4-4 4 4', // lift toward chest
+  calf_raise:'M4 20l6-6 4 4 8-10M16 8h6v6', // rising trend
+  ankle_circle:'M23 4v6h-6M20.49 15a9 9 0 11-2.12-9.36L23 10', // rotation
+  posture:'M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3', // clean scan check
+  side_bend:'M11 17l-5-5 5-5M18 17l-5-5 5-5', // lateral motion
+  bilateral_raise:'M17 11l-5-5-5 5M17 18l-5-5-5 5' // both arms up
+};
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
 
@@ -1754,13 +1747,12 @@ document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>`
   <span class="ex-idx">${String(i+1).padStart(2,'0')}</span>
   <div class="ex-icon">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="${ICONS[i]||ICONS[0]}"/>
+      <path d="${ICON_BY_DET[ex.det]||ICON_BY_DET.neck_tilt}"/>
     </svg>
   </div>
   <div class="ex-top">
     <span class="ex-area">${ex.area}</span>
     <span class="ex-badge" style="color:${DC[ex.diff]};background:${DC[ex.diff]}1a">${ex.diff}</span>
-    <div class="ex-dots">${[1,2,3].map(d=>`<div class="ex-dot" style="background:${d<=DD[ex.diff]?DC[ex.diff]:'var(--w10)'}"></div>`).join('')}</div>
   </div>
   <h3 class="ex-name">${ex.name}</h3>
   <p class="ex-desc">${ex.desc}</p>
@@ -1975,7 +1967,7 @@ document.getElementById('research-grid').innerHTML=RESEARCH.map(r=>`
 // AI COACH — Fixed with fallback engine & retry logic
 // ═══════════════════════════════════════════════════════════
 const AIChat={
-  hist:[{role:'system',content:"You are PAH Clinical AI Physiotherapist. You ONLY discuss physiotherapy: pain, injuries, exercises, and rehabilitation. If asked about anything else, politely decline and redirect the user to ask a physiotherapy question — do not answer unrelated questions under any circumstances. On the FIRST message describing a problem, give a structured response: 1) Brief Clinical Assessment 2) 1-2 Recommended Exercises (from the PAH library) 3) One or two tailored management tips 4) Red flags only if severity is genuinely high. Keep it under 150 words — do not include a section that isn't relevant to what was actually described. On any FOLLOW-UP message, do NOT repeat the assessment — just answer the specific follow-up directly in 1-3 sentences."}],
+  hist:[{role:'system',content:"You are PhysioSync Clinical AI Physiotherapist. You ONLY discuss physiotherapy: pain, injuries, exercises, and rehabilitation. If asked about anything else, politely decline and redirect the user to ask a physiotherapy question — do not answer unrelated questions under any circumstances. On the FIRST message describing a problem, give a structured response: 1) Brief Clinical Assessment 2) 1-2 Recommended Exercises (from the PhysioSync library) 3) One or two tailored management tips 4) Red flags only if severity is genuinely high. Keep it under 150 words — do not include a section that isn't relevant to what was actually described. On any FOLLOW-UP message, do NOT repeat the assessment — just answer the specific follow-up directly in 1-3 sentences."}],
   busy:false,
   retryCount:0,
   maxRetries:2,
@@ -1987,7 +1979,7 @@ const AIChat={
   },
 
   offTopicReply(){
-    return "I'm PAH's physiotherapy assistant, so I can only help with pain, injuries, exercises, and rehabilitation. Try describing a symptom — for example, \"lower back pain, 6/10, for 2 weeks.\"";
+    return "I'm PhysioSync's physiotherapy assistant, so I can only help with pain, injuries, exercises, and rehabilitation. Try describing a symptom — for example, \"lower back pain, 6/10, for 2 weeks.\"";
   },
 
   send(txt){
@@ -2011,7 +2003,7 @@ const AIChat={
     const d=document.createElement('div');
     d.className='cm '+role;
     if(id)d.id=id;
-    d.innerHTML=(role==='bot'?'<strong>PAH Clinical AI</strong>':'')+html.replace(/\n/g,'<br>');
+    d.innerHTML=(role==='bot'?'<strong>PhysioSync Clinical AI</strong>':'')+html.replace(/\n/g,'<br>');
     b.appendChild(d);b.scrollTop=b.scrollHeight;
   },
 
@@ -2135,7 +2127,7 @@ const AIChat={
     else if(kwMatch(msg,'bursitis'))condition='bursitis';
     else if(kwMatch(msg,'spondylosis')||kwMatch(msg,'stenosis'))condition='degenerative spine';
 
-    // Match exercises from PAH library — pick the 2 most relevant, not a full dump
+    // Match exercises from PhysioSync library — pick the 2 most relevant, not a full dump
     const recEx=EX.filter(e=>{
       const text=(e.name+' '+e.area+' '+e.desc+' '+e.tags.join(' ')+' '+e.muscles.join(' ')).toLowerCase();
       return text.includes(location)||e.tags.some(t=>t.toLowerCase()===location);
@@ -2158,7 +2150,7 @@ const AIChat={
 
     let exBlock='';
     if(recEx.length){
-      exBlock='\n\nWorth trying from the PAH library:\n'+recEx.map(e=>`- **${e.name}** — ${e.desc}`).join('\n');
+      exBlock='\n\nWorth trying from the PhysioSync library:\n'+recEx.map(e=>`- **${e.name}** — ${e.desc}`).join('\n');
     }
 
     const tipsBlock=tips.length?'\n\n'+tips.slice(0,severity>7?1:2).map(t=>t).join(' '):'';
@@ -2265,6 +2257,7 @@ const CamDiag={
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];visLossStreak=0;
+  torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2738,7 +2731,7 @@ function smoothAngle(val){
   return emaAngle;
 }
 // Genuine form score from measured angle vs. this exercise's real target range —
-// replaces hardcoded per-branch constants. 'hold' rewards sitting inside [lo,hi];
+// no hardcoded per-exercise constants. 'hold' rewards sitting inside [lo,hi];
 // 'oscillate' rewards reaching close to either extreme (full range of motion).
 function scoreHold(val,lo,hi){
   if(val>=lo&&val<=hi)return 100;
@@ -2825,13 +2818,10 @@ function safe(lm,...idx){return idx.every(i=>lm[i]&&vis(lm[i]));}
 // Wraps safe() so that whenever the joints this exercise needs aren't actually
 // visible, score/angle reflect that (zeroed) instead of freezing at their last
 // good value. Requires several CONSECUTIVE bad frames before declaring "Lost" —
-// a single low-confidence frame is normal MediaPipe noise (very common on
-// elbow/wrist landmarks during overhead reaches) and must not flash a false
-// tracking-loss state while the user is actually moving correctly.
+// a single low-confidence frame is normal MediaPipe noise and must not flash a
+// false tracking-loss state while the user is actually moving correctly.
 let visLossStreak=0;
 const VIS_LOSS_GRACE=6; // ~200ms at 30fps
-let bilateralArmLossStreak=0;
-const BILATERAL_ARM_GRACE=15; // ~500ms at 30fps — brief dips near full overhead are normal
 function requireVisible(lm,...idx){
   if(safe(lm,...idx)){visLossStreak=0;return true;}
   visLossStreak++;
@@ -2841,6 +2831,23 @@ function requireVisible(lm,...idx){
   setFB('Body not fully visible — step back so the tracked joints are in frame.','warn');
   setPhase('Lost');
   return false;
+}
+// Generalized version of the visibility-grace pattern above, for a SECONDARY set
+// of landmarks that are expected to flicker in and out more than the core body
+// (e.g. wrists at full overhead extension) — never a single-frame silent freeze;
+// after the grace window it surfaces an actionable message instead of going mute.
+function makeGracedVisibilityCheck(grace,msg){
+  let streak=0;
+  return{
+    check(lm,...idx){
+      if(safe(lm,...idx)){streak=0;return true;}
+      streak++;
+      if(streak<grace)return true;
+      setFB(msg,'warn');
+      return false;
+    },
+    reset(){streak=0;}
+  };
 }
 
 // Separate smoothing state from the primary angle EMA (smoothAngle) so this
@@ -2867,12 +2874,287 @@ function checkTorsoCompensation(lm){
 }
 
 // ═══════════════════════════════════════════════════════════
-// EXERCISE ANALYSIS ENGINE
+// EXERCISE ANALYSIS ENGINE — unified hold/oscillate detectors
 // ═══════════════════════════════════════════════════════════
+// Shared engine for "reach the target, hold it, release it" exercises. Every
+// hold-type exercise used to be its own hand-copied if/else block, which is how
+// a state-machine bug (assuming repPhase started as 'down' instead of its real
+// initial value 'neutral') silently broke rep-counting for several exercises at
+// once. Routing all of them through ONE audited implementation means that bug
+// class can't happen again — there's only one place to get the state machine
+// right instead of eight.
+const HOLD_CFG={
+  neck_tilt:{
+    vis:[0,11,12],
+    compute(lm){
+      const nose=lm[0],shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
+      return{value:smoothAngle(angleFromVertical(shoulderMid,nose)),label:'Tilt',unit:'°'};
+    },
+    isEngaged:(o,lo)=>o.value>lo,
+    isReleased:(o,lo)=>o.value<lo*0.35,
+    minHoldMs:1800,activeLabel:'Stretching',
+    engagedMsg:'Good tilt — hold this position for 3 seconds.',
+    releaseMsg:'Good — return and tilt the other side.',
+    shortHoldMsg:'Hold the tilt a little longer for full credit.',
+    readyMsg:'Slowly tilt your head to one side, hold 3 seconds.'
+  },
+  chin_tuck:{
+    vis:[0,7,8],
+    compute(lm){
+      const nose=lm[0],earMidX=(lm[7].x+lm[8].x)/2;
+      return{value:smoothAngle(Math.abs((earMidX-nose.x)*100)),label:'Retraction',unit:''};
+    },
+    isEngaged:(o,lo)=>o.value>lo,
+    isReleased:(o,lo)=>o.value<lo*0.3,
+    minHoldMs:2500,activeLabel:'Tucked',
+    engagedMsg:'Good chin tuck — hold 5 seconds. Keep eyes level.',
+    releaseMsg:'Release and repeat the tuck motion.',
+    shortHoldMsg:'Hold the tuck a little longer for full credit.',
+    readyMsg:'Draw your chin straight backward — like making a double chin.'
+  },
+  side_bend:{
+    vis:[11,12,23,24],
+    compute(lm){
+      const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
+      const hipMid={x:(lm[23].x+lm[24].x)/2,y:(lm[23].y+lm[24].y)/2};
+      return{value:smoothAngle(angleFromVertical(hipMid,shoulderMid)),label:'Side Bend',unit:'°'};
+    },
+    isEngaged:(o,lo)=>o.value>lo,
+    isReleased:(o,lo)=>o.value<lo*0.35,
+    minHoldMs:1500,activeLabel:'Bending',
+    engagedMsg:'Good side bend — hold 2 seconds.',
+    releaseMsg:'Good — return upright and bend the other side.',
+    shortHoldMsg:'Hold the bend a little longer for full credit.',
+    readyMsg:'Stand tall, slide one hand down your leg to bend sideways.'
+  },
+  knee_chest:{
+    vis:[23,25,27],
+    compute(lm){
+      return{value:smoothAngle(angleDeg(lm[23],lm[25],lm[27])),label:'Knee Flex',unit:'°'}; // hip-knee-ankle
+    },
+    isEngaged:(o,lo,hi)=>o.value<hi, // knee-flexion angle DECREASES as the knee lifts
+    isReleased:(o)=>o.value>150,
+    minHoldMs:1800,activeLabel:'Up',
+    engagedMsg:'Good — pull knee toward chest. Hold 3 seconds.',
+    releaseMsg:'Lower and raise the other knee.',
+    shortHoldMsg:'Hold the lift a little longer for full credit.',
+    readyMsg:'Stand tall. Pull one knee up toward your chest.'
+  },
+  calf_raise:{
+    vis:[25,27,29],
+    compute(lm){
+      return{value:smoothAngle(angleDeg(lm[25],lm[27],lm[29])),label:'Ankle',unit:'°'}; // knee-ankle-toe
+    },
+    isEngaged:(o,lo,hi)=>o.value>hi,
+    isReleased:(o,lo)=>o.value<lo,
+    minHoldMs:700,activeLabel:'Up',
+    engagedMsg:'Full plantarflexion — hold at top.',
+    releaseMsg:'Lower slowly over 3 seconds.',
+    shortHoldMsg:'Pause at the top a little longer next time.',
+    readyMsg:'Rise fully onto tiptoes. Pause at the top for 1 second.'
+  },
+  mckenzie:{
+    vis:[7,11,23],
+    compute(lm){
+      const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23]));
+      return{value:Math.max(0,180-spineAng),spineAng,label:'Spine',unit:'°'}; // real degrees of backward extension from neutral
+    },
+    isEngaged:(o)=>o.spineAng<165,
+    isReleased:(o)=>o.spineAng>172,
+    minHoldMs:1800,activeLabel:'Extended',
+    engagedMsg:'Good backward extension — hold 3 seconds.',
+    releaseMsg:'Stand tall and repeat the extension.',
+    shortHoldMsg:'Hold the extension a little longer for full credit.',
+    readyMsg:'Place hands on lower back and gently arch backward.'
+  }
+};
+function runHold(det,lm){
+  const cfg=HOLD_CFG[det];
+  if(!requireVisible(lm,...cfg.vis))return;
+  const{lo,hi}=sessEx.angles.threshold;
+  const o=cfg.compute(lm);
+  setAngle(o.value,o.label,o.unit);
+  const idle=isIdleHold(o.value,lo,hi);
+  if(cfg.isEngaged(o,lo,hi)){
+    if(repPhase!=='engaged'){setRepPhase('engaged');setFB(cfg.engagedMsg,'good');}
+    updateScore(idle?0:scoreHold(o.value,lo,hi));setPhase(cfg.activeLabel);
+  }else if(cfg.isReleased(o,lo,hi)&&repPhase==='engaged'){
+    if(phaseAge()>cfg.minHoldMs){setRepPhase('neutral');doRep();setFB(cfg.releaseMsg,'');}
+    else{setRepPhase('neutral');setFB(cfg.shortHoldMsg,'warn');}
+  }else{
+    setFB(cfg.readyMsg,'');setPhase('Ready');
+    updateScore(idle?0:scoreHold(o.value,lo,hi));
+  }
+}
+
+// Shared engine for continuous back-and-forth exercises (no hold required —
+// reaching one extreme then the other counts a rep).
+const OSC_CFG={
+  shoulder_roll:{
+    vis:[11,12,13,14],
+    compute(lm){
+      const lAng=angleDeg(lm[23],lm[11],lm[13]),rAng=angleDeg(lm[24],lm[12],lm[14]);
+      return{value:smoothAngle((lAng+rAng)/2),label:'Shoulder',unit:'°'};
+    },
+    isEngaged:o=>o.value>100,isReleased:o=>o.value<55,
+    engagedState:'up',releasedState:'down',activeLabel:'Rolling Up',
+    releaseMsg:'Good circle — keep rolling!',releaseCls:'good',
+    readyMsg:'Roll shoulders in large backward circles. Full range.'
+  },
+  wrist:{
+    vis:[13,15,17],
+    compute(lm){
+      return{value:smoothAngle(angleDeg(lm[13],lm[15],lm[17])),label:'Wrist',unit:'°'};
+    },
+    isEngaged:o=>o.value>140,isReleased:o=>o.value<50,
+    engagedState:'ext',releasedState:'flex',
+    engagedMsg:'Full extension — now flex down.',
+    releaseMsg:'Good — extend again.',
+    lowHintTest:o=>o.value<50,lowHintMsg:'Flex wrist fully downward.',
+    readyMsg:'Extend wrist fully upward, then flex fully downward.',movingLabel:'Moving'
+  }
+};
+function runOscillate(det,lm){
+  const cfg=OSC_CFG[det];
+  if(!requireVisible(lm,...cfg.vis))return;
+  const{lo,hi}=sessEx.angles.threshold;
+  const o=cfg.compute(lm);
+  setAngle(o.value,o.label,o.unit);
+  const idle=isIdleOscillate(o.value,lo,hi);
+  if(cfg.isEngaged(o)){
+    if(repPhase!==cfg.engagedState){setRepPhase(cfg.engagedState);if(cfg.engagedMsg)setFB(cfg.engagedMsg,'good');}
+    if(cfg.activeLabel)setPhase(cfg.activeLabel);
+  }else if(cfg.isReleased(o)&&repPhase===cfg.engagedState){
+    setRepPhase(cfg.releasedState);doRep();setFB(cfg.releaseMsg,cfg.releaseCls||'');
+  }else if(cfg.lowHintTest&&cfg.lowHintTest(o)){
+    setFB(cfg.lowHintMsg,'');
+  }else{
+    setFB(cfg.readyMsg,'');
+    if(cfg.movingLabel)setPhase(cfg.movingLabel);
+  }
+  updateScore(idle?0:scoreOscillate(o.value,lo,hi));
+}
+
+// Codman pendulum — swing amplitude is the SHOULDER's deviation from vertical
+// (shoulder-to-wrist), not elbow flexion. (The elbow barely bends during a
+// correct pendulum swing, so measuring elbow angle would stay pinned near a
+// nearly-straight value all exercise long and never register the swing at all —
+// this is the fix for that.)
+function runPendulum(lm){
+  if(!requireVisible(lm,11,13,15))return;
+  const{lo,hi}=sessEx.angles.threshold;
+  const raw=smoothAngle(angleFromVertical(lm[11],lm[15]));
+  setAngle(raw,'Swing');
+  const idle=isIdleHold(raw,lo,hi);
+  updateScore(idle?0:scoreHold(raw,lo,hi));
+  setFB('Let the arm hang loose. Small gravity-driven circles. No muscle force.','good');
+  if(raw>15&&repPhase==='neutral'){setRepPhase('swing');}
+  else if(raw<8&&repPhase==='swing'){setRepPhase('neutral');doRep();}
+}
+
+// Cat-Cow alternates between two held extremes (arch/round) rather than one
+// target and neutral, so it doesn't fit the single-target hold engine above.
+function runCatCow(lm){
+  if(!requireVisible(lm,7,11,23))return;
+  const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23]));
+  setAngle(spineAng,'Spine');
+  const dev=Math.abs(180-spineAng);
+  const idle=isIdleHold(dev,15,40);
+  if(spineAng<160){
+    if(repPhase!=='arch'){setRepPhase('arch');setFB('Good arch (cow) — now round into cat position.','good');}
+    updateScore(idle?0:scoreHold(dev,15,40));setPhase('Cow');
+  }else if(spineAng>175&&repPhase==='arch'){
+    if(phaseAge()>700){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
+    else{setFB('Hold each position briefly, in rhythm with your breath.','warn');}
+  }else if(spineAng>175){
+    setFB('Arch your spine fully — look upward gently.','');
+    updateScore(idle?0:scoreHold(dev,15,40));
+  }else{
+    setFB('Move fluidly between full arch and full round. Breathe with each.','');
+    updateScore(idle?0:scoreHold(dev,15,40));
+  }
+}
+
+// Cumulative angular sweep (not a threshold crossing) — genuinely different
+// geometry from every other detector, kept bespoke.
+function runAnkleCircle(lm){
+  if(!requireVisible(lm,27,31))return;
+  const ankle=lm[27],foot=lm[31];
+  const theta=Math.atan2(foot.y-ankle.y,foot.x-ankle.x);
+  if(ankleCirclePrevTheta!=null){
+    let delta=theta-ankleCirclePrevTheta;
+    if(delta>Math.PI)delta-=2*Math.PI;
+    if(delta<-Math.PI)delta+=2*Math.PI;
+    ankleCircleAccum+=delta;
+  }
+  ankleCirclePrevTheta=theta;
+  const sweptDeg=Math.abs(ankleCircleAccum)*180/Math.PI;
+  setAngle(Math.min(sweptDeg,360),'Rotation');
+  const radius=Math.hypot(foot.x-ankle.x,foot.y-ankle.y);
+  const angularSpeed=trackStillness(sweptDeg)?0:1; // reuses the same stillness window on cumulative sweep
+  const moving=radius>0.025&&angularSpeed>0;
+  updateScore(moving?96:0);
+  setFB(moving?'Good circular motion — keep going.':'Rotate your ankle to begin — make the circle bigger.',moving?'good':'warn');
+  setPhase('Circling ('+Math.round(Math.min(sweptDeg,360))+'°)');
+  if(sweptDeg>=340){doRep();ankleCircleAccum=0;}
+}
+
+// Multi-factor static scan, not a rep cycle — kept bespoke.
+function runPosture(lm){
+  if(!requireVisible(lm,11,12,23,24,7,8))return;
+  const sLev=Math.abs(lm[11].y-lm[12].y)*100; // real shoulder-height asymmetry
+  const hLev=Math.abs(lm[23].y-lm[24].y)*100; // real hip-height asymmetry
+  const headFwd=(lm[0].z-(lm[11].z+lm[12].z)/2)*60; // real forward-head depth offset
+  const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23])); // real ear-shoulder-hip alignment
+  setAngle(spineAng,'Spine');
+  let score=100;
+  const issues=[];
+  if(sLev>2.5){score-=20;issues.push('shoulder-height asymmetry');}
+  if(hLev>2.5){score-=20;issues.push('hip tilt');}
+  if(headFwd>8){score-=15;issues.push('forward head posture');}
+  if(spineAng<160){score-=15;issues.push('spinal flexion');}
+  updateScore(Math.max(0,score));
+  setFB(issues.length?'Detected: '+issues.join(', ')+'.':'Excellent posture — symmetrical alignment.',issues.length?'warn':'good');
+  setPhase('Scanning');
+  if(sessReps===0){setTimeout(()=>{if(sessActive&&sessEx&&sessEx.det==='posture')doRep();},6000);}
+}
+
+// Bilateral hold with a symmetry check — genuinely different from the single-
+// limb hold engine (two angles + a left/right error term), kept bespoke.
+// Wrists (not elbows) drive the angle — they stay visible more reliably than
+// elbows when arms are fully overhead (elbows are prone to self-occlusion/
+// frame-edge clipping right at the top of the movement, which used to silently
+// freeze tracking exactly when a rep should complete).
+const bilateralArmCheck=makeGracedVisibilityCheck(15,'Step back so both raised arms stay fully in frame.');
+function runBilateralRaise(lm){
+  if(!requireVisible(lm,11,12,23,24))return;
+  const{lo,hi}=sessEx.angles.threshold;
+  if(!bilateralArmCheck.check(lm,15,16)){setPhase('Adjust Framing');return;}
+  const lAng=angleDeg(lm[23],lm[11],lm[15]);
+  const rAng=angleDeg(lm[24],lm[12],lm[16]);
+  const avg=smoothAngle((lAng+rAng)/2);
+  const symErr=Math.abs(lAng-rAng);
+  setAngle(avg,'Arms');
+  const idle=isIdleHold(avg,lo,hi);
+  if(avg>lo){
+    if(repPhase!=='up'){setRepPhase('up');setFB('Good — both arms raised. Hold 2 seconds.','good');}
+    const penalty=symErr>20?15:0;
+    updateScore(idle?0:Math.max(0,scoreHold(avg,lo,hi)-penalty));setPhase('Raised');
+    if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
+  }else if(avg<40&&repPhase==='up'){
+    if(phaseAge()>1200){setRepPhase('down');doRep();setFB('Lower complete — raise again with control.','');}
+    else{setRepPhase('down');setFB('Lower a little slower for full credit.','warn');}
+  }else{
+    setFB('Raise both arms forward and up together, nice and slow.','');
+    updateScore(idle?0:scoreHold(avg,lo,hi));
+  }
+}
+
+const HOLD_DETS=new Set(['neck_tilt','chin_tuck','side_bend','knee_chest','calf_raise','mckenzie']);
+const OSC_DETS=new Set(['shoulder_roll','wrist']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
-  const{lo,hi}=sessEx.angles.threshold;
 
   if(COMPENSATION_CHECK_DETS.has(det)&&checkTorsoCompensation(lm)){
     updateScore(0);
@@ -2881,235 +3163,13 @@ function analyzeExercise(lm,W,H){
     return;
   }
 
-  if(det==='neck_tilt'){
-    if(!requireVisible(lm,0,11,12))return;
-    const nose=lm[0],lS=lm[11],rS=lm[12];
-    const shoulderMid={x:(lS.x+rS.x)/2,y:(lS.y+rS.y)/2};
-    const raw=smoothAngle(angleFromVertical(shoulderMid,nose)); // real deviation from vertical, degrees
-    setAngle(raw,'Tilt');
-    if(raw>lo){
-      if(repPhase==='neutral'){setRepPhase('tilted');setFB('Good tilt — hold this position for 3 seconds.','good');}
-      updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));setPhase('Stretching');
-    }else if(raw<lo*0.35&&repPhase==='tilted'){
-      if(phaseAge()>1800){setRepPhase('neutral');doRep();setFB('Good — return and tilt the other side.','');}
-      else{setRepPhase('neutral');setFB('Hold the tilt a little longer for full credit.','warn');}
-    }else{
-      setFB('Slowly tilt your head to one side, hold 3 seconds.','');setPhase('Ready');
-      updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));
-    }
-  }
-
-  else if(det==='chin_tuck'){
-    if(!requireVisible(lm,0,7,8))return;
-    const nose=lm[0];
-    const earMidX=(lm[7].x+lm[8].x)/2;
-    const retraction=smoothAngle(Math.abs((earMidX-nose.x)*100));
-    setAngle(retraction,'Retraction','');
-    if(retraction>lo){
-      if(repPhase==='neutral'){setRepPhase('tucked');setFB('Good chin tuck — hold 5 seconds. Keep eyes level.','good');}
-      updateScore(isIdleHold(retraction,lo,hi)?0:scoreHold(retraction,lo,hi));setPhase('Tucked');
-    }else if(retraction<lo*0.3&&repPhase==='tucked'){
-      if(phaseAge()>2500){setRepPhase('neutral');doRep();setFB('Release and repeat the tuck motion.','');}
-      else{setRepPhase('neutral');setFB('Hold the tuck a little longer for full credit.','warn');}
-    }else{
-      setFB('Draw your chin straight backward — like making a double chin.','');setPhase('Ready');
-      updateScore(isIdleHold(retraction,lo,hi)?0:scoreHold(retraction,lo,hi));
-    }
-  }
-
-  else if(det==='shoulder_roll'){
-    if(!requireVisible(lm,11,12,13,14))return;
-    const lAng=angleDeg(lm[23],lm[11],lm[13]);
-    const rAng=angleDeg(lm[24],lm[12],lm[14]);
-    const avg=smoothAngle((lAng+rAng)/2);
-    setAngle(avg,'Shoulder');
-    if(avg>100&&repPhase!=='up'){repPhase='up';setPhase('Rolling Up');}
-    else if(avg<55&&repPhase==='up'){repPhase='down';doRep();setFB('Good circle — keep rolling!','good');}
-    else{setFB('Roll shoulders in large backward circles. Full range.','');}
-    updateScore(isIdleOscillate(avg,lo,hi)?0:scoreOscillate(avg,lo,hi));
-  }
-
-  else if(det==='pendulum'){
-    if(!requireVisible(lm,11,13,15))return;
-    const ang=angleDeg(lm[11],lm[13],lm[15]);
-    const raw=smoothAngle(ang);
-    setAngle(raw,'Swing');
-    updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));
-    setFB('Let the arm hang loose. Small gravity-driven circles. No muscle force.','good');
-    if(raw>15&&repPhase==='neutral'){repPhase='swing';}
-    else if(raw<8&&repPhase==='swing'){repPhase='neutral';doRep();}
-  }
-
-  else if(det==='wrist'){
-    if(!requireVisible(lm,13,15,17))return;
-    const ang=smoothAngle(angleDeg(lm[13],lm[15],lm[17]));
-    setAngle(ang,'Wrist');
-    if(ang>140){if(repPhase!=='ext'){repPhase='ext';setFB('Full extension — now flex down.','good');}}
-    else if(ang<50&&repPhase==='ext'){repPhase='flex';doRep();setFB('Good — extend again.','');}
-    else if(ang<50){setFB('Flex wrist fully downward.','');}
-    else{setFB('Extend wrist fully upward, then flex fully downward.','');setPhase('Moving');}
-    updateScore(isIdleOscillate(ang,lo,hi)?0:scoreOscillate(ang,lo,hi));
-  }
-
-  else if(det==='mckenzie'||det==='catcow'){
-    if(!requireVisible(lm,7,11,23))return;
-    const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23]));
-    setAngle(spineAng,'Spine');
-    if(det==='mckenzie'){
-      const extension=Math.max(0,180-spineAng); // real degrees of backward extension from neutral
-      if(spineAng<165){
-        if(repPhase==='neutral'){setRepPhase('extended');setFB('Good backward extension — hold 3 seconds.','good');}
-        updateScore(isIdleHold(extension,lo,hi)?0:scoreHold(extension,lo,hi));setPhase('Extended');
-      }else if(spineAng>172&&repPhase==='extended'){
-        if(phaseAge()>1800){setRepPhase('neutral');doRep();setFB('Stand tall and repeat the extension.','');}
-        else{setRepPhase('neutral');setFB('Hold the extension a little longer for full credit.','warn');}
-      }else{
-        setFB('Place hands on lower back and gently arch backward.','');
-        updateScore(isIdleHold(extension,lo,hi)?0:scoreHold(extension,lo,hi));
-      }
-    }else{
-      const dev=Math.abs(180-spineAng); // degrees away from neutral, either direction
-      if(spineAng<160){
-        if(repPhase!=='arch'){setRepPhase('arch');setFB('Good arch (cow) — now round into cat position.','good');}
-        updateScore(isIdleHold(dev,15,40)?0:scoreHold(dev,15,40));setPhase('Cow');
-      }else if(spineAng>175&&repPhase==='arch'){
-        if(phaseAge()>700){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
-        else{setFB('Hold each position briefly, in rhythm with your breath.','warn');}
-      }else if(spineAng>175){
-        setFB('Arch your spine fully — look upward gently.','');
-        updateScore(isIdleHold(dev,15,40)?0:scoreHold(dev,15,40));
-      }else{
-        setFB('Move fluidly between full arch and full round. Breathe with each.','');
-        updateScore(isIdleHold(dev,15,40)?0:scoreHold(dev,15,40));
-      }
-    }
-  }
-
-  else if(det==='knee_chest'){
-    if(!requireVisible(lm,23,25,27))return;
-    const kneeAng=smoothAngle(angleDeg(lm[23],lm[25],lm[27])); // real knee-flexion angle, hip(23)-knee(25)-ankle(27)
-    setAngle(kneeAng,'Knee Flex');
-    if(kneeAng<hi){
-      if(repPhase!=='up'){setRepPhase('up');setFB('Good — pull knee toward chest. Hold 3 seconds.','good');}
-      updateScore(isIdleHold(kneeAng,lo,hi)?0:scoreHold(kneeAng,lo,hi));setPhase('Up');
-    }else if(kneeAng>150&&repPhase==='up'){
-      if(phaseAge()>1800){setRepPhase('down');doRep();setFB('Lower and raise the other knee.','');}
-      else{setRepPhase('down');setFB('Hold the lift a little longer for full credit.','warn');}
-    }else{
-      setFB('Stand tall. Pull one knee up toward your chest.','');
-      updateScore(isIdleHold(kneeAng,lo,hi)?0:scoreHold(kneeAng,lo,hi));
-    }
-  }
-
-  else if(det==='calf_raise'){
-    if(!requireVisible(lm,25,27,29))return;
-    const ang=smoothAngle(angleDeg(lm[25],lm[27],lm[29])); // real shin-to-heel (ankle) angle
-    setAngle(ang,'Ankle');
-    if(ang>hi){
-      if(repPhase!=='up'){setRepPhase('up');setFB('Full plantarflexion — hold at top.','good');}
-      updateScore(isIdleHold(ang,lo,hi)?0:scoreHold(ang,lo,hi));setPhase('Up');
-    }else if(ang<lo&&repPhase==='up'){
-      if(phaseAge()>700){setRepPhase('down');doRep();setFB('Lower slowly over 3 seconds.','');}
-      else{setRepPhase('down');setFB('Pause at the top a little longer next time.','warn');}
-    }else{
-      setFB('Rise fully onto tiptoes. Pause at the top for 1 second.','');
-      updateScore(isIdleHold(ang,lo,hi)?0:scoreHold(ang,lo,hi));
-    }
-  }
-
-  else if(det==='ankle_circle'){
-    if(!requireVisible(lm,27,31))return;
-    const ankle=lm[27],foot=lm[31];
-    const theta=Math.atan2(foot.y-ankle.y,foot.x-ankle.x);
-    if(ankleCirclePrevTheta!=null){
-      let delta=theta-ankleCirclePrevTheta;
-      if(delta>Math.PI)delta-=2*Math.PI;
-      if(delta<-Math.PI)delta+=2*Math.PI;
-      ankleCircleAccum+=delta;
-    }
-    ankleCirclePrevTheta=theta;
-    const sweptDeg=Math.abs(ankleCircleAccum)*180/Math.PI;
-    setAngle(Math.min(sweptDeg,360),'Rotation');
-    const radius=Math.hypot(foot.x-ankle.x,foot.y-ankle.y);
-    const angularSpeed=trackStillness(sweptDeg)?0:1; // reuses the same stillness window on cumulative sweep
-    const moving=radius>0.025&&angularSpeed>0;
-    updateScore(moving?96:0);
-    setFB(moving?'Good circular motion — keep going.':'Rotate your ankle to begin — make the circle bigger.',moving?'good':'warn');
-    setPhase('Circling ('+Math.round(Math.min(sweptDeg,360))+'°)');
-    if(sweptDeg>=340){doRep();ankleCircleAccum=0;}
-  }
-
-  else if(det==='side_bend'){
-    if(!requireVisible(lm,11,12,23,24))return;
-    const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
-    const hipMid={x:(lm[23].x+lm[24].x)/2,y:(lm[23].y+lm[24].y)/2};
-    const raw=smoothAngle(angleFromVertical(hipMid,shoulderMid)); // real trunk-lean angle from vertical
-    setAngle(raw,'Side Bend');
-    if(raw>lo){
-      if(repPhase==='neutral'){setRepPhase('bent');setFB('Good side bend — hold 2 seconds.','good');}
-      updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));setPhase('Bending');
-    }else if(raw<lo*0.35&&repPhase==='bent'){
-      if(phaseAge()>1500){setRepPhase('neutral');doRep();setFB('Good — return upright and bend the other side.','');}
-      else{setRepPhase('neutral');setFB('Hold the bend a little longer for full credit.','warn');}
-    }else{
-      setFB('Stand tall, slide one hand down your leg to bend sideways.','');setPhase('Ready');
-      updateScore(isIdleHold(raw,lo,hi)?0:scoreHold(raw,lo,hi));
-    }
-  }
-
-  else if(det==='posture'){
-    if(!requireVisible(lm,11,12,23,24,7,8))return;
-    const sLev=Math.abs(lm[11].y-lm[12].y)*100; // real shoulder-height asymmetry
-    const hLev=Math.abs(lm[23].y-lm[24].y)*100; // real hip-height asymmetry
-    const headFwd=(lm[0].z-(lm[11].z+lm[12].z)/2)*60; // real forward-head depth offset
-    const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23])); // real ear-shoulder-hip alignment
-    setAngle(spineAng,'Spine');
-    let score=100;
-    const issues=[];
-    if(sLev>2.5){score-=20;issues.push('shoulder-height asymmetry');}
-    if(hLev>2.5){score-=20;issues.push('hip tilt');}
-    if(headFwd>8){score-=15;issues.push('forward head posture');}
-    if(spineAng<160){score-=15;issues.push('spinal flexion');}
-    updateScore(Math.max(0,score));
-    setFB(issues.length?'Detected: '+issues.join(', ')+'.':'Excellent posture — symmetrical alignment.',issues.length?'warn':'good');
-    setPhase('Scanning');
-    if(sessReps===0){setTimeout(()=>{if(sessActive&&sessEx&&sessEx.det==='posture')doRep();},6000);}
-  }
-
-  else if(det==='bilateral_raise'){
-    // Only the torso (shoulders/hips) gates "Lost". Wrists (not elbows) drive the
-    // angle — they stay visible more reliably than elbows when arms are fully
-    // overhead (elbows are prone to self-occlusion/frame-edge clipping right at
-    // the top of the movement, which used to silently freeze tracking exactly
-    // when a rep should complete). A short grace period absorbs brief dips;
-    // beyond that, the user gets an actionable message instead of a silent freeze.
-    if(!requireVisible(lm,11,12,23,24))return;
-    if(!safe(lm,15,16)){
-      bilateralArmLossStreak++;
-      if(bilateralArmLossStreak<BILATERAL_ARM_GRACE)return;
-      setFB('Step back so both raised arms stay fully in frame.','warn');
-      setPhase('Adjust Framing');
-      return;
-    }
-    bilateralArmLossStreak=0;
-    const lAng=angleDeg(lm[23],lm[11],lm[15]);
-    const rAng=angleDeg(lm[24],lm[12],lm[16]);
-    const avg=smoothAngle((lAng+rAng)/2);
-    const symErr=Math.abs(lAng-rAng);
-    setAngle(avg,'Arms');
-    if(avg>lo){
-      if(repPhase!=='up'){setRepPhase('up');setFB('Good — both arms raised. Hold 2 seconds.','good');}
-      const penalty=symErr>20?15:0;
-      updateScore(isIdleHold(avg,lo,hi)?0:Math.max(0,scoreHold(avg,lo,hi)-penalty));setPhase('Raised');
-      if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
-    }else if(avg<40&&repPhase==='up'){
-      if(phaseAge()>1200){setRepPhase('down');doRep();setFB('Lower complete — raise again with control.','');}
-      else{setRepPhase('down');setFB('Lower a little slower for full credit.','warn');}
-    }else{
-      setFB('Raise both arms forward and up together, nice and slow.','');
-      updateScore(isIdleHold(avg,lo,hi)?0:scoreHold(avg,lo,hi));
-    }
-  }
+  if(HOLD_DETS.has(det))return runHold(det,lm);
+  if(OSC_DETS.has(det))return runOscillate(det,lm);
+  if(det==='pendulum')return runPendulum(lm);
+  if(det==='catcow')return runCatCow(lm);
+  if(det==='ankle_circle')return runAnkleCircle(lm);
+  if(det==='posture')return runPosture(lm);
+  if(det==='bilateral_raise')return runBilateralRaise(lm);
 }
 </script>
 </body>
