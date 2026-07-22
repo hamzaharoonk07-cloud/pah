@@ -6,36 +6,36 @@
 <title>PhysioSync – AI Physiotherapy</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="anatomy-viewer.js"></script>
 <style>
 :root{
-  --brand:#e11d48;--accent:#fb7185;--green:#00e5a0;--yellow:#f59e0b;--blue:#3b82f6;
-  --purple:#8b5cf6;--surface:var(--w04);--border:var(--w08);
-  --card:rgba(12,12,18,1);--text:#f8fafc;--muted:#94a3b8;--submuted:#94a3b8;
-  --bg:#060608;--bg-strong:#000;--bg-alt:#0a0010;--heading:#fff;--glass:rgba(6,6,8,.92);
-  --w03:rgba(255,255,255,.03);--w04:rgba(255,255,255,.04);--w05:rgba(255,255,255,.05);
-  --w06:rgba(255,255,255,.06);--w07:rgba(255,255,255,.07);--w08:rgba(255,255,255,.08);
-  --w09:rgba(255,255,255,.09);--w10:rgba(255,255,255,.1);--w12:rgba(255,255,255,.12);
-  --card1:rgba(10,10,16,1);--card2:rgba(10,10,18,1);
-  --input-bg:var(--w05);--shadow-strength:.7;
+  --brand:#e11d48;--accent:#fb7185;--green:#12d999;--yellow:#f5a524;--blue:#3b82f6;
+  --purple:#a78bfa;--surface:var(--w04);--border:var(--w08);
+  --card:rgba(17,17,22,1);--text:#f2f2f5;--muted:#a3a7b7;--submuted:#75798c;
+  --bg:#08080b;--bg-strong:#000;--bg-alt:#0d0812;--heading:#fbfbfd;--glass:rgba(7,7,10,.9);
+  --w03:rgba(255,255,255,.035);--w04:rgba(255,255,255,.045);--w05:rgba(255,255,255,.06);
+  --w06:rgba(255,255,255,.07);--w07:rgba(255,255,255,.085);--w08:rgba(255,255,255,.1);
+  --w09:rgba(255,255,255,.11);--w10:rgba(255,255,255,.13);--w12:rgba(255,255,255,.16);
+  --card1:#131318;--card2:#141419;
+  --input-bg:var(--w05);--shadow-strength:.7;--shadow-color:rgba(0,0,0,.55);
 }
 :root[data-theme="light"]{
-  --surface:rgba(15,23,42,.035);--border:rgba(15,23,42,.1);
-  --card:#ffffff;--text:#1e293b;--muted:#475569;--submuted:#64748b;
-  --bg:#f4f5f7;--bg-strong:#ffffff;--bg-alt:#eef0ff;--heading:#0f172a;--glass:rgba(255,255,255,.85);
-  --w03:rgba(15,23,42,.035);--w04:rgba(15,23,42,.045);--w05:rgba(15,23,42,.055);
-  --w06:rgba(15,23,42,.065);--w07:rgba(15,23,42,.08);--w08:rgba(15,23,42,.09);
-  --w09:rgba(15,23,42,.1);--w10:rgba(15,23,42,.12);--w12:rgba(15,23,42,.14);
+  --surface:rgba(20,20,30,.03);--border:rgba(20,20,30,.09);
+  --card:#ffffff;--text:#1a1a22;--muted:#5b5f70;--submuted:#828596;
+  --bg:#faf9fb;--bg-strong:#ffffff;--bg-alt:#f2f1f6;--heading:#0c0c12;--glass:rgba(255,255,255,.82);
+  --w03:rgba(20,20,30,.03);--w04:rgba(20,20,30,.04);--w05:rgba(20,20,30,.05);
+  --w06:rgba(20,20,30,.06);--w07:rgba(20,20,30,.075);--w08:rgba(20,20,30,.085);
+  --w09:rgba(20,20,30,.1);--w10:rgba(20,20,30,.11);--w12:rgba(20,20,30,.13);
   --card1:#ffffff;--card2:#ffffff;
-  --input-bg:rgba(15,23,42,.04);--shadow-strength:.12;
+  --input-bg:rgba(20,20,30,.04);--shadow-strength:.1;--shadow-color:rgba(20,20,35,.1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;width:100%}
 body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;min-height:100vh;width:100%;max-width:100vw;transition:background .3s ease,color .3s ease}
-h1,h2,h3,h4,h5,h6{font-family:'Poppins',sans-serif;font-weight:700}
+h1,h2,h3,h4,h5,h6{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
 img{max-width:100%;display:block}
 button{cursor:pointer}
 a{text-decoration:none;color:inherit}
@@ -55,9 +55,10 @@ a{text-decoration:none;color:inherit}
   border-radius:24px;padding:36px 32px;
 }
 .gate-logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
-.gate-logo-row img{width:44px;height:44px;border-radius:10px;object-fit:cover}
-.gate-logo-text{font-family:'Poppins',sans-serif;font-weight:900;font-size:1.3rem}
-.gate-logo-text span{color:var(--brand)}
+.brand-icon,.brand-text{width:auto;display:block}
+.brand-text-light{display:none}
+:root[data-theme="light"] .brand-text-dark{display:none}
+:root[data-theme="light"] .brand-text-light{display:block}
 .gate-h{font-size:1.4rem;font-weight:800;text-align:center;margin-bottom:4px}
 .gate-sub{color:var(--muted);font-size:.83rem;text-align:center;margin-bottom:24px}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
@@ -73,7 +74,7 @@ a{text-decoration:none;color:inherit}
 .gate-btn{
   margin-top:14px;width:100%;padding:14px;border-radius:12px;border:none;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
-  font-family:'Poppins',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.04em;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.04em;
   transition:opacity .2s,transform .15s;box-shadow:0 8px 24px rgba(225,29,72,.3);
 }
 .gate-btn:hover{opacity:.88;transform:translateY(-1px)}
@@ -87,11 +88,10 @@ a{text-decoration:none;color:inherit}
   background:var(--glass);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--w06);gap:12px;
 }
-.nav-logo{display:flex;align-items:center;gap:9px;font-family:'Poppins',sans-serif;font-weight:900;font-size:1.05rem}
-.nav-logo img{width:34px;height:34px;border-radius:8px;object-fit:cover}
+.nav-logo{display:flex;align-items:center;gap:9px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.05rem}
 .nav-logo span{color:var(--brand)}
 .nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
-.nl{color:var(--muted);font-family:'Poppins',sans-serif;font-weight:600;font-size:.74rem;letter-spacing:.04em;padding:6px 13px;border-radius:8px;transition:all .2s}
+.nl{color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.74rem;letter-spacing:.04em;padding:6px 13px;border-radius:8px;transition:all .2s}
 .nl:hover{color:var(--heading);background:var(--w06)}
 .nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .nav-greet{display:none!important}
@@ -99,11 +99,11 @@ a{text-decoration:none;color:inherit}
 .nav-streak{
   display:flex;align-items:center;gap:6px;padding:5px 13px;border-radius:100px;
   background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.25);
-  color:var(--accent);font-family:'Poppins',sans-serif;font-size:.72rem;font-weight:700;white-space:nowrap;
+  color:var(--accent);font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;white-space:nowrap;
 }
 .nav-home{
   padding:6px 14px;border-radius:8px;border:1px solid var(--w10);
-  color:var(--muted);font-family:'Poppins',sans-serif;font-size:.73rem;font-weight:600;
+  color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:600;
   transition:all .2s;display:flex;align-items:center;gap:5px;
 }
 .nav-home:hover{color:var(--heading);border-color:var(--w12)}
@@ -161,7 +161,7 @@ a{text-decoration:none;color:inherit}
   width:28px;height:28px;border-radius:50%;flex-shrink:0;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Poppins',sans-serif;font-weight:800;font-size:.75rem;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.75rem;
   box-shadow:0 2px 8px rgba(225,29,72,.5);
 }
 .hero-welcome strong{color:var(--heading)}
@@ -177,7 +177,7 @@ a{text-decoration:none;color:inherit}
 .pill{
   padding:5px 16px;border-radius:100px;font-size:.72rem;font-weight:600;cursor:pointer;
   border:1px solid var(--w10);color:var(--muted);background:transparent;
-  font-family:'Poppins',sans-serif;transition:all .2s;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;
 }
 .pill:hover,.pill.on{border-color:var(--brand);color:#fff;background:rgba(225,29,72,.12)}
 
@@ -191,7 +191,7 @@ a{text-decoration:none;color:inherit}
   background:var(--card1);border:1px solid var(--w07);
   border-radius:20px;padding:24px;transition:border-color .3s,transform .3s,box-shadow .3s;
   position:relative;overflow:hidden;
-  box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px rgba(0,0,0,.7);
+  box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px var(--shadow-color);
 }
 .ex-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
@@ -206,8 +206,10 @@ a{text-decoration:none;color:inherit}
 .ex-card:hover::before{opacity:1}
 .ex-card:hover::after{opacity:1}
 .ex-card.hidden{display:none}
+.ex-card.ex-linked{animation:exLinkedPulse 1.3s ease 2}
+@keyframes exLinkedPulse{0%,100%{box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px var(--shadow-color),0 0 0 0 rgba(225,29,72,.5)}50%{box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px var(--shadow-color),0 0 0 6px rgba(225,29,72,.18)}}
 .ex-idx{
-  position:absolute;top:14px;right:18px;font-family:'Poppins',sans-serif;font-weight:800;
+  position:absolute;top:14px;right:18px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;
   font-size:1.7rem;color:var(--w05);letter-spacing:-.02em;line-height:1;user-select:none;
 }
 .ex-icon{
@@ -233,7 +235,7 @@ a{text-decoration:none;color:inherit}
 .ex-start-btn{
   width:100%;padding:11px;border-radius:100px;border:none;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
-  font-family:'Poppins',sans-serif;font-weight:700;font-size:.79rem;letter-spacing:.04em;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.79rem;letter-spacing:.04em;
   transition:opacity .2s,transform .15s;box-shadow:0 4px 16px rgba(225,29,72,.25);
 }
 .ex-start-btn:hover{opacity:.85;transform:scale(1.01)}
@@ -266,7 +268,7 @@ a{text-decoration:none;color:inherit}
   background:var(--card2);border:1px solid var(--w07);
   border-radius:20px;overflow:hidden;transition:border-color .25s,transform .25s,box-shadow .25s;
   display:flex;flex-direction:column;
-  box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px rgba(0,0,0,.7);
+  box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px var(--shadow-color);
 }
 .hosp-card:hover{border-color:rgba(225,29,72,.35);transform:translateY(-4px);box-shadow:0 1px 0 var(--w05) inset,0 26px 52px -24px rgba(225,29,72,.16)}
 .hosp-top{
@@ -276,10 +278,16 @@ a{text-decoration:none;color:inherit}
   border-radius:20px 20px 0 0; /* Match card radius */
 }
 .hosp-logo{
-  width:100%;max-width:200px;height:70px;object-fit:contain;
-  /* Remove brightness filter — not needed on white bg */
+  max-width:200px;width:100%;height:56px;object-fit:contain;
 }
-.hosp-name{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.05rem;text-align:center;line-height:1.3;color: black;}
+.hosp-mark{
+  width:56px;height:56px;border-radius:16px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.02em;
+  box-shadow:0 8px 20px rgba(225,29,72,.3);
+}
+.hosp-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;text-align:center;line-height:1.3;color: black;}
 .hosp-type{
   font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;
   padding:3px 14px;border-radius:100px;background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.15);
@@ -303,7 +311,7 @@ a{text-decoration:none;color:inherit}
 .hosp-phone a:hover{opacity:.8}
 .hosp-btn{
   width:100%;margin-top:auto;padding:11px;border-radius:100px;border:1px solid rgba(225,29,72,.4);
-  background:transparent;color:var(--brand);font-family:'Poppins',sans-serif;font-weight:700;
+  background:transparent;color:var(--brand);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;
   font-size:.77rem;transition:all .2s;letter-spacing:.04em;
 }
 .hosp-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
@@ -320,7 +328,7 @@ a{text-decoration:none;color:inherit}
 }
 .who-stat:hover{border-color:rgba(225,29,72,.3)}
 .who-stat-num{
-  font-family:'Poppins',sans-serif;font-weight:900;font-size:2.4rem;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:2.4rem;
   background:linear-gradient(135deg,var(--brand),var(--accent));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   margin-bottom:6px;
@@ -338,7 +346,7 @@ a{text-decoration:none;color:inherit}
   background:var(--card2);border:1px solid var(--w07);
   border-radius:20px;padding:24px;transition:border-color .25s,transform .25s,box-shadow .25s;
   position:relative;overflow:hidden;
-  box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px rgba(0,0,0,.7);
+  box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px var(--shadow-color);
 }
 .research-card:hover{border-color:rgba(225,29,72,.35);transform:translateY(-3px)}
 .research-card::before{
@@ -358,7 +366,7 @@ a{text-decoration:none;color:inherit}
   color:var(--accent);font-weight:700;padding:2px 10px;border-radius:100px;
   background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.15);margin-bottom:10px;
 }
-.research-title{font-family:'Poppins',sans-serif;font-weight:800;font-size:.98rem;line-height:1.35;margin-bottom:8px}
+.research-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.98rem;line-height:1.35;margin-bottom:8px}
 .research-desc{color:var(--muted);font-size:.79rem;line-height:1.7;margin-bottom:12px}
 .research-fact{
   display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:9px;
@@ -399,13 +407,13 @@ a{text-decoration:none;color:inherit}
 .dash-streak-ring-txt{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-.dash-streak-ring-txt strong{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.05rem;line-height:1;color:var(--heading)}
+.dash-streak-ring-txt strong{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;line-height:1;color:var(--heading)}
 .dash-streak-ring-txt span{font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
 .dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
 .dash-m{
   background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:22px;
   transition:border-color .25s,transform .25s,box-shadow .25s;
-  box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px rgba(0,0,0,.7);
+  box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px var(--shadow-color);
 }
 .dash-m:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
 .dash-m-ic{
@@ -413,11 +421,11 @@ a{text-decoration:none;color:inherit}
   display:flex;align-items:center;justify-content:center;margin-bottom:14px;
 }
 .dash-m-ic svg{width:17px;height:17px;stroke:var(--brand)}
-.dash-m-val{font-size:2.1rem;font-weight:800;font-family:'Poppins',sans-serif;color:var(--heading);line-height:1}
+.dash-m-val{font-size:2.1rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;color:var(--heading);line-height:1}
 .dash-m-lbl{font-size:.7rem;color:var(--muted);margin-top:6px}
 .dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.dash-card{background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:22px;box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px rgba(0,0,0,.7)}
-.dash-card-t{font-family:'Poppins',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:18px;display:flex;align-items:center;gap:7px}
+.dash-card{background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:22px;box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px var(--shadow-color)}
+.dash-card-t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:18px;display:flex;align-items:center;gap:7px}
 .dash-card-t svg{width:15px;height:15px;stroke:var(--brand)}
 #weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:6px}
 .wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
@@ -460,9 +468,9 @@ a{text-decoration:none;color:inherit}
 .coach-panel{
   position:fixed;bottom:94px;right:24px;z-index:799;
   width:min(370px,calc(100vw - 32px));height:min(560px,calc(100vh - 130px));
-  background:rgba(10,10,18,.98);backdrop-filter:blur(20px);
+  background:var(--card1);backdrop-filter:blur(20px);
   border:1px solid var(--w09);border-radius:20px;overflow:hidden;
-  display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.55);
+  display:flex;flex-direction:column;box-shadow:0 24px 70px var(--shadow-color);
   opacity:0;transform:translateY(16px) scale(.97);pointer-events:none;
   transition:opacity .25s ease,transform .25s cubic-bezier(.2,.8,.2,1);
   transform-origin:bottom right;
@@ -481,7 +489,7 @@ a{text-decoration:none;color:inherit}
 .cm.user{background:var(--brand);color:#fff;align-self:flex-end}
 .cm strong{display:block;color:var(--brand);font-size:.72rem;margin-bottom:4px}
 .cm.user strong{color:rgba(255,255,255,.7)}
-.qchip{cursor:pointer;background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.2);color:var(--accent);padding:4px 12px;border-radius:100px;font-size:.7rem;font-family:'Poppins',sans-serif;font-weight:600;transition:background .2s}
+.qchip{cursor:pointer;background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.2);color:var(--accent);padding:4px 12px;border-radius:100px;font-size:.7rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;transition:background .2s}
 .qchip:hover{background:rgba(225,29,72,.18)}
 .chat-row{padding:11px 13px;border-top:1px solid var(--w06);display:flex;gap:8px}
 #chat-in{flex:1;background:var(--w04);border:1px solid var(--w09);border-radius:11px;padding:10px 14px;color:var(--heading);font-family:'Inter',sans-serif;font-size:.81rem;outline:none}
@@ -520,11 +528,11 @@ a{text-decoration:none;color:inherit}
   background:linear-gradient(to bottom,rgba(0,0,0,.85) 0%,transparent 100%);
 }
 .sh-info{}
-.sh-name{font-size:1.15rem;font-weight:800;font-family:'Poppins',sans-serif}
+.sh-name{font-size:1.15rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
 .sh-area{color:var(--muted);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
 .sh-close{
   background:var(--w10);border:1px solid rgba(255,255,255,.18);color:#fff;
-  border-radius:100px;padding:7px 18px;font-family:'Poppins',sans-serif;font-size:.73rem;font-weight:600;
+  border-radius:100px;padding:7px 18px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:600;
   transition:background .2s;flex-shrink:0;
 }
 .sh-close:hover{background:rgba(255,255,255,.18)}
@@ -544,7 +552,7 @@ a{text-decoration:none;color:inherit}
   position:absolute;top:76px;left:18px;z-index:10;
   background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.13);
   border-radius:100px;padding:5px 14px;
-  font-family:'Poppins',sans-serif;font-size:.66rem;font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.66rem;font-weight:700;
   letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:7px;
 }
 .hdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;box-shadow:0 0 8px currentColor;animation:hp 1.4s ease infinite}
@@ -562,7 +570,7 @@ a{text-decoration:none;color:inherit}
 /* Rep flash */
 .rep-flash{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  z-index:20;font-family:'Poppins',sans-serif;font-weight:900;font-size:8rem;
+  z-index:20;font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:8rem;
   color:var(--brand);text-shadow:0 0 60px rgba(225,29,72,.9);pointer-events:none;opacity:0;
 }
 .rep-flash.go{animation:rfa .7s ease forwards}
@@ -632,7 +640,7 @@ a{text-decoration:none;color:inherit}
 .demo-live-trigger{
   position:absolute;top:118px;left:18px;z-index:10;
   background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);color:#fff;
-  border-radius:100px;padding:7px 15px 7px 12px;font-family:'Poppins',sans-serif;
+  border-radius:100px;padding:7px 15px 7px 12px;font-family:'Plus Jakarta Sans',sans-serif;
   font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
   display:flex;align-items:center;gap:6px;transition:background .2s,border-color .2s;
 }
@@ -654,12 +662,12 @@ a{text-decoration:none;color:inherit}
 .demo-overlay-close{
   width:100%;margin-top:14px;padding:12px;border-radius:100px;border:none;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
-  font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.82rem;
 }
 .s-cam-btn{
   padding:14px 36px;border-radius:100px;border:none;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
-  font-family:'Poppins',sans-serif;font-weight:700;font-size:.88rem;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;
   display:flex;align-items:center;gap:10px;
   box-shadow:0 8px 28px rgba(225,29,72,.45);transition:transform .2s,box-shadow .2s;
 }
@@ -686,7 +694,7 @@ a{text-decoration:none;color:inherit}
   border-radius:14px;padding:11px;text-align:center;
   border:1px solid var(--w09);
 }
-.s-stat-v{font-size:1.65rem;font-weight:800;color:var(--brand);font-family:'Poppins',sans-serif;line-height:1}
+.s-stat-v{font-size:1.65rem;font-weight:800;color:var(--brand);font-family:'Plus Jakarta Sans',sans-serif;line-height:1}
 .s-stat-l{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:4px}
 .s-fb{
   border-radius:11px;padding:9px 16px;font-size:.8rem;text-align:center;line-height:1.5;
@@ -736,11 +744,10 @@ a{text-decoration:none;color:inherit}
 .f-badge svg{width:14px;height:14px;stroke:#00e5a0;flex-shrink:0}
 .footer-cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;max-width:1320px;margin:0 auto 24px}
 .f-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.f-brand img{width:34px;height:34px;border-radius:8px;object-fit:cover}
-.f-brand-name{font-family:'Poppins',sans-serif;font-weight:900;font-size:1.1rem}
+.f-brand-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:1.1rem}
 .f-brand-name span{color:var(--brand)}
 .f-desc{color:var(--muted);font-size:.79rem;line-height:1.7;max-width:260px}
-.f-hd{font-family:'Poppins',sans-serif;font-weight:700;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--heading);margin-bottom:13px}
+.f-hd{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--heading);margin-bottom:13px}
 .f-lks{display:flex;flex-direction:column;gap:9px}
 .f-lks a,.f-lks span{color:var(--muted);font-size:.79rem;transition:color .2s}
 .f-lks a:hover{color:var(--heading);padding-left:2px}
@@ -794,7 +801,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   .nav-home{display:none}
   #navbar{padding:0 18px}
   .nav-logo{font-size:.92rem}
-  .nav-logo img{width:28px;height:28px}
+  .nav-logo .brand-icon{height:30px}
+  .nav-logo .brand-text{height:20px}
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
   .s-ang{right:6px}
@@ -819,8 +827,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 <div id="gate">
   <div class="gate-wrap">
     <div class="gate-logo-row">
-      <img src="pahlogo/pahlogo.jpeg" alt="PhysioSync" onerror="this.style.display='none'">
-      <div class="gate-logo-text"><span>Physio</span>Sync</div>
+      <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:80px">
+      <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:40px">
+      <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:40px">
     </div>
     <h2 class="gate-h">Create Your Profile</h2>
     <p class="gate-sub">Set up your recovery profile to get personalized guidance.</p>
@@ -848,8 +857,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 <!-- ══════════ NAVBAR ══════════ -->
 <nav id="navbar">
   <a href="index.html" class="nav-logo">
-    <img src="pah.jpeg" alt="PhysioSync" onerror="this.style.display='none'">
-    <span>Physio</span>Sync
+    <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:52px">
+    <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:26px">
+    <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:26px">
   </a>
   <div class="nav-links">
     <a href="#hero" class="nl">Exercises</a>
@@ -1053,7 +1063,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <circle id="ring-c" cx="33" cy="33" r="27" fill="none" stroke="#00e5a0" stroke-width="5"
         stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6"
         transform="rotate(-90 33 33)" style="transition:stroke-dashoffset .6s,stroke .4s"/>
-      <text id="ring-t" x="33" y="38" text-anchor="middle" fill="#fff" font-family="Poppins" font-weight="800" font-size="12">--%</text>
+      <text id="ring-t" x="33" y="38" text-anchor="middle" fill="#fff" font-family="Plus Jakarta Sans" font-weight="800" font-size="12">--%</text>
     </svg>
     <div class="s-ring-lbl">Form</div>
   </div>
@@ -1065,7 +1075,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <circle id="ang-c" cx="45" cy="45" r="37" fill="none" stroke="#f59e0b" stroke-width="6"
         stroke-linecap="round" stroke-dasharray="232.5" stroke-dashoffset="232.5"
         transform="rotate(-90 45 45)" style="transition:stroke-dashoffset .35s"/>
-      <text id="ang-t" x="45" y="50" text-anchor="middle" fill="#fff" font-family="Poppins" font-weight="800" font-size="14">0°</text>
+      <text id="ang-t" x="45" y="50" text-anchor="middle" fill="#fff" font-family="Plus Jakarta Sans" font-weight="800" font-size="14">0°</text>
       <text id="ang-l" x="45" y="64" text-anchor="middle" fill="#94a3b8" font-family="Inter" font-size="7">Angle</text>
     </svg>
   </div>
@@ -1164,8 +1174,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="footer-cols">
     <div>
       <div class="f-brand">
-        <img src="pah.jpeg" alt="PhysioSync" onerror="this.style.display='none'">
-        <div class="f-brand-name"><span>Physio</span>Sync</div>
+        <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:58px">
+        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:30px">
+        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:30px">
       </div>
       <p class="f-desc">Clinical-grade AI physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
     </div>
@@ -1218,7 +1229,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <div class="coach-head">
       <div class="coach-av">AI</div>
       <div>
-        <div style="font-weight:800;font-size:.92rem;font-family:'Poppins',sans-serif">PhysioSync Clinical AI</div>
+        <div style="font-weight:800;font-size:.92rem;font-family:'Plus Jakarta Sans',sans-serif">PhysioSync Clinical AI</div>
         <div class="coach-online"><span class="cdot"></span>Online — Evidence-Based Protocol</div>
       </div>
     </div>
@@ -1765,53 +1776,74 @@ document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>`
   <button class="ex-start-btn" onclick="openSession(${i})">Start with AI Tracking</button>
 </div>`).join('');
 
+// Deep link from index.html's anatomy panels ("Related Exercise" → ?ex=<det>)
+// — scroll to and highlight the matching card instead of auto-starting the
+// camera, since getUserMedia requires a real user gesture on the button itself.
+(function highlightLinkedExercise(){
+  const det=new URLSearchParams(location.search).get('ex');
+  if(!det)return;
+  const idx=EX.findIndex(ex=>ex.det===det);
+  if(idx<0)return;
+  const card=document.querySelector(`.ex-card[data-i="${idx}"]`);
+  if(!card)return;
+  setTimeout(()=>{
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.classList.add('ex-linked');
+    setTimeout(()=>card.classList.remove('ex-linked'),2600);
+  },400);
+})();
+
 // ═══════════════════════════════════════════════════════════
 // HOSPITALS
 // ═══════════════════════════════════════════════════════════
 const HOSPITALS=[
   {
     name:'Aga Khan University Hospital',
+    initials:'AK',
+    logo:'hospitallogos/aga_khan.png',
     type:'Tertiary Care / Teaching',
     addr:'Stadium Road, Karachi, Sindh 74800, Pakistan',
     phone:'+92 21 111 911 911',
     tags:['24/7 Emergency','Cardiac Surgery','Neurosciences','Orthopaedics','Rehabilitation'],
-    logo:'hospitallogos/aga_khan.png',
     website:'https://hospitals.aku.edu/pakistan/Health-Services/department-of-physiotherapy/Pages/default.aspx'
   },
   {
     name:'Liaquat National Hospital',
+    initials:'LN',
+    logo:'hospitallogos/liaquat_national.png',
     type:'Public Tertiary Care',
     addr:'Stadium Road, Karachi, Sindh 74800, Pakistan',
     phone:'(021) 111 456 456',
     tags:['700 Beds','Physical Therapy','Spine Surgery','Trauma Care','Diagnostics'],
-    logo:'hospitallogos/liaquat_national.png',
     website:'https://www.lnh.edu.pk/services/physiotherapy-and-rehabilitation'
   },
   {
     name:'Indus Hospital & Health Network',
+    initials:'IH',
+    logo:'hospitallogos/indus_hospital.webp',
     type:'Free Quality Healthcare',
     addr:'Korangi Crossing, Karachi, Sindh 75190, Pakistan',
     phone:'+92 21 111 111 880',
     tags:['Free Care','Cancer Centre','Rehabilitation','Blood Bank','Telemedicine'],
-    logo:'hospitallogos/indus_hospital.png',
     website:'https://indushospital.org.pk/our-work/center-of-excellence/physical-rehabilitation-centre/'
   },
   {
     name:'South City Hospital',
+    initials:'SC',
+    logo:'hospitallogos/south_city.png',
     type:'Private Premium Care',
     addr:'8 Clifton, Block 2, Karachi, Sindh 75600, Pakistan',
     phone:'+92 21 3587 8639',
     tags:['ICU / CCU','Laparoscopic Surgery','Maternity','Physiotherapy','Emergency'],
-    logo:'hospitallogos/south_city.png',
     website:'https://southcityhospital.org/for-patients/physiotherapy-rehabilitation/'
   },
   {
     name:'Ziauddin Hospital',
+    initials:'ZH',
     type:'Private Tertiary Care',
     addr:'Allama Rasheed Turabi Rd, Wahid Colony, Karachi, 74700, Pakistan',
     phone:'+92 21 1119 42942',
     tags:['Private Care','Trauma Centre','Burn Unit','Rehabilitation','Post-Surgical'],
-    logo:'hospitallogos/ziauddin.png',
     website:'https://www.ziauddinhospital.com/services/physiotherapy/'
   },
 
@@ -1823,7 +1855,7 @@ const phoneSVG='<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-lin
 document.getElementById('hosp-grid').innerHTML=HOSPITALS.map(h=>`
 <div class="hosp-card">
   <div class="hosp-top">
-    <img src="${h.logo}" alt="${h.name}" class="hosp-logo" onerror="this.style.display='none'">
+    ${h.logo?`<img src="${h.logo}" alt="${h.name}" class="hosp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="hosp-mark" style="display:none">${h.initials}</div>`:`<div class="hosp-mark">${h.initials}</div>`}
     <div class="hosp-name">${h.name}</div>
     <div class="hosp-type">${h.type}</div>
   </div>
@@ -2191,6 +2223,7 @@ let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral';
 let formScores=[],lastLM=null,raf=null,sessActive=false;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
 let ankleCirclePrevTheta=null,ankleCircleAccum=0; // true angular-sweep tracking for ankle_circle
+let shoulderRollPrevTheta=null,shoulderRollAccum=0; // same technique for shoulder_roll
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
 const REP_DEBOUNCE_MS=550; // minimum time between counted reps — filters jitter-driven double counts
 function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();}}
@@ -2258,6 +2291,7 @@ function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];visLossStreak=0;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
+  shoulderRollPrevTheta=null;shoulderRollAccum=0;chinTuckBaseline=null;
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2497,8 +2531,8 @@ function showCameraDiagnostics(){
   if(!popup){
     popup=document.createElement('div');
     popup.id='cam-diag-popup';
-    popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,10,18,.98);border:1px solid var(--w10);border-radius:16px;padding:24px;z-index:10000;max-width:90%;width:420px;color:#fff;font-family:Inter,sans-serif;font-size:.82rem;max-height:70vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.8);';
-    popup.innerHTML='<h3 style="margin:0 0 14px;font-family:Poppins,sans-serif;font-size:1.15rem;color:#fff;">Camera Diagnostics</h3><div id="cam-diag-content"></div><button onclick="document.getElementById(\'cam-diag-popup\').style.display=\'none\'" style="margin-top:18px;width:100%;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:Poppins;font-weight:700;font-size:.85rem;cursor:pointer;">Close</button>';
+    popup.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--card1);border:1px solid var(--w10);border-radius:16px;padding:24px;z-index:10000;max-width:90%;width:420px;color:var(--text);font-family:Inter,sans-serif;font-size:.82rem;max-height:70vh;overflow-y:auto;box-shadow:0 20px 60px var(--shadow-color);';
+    popup.innerHTML='<h3 style="margin:0 0 14px;font-family:Plus Jakarta Sans,sans-serif;font-size:1.15rem;color:var(--heading);">Camera Diagnostics</h3><div id="cam-diag-content"></div><button onclick="document.getElementById(\'cam-diag-popup\').style.display=\'none\'" style="margin-top:18px;width:100%;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:Plus Jakarta Sans,sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;">Close</button>';
     document.body.appendChild(popup);
   }
   const content=document.getElementById('cam-diag-content');
@@ -2696,7 +2730,7 @@ function drawSkeleton(ctx,lm,W,H){
       ctx.fillStyle='rgba(245,158,11,.15)';ctx.fill();
       ctx.beginPath();ctx.arc(bx,by,r2,a1,a2);
       ctx.strokeStyle='rgba(245,158,11,.6)';ctx.lineWidth=1.5;ctx.stroke();
-      ctx.fillStyle='#fff';ctx.font='bold 11px Poppins,sans-serif';ctx.textAlign='center';
+      ctx.fillStyle='#fff';ctx.font="bold 11px 'Plus Jakarta Sans',sans-serif";ctx.textAlign='center';
       ctx.fillText(Math.round(ang)+'°',bx,by-r2-5);
     }
   }
@@ -2720,6 +2754,16 @@ function angleFromVertical(A,B){
   const dx=B.x-A.x,dy=B.y-A.y;
   return Math.abs(Math.atan2(dx,-dy)*180/Math.PI);
 }
+// Shoulder depth relative to hip depth — positive means shoulders sit further
+// from the camera than the hips (arching backward), negative means they sit
+// closer (rounding forward). x/y-only geometry is blind to this since a
+// front-facing camera barely shows a sagittal-plane bend in its 2D projection;
+// z is the axis that actually moves.
+function spineLeanZ(lm){
+  const shoulderZ=(lm[11].z+lm[12].z)/2,hipZ=(lm[23].z+lm[24].z)/2;
+  return(shoulderZ-hipZ)*100;
+}
+let chinTuckBaseline=null;
 let angleRawBuf=[];
 function smoothAngle(val){
   // Median-of-3 rejects single-frame pose-estimation spikes before EMA smoothing —
@@ -2899,10 +2943,19 @@ const HOLD_CFG={
     readyMsg:'Slowly tilt your head to one side, hold 3 seconds.'
   },
   chin_tuck:{
-    vis:[0,7,8],
+    vis:[0,11,12],
+    // A chin tuck is a front-to-back (depth) head translation, not a left-right
+    // one — measuring nose-vs-ear X position (as this used to) barely changes
+    // during a real chin tuck when facing the camera, since almost none of the
+    // motion happens on that axis. Track the head's Z-depth relative to the
+    // shoulders instead (same axis the posture scan uses for forward-head
+    // detection), calibrated against this exercise's own starting position so
+    // it works regardless of a person's resting posture or camera distance.
     compute(lm){
-      const nose=lm[0],earMidX=(lm[7].x+lm[8].x)/2;
-      return{value:smoothAngle(Math.abs((earMidX-nose.x)*100)),label:'Retraction',unit:''};
+      const headZ=(lm[0].z-(lm[11].z+lm[12].z)/2)*100;
+      if(chinTuckBaseline==null)chinTuckBaseline=headZ;
+      const retraction=smoothAngle(Math.max(0,chinTuckBaseline-headZ));
+      return{value:retraction,label:'Retraction',unit:''};
     },
     isEngaged:(o,lo)=>o.value>lo,
     isReleased:(o,lo)=>o.value<lo*0.3,
@@ -2954,13 +3007,17 @@ const HOLD_CFG={
     readyMsg:'Rise fully onto tiptoes. Pause at the top for 1 second.'
   },
   mckenzie:{
-    vis:[7,11,23],
+    vis:[11,12,23,24],
+    // Backward arching is a front-to-back (depth) spinal movement. A camera
+    // facing the user sees almost none of that on the x/y plane — angleDeg
+    // there only picks up the small residual vertical foreshortening, not the
+    // real motion — so this needs the z axis (same idea as chin_tuck above).
     compute(lm){
-      const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23]));
-      return{value:Math.max(0,180-spineAng),spineAng,label:'Spine',unit:'°'}; // real degrees of backward extension from neutral
+      const lean=smoothAngle(spineLeanZ(lm));
+      return{value:Math.max(0,lean),lean,label:'Spine',unit:''};
     },
-    isEngaged:(o)=>o.spineAng<165,
-    isReleased:(o)=>o.spineAng>172,
+    isEngaged:(o)=>o.lean>7,
+    isReleased:(o)=>o.lean<2,
     minHoldMs:1800,activeLabel:'Extended',
     engagedMsg:'Good backward extension — hold 3 seconds.',
     releaseMsg:'Stand tall and repeat the extension.',
@@ -2990,17 +3047,6 @@ function runHold(det,lm){
 // Shared engine for continuous back-and-forth exercises (no hold required —
 // reaching one extreme then the other counts a rep).
 const OSC_CFG={
-  shoulder_roll:{
-    vis:[11,12,13,14],
-    compute(lm){
-      const lAng=angleDeg(lm[23],lm[11],lm[13]),rAng=angleDeg(lm[24],lm[12],lm[14]);
-      return{value:smoothAngle((lAng+rAng)/2),label:'Shoulder',unit:'°'};
-    },
-    isEngaged:o=>o.value>100,isReleased:o=>o.value<55,
-    engagedState:'up',releasedState:'down',activeLabel:'Rolling Up',
-    releaseMsg:'Good circle — keep rolling!',releaseCls:'good',
-    readyMsg:'Roll shoulders in large backward circles. Full range.'
-  },
   wrist:{
     vis:[13,15,17],
     compute(lm){
@@ -3055,24 +3101,55 @@ function runPendulum(lm){
 // Cat-Cow alternates between two held extremes (arch/round) rather than one
 // target and neutral, so it doesn't fit the single-target hold engine above.
 function runCatCow(lm){
-  if(!requireVisible(lm,7,11,23))return;
-  const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23]));
-  setAngle(spineAng,'Spine');
-  const dev=Math.abs(180-spineAng);
+  if(!requireVisible(lm,11,12,23,24))return;
+  // Same depth-axis fix as mckenzie above — cat/cow is a sagittal-plane
+  // movement, so it needs z-lean, not an x/y angle a front camera barely sees.
+  const lean=smoothAngle(spineLeanZ(lm));
+  const dev=Math.abs(lean);
+  setAngle(dev,'Spine');
   const idle=isIdleHold(dev,15,40);
-  if(spineAng<160){
+  if(lean>7){
     if(repPhase!=='arch'){setRepPhase('arch');setFB('Good arch (cow) — now round into cat position.','good');}
     updateScore(idle?0:scoreHold(dev,15,40));setPhase('Cow');
-  }else if(spineAng>175&&repPhase==='arch'){
+  }else if(lean<-7&&repPhase==='arch'){
     if(phaseAge()>700){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
     else{setFB('Hold each position briefly, in rhythm with your breath.','warn');}
-  }else if(spineAng>175){
+  }else if(lean<-7){
     setFB('Arch your spine fully — look upward gently.','');
     updateScore(idle?0:scoreHold(dev,15,40));
   }else{
     setFB('Move fluidly between full arch and full round. Breathe with each.','');
     updateScore(idle?0:scoreHold(dev,15,40));
   }
+}
+
+// Shoulder rolls are a circular motion, not a hinge that swings between two
+// fixed angles — a real roll keeps the elbow close to the body the whole time,
+// so the old hip-shoulder-elbow "swing" angle barely moved and often never
+// crossed its own count thresholds. This tracks the elbow's cumulative sweep
+// around the shoulder instead (the same technique as ankle_circle below),
+// which is what "roll in a circle" actually means geometrically.
+function runShoulderRoll(lm){
+  if(!requireVisible(lm,11,12,13,14))return;
+  const lTheta=Math.atan2(lm[13].y-lm[11].y,lm[13].x-lm[11].x);
+  const rTheta=Math.atan2(lm[14].y-lm[12].y,lm[14].x-lm[12].x);
+  // Circular mean of both sides — averaging raw angles breaks near the ±180°
+  // wraparound, averaging their unit vectors doesn't.
+  const theta=Math.atan2((Math.sin(lTheta)+Math.sin(rTheta))/2,(Math.cos(lTheta)+Math.cos(rTheta))/2);
+  if(shoulderRollPrevTheta!=null){
+    let delta=theta-shoulderRollPrevTheta;
+    if(delta>Math.PI)delta-=2*Math.PI;
+    if(delta<-Math.PI)delta+=2*Math.PI;
+    shoulderRollAccum+=delta;
+  }
+  shoulderRollPrevTheta=theta;
+  const sweptDeg=Math.abs(shoulderRollAccum)*180/Math.PI;
+  setAngle(Math.min(sweptDeg,360),'Rotation');
+  const moving=!trackStillness(sweptDeg);
+  updateScore(moving?96:0);
+  setFB(moving?'Good circle — keep rolling!':'Roll shoulders in large backward circles. Full range.',moving?'good':'warn');
+  setPhase('Rolling ('+Math.round(Math.min(sweptDeg,360))+'°)');
+  if(sweptDeg>=330){doRep();shoulderRollAccum=0;}
 }
 
 // Cumulative angular sweep (not a threshold crossing) — genuinely different
@@ -3151,7 +3228,7 @@ function runBilateralRaise(lm){
 }
 
 const HOLD_DETS=new Set(['neck_tilt','chin_tuck','side_bend','knee_chest','calf_raise','mckenzie']);
-const OSC_DETS=new Set(['shoulder_roll','wrist']);
+const OSC_DETS=new Set(['wrist']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
@@ -3166,6 +3243,7 @@ function analyzeExercise(lm,W,H){
   if(HOLD_DETS.has(det))return runHold(det,lm);
   if(OSC_DETS.has(det))return runOscillate(det,lm);
   if(det==='pendulum')return runPendulum(lm);
+  if(det==='shoulder_roll')return runShoulderRoll(lm);
   if(det==='catcow')return runCatCow(lm);
   if(det==='ankle_circle')return runAnkleCircle(lm);
   if(det==='posture')return runPosture(lm);
