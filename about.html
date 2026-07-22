@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>About PhysioSync</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#e11d48;--accent:#fb7185;--green:#12d999;--yellow:#f5a524;--blue:#3b82f6;
+  --purple:#a78bfa;
+  --card:rgba(17,17,22,1);--text:#f2f2f5;--muted:#a3a7b7;--submuted:#75798c;
+  --bg:#08080b;--bg-strong:#000;--bg-alt:#0d0812;--heading:#fbfbfd;--glass:rgba(7,7,10,.9);
+  --w03:rgba(255,255,255,.035);--w04:rgba(255,255,255,.045);--w05:rgba(255,255,255,.06);
+  --w06:rgba(255,255,255,.07);--w07:rgba(255,255,255,.085);--w08:rgba(255,255,255,.1);
+  --w09:rgba(255,255,255,.11);--w10:rgba(255,255,255,.13);--w12:rgba(255,255,255,.16);
+  --card1:#131318;--card2:#141419;--shadow-color:rgba(0,0,0,.55);
+}
+:root[data-theme="light"]{
+  --card:#ffffff;--text:#1a1a22;--muted:#5b5f70;--submuted:#828596;
+  --bg:#faf9fb;--bg-strong:#ffffff;--bg-alt:#f2f1f6;--heading:#0c0c12;--glass:rgba(255,255,255,.82);
+  --w03:rgba(20,20,30,.03);--w04:rgba(20,20,30,.04);--w05:rgba(20,20,30,.05);
+  --w06:rgba(20,20,30,.06);--w07:rgba(20,20,30,.075);--w08:rgba(20,20,30,.085);
+  --w09:rgba(20,20,30,.1);--w10:rgba(20,20,30,.11);--w12:rgba(20,20,30,.13);
+  --card1:#ffffff;--card2:#ffffff;--shadow-color:rgba(20,20,35,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;width:100%}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;min-height:100vh;width:100%;max-width:100vw;transition:background .3s ease,color .3s ease}
+h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+
+/* NAVBAR */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:62px;background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--w06);gap:12px}
+.nav-logo{display:flex;align-items:center;gap:9px}
+.brand-icon,.brand-text{width:auto;display:block}
+.brand-text-light{display:none}
+:root[data-theme="light"] .brand-text-dark{display:none}
+:root[data-theme="light"] .brand-text-light{display:block}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
+.nl{color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.74rem;letter-spacing:.04em;padding:6px 13px;border-radius:8px;transition:all .2s}
+.nl:hover{color:var(--heading);background:var(--w06)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-home{padding:6px 14px;border-radius:8px;border:1px solid var(--w10);color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:5px}
+.nav-home:hover{color:var(--heading);border-color:var(--w12)}
+.theme-tgl{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--w05);border:1px solid var(--w10);color:var(--heading);cursor:pointer;transition:all .2s;flex-shrink:0}
+.theme-tgl:hover{background:var(--w08);border-color:var(--w12)}
+.ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer}
+.ham span{display:block;width:20px;height:2px;background:var(--heading);border-radius:1px}
+.mob-menu{display:none;position:fixed;top:62px;left:0;right:0;z-index:499;background:var(--glass);border-bottom:1px solid var(--w06);padding:14px 20px;flex-direction:column;gap:4px}
+.mob-menu.open{display:flex}
+.mob-menu .nl{font-size:.88rem;padding:11px 12px}
+@media(max-width:860px){.nav-links{display:none}.nav-home{display:none}.ham{display:flex}}
+
+/* HERO */
+.ab-hero{padding:130px 24px 70px;text-align:center;position:relative;overflow:hidden}
+.ab-hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.hero-blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0;animation:blobFloat 16s ease-in-out infinite}
+.hero-blob.b1{width:420px;height:420px;top:-180px;left:-120px;background:radial-gradient(circle,rgba(225,29,72,.28),transparent 70%)}
+.hero-blob.b2{width:380px;height:380px;top:-120px;right:-140px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%);animation-delay:-6s}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.08)}}
+@media(prefers-reduced-motion:reduce){.hero-blob{animation:none}}
+:root[data-theme="light"] .hero-blob,:root[data-theme="light"] .sec-blob{opacity:.4}
+.ab-tag{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brand);border:1px solid rgba(225,29,72,.3);padding:5px 16px;border-radius:100px;background:rgba(225,29,72,.07);margin-bottom:18px}
+.ab-h{font-size:clamp(2rem,6vw,3.6rem);font-weight:800;line-height:1.08;margin-bottom:16px;letter-spacing:-.03em}
+.ab-h span{background:linear-gradient(100deg,var(--brand),var(--accent),var(--purple),var(--brand));background-size:300% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradShift 7s ease-in-out infinite}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@media(prefers-reduced-motion:reduce){.ab-h span{animation:none}}
+.ab-sub{color:var(--muted);font-size:1rem;line-height:1.8;max-width:600px;margin:0 auto}
+
+/* SECTIONS */
+.section{padding:64px 24px;position:relative;overflow:hidden}
+.sec-blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:blobFloat 18s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.sec-blob{animation:none}}
+.sec-in{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.sec-tag{display:inline-block;font-weight:700;font-size:.67rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+.sec-h{font-size:clamp(1.6rem,4vw,2.5rem);font-weight:800;line-height:1.15;margin-bottom:14px;letter-spacing:-.02em}
+.sec-p{color:var(--muted);font-size:.95rem;line-height:1.85;max-width:680px}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* MISSION SPLIT */
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start;margin-top:36px}
+@media(max-width:800px){.mission-grid{grid-template-columns:1fr}}
+.mission-card{background:var(--card1);border:1px solid var(--w07);border-radius:20px;padding:28px;box-shadow:0 1px 0 var(--w05) inset,0 24px 44px -30px var(--shadow-color);transition:border-color .25s,transform .25s}
+.mission-card:hover{border-color:rgba(225,29,72,.3);transform:translateY(-3px)}
+.mission-ic{width:44px;height:44px;border-radius:12px;background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.mission-ic svg{width:20px;height:20px;stroke:var(--brand)}
+.mission-card h3{font-size:1.05rem;margin-bottom:8px}
+.mission-card p{color:var(--muted);font-size:.85rem;line-height:1.7}
+
+/* VALUES GRID */
+.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:36px}
+.value-card{background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:24px;box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px var(--shadow-color);transition:border-color .25s,transform .25s}
+.value-card:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
+.value-ic{width:38px;height:38px;border-radius:10px;background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.2);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.value-ic svg{width:17px;height:17px;stroke:var(--brand)}
+.value-card h3{font-size:.95rem;margin-bottom:7px}
+.value-card p{color:var(--muted);font-size:.8rem;line-height:1.65}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+@media(max-width:700px){.stats-strip{grid-template-columns:1fr 1fr}}
+.stat-box{background:var(--card2);border:1px solid var(--w07);border-radius:16px;padding:22px;text-align:center}
+.stat-num{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2rem;background:linear-gradient(135deg,var(--brand),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.stat-lbl{font-size:.68rem;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;font-weight:600}
+
+/* CTA */
+.ab-cta{text-align:center;padding:70px 24px}
+.ab-cta-box{max-width:640px;margin:0 auto;background:linear-gradient(135deg,rgba(225,29,72,.12),rgba(139,92,246,.08));border:1px solid rgba(225,29,72,.25);border-radius:24px;padding:48px 32px}
+.ab-cta h2{font-size:clamp(1.4rem,3.5vw,2rem);margin-bottom:12px}
+.ab-cta p{color:var(--muted);font-size:.9rem;margin-bottom:26px;line-height:1.7}
+.ab-cta-btn{display:inline-block;padding:14px 34px;border-radius:100px;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.9rem;letter-spacing:.03em;box-shadow:0 10px 32px rgba(225,29,72,.4);transition:transform .2s,box-shadow .2s}
+.ab-cta-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(225,29,72,.55)}
+
+/* FOOTER */
+.footer{background:var(--bg-strong);border-top:1px solid var(--w06);padding:48px 24px 24px;position:relative;z-index:1}
+.footer-cols{max-width:1200px;margin:0 auto 30px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
+@media(max-width:768px){.footer-cols{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.footer-cols{grid-template-columns:1fr}}
+.f-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.f-brand img.brand-logo{width:auto}
+.f-desc{color:var(--muted);font-size:.79rem;line-height:1.7;max-width:260px}
+.f-hd{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--heading);margin-bottom:13px}
+.f-lks{display:flex;flex-direction:column;gap:9px}
+.f-lks a,.f-lks span{color:var(--submuted);font-size:.79rem;transition:color .2s}
+.f-lks a:hover{color:var(--heading)}
+.f-bot{max-width:1200px;margin:0 auto;padding-top:16px;border-top:1px solid var(--w05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.f-bot span{color:var(--submuted);font-size:.69rem}
+.f-soc{display:flex;gap:12px}
+.f-soc a{width:30px;height:30px;border-radius:50%;background:var(--w05);border:1px solid var(--w08);display:flex;align-items:center;justify-content:center;color:var(--submuted);transition:all .2s}
+.f-soc a svg{width:15px;height:15px}
+.f-soc a:hover{color:#fff;background:var(--brand);border-color:var(--brand)}
+.f-bot-lks{display:flex;gap:18px}
+.f-bot-lks a{color:var(--submuted);font-size:.69rem;transition:color .2s}
+.f-bot-lks a:hover{color:var(--heading)}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:44px">
+    <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:22px">
+    <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
+  </a>
+  <div class="nav-links">
+    <a href="exercises.html#hero" class="nl">Exercises</a>
+    <a href="exercises.html#hospitals" class="nl">Hospitals</a>
+    <a href="exercises.html#research" class="nl">Research</a>
+    <a href="about.html" class="nl">About</a>
+  </div>
+  <div class="nav-right">
+    <a href="index.html" class="nav-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Home
+    </a>
+    <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+    <div class="ham" id="ham" onclick="document.getElementById('mob-nav').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mob-menu" id="mob-nav">
+  <a href="exercises.html#hero" class="nl">Exercises</a>
+  <a href="exercises.html#hospitals" class="nl">Hospitals</a>
+  <a href="exercises.html#research" class="nl">Research</a>
+  <a href="about.html" class="nl">About</a>
+</div>
+
+<!-- HERO -->
+<section class="ab-hero">
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="ab-hero-inner">
+    <span class="ab-tag">Our Story</span>
+    <h1 class="ab-h">Physiotherapy that's <span>always within reach</span></h1>
+    <p class="ab-sub">PhysioSync started from a simple frustration: good physiotherapy is expensive, hard to schedule, and often ends the moment you leave the clinic. We built a way to bring real, camera-verified guidance home — private, accurate, and free to use.</p>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="section reveal">
+  <div class="sec-blob" style="width:320px;height:320px;top:-100px;right:-110px;background:radial-gradient(circle,rgba(225,29,72,.14),transparent 70%)"></div>
+  <div class="sec-in">
+    <span class="sec-tag">Why We Built This</span>
+    <h2 class="sec-h">Recovery shouldn't stop at the clinic door</h2>
+    <p class="sec-p">Most rehabilitation happens between appointments — at home, alone, guessing whether you're doing an exercise correctly. PhysioSync closes that gap with real pose-tracking, not a video you have to interpret yourself.</p>
+    <div class="mission-grid">
+      <div class="mission-card">
+        <div class="mission-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <h3>Real-time, not guesswork</h3>
+        <p>Every rep is measured with actual joint-angle geometry from your camera feed — the same landmarks a physiotherapist would watch for — so form feedback reflects what your body is actually doing, not a generic animation.</p>
+      </div>
+      <div class="mission-card">
+        <div class="mission-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <h3>Private by design</h3>
+        <p>Your camera feed is processed entirely on your own device. Nothing is uploaded, recorded, or sent to a server — the same privacy standard we'd want for our own physiotherapy sessions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="section reveal">
+  <div class="sec-in">
+    <span class="sec-tag">What Guides Us</span>
+    <h2 class="sec-h">Built on clinical principles, not shortcuts</h2>
+    <p class="sec-p">This is a medical-adjacent product, and we treat it that way — every exercise, score, and piece of feedback is designed to be something a physiotherapist would actually stand behind.</p>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
+        <h3>Accuracy first</h3>
+        <p>No fake scores. If tracking is uncertain, we say so instead of showing a number we can't stand behind.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+        <h3>Beginner-safe</h3>
+        <p>Every exercise in the library is intentionally gentle and low-risk — appropriate for home use without in-person supervision.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <h3>Free to use</h3>
+        <p>No account paywalls, no subscription to access exercises. Recovery guidance shouldn't be gated behind a price tag.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
+        <h3>Evidence-based</h3>
+        <p>Our research library cites WHO data directly — every claim is traceable back to its source, not just asserted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section reveal">
+  <div class="sec-blob" style="width:300px;height:300px;bottom:-120px;left:-100px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%)"></div>
+  <div class="sec-in">
+    <span class="sec-tag">In Numbers</span>
+    <h2 class="sec-h">What's in the app today</h2>
+    <div class="stats-strip">
+      <div class="stat-box"><div class="stat-num">14</div><div class="stat-lbl">Beginner Exercises</div></div>
+      <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">Partner Hospitals</div></div>
+      <div class="stat-box"><div class="stat-num">0</div><div class="stat-lbl">Data Uploaded</div></div>
+      <div class="stat-box"><div class="stat-num">100%</div><div class="stat-lbl">Free to Use</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="ab-cta reveal">
+  <div class="ab-cta-box">
+    <h2>Ready to start your recovery?</h2>
+    <p>No signup fees, no account required to browse — just pick an exercise and let PhysioSync guide the rest.</p>
+    <a href="exercises.html#hero" class="ab-cta-btn">Browse Exercises</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-cols">
+    <div>
+      <div class="f-brand">
+        <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:44px">
+        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:22px">
+        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
+      </div>
+      <p class="f-desc">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
+    </div>
+    <div>
+      <div class="f-hd">Platform</div>
+      <div class="f-lks">
+        <a href="exercises.html#hero">Exercises</a>
+        <a href="exercises.html#hospitals">Hospitals</a>
+        <a href="exercises.html#research">Research</a>
+        <a href="exercises.html#dashboard">Dashboard</a>
+        <a href="index.html">3D Body Map</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-hd">Company</div>
+      <div class="f-lks">
+        <a href="about.html">About PhysioSync</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-hd">Contact</div>
+      <div class="f-lks">
+        <span>physiosync@gmail.com</span>
+        <span>0316 2404444</span>
+        <span>Karachi, Pakistan</span>
+      </div>
+    </div>
+  </div>
+  <div class="f-bot">
+    <span>&copy; 2026 PhysioSync. All rights reserved.</span>
+    <div class="f-soc">
+      <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
+      <a href="https://instagram.com/physiosync" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
+      <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
+    </div>
+    <div class="f-bot-lks"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
+
+<script>
+function syncThemeIcon(){
+  const light=document.documentElement.getAttribute('data-theme')==='light';
+  const sun=document.getElementById('theme-ic-sun'),moon=document.getElementById('theme-ic-moon');
+  if(sun&&moon){sun.style.display=light?'block':'none';moon.style.display=light?'none':'block';}
+}
+function toggleTheme(){
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  if(isLight){document.documentElement.removeAttribute('data-theme');localStorage.setItem('pah-theme','dark');}
+  else{document.documentElement.setAttribute('data-theme','light');localStorage.setItem('pah-theme','light');}
+  syncThemeIcon();
+}
+syncThemeIcon();
+
+(function initScrollReveal(){
+  const targets=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){targets.forEach(el=>el.classList.add('in'));return;}
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.12});
+  targets.forEach(el=>io.observe(el));
+  setTimeout(()=>{targets.forEach(el=>{if(!el.classList.contains('in'))el.classList.add('in');});},2500);
+})();
+</script>
+</body>
+</html>

@@ -148,6 +148,19 @@ a{text-decoration:none;color:inherit}
 }
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @media(prefers-reduced-motion:reduce){.hero-h span{animation:none}}
+/* Continuous ambient edge glow — a slim animated gradient frame pinned to all
+   four edges of the viewport, always running regardless of scroll. */
+.edge-glow{position:fixed;z-index:9998;pointer-events:none;
+  background:linear-gradient(90deg,var(--brand),var(--purple),var(--blue),var(--accent),var(--brand));
+  background-size:300% 100%;animation:edgeGlowShift 8s linear infinite;
+  box-shadow:0 0 16px rgba(225,29,72,.55)}
+.edge-glow.et{top:0;left:0;right:0;height:3px}
+.edge-glow.eb{bottom:0;left:0;right:0;height:3px}
+.edge-glow.el{top:0;bottom:0;left:0;width:3px;background:linear-gradient(180deg,var(--brand),var(--purple),var(--blue),var(--accent),var(--brand));background-size:100% 300%;animation-name:edgeGlowShiftV}
+.edge-glow.er{top:0;bottom:0;right:0;width:3px;background:linear-gradient(180deg,var(--brand),var(--purple),var(--blue),var(--accent),var(--brand));background-size:100% 300%;animation-name:edgeGlowShiftV}
+@keyframes edgeGlowShift{0%{background-position:0% 0}100%{background-position:300% 0}}
+@keyframes edgeGlowShiftV{0%{background-position:0 0%}100%{background-position:0 300%}}
+@media(prefers-reduced-motion:reduce){.edge-glow{animation:none}}
 .hero-sub{color:var(--muted);font-size:.95rem;line-height:1.8;max-width:560px;margin:0 auto 28px}
 .hero-welcome{
   display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
@@ -844,6 +857,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 </style>
 </head>
 <body>
+<div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
 <!-- ══════════ GATE ══════════ -->
 <div id="gate">
@@ -888,6 +902,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <a href="#hospitals" class="nl">Hospitals</a>
     <a href="#research" class="nl">Research</a>
     <a href="#dashboard" class="nl">Dashboard</a>
+    <a href="about.html" class="nl">About</a>
   </div>
   <div class="nav-right">
     <div class="nav-greet" id="nav-greet" style="display:none">Welcome back, <span id="nav-name">—</span></div>
@@ -913,6 +928,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <a href="#hospitals" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
   <a href="#research" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
   <a href="#dashboard" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Dashboard</a>
+  <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
 </div>
 
 <!-- ══════════ HERO ══════════ -->
@@ -929,7 +945,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <span class="hero-welcome-av" id="hero-welcome-av">P</span>
       <span>Good <span id="hero-time">day</span>, <strong id="hero-name">—</strong>. Ready for your session?</span>
     </div>
-    <h1 class="hero-h">Your <span>Recovery</span><br>Guided by AI</h1>
+    <h1 class="hero-h">Your <span>Recovery</span><br>Guided by PhysioSync</h1>
     <p class="hero-sub">Physio-approved exercises with real-time MediaPipe pose tracking and live form scoring — all private, all on your device.</p>
     <div class="search-row">
       <input class="ex-search" id="ex-search" type="text" placeholder="Search exercises, muscles, joints..." oninput="filterEx()">
@@ -1132,7 +1148,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         </div>
         <h2 id="s-pre-h">Ready to Track?</h2>
         <div class="s-pre-meta" id="s-pre-meta"></div>
-        <p>Your camera feed stays on your device. MediaPipe AI runs locally — nothing is uploaded.</p>
+        <p>Your camera feed stays on your device. PhysioSync's tracking runs locally — nothing is uploaded.</p>
         <button class="s-cam-btn" onclick="startCamera()">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
           Activate Camera and Begin
@@ -1185,10 +1201,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       Camera never leaves your device
     </div>
     <div class="f-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      No account or signup required
-    </div>
-    <div class="f-badge">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       Research sourced directly from who.int
     </div>
@@ -1200,7 +1212,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:30px">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:30px">
       </div>
-      <p class="f-desc">Clinical-grade AI physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
+      <p class="f-desc">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
     </div>
     <div>
       <div class="f-hd">Platform</div>
@@ -1215,15 +1227,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <div>
       <div class="f-hd">Company</div>
       <div class="f-lks">
-        <a href="#">About PhysioSync</a>
-        <a href="#">Careers</a>
+        <a href="about.html">About PhysioSync</a>
       </div>
     </div>
     <div>
       <div class="f-hd">Contact</div>
       <div class="f-lks">
-        <span>hello@physiosync.ai</span>
-        <span>+92 21 000 0000</span>
+        <span>physiosync@gmail.com</span>
+        <span>0316 2404444</span>
         <span>Karachi, Pakistan</span>
       </div>
     </div>
@@ -1718,7 +1729,7 @@ const EX=[
     angles:{main:[0,7,8],pivot:0,threshold:{lo:15,hi:40}},
     joints:{p:[0,7,8,11,12],s:[13,14],lk:[[0,7],[0,8],[7,8],[7,11],[8,12]],sk:[[11,13],[12,14]]}},
   {name:'Posture Check',area:'Full Body Assessment',diff:'Beginner',tags:['Neck','Shoulder','Back','Hip','Knee'],reps:1,det:'posture',
-    desc:'Stand naturally, arms relaxed. Hold for 6 seconds while the AI scans shoulder level, hip level, forward head, and spinal alignment.',
+    desc:'Stand naturally, arms relaxed. Hold for 6 seconds while PhysioSync scans shoulder level, hip level, forward head, and spinal alignment.',
     note:'Quick clinical screen of cervical, thoracic, lumbar, and pelvic alignment — useful before choosing which exercises to focus on.',
     muscles:['All Postural Muscles','Core','Erector Spinae'],
     angles:{main:[7,11,23],pivot:11,threshold:{lo:0,hi:5}},
@@ -1862,6 +1873,7 @@ const HOSPITALS=[
   {
     name:'Ziauddin Hospital',
     initials:'ZH',
+    logo:'hospitallogos/ziauddin.png',
     type:'Private Tertiary Care',
     addr:'Allama Rasheed Turabi Rd, Wahid Colony, Karachi, 74700, Pakistan',
     phone:'+92 21 1119 42942',
