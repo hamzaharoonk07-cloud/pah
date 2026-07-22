@@ -793,13 +793,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 .toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);
   background:var(--glass);border:1px solid var(--w10);backdrop-filter:blur(14px);
-  border-radius:100px;padding:10px 22px 10px 18px;color:var(--heading);font-size:.79rem;font-weight:600;
+  border-radius:16px;padding:12px 20px;color:var(--heading);font-size:.79rem;font-weight:600;line-height:1.4;
   z-index:9000;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s;
-  opacity:0;white-space:nowrap;pointer-events:none;
+  opacity:0;pointer-events:none;
   box-shadow:0 12px 32px -12px rgba(0,0,0,.35);
-  display:flex;align-items:center;gap:9px;
+  display:flex;align-items:flex-start;gap:9px;
+  max-width:min(420px,calc(100vw - 32px));text-align:left;
 }
-.toast::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--brand);box-shadow:0 0 8px var(--brand);flex-shrink:0}
+.toast::before{content:'';width:7px;height:7px;margin-top:5px;border-radius:50%;background:var(--brand);box-shadow:0 0 8px var(--brand);flex-shrink:0}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 #scroll-top{
   position:fixed;bottom:94px;right:33px;z-index:400;
