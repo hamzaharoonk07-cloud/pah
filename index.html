@@ -259,7 +259,7 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif}
   const overlay = document.getElementById('gate-overlay');
   const form = document.getElementById('gate-form');
   const error = document.getElementById('gate-error');
-  const account = JSON.parse(localStorage.getItem('pah_account') || 'null');
+  const account = JSON.parse(localStorage.getItem('pah_acc') || 'null');
   if(account){ overlay.classList.add('hidden'); }
   form.addEventListener('submit', function(e){
     e.preventDefault();
@@ -273,7 +273,7 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif}
       error.style.display = 'block';
       return false;
     }
-    localStorage.setItem('pah_account', JSON.stringify({name, gender, age, weight, height}));
+    localStorage.setItem('pah_acc', JSON.stringify({name, gender, age, weight, height, joined:new Date().toLocaleDateString()}));
     overlay.classList.add('hidden');
     return false;
   });
