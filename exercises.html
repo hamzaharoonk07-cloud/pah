@@ -947,7 +947,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Clinical Tracking · 3D Muscle Map · 14 Exercises
+      Clinical Tracking · 3D Muscle Map · 9 Exercises
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av">P</span>
@@ -1411,17 +1411,9 @@ const DEMO_DEFS={
       return{leftShoulder:{x:DEMO_REST.leftShoulder.x+dx,y:DEMO_REST.leftShoulder.y+dy},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx,y:DEMO_REST.rightShoulder.y+dy},
              leftElbow:{x:DEMO_REST.leftElbow.x+dx*.7,y:DEMO_REST.leftElbow.y+dy*.7},rightElbow:{x:DEMO_REST.rightElbow.x+dx*.7,y:DEMO_REST.rightElbow.y+dy*.7}};},
     steps:['Roll both shoulders in large backward circles'],highlight:['leftShoulder','rightShoulder']},
-  pendulum:{kind:'param',period:2200,base:{rightElbow:{x:.64,y:.42}},param:(theta)=>({rightWrist:{x:.66+.05*Math.sin(theta),y:.60+.03*Math.cos(theta)}}),
-    steps:['Lean forward, let the arm hang loose — small gravity-driven circles'],highlight:['rightShoulder','rightWrist']},
-  wrist:{kind:'param',period:2000,base:{leftElbow:{x:.30,y:.40},rightElbow:{x:.70,y:.40}},
-    param:(theta)=>{const o=.045*Math.sin(theta);return{leftWrist:{x:.16,y:.40+o},rightWrist:{x:.84,y:.40-o}};},
-    steps:['Extend arms forward, flex wrist up and down'],highlight:['leftWrist','rightWrist']},
   mckenzie:{kind:'hold',base:{leftWrist:{x:.44,y:.56},rightWrist:{x:.56,y:.56},leftElbow:{x:.40,y:.46},rightElbow:{x:.60,y:.46}},
     peak:{neck:{x:.5,y:.175},head:{x:.52,y:.065},leftShoulder:{x:.39,y:.195},rightShoulder:{x:.61,y:.195}},
     steps:['Hands on lower back, stand tall','Arch backward gently — hold 3 seconds'],highlight:['neck','pelvis']},
-  catcow:{kind:'hold',base:{neck:{x:.5,y:.175},head:{x:.5,y:.06}},
-    peak:{neck:{x:.5,y:.235},head:{x:.5,y:.16},pelvis:{x:.5,y:.54},leftShoulder:{x:.40,y:.25},rightShoulder:{x:.60,y:.25}},
-    steps:['Arch your spine fully — cow','Round your spine fully — cat'],highlight:['neck','pelvis']},
   knee_chest:{kind:'hold',peak:{rightKnee:{x:.52,y:.46},rightAnkle:{x:.50,y:.40},rightFoot:{x:.49,y:.42}},
     steps:['Stand tall','Pull one knee up toward your chest — hold 3 seconds'],highlight:['rightHip','rightKnee']},
   calf_raise:{kind:'hold',peak:shiftAllY(-.03),
@@ -1431,7 +1423,6 @@ const DEMO_DEFS={
   side_bend:{kind:'hold',peak:{neck:{x:.42,y:.225},head:{x:.36,y:.145},leftShoulder:{x:.35,y:.245},rightShoulder:{x:.58,y:.20},
       leftElbow:{x:.30,y:.42},leftWrist:{x:.27,y:.60}},
     steps:['Stand tall, feet hip-width apart','Slide one hand down your leg, bend sideways — hold'],highlight:['neck','leftShoulder']},
-  posture:{kind:'static',steps:['Stand naturally, arms relaxed — we scan your alignment'],highlight:[]},
   bilateral_raise:{kind:'hold',peak:{leftElbow:{x:.37,y:.10},leftWrist:{x:.40,y:.02},rightElbow:{x:.63,y:.10},rightWrist:{x:.60,y:.02}},
     steps:['Arms relaxed at your sides','Raise both arms fully overhead together — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
   _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
@@ -1707,30 +1698,12 @@ const EX=[
     muscles:['Deltoid','Upper Trapezius','Rhomboids','Serratus Anterior'],
     angles:{main:[11,13,15],pivot:11,threshold:{lo:30,hi:120}},
     joints:{p:[11,12,13,14],s:[7,8,15,16],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12]]}},
-  {name:'Pendulum Swing',area:'Shoulder Decompression',diff:'Beginner',tags:['Shoulder'],reps:20,det:'pendulum',
-    desc:'Lean forward slightly. Let one arm hang free. Swing in small circles using gravity, not muscle.',
-    note:'Codman pendulum. Decompresses glenohumeral joint. Primary treatment for frozen shoulder.',
-    muscles:['Rotator Cuff','Biceps Brachii','Infraspinatus'],
-    angles:{main:[11,13,15],pivot:11,threshold:{lo:10,hi:45}},
-    joints:{p:[11,13,15],s:[12,14,16],lk:[[11,13],[13,15]],sk:[[12,14],[14,16]]}},
-  {name:'Wrist Stretch',area:'Wrist and Forearm',diff:'Beginner',tags:['Wrist'],reps:20,det:'wrist',
-    desc:'Extend arms forward. Flex wrist down then extend up fully. Slow and controlled motion.',
-    note:'Improves radioulnar mobility. Prevents carpal tunnel progression. Reduces forearm tightness.',
-    muscles:['Wrist Flexors','Wrist Extensors','Pronator Teres'],
-    angles:{main:[13,15,17],pivot:15,threshold:{lo:20,hi:160}},
-    joints:{p:[13,14,15,16,17,18],s:[11,12],lk:[[13,15],[14,16],[15,17],[16,18]],sk:[[11,13],[12,14]]}},
   {name:'Gentle Back Arch',area:'Lower Back',diff:'Beginner',tags:['Back'],reps:10,det:'mckenzie',
     desc:'Place hands on lower back. Gently arch backward. Hold 3 seconds at end range. Stand tall between reps.',
     note:'McKenzie method. Primary treatment for L4-L5 disc herniation. Centralizes radiating leg pain.',
     muscles:['Erector Spinae','Multifidus','Quadratus Lumborum'],
     angles:{main:[7,11,23],pivot:11,threshold:{lo:5,hi:20}},
     joints:{p:[11,12,23,24],s:[7,8,25,26],lk:[[11,12],[11,23],[12,24],[23,24]],sk:[[7,11],[8,12],[23,25],[24,26]]}},
-  {name:'Cat-Cow Stretch',area:'Full Spine Mobility',diff:'Beginner',tags:['Back','Neck'],reps:15,det:'catcow',
-    desc:'Standing. Arch spine fully (cow), then round completely (cat). Synchronize with slow breath.',
-    note:'Dynamic lumbar mobilization. Reduces intradiscal pressure. Promotes nutrient exchange in discs.',
-    muscles:['Erector Spinae','Rectus Abdominis','Multifidus'],
-    angles:{main:[7,11,23],pivot:11,threshold:{lo:0,hi:20}},
-    joints:{p:[0,7,8,11,12,23,24],s:[25,26],lk:[[0,7],[0,8],[7,8],[7,11],[8,12],[11,12],[11,23],[12,24],[23,24]],sk:[[23,25],[24,26]]}},
   {name:'Knee to Chest',area:'Hip Flexors and Lumbar',diff:'Beginner',tags:['Hip','Back','Knee'],reps:12,det:'knee_chest',
     desc:'Stand tall. Pull knee toward chest and hold 3 seconds. Standing leg slightly bent. Alternate.',
     note:'Hip flexor stretch with balance. Reduces anterior pelvic tilt and lumbar compression.',
@@ -1749,18 +1722,6 @@ const EX=[
     muscles:['Peroneals','Tibialis Anterior','Gastrocnemius'],
     angles:{main:[25,27,31],pivot:27,threshold:{lo:80,hi:140}},
     joints:{p:[27,28,29,30,31,32],s:[25,26],lk:[[27,29],[28,30],[29,31],[30,32]],sk:[[25,27],[26,28]]}},
-  {name:'Ear to Shoulder Stretch',area:'Upper Trapezius',diff:'Beginner',tags:['Neck','Shoulder'],reps:10,det:'neck_tilt',
-    desc:'Drop one ear toward the shoulder. Add gentle overpressure with the same-side hand if comfortable. Hold, then switch sides.',
-    note:'Lengthens upper trapezius and scalenes. Relieves tension headaches and cervicogenic pain.',
-    muscles:['Upper Trapezius','SCM','Levator Scapulae'],
-    angles:{main:[0,7,8],pivot:0,threshold:{lo:15,hi:40}},
-    joints:{p:[0,7,8,11,12],s:[13,14],lk:[[0,7],[0,8],[7,8],[7,11],[8,12]],sk:[[11,13],[12,14]]}},
-  {name:'Posture Check',area:'Full Body Assessment',diff:'Beginner',tags:['Neck','Shoulder','Back','Hip','Knee'],reps:1,det:'posture',
-    desc:'Stand naturally, arms relaxed. Hold for 6 seconds while PhysioSync scans shoulder level, hip level, forward head, and spinal alignment.',
-    note:'Quick clinical screen of cervical, thoracic, lumbar, and pelvic alignment — useful before choosing which exercises to focus on.',
-    muscles:['All Postural Muscles','Core','Erector Spinae'],
-    angles:{main:[7,11,23],pivot:11,threshold:{lo:0,hi:5}},
-    joints:{p:[0,7,8,11,12,23,24],s:[13,14,25,26],lk:[[0,7],[0,8],[7,8],[7,11],[8,12],[11,12],[11,23],[12,24],[23,24]],sk:[[11,13],[12,14],[23,25],[24,26]]}},
   {name:'Standing Side Bend',area:'Trunk Lateral Flexion',diff:'Beginner',tags:['Back'],reps:12,det:'side_bend',
     desc:'Stand tall, feet hip-width apart. Slide one hand down the outside of your leg, bending sideways at the waist. Hold, return to center, then bend the other way.',
     note:'Improves lateral spinal mobility and quadratus lumborum flexibility. Gentle daily mobility habit for a stiff lower back.',
@@ -1799,14 +1760,10 @@ const ICON_BY_DET={
   neck_tilt:'M6 18L18 6M18 6H10M18 6v8', // lean/tilt arrow
   chin_tuck:'M9 14l-5-5 5-5M4 9h10a5 5 0 015 5v6', // retraction curl-back
   shoulder_roll:'M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3', // full-circle repeat
-  pendulum:'M6 4h12M12 4v6l6 10M12 10l-6 10', // hanging swing
-  wrist:'M7 15l5 5 5-5M7 9l5-5 5 5', // extend/flex chevrons
   mckenzie:'M4 17Q12 3 20 17', // backward arch
-  catcow:'M4 8Q12 2 20 8M4 16Q12 22 20 16', // arch + round
   knee_chest:'M4 20h6a4 4 0 004-4V4M8 8l4-4 4 4', // lift toward chest
   calf_raise:'M4 20l6-6 4 4 8-10M16 8h6v6', // rising trend
   ankle_circle:'M23 4v6h-6M20.49 15a9 9 0 11-2.12-9.36L23 10', // rotation
-  posture:'M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3', // clean scan check
   side_bend:'M11 17l-5-5 5-5M18 17l-5-5 5-5', // lateral motion
   bilateral_raise:'M17 11l-5-5-5 5M17 18l-5-5-5 5' // both arms up
 };
@@ -2320,6 +2277,7 @@ let formScores=[],lastLM=null,raf=null,sessActive=false;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
 let ankleCirclePrevTheta=null,ankleCircleAccum=0; // true angular-sweep tracking for ankle_circle
 let shoulderRollPrevTheta=null,shoulderRollAccum=0; // same technique for shoulder_roll
+let shoulderRollCenter=null; // slow-EMA center the shoulder itself orbits around
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
 const REP_DEBOUNCE_MS=550; // minimum time between counted reps — filters jitter-driven double counts
 function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();}}
@@ -2387,7 +2345,7 @@ function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];visLossStreak=0;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
-  shoulderRollPrevTheta=null;shoulderRollAccum=0;chinTuckBaseline=null;
+  shoulderRollPrevTheta=null;shoulderRollAccum=0;shoulderRollCenter=null;chinTuckBaseline=null;
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2858,11 +2816,6 @@ function scoreHold(val,lo,hi){
   const dist=val<lo?lo-val:val-hi;
   return Math.max(0,100-(dist/Math.max(hi-lo,10))*140);
 }
-function scoreOscillate(val,lo,hi){
-  const nearest=Math.min(Math.abs(val-lo),Math.abs(val-hi));
-  const span=Math.max(hi-lo,10);
-  return Math.max(0,100-(nearest/span)*90);
-}
 // Detects genuine stillness (not just "holding the target") so an idle, unengaged
 // body doesn't keep showing a leftover/false score.
 let motionHistory=[];
@@ -2876,11 +2829,6 @@ function trackStillness(val){
 }
 function isIdleHold(val,lo,hi){
   return trackStillness(val)&&!(val>=lo&&val<=hi);
-}
-function isIdleOscillate(val,lo,hi){
-  const span=Math.max(hi-lo,10);
-  const nearExtreme=Math.abs(val-lo)<span*0.15||Math.abs(val-hi)<span*0.15;
-  return trackStillness(val)&&!nearExtreme;
 }
 function setAngle(deg,lbl,unit='°'){
   const perc=Math.min(deg/180,1);
@@ -2983,8 +2931,7 @@ function smoothTorso(val){
 // Real physios watch for compensation — swaying or leaning the trunk to fake
 // range of motion instead of moving the intended joint. Only applied to
 // exercises where the torso should stay still (excludes side_bend/mckenzie/
-// catcow/pendulum/posture/bilateral_raise, which all involve intentional or
-// separately-handled torso movement).
+// bilateral_raise, which involve intentional torso movement).
 const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','chin_tuck','shoulder_roll','knee_chest','calf_raise','ankle_circle']);
 function checkTorsoCompensation(lm){
   if(!safe(lm,11,12,23,24))return false;
@@ -3119,100 +3066,28 @@ function runHold(det,lm){
     updateScore(idle?0:scoreHold(o.value,lo,hi));
   }
 }
-
-// Shared engine for continuous back-and-forth exercises (no hold required —
-// reaching one extreme then the other counts a rep).
-const OSC_CFG={
-  wrist:{
-    vis:[13,15,17],
-    compute(lm){
-      return{value:smoothAngle(angleDeg(lm[13],lm[15],lm[17])),label:'Wrist',unit:'°'};
-    },
-    isEngaged:o=>o.value>140,isReleased:o=>o.value<50,
-    engagedState:'ext',releasedState:'flex',
-    engagedMsg:'Full extension — now flex down.',
-    releaseMsg:'Good — extend again.',
-    lowHintTest:o=>o.value<50,lowHintMsg:'Flex wrist fully downward.',
-    readyMsg:'Extend wrist fully upward, then flex fully downward.',movingLabel:'Moving'
-  }
-};
-function runOscillate(det,lm){
-  const cfg=OSC_CFG[det];
-  if(!requireVisible(lm,...cfg.vis))return;
-  const{lo,hi}=sessEx.angles.threshold;
-  const o=cfg.compute(lm);
-  setAngle(o.value,o.label,o.unit);
-  const idle=isIdleOscillate(o.value,lo,hi);
-  if(cfg.isEngaged(o)){
-    if(repPhase!==cfg.engagedState){setRepPhase(cfg.engagedState);if(cfg.engagedMsg)setFB(cfg.engagedMsg,'good');}
-    if(cfg.activeLabel)setPhase(cfg.activeLabel);
-  }else if(cfg.isReleased(o)&&repPhase===cfg.engagedState){
-    setRepPhase(cfg.releasedState);doRep();setFB(cfg.releaseMsg,cfg.releaseCls||'');
-  }else if(cfg.lowHintTest&&cfg.lowHintTest(o)){
-    setFB(cfg.lowHintMsg,'');
-  }else{
-    setFB(cfg.readyMsg,'');
-    if(cfg.movingLabel)setPhase(cfg.movingLabel);
-  }
-  updateScore(idle?0:scoreOscillate(o.value,lo,hi));
-}
-
-// Codman pendulum — swing amplitude is the SHOULDER's deviation from vertical
-// (shoulder-to-wrist), not elbow flexion. (The elbow barely bends during a
-// correct pendulum swing, so measuring elbow angle would stay pinned near a
-// nearly-straight value all exercise long and never register the swing at all —
-// this is the fix for that.)
-function runPendulum(lm){
-  if(!requireVisible(lm,11,13,15))return;
-  const{lo,hi}=sessEx.angles.threshold;
-  const raw=smoothAngle(angleFromVertical(lm[11],lm[15]));
-  setAngle(raw,'Swing');
-  const idle=isIdleHold(raw,lo,hi);
-  updateScore(idle?0:scoreHold(raw,lo,hi));
-  setFB('Let the arm hang loose. Small gravity-driven circles. No muscle force.','good');
-  if(raw>15&&repPhase==='neutral'){setRepPhase('swing');}
-  else if(raw<8&&repPhase==='swing'){setRepPhase('neutral');doRep();}
-}
-
-// Cat-Cow alternates between two held extremes (arch/round) rather than one
-// target and neutral, so it doesn't fit the single-target hold engine above.
-function runCatCow(lm){
-  if(!requireVisible(lm,11,12,23,24))return;
-  // Same depth-axis fix as mckenzie above — cat/cow is a sagittal-plane
-  // movement, so it needs z-lean, not an x/y angle a front camera barely sees.
-  const lean=smoothAngle(spineLeanZ(lm));
-  const dev=Math.abs(lean);
-  setAngle(dev,'Spine');
-  const idle=isIdleHold(dev,15,40);
-  if(lean>7){
-    if(repPhase!=='arch'){setRepPhase('arch');setFB('Good arch (cow) — now round into cat position.','good');}
-    updateScore(idle?0:scoreHold(dev,15,40));setPhase('Cow');
-  }else if(lean<-7&&repPhase==='arch'){
-    if(phaseAge()>700){setRepPhase('round');doRep();setFB('Good cat — arch into cow again.','');}
-    else{setFB('Hold each position briefly, in rhythm with your breath.','warn');}
-  }else if(lean<-7){
-    setFB('Arch your spine fully — look upward gently.','');
-    updateScore(idle?0:scoreHold(dev,15,40));
-  }else{
-    setFB('Move fluidly between full arch and full round. Breathe with each.','');
-    updateScore(idle?0:scoreHold(dev,15,40));
-  }
-}
-
 // Shoulder rolls are a circular motion, not a hinge that swings between two
-// fixed angles — a real roll keeps the elbow close to the body the whole time,
-// so the old hip-shoulder-elbow "swing" angle barely moved and often never
-// crossed its own count thresholds. This tracks the elbow's cumulative sweep
-// around the shoulder instead (the same technique as ankle_circle below),
-// which is what "roll in a circle" actually means geometrically.
+// fixed angles. A real roll keeps the elbow close to the body the whole
+// time, so tracking the elbow-around-shoulder vector (the old approach)
+// barely moved and rarely crossed its own count thresholds — the part that
+// actually traces a circle is the shoulder joint itself (elevation →
+// retraction → depression → protraction), orbiting its own average
+// position. Track that directly: a slow-EMA "center" for the shoulder
+// midpoint, then the cumulative angular sweep of the shoulder around that
+// center (same technique as runAnkleCircle, self-referencing instead of
+// anchored to a second joint).
 function runShoulderRoll(lm){
-  if(!requireVisible(lm,11,12,13,14))return;
-  const lTheta=Math.atan2(lm[13].y-lm[11].y,lm[13].x-lm[11].x);
-  const rTheta=Math.atan2(lm[14].y-lm[12].y,lm[14].x-lm[12].x);
-  // Circular mean of both sides — averaging raw angles breaks near the ±180°
-  // wraparound, averaging their unit vectors doesn't.
-  const theta=Math.atan2((Math.sin(lTheta)+Math.sin(rTheta))/2,(Math.cos(lTheta)+Math.cos(rTheta))/2);
-  if(shoulderRollPrevTheta!=null){
+  if(!requireVisible(lm,11,12))return;
+  const mid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
+  if(shoulderRollCenter==null)shoulderRollCenter={x:mid.x,y:mid.y};
+  else{
+    shoulderRollCenter.x+=(mid.x-shoulderRollCenter.x)*0.015;
+    shoulderRollCenter.y+=(mid.y-shoulderRollCenter.y)*0.015;
+  }
+  const dx=mid.x-shoulderRollCenter.x,dy=mid.y-shoulderRollCenter.y;
+  const radius=Math.hypot(dx,dy);
+  const theta=Math.atan2(dy,dx);
+  if(shoulderRollPrevTheta!=null&&radius>0.008){
     let delta=theta-shoulderRollPrevTheta;
     if(delta>Math.PI)delta-=2*Math.PI;
     if(delta<-Math.PI)delta+=2*Math.PI;
@@ -3252,25 +3127,6 @@ function runAnkleCircle(lm){
   if(sweptDeg>=340){doRep();ankleCircleAccum=0;}
 }
 
-// Multi-factor static scan, not a rep cycle — kept bespoke.
-function runPosture(lm){
-  if(!requireVisible(lm,11,12,23,24,7,8))return;
-  const sLev=Math.abs(lm[11].y-lm[12].y)*100; // real shoulder-height asymmetry
-  const hLev=Math.abs(lm[23].y-lm[24].y)*100; // real hip-height asymmetry
-  const headFwd=(lm[0].z-(lm[11].z+lm[12].z)/2)*60; // real forward-head depth offset
-  const spineAng=smoothAngle(angleDeg(lm[7],lm[11],lm[23])); // real ear-shoulder-hip alignment
-  setAngle(spineAng,'Spine');
-  let score=100;
-  const issues=[];
-  if(sLev>2.5){score-=20;issues.push('shoulder-height asymmetry');}
-  if(hLev>2.5){score-=20;issues.push('hip tilt');}
-  if(headFwd>8){score-=15;issues.push('forward head posture');}
-  if(spineAng<160){score-=15;issues.push('spinal flexion');}
-  updateScore(Math.max(0,score));
-  setFB(issues.length?'Detected: '+issues.join(', ')+'.':'Excellent posture — symmetrical alignment.',issues.length?'warn':'good');
-  setPhase('Scanning');
-  if(sessReps===0){setTimeout(()=>{if(sessActive&&sessEx&&sessEx.det==='posture')doRep();},6000);}
-}
 
 // Bilateral hold with a symmetry check — genuinely different from the single-
 // limb hold engine (two angles + a left/right error term), kept bespoke.
@@ -3304,7 +3160,6 @@ function runBilateralRaise(lm){
 }
 
 const HOLD_DETS=new Set(['neck_tilt','chin_tuck','side_bend','knee_chest','calf_raise','mckenzie']);
-const OSC_DETS=new Set(['wrist']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
@@ -3317,12 +3172,8 @@ function analyzeExercise(lm,W,H){
   }
 
   if(HOLD_DETS.has(det))return runHold(det,lm);
-  if(OSC_DETS.has(det))return runOscillate(det,lm);
-  if(det==='pendulum')return runPendulum(lm);
   if(det==='shoulder_roll')return runShoulderRoll(lm);
-  if(det==='catcow')return runCatCow(lm);
   if(det==='ankle_circle')return runAnkleCircle(lm);
-  if(det==='posture')return runPosture(lm);
   if(det==='bilateral_raise')return runBilateralRaise(lm);
 }
 </script>
