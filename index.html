@@ -175,11 +175,11 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif}
 .gate-logo span{color:var(--brand)}
 .gate-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.4rem;text-align:center;margin-bottom:6px;color:var(--heading)}
 .gate-sub{color:var(--submuted);font-size:.85rem;text-align:center;margin-bottom:28px}
-.gate-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.gate-field{display:flex;flex-direction:column;gap:6px}
+.gate-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.gate-field{display:flex;flex-direction:column;gap:6px;min-width:0}
 .gate-field label{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--submuted);font-weight:600}
 .gate-field input,.gate-field select{
-  background:var(--w05);border:1px solid var(--w10);border-radius:10px;
+  width:100%;max-width:100%;box-sizing:border-box;background:var(--w05);border:1px solid var(--w10);border-radius:10px;
   padding:10px 12px;color:var(--heading);font-family:'Inter',sans-serif;font-size:.9rem;
 }
 .gate-field input:focus,.gate-field select:focus{outline:none;border-color:var(--brand)}

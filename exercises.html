@@ -23,14 +23,14 @@
   --input-bg:var(--w05);--shadow-strength:.7;--shadow-color:rgba(0,0,0,.55);
 }
 :root[data-theme="light"]{
-  --surface:rgba(20,20,30,.03);--border:rgba(20,20,30,.09);
+  --surface:rgba(20,20,30,.04);--border:rgba(20,20,30,.12);
   --card:#ffffff;--text:#1a1a22;--muted:#5b5f70;--submuted:#828596;
-  --bg:#faf9fb;--bg-strong:#ffffff;--bg-alt:#f2f1f6;--heading:#0c0c12;--glass:rgba(255,255,255,.82);
-  --w03:rgba(20,20,30,.03);--w04:rgba(20,20,30,.04);--w05:rgba(20,20,30,.05);
-  --w06:rgba(20,20,30,.06);--w07:rgba(20,20,30,.075);--w08:rgba(20,20,30,.085);
-  --w09:rgba(20,20,30,.1);--w10:rgba(20,20,30,.11);--w12:rgba(20,20,30,.13);
+  --bg:#f3f1f6;--bg-strong:#ffffff;--bg-alt:#ece9f2;--heading:#0c0c12;--glass:rgba(255,255,255,.86);
+  --w03:rgba(20,20,30,.045);--w04:rgba(20,20,30,.06);--w05:rgba(20,20,30,.08);
+  --w06:rgba(20,20,30,.09);--w07:rgba(20,20,30,.11);--w08:rgba(20,20,30,.13);
+  --w09:rgba(20,20,30,.15);--w10:rgba(20,20,30,.18);--w12:rgba(20,20,30,.22);
   --card1:#ffffff;--card2:#ffffff;
-  --input-bg:rgba(20,20,30,.04);--shadow-strength:.1;--shadow-color:rgba(20,20,35,.1);
+  --input-bg:rgba(20,20,30,.055);--shadow-strength:.16;--shadow-color:rgba(30,20,50,.16);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;width:100%}
@@ -61,11 +61,12 @@ a{text-decoration:none;color:inherit}
 :root[data-theme="light"] .brand-text-light{display:block}
 .gate-h{font-size:1.4rem;font-weight:800;text-align:center;margin-bottom:4px}
 .gate-sub{color:var(--muted);font-size:.83rem;text-align:center;margin-bottom:24px}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.frow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
 .frow1{margin-bottom:10px}
+.fl{min-width:0}
 .fl label{display:block;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:5px}
 .fl input,.fl select{
-  width:100%;background:var(--w05);border:1px solid var(--w09);
+  width:100%;max-width:100%;box-sizing:border-box;background:var(--w05);border:1px solid var(--w09);
   border-radius:10px;padding:11px 13px;color:var(--heading);font-family:'Inter',sans-serif;font-size:.85rem;
   transition:border-color .2s;
 }
@@ -132,7 +133,7 @@ a{text-decoration:none;color:inherit}
 .hero-blob.b3{width:300px;height:300px;bottom:-160px;left:40%;background:radial-gradient(circle,rgba(59,130,246,.16),transparent 70%);animation-delay:-11s}
 @keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.08)}}
 @media(prefers-reduced-motion:reduce){.hero-blob{animation:none}}
-:root[data-theme="light"] .hero-blob,:root[data-theme="light"] .sec-blob{opacity:.4}
+:root[data-theme="light"] .hero-blob,:root[data-theme="light"] .sec-blob{opacity:.22;filter:blur(90px)}
 .hero-tag{
   display:inline-flex;align-items:center;gap:7px;
   font-weight:700;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
@@ -630,8 +631,8 @@ a{text-decoration:none;color:inherit}
 }
 .s-pre.exiting{opacity:0;transform:scale(.97);pointer-events:none}
 .s-pre-grid{
-  display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:36px;
-  max-width:840px;width:100%;align-items:center;margin:auto;
+  display:grid;grid-template-columns:minmax(340px,440px) 1fr;gap:40px;
+  max-width:980px;width:100%;align-items:center;margin:auto;
 }
 .s-pre-info{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
 .s-pre-icon{
@@ -1149,9 +1150,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 
   <!-- Real 3D anatomy reference model — offline, local GLB, no network dependency -->
   <div class="model-panel" id="model-panel" style="display:none">
-    <div class="model-panel-lbl"><span class="mpl-dot"></span>Muscle Reference</div>
-    <div id="anatomy-frame-live" title="Human Muscular Anatomy"></div>
-    <div class="model-panel-attr">Model: Chenzoss / Sketchfab · CC-BY-4.0</div>
+    <div id="anatomy-frame-live" title="3D Reference"></div>
   </div>
 
   <!-- Rep counter flash -->
@@ -1167,7 +1166,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
           </button>
         </div>
-        <canvas id="demo-canvas" width="320" height="320"></canvas>
+        <canvas id="demo-canvas" width="420" height="420"></canvas>
         <div class="demo-caption" id="demo-caption">Loading preview…</div>
         <div class="demo-dots" id="demo-dots"></div>
       </div>
@@ -1861,7 +1860,7 @@ document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>`
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
     <span>${ex.note}</span>
   </div>
-  <button class="ex-start-btn" onclick="openSession(${i})">Start with AI Tracking</button>
+  <button class="ex-start-btn" onclick="openSession(${i})">Start Your Physio</button>
 </div>`).join('');
 
 // Deep link from index.html's anatomy panels ("Related Exercise" → ?ex=<det>)
@@ -2117,7 +2116,7 @@ const AIChat={
     if(/camera|record|upload|privacy/.test(m))
       return "Your camera feed never leaves your device — PhysioSync tracks your movement locally in the browser using MediaPipe. Nothing is recorded or uploaded anywhere.";
     if(/session|start|begin/.test(m))
-      return "Pick any exercise card in the library above and tap \"Start with AI Tracking.\" Allow camera access when prompted, then follow the on-screen form guidance — reps and form score are tracked automatically.";
+      return "Pick any exercise card in the library above and tap \"Start Your Physio.\" Allow camera access when prompted, then follow the on-screen form guidance — reps and form score are tracked automatically.";
     if(/dashboard|streak|score|reps?\b/.test(m))
       return "Your Dashboard (bottom of this page) tracks sessions completed, total reps, average form score, your day streak, and a weekly activity chart — all saved on this device, no account needed.";
     if(/hospital/.test(m))
