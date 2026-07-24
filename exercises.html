@@ -2786,24 +2786,6 @@ function drawSkeleton(ctx,lm,W,H){
     }
   });
 
-  if(sessEx.joints.p.length>=3&&lastLM){
-    const [ja,jb,jc]=sessEx.joints.p.slice(0,3);
-    const A=lm[ja],B=lm[jb],C=lm[jc];
-    if(A&&B&&C&&typeof A.visibility==='number'&&typeof B.visibility==='number'&&typeof C.visibility==='number'&&A.visibility>0.5&&B.visibility>0.5&&C.visibility>0.5){
-      const bx=B.x*W,by=B.y*H;
-      const ang=angleDeg(A,B,C);
-      const r2=40;
-      const a1=Math.atan2(A.y-B.y,A.x-B.x);
-      const a2=Math.atan2(C.y-B.y,C.x-B.x);
-      ctx.beginPath();ctx.moveTo(bx,by);
-      ctx.arc(bx,by,r2,a1,a2);ctx.closePath();
-      ctx.fillStyle='rgba(245,158,11,.15)';ctx.fill();
-      ctx.beginPath();ctx.arc(bx,by,r2,a1,a2);
-      ctx.strokeStyle='rgba(245,158,11,.6)';ctx.lineWidth=1.5;ctx.stroke();
-      ctx.fillStyle='#fff';ctx.font="bold 11px 'Plus Jakarta Sans',sans-serif";ctx.textAlign='center';
-      ctx.fillText(Math.round(ang)+'°',bx,by-r2-5);
-    }
-  }
   ctx.restore();
 }
 
