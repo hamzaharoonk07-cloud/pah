@@ -979,7 +979,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Clinical Tracking · 3D Muscle Map · 8 Exercises
+      Clinical Tracking · 3D Muscle Map · 11 Exercises
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av">P</span>
@@ -1456,6 +1456,13 @@ const DEMO_DEFS={
     steps:['Stand tall, feet hip-width apart','Slide one hand down your leg, bend sideways — hold'],highlight:['neck','leftShoulder']},
   bilateral_raise:{kind:'hold',peak:{leftElbow:{x:.37,y:.10},leftWrist:{x:.40,y:.02},rightElbow:{x:.63,y:.10},rightWrist:{x:.60,y:.02}},
     steps:['Arms relaxed at your sides','Raise both arms fully overhead together — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
+  mini_squat:{kind:'hold',peak:{pelvis:{y:.61},leftHip:{y:.62},rightHip:{y:.62},
+      leftKnee:{x:.40,y:.78},rightKnee:{x:.60,y:.78},leftAnkle:{y:.925},rightAnkle:{y:.925}},
+    steps:['Stand tall, feet shoulder-width apart','Bend both knees into a shallow squat — pause, then stand'],highlight:['leftKnee','rightKnee']},
+  toe_raise:{kind:'hold',peak:{leftFoot:{y:.90},rightFoot:{y:.90}},
+    steps:['Stand flat, heels on the ground','Lift your toes up toward your shins — hold at the top'],highlight:['leftFoot','rightFoot']},
+  hip_abduction:{kind:'hold',peak:{leftKnee:{x:.30,y:.72},leftAnkle:{x:.26,y:.88},leftFoot:{x:.22,y:.90}},
+    steps:['Stand tall, holding on to something for balance','Lift one leg out to the side — hold 2 seconds'],highlight:['leftHip','leftKnee']},
   _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
 };
 
@@ -1758,7 +1765,25 @@ const EX=[
     note:'Gentle bilateral shoulder flexion. Builds shoulder mobility and coordination — a good starting point before more demanding single-arm shoulder work.',
     muscles:['Anterior Deltoid','Upper Trapezius','Serratus Anterior'],
     angles:{main:[23,11,13],pivot:11,threshold:{lo:100,hi:165}},
-    joints:{p:[11,12,13,14,15,16],s:[7,8,23,24],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12],[11,23],[12,24]]}}
+    joints:{p:[11,12,13,14,15,16],s:[7,8,23,24],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12],[11,23],[12,24]]}},
+  {name:'Mini Squats',area:'Hip and Knee',diff:'Beginner',tags:['Hip','Knee'],reps:12,det:'mini_squat',
+    desc:'Feet shoulder-width apart. Bend both knees into a shallow squat, keeping knees behind your toes. Pause, then stand back up with control.',
+    note:'Builds functional lower-limb strength for sit-to-stand and stairs. Shallow range keeps load safe for beginners and sensitive knees.',
+    muscles:['Quadriceps','Gluteus Maximus','Hamstrings'],
+    angles:{main:[23,25,27],pivot:25,threshold:{lo:135,hi:158}},
+    joints:{p:[23,24,25,26,27,28],s:[],lk:[[23,24],[23,25],[24,26],[25,27],[26,28]],sk:[]}},
+  {name:'Toe Raises',area:'Shin and Ankle',diff:'Beginner',tags:['Ankle'],reps:15,det:'toe_raise',
+    desc:'Stand flat, heels on the ground. Lift your toes and the front of your foot up toward your shins. Hold, then lower with control.',
+    note:'Strengthens tibialis anterior. Reduces shin splint risk and complements calf raises by training the opposing ankle muscle group.',
+    muscles:['Tibialis Anterior','Extensor Digitorum Longus'],
+    angles:{main:[27,31,29],pivot:27,threshold:{lo:3,hi:10}},
+    joints:{p:[27,28,31,32],s:[25,26],lk:[[27,31],[28,32]],sk:[[25,27],[26,28]]}},
+  {name:'Standing Hip Abduction',area:'Hip and Glutes',diff:'Beginner',tags:['Hip'],reps:12,det:'hip_abduction',
+    desc:'Stand tall, holding on to something stable for balance. Lift one leg out to the side without leaning your torso. Hold, lower, and repeat.',
+    note:'Strengthens gluteus medius. Improves single-leg stability and pelvic control — reduces fall risk and hip drop during walking.',
+    muscles:['Gluteus Medius','Tensor Fasciae Latae'],
+    angles:{main:[24,23,25],pivot:23,threshold:{lo:15,hi:35}},
+    joints:{p:[23,24,25,26],s:[27,28],lk:[[23,24],[23,25],[24,26]],sk:[[25,27],[26,28]]}}
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1789,7 +1814,10 @@ const ICON_BY_DET={
   calf_raise:'M4 20l6-6 4 4 8-10M16 8h6v6', // rising trend
   ankle_circle:'M23 4v6h-6M20.49 15a9 9 0 11-2.12-9.36L23 10', // rotation
   side_bend:'M11 17l-5-5 5-5M18 17l-5-5 5-5', // lateral motion
-  bilateral_raise:'M17 11l-5-5-5 5M17 18l-5-5-5 5' // both arms up
+  bilateral_raise:'M17 11l-5-5-5 5M17 18l-5-5-5 5', // both arms up
+  mini_squat:'M6 9l6 6 6-6M12 3v12', // dip down
+  toe_raise:'M6 15l6-6 6 6M12 21V9', // lift up
+  hip_abduction:'M4 12h10M14 6l6 6-6 6' // leg swings out to the side
 };
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
@@ -2371,6 +2399,7 @@ function openSession(idx){
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
   shoulderRollPrevTheta=null;shoulderRollAccum=0;shoulderRollCenter=null;
   calfRaiseBaseline=null;calfRaiseCalSum=0;calfRaiseCalFrames=0;
+  toeRaiseBaseline=null;toeRaiseCalSum=0;toeRaiseCalFrames=0;
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2708,73 +2737,31 @@ function onPoseResults(results){
   analyzeExercise(lm,cv.width,cv.height);
 }
 
-// ── SKELETON DRAWING — FIXED visibility checks ──
-const SKEL_CONNECTIONS=[
-  [0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],
-  [9,10],[11,12],
-  [11,13],[13,15],[15,17],[15,19],[15,21],
-  [12,14],[14,16],[16,18],[16,20],[16,22],
-  [11,23],[12,24],[23,24],
-  [23,25],[24,26],[25,27],[26,28],
-  [27,29],[28,30],[29,31],[30,32]
-];
-
+// ── TRACKED-JOINT MARKER — highlights only the joint(s) this exercise
+// actually scores, instead of drawing a full stick-figure skeleton over the
+// person (bone lines + secondary joints read as cluttered/low-end).
 function drawSkeleton(ctx,lm,W,H){
   if(!sessEx)return;
   const pSet=new Set(sessEx.joints.p);
-  const sSet=new Set(sessEx.joints.s);
-  const primLinks=sessEx.joints.lk;
-  const secLinks=sessEx.joints.sk;
-
-  function isPL(a,b){return primLinks.some(l=>(l[0]===a&&l[1]===b)||(l[0]===b&&l[1]===a));}
-  function isSL(a,b){return secLinks.some(l=>(l[0]===a&&l[1]===b)||(l[0]===b&&l[1]===a));}
 
   ctx.save();
-  ctx.lineCap='round';ctx.lineJoin='round';
 
   lm.forEach((pt,i)=>{
     if(typeof pt.visibility!=='number'||pt.visibility<0.4||!pSet.has(i))return;
     const x=pt.x*W,y=pt.y*H;
-    const g=ctx.createRadialGradient(x,y,0,x,y,28);
-    g.addColorStop(0,'rgba(225,29,72,.3)');
+
+    const g=ctx.createRadialGradient(x,y,0,x,y,26);
+    g.addColorStop(0,'rgba(225,29,72,.35)');
     g.addColorStop(1,'transparent');
-    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,28,0,Math.PI*2);ctx.fill();
-  });
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,26,0,Math.PI*2);ctx.fill();
 
-  SKEL_CONNECTIONS.forEach(([a,b])=>{
-    const A=lm[a],B=lm[b];
-    if(!A||!B||typeof A.visibility!=='number'||typeof B.visibility!=='number'||A.visibility<0.4||B.visibility<0.4)return;
-    const x1=A.x*W,y1=A.y*H,x2=B.x*W,y2=B.y*H;
-    const pl=isPL(a,b),sl=isSL(a,b);
-    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
-    if(pl){
-      const g=ctx.createLinearGradient(x1,y1,x2,y2);
-      g.addColorStop(0,'rgba(225,29,72,.95)');
-      g.addColorStop(1,'rgba(251,113,133,.95)');
-      ctx.strokeStyle=g;ctx.lineWidth=5;
-      ctx.shadowColor='rgba(225,29,72,.7)';ctx.shadowBlur=14;
-    }else if(sl){
-      ctx.strokeStyle='rgba(59,130,246,.65)';ctx.lineWidth=2.5;ctx.shadowBlur=0;
-    }else{
-      ctx.strokeStyle='rgba(255,255,255,.15)';ctx.lineWidth=1.5;ctx.shadowBlur=0;
-    }
+    ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);
+    ctx.strokeStyle='rgba(225,29,72,.9)';ctx.lineWidth=2;
+    ctx.shadowColor='rgba(225,29,72,.6)';ctx.shadowBlur=10;
     ctx.stroke();ctx.shadowBlur=0;
-  });
 
-  lm.forEach((pt,i)=>{
-    if(typeof pt.visibility!=='number'||pt.visibility<0.35)return;
-    const x=pt.x*W,y=pt.y*H;
-    const iP=pSet.has(i),iS=sSet.has(i);
-    const r=iP?10:iS?6:3.5;
-    const col=iP?'#e11d48':iS?'#3b82f6':'rgba(255,255,255,.35)';
-    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);
-    if(iP){ctx.shadowColor='#e11d48';ctx.shadowBlur=18;}
-    ctx.fillStyle=col;ctx.fill();ctx.shadowBlur=0;
-    if(iP||iS){
-      ctx.beginPath();ctx.arc(x,y,r+3,0,Math.PI*2);
-      ctx.strokeStyle=iP?'rgba(225,29,72,.45)':'rgba(59,130,246,.4)';
-      ctx.lineWidth=1.5;ctx.stroke();
-    }
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle='#fff';ctx.fill();
   });
 
   ctx.restore();
@@ -2807,6 +2794,7 @@ function spineLeanZ(lm){
   return(shoulderZ-hipZ)*100;
 }
 let calfRaiseBaseline=null,calfRaiseCalSum=0,calfRaiseCalFrames=0;
+let toeRaiseBaseline=null,toeRaiseCalSum=0,toeRaiseCalFrames=0;
 const BASELINE_CAL_FRAMES=12; // ~400ms at 30fps — averages out single-frame noise instead of snapshotting one frame as truth
 let angleRawBuf=[];
 function smoothAngle(val){
@@ -2942,7 +2930,7 @@ function smoothTorso(val){
 // range of motion instead of moving the intended joint. Only applied to
 // exercises where the torso should stay still (excludes side_bend/mckenzie/
 // bilateral_raise, which involve intentional torso movement).
-const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_roll','knee_chest','calf_raise','ankle_circle']);
+const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_roll','knee_chest','calf_raise','ankle_circle','toe_raise','hip_abduction']);
 function checkTorsoCompensation(lm){
   if(!safe(lm,11,12,23,24))return false;
   const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
@@ -3047,6 +3035,66 @@ const HOLD_CFG={
     releaseMsg:'Stand tall and repeat the extension.',
     shortHoldMsg:'Hold the extension a little longer for full credit.',
     readyMsg:'Place hands on lower back and gently arch backward.'
+  },
+  mini_squat:{
+    vis:[23,24,25,26,27,28],
+    // Same hip-knee-ankle angle knee_chest uses, but for a shallow bodyweight
+    // squat both knees bend together (a symmetric bilateral movement, hip stays
+    // roughly over the ankle) rather than one knee lifting toward the chest —
+    // average both legs for a more stable, representative reading.
+    compute(lm){
+      const l=angleDeg(lm[23],lm[25],lm[27]);
+      const r=angleDeg(lm[24],lm[26],lm[28]);
+      return{value:smoothAngle((l+r)/2),label:'Knee Flex',unit:'°'};
+    },
+    isEngaged:(o,lo,hi)=>o.value<hi, // knee-flexion angle decreases as you sit into the squat
+    isReleased:(o)=>o.value>168,
+    minHoldMs:500,activeLabel:'Down',
+    engagedMsg:'Good depth — pause, then stand back up with control.',
+    releaseMsg:'Nice — stand tall and repeat.',
+    shortHoldMsg:'Pause a moment at the bottom for full credit.',
+    readyMsg:'Bend both knees into a shallow squat, keeping knees behind your toes.'
+  },
+  toe_raise:{
+    vis:[27,31],
+    // Mirror image of calf_raise's fix: dorsiflexion lifts the forefoot/toe
+    // while the heel and ankle stay put, so track the toe landmark's own
+    // vertical rise from a session-calibrated baseline rather than a 2D angle
+    // (which has the same camera-depth blind spot calf_raise's old version had).
+    compute(lm){
+      const toeY=lm[31].y*100;
+      if(toeRaiseBaseline==null){
+        toeRaiseCalSum+=toeY;toeRaiseCalFrames++;
+        if(toeRaiseCalFrames>=BASELINE_CAL_FRAMES)toeRaiseBaseline=toeRaiseCalSum/toeRaiseCalFrames;
+        return{value:0,label:'Lift',unit:''};
+      }
+      const lift=smoothAngle(Math.max(0,toeRaiseBaseline-toeY));
+      return{value:lift,label:'Lift',unit:''};
+    },
+    isEngaged:(o,lo)=>o.value>lo,
+    isReleased:(o,lo)=>o.value<lo*0.3,
+    minHoldMs:600,activeLabel:'Up',
+    engagedMsg:'Full dorsiflexion — hold at the top.',
+    releaseMsg:'Lower your toes back down with control.',
+    shortHoldMsg:'Pause at the top a little longer next time.',
+    readyMsg:'Keep your heel down and lift your toes up toward your shin.'
+  },
+  hip_abduction:{
+    vis:[23,24,25],
+    // Same angleFromVertical pattern already proven for neck_tilt/side_bend —
+    // a leg swinging out sideways is a clean lateral (x/y-plane) motion from a
+    // front-facing camera, so no depth-axis blind spot here.
+    compute(lm){
+      const hipMid={x:(lm[23].x+lm[24].x)/2,y:(lm[23].y+lm[24].y)/2};
+      return{value:smoothAngle(angleFromVertical(hipMid,lm[25])),label:'Leg Lift',unit:'°'};
+    },
+    isEngaged:(o,lo)=>o.value>lo,
+    isReleased:(o,lo)=>o.value<lo*0.35,
+    minHoldMs:1200,activeLabel:'Lifted',
+    engagedMsg:'Good lift — hold 2 seconds, keep your hips level.',
+    releaseMsg:'Lower with control and repeat.',
+    shortHoldMsg:'Hold the lift a little longer for full credit.',
+    readyMsg:'Stand tall, lift one leg out to the side without leaning.'
   }
 };
 function runHold(det,lm){
@@ -3160,7 +3208,7 @@ function runBilateralRaise(lm){
   }
 }
 
-const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','calf_raise','mckenzie']);
+const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','calf_raise','mckenzie','mini_squat','toe_raise','hip_abduction']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
