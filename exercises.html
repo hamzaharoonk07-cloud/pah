@@ -2305,7 +2305,7 @@ const AIChat={
 // ═══════════════════════════════════════════════════════════
 let poseModel=null,poseLoaded=false,camStream=null;
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral';
-let formScores=[],lastLM=null,raf=null,sessActive=false;
+let formScores=[],lastLM=null,raf=null,sessActive=false,skelSmoothPts=null;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
 let ankleCirclePrevTheta=null,ankleCircleAccum=0; // true angular-sweep tracking for ankle_circle
 let shoulderRollPrevTheta=null,shoulderRollAccum=0; // same technique for shoulder_roll
@@ -2522,8 +2522,9 @@ async function startCamera(){
   const cv=document.getElementById('s-canvas');
   const vw=vid.videoWidth||1280;
   const vh=vid.videoHeight||720;
-  cv.width=vw;
-  cv.height=vh;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=vw*dpr;
+  cv.height=vh*dpr;
   cv.style.display='block';
 
   // 7. UI state
@@ -2725,21 +2726,43 @@ const SKEL_CONNECTIONS=[
   [27,29],[28,30],[29,31],[30,32]
 ];
 
+// Smooths landmark screen positions for drawing only (own EMA buffer, isolated
+// from each exercise's angle-smoothing state) so the rendered skeleton glides
+// instead of vibrating with raw per-frame detector noise. Visibility/confidence
+// checks below always read the raw (unsmoothed) landmark so loss detection
+// still reacts immediately.
+const SKEL_SMOOTH_ALPHA=0.55;
+function smoothSkeletonPoints(lm){
+  if(!skelSmoothPts||skelSmoothPts.length!==lm.length){
+    skelSmoothPts=lm.map(p=>({x:p.x,y:p.y}));
+    return skelSmoothPts;
+  }
+  for(let i=0;i<lm.length;i++){
+    const p=lm[i],s=skelSmoothPts[i];
+    if(typeof p.visibility==='number'&&p.visibility<0.3)continue;
+    s.x=s.x*SKEL_SMOOTH_ALPHA+p.x*(1-SKEL_SMOOTH_ALPHA);
+    s.y=s.y*SKEL_SMOOTH_ALPHA+p.y*(1-SKEL_SMOOTH_ALPHA);
+  }
+  return skelSmoothPts;
+}
+
 function drawSkeleton(ctx,lm,W,H){
   if(!sessEx)return;
   const pSet=new Set(sessEx.joints.p);
   const sSet=new Set(sessEx.joints.s);
   const primLinks=sessEx.joints.lk;
   const secLinks=sessEx.joints.sk;
+  const sp=smoothSkeletonPoints(lm);
 
   function isPL(a,b){return primLinks.some(l=>(l[0]===a&&l[1]===b)||(l[0]===b&&l[1]===a));}
   function isSL(a,b){return secLinks.some(l=>(l[0]===a&&l[1]===b)||(l[0]===b&&l[1]===a));}
 
   ctx.save();
+  ctx.lineCap='round';ctx.lineJoin='round';
 
   lm.forEach((pt,i)=>{
     if(typeof pt.visibility!=='number'||pt.visibility<0.4||!pSet.has(i))return;
-    const x=pt.x*W,y=pt.y*H;
+    const x=sp[i].x*W,y=sp[i].y*H;
     const g=ctx.createRadialGradient(x,y,0,x,y,28);
     g.addColorStop(0,'rgba(225,29,72,.3)');
     g.addColorStop(1,'transparent');
@@ -2749,7 +2772,7 @@ function drawSkeleton(ctx,lm,W,H){
   SKEL_CONNECTIONS.forEach(([a,b])=>{
     const A=lm[a],B=lm[b];
     if(!A||!B||typeof A.visibility!=='number'||typeof B.visibility!=='number'||A.visibility<0.4||B.visibility<0.4)return;
-    const x1=A.x*W,y1=A.y*H,x2=B.x*W,y2=B.y*H;
+    const x1=sp[a].x*W,y1=sp[a].y*H,x2=sp[b].x*W,y2=sp[b].y*H;
     const pl=isPL(a,b),sl=isSL(a,b);
     ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
     if(pl){
@@ -2768,7 +2791,7 @@ function drawSkeleton(ctx,lm,W,H){
 
   lm.forEach((pt,i)=>{
     if(typeof pt.visibility!=='number'||pt.visibility<0.35)return;
-    const x=pt.x*W,y=pt.y*H;
+    const x=sp[i].x*W,y=sp[i].y*H;
     const iP=pSet.has(i),iS=sSet.has(i);
     const r=iP?10:iS?6:3.5;
     const col=iP?'#e11d48':iS?'#3b82f6':'rgba(255,255,255,.35)';
@@ -2786,7 +2809,7 @@ function drawSkeleton(ctx,lm,W,H){
     const [ja,jb,jc]=sessEx.joints.p.slice(0,3);
     const A=lm[ja],B=lm[jb],C=lm[jc];
     if(A&&B&&C&&typeof A.visibility==='number'&&typeof B.visibility==='number'&&typeof C.visibility==='number'&&A.visibility>0.5&&B.visibility>0.5&&C.visibility>0.5){
-      const bx=B.x*W,by=B.y*H;
+      const bx=sp[jb].x*W,by=sp[jb].y*H;
       const ang=angleDeg(A,B,C);
       const r2=40;
       const a1=Math.atan2(A.y-B.y,A.x-B.x);
