@@ -44,10 +44,10 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif}
 @media(prefers-reduced-motion:reduce){.edge-glow{animation:none}}
 
 #joint-focus{position:relative}
-.jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
+.jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:var(--bg-strong)}
 
-#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none;background:#000}
-.jf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:#000;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#64748b;transition:opacity .6s}
+#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none;background:var(--bg-strong)}
+.jf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:var(--bg-strong);font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#64748b;transition:opacity .6s}
 .jf-loading.hide{opacity:0;pointer-events:none}
 
 .jf-overlay-grad{
@@ -93,10 +93,21 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif}
 @media(max-width:768px){.jf-overlay{padding:28px 24px;text-align:left;width:100%}}
 
 .jf-tag{display:inline-block;font-weight:700;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
-/* The 3D viewer is always a dark stage (Sketchfab embed + dark gradient) no
-   matter the site theme, so this overlay text stays fixed light — using the
-   theme's heading/muted colors here would turn it dark-on-dark in light mode. */
-.jf-title{font-size:clamp(2.4rem,6vw,5rem);font-weight:900;line-height:1;margin-bottom:14px;letter-spacing:-.02em;text-transform:uppercase;color:#fff}
+/* jf-overlay-grad keeps a fixed dark gradient behind this text regardless of
+   site theme, so it stays fixed light — using the theme's heading/muted
+   colors here would turn it dark-on-dark against that gradient. */
+.jf-title{
+  font-size:clamp(2.4rem,6vw,5rem);font-weight:900;line-height:1;margin-bottom:14px;letter-spacing:-.02em;text-transform:uppercase;
+  color:#fff;
+  background:linear-gradient(100deg,#fff 30%,var(--accent) 46%,var(--purple) 50%,var(--accent) 54%,#fff 70%);
+  background-size:300% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  animation:jfTitleShimmer 6s ease-in-out infinite;
+}
+@keyframes jfTitleShimmer{0%{background-position:180% 0}50%{background-position:-80% 0}100%{background-position:180% 0}}
+@media(prefers-reduced-motion:reduce){
+  .jf-title{animation:none;background:none;-webkit-text-fill-color:#fff;color:#fff}
+}
 .jf-desc{color:#cbd5e1;font-size:1rem;line-height:1.75;margin-bottom:18px;margin-left:auto}
 @media(max-width:768px){.jf-desc{margin-left:0}}
 .jf-conditions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;justify-content:flex-end}
@@ -288,6 +299,7 @@ function toggleTheme(){
   if(isLight){document.documentElement.removeAttribute('data-theme');localStorage.setItem('pah-theme','dark');}
   else{document.documentElement.setAttribute('data-theme','light');localStorage.setItem('pah-theme','light');}
   syncThemeIcon();
+  if(typeof applyModelBackground==='function') applyModelBackground();
 }
 syncThemeIcon();
 </script>
@@ -447,6 +459,7 @@ client.init('85636205977d44878fc729fde5b77cd3', {
     api.start();
     api.addEventListener('viewerready', function(){
       loadingEl.classList.add('hide');
+      applyModelBackground();
       focusJoint(panels[0], true);
     });
   },
@@ -454,6 +467,12 @@ client.init('85636205977d44878fc729fde5b77cd3', {
     loadingEl.textContent = 'Unable to load 3D model';
   }
 });
+
+function applyModelBackground(){
+  if(!sketchfabApi) return;
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  sketchfabApi.setBackground({color: isLight ? [1,1,1] : [0,0,0]}, function(){});
+}
 
 function setCamera(camStr, instant){
   if(!sketchfabApi) return;
