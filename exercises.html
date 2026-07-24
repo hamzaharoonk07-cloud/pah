@@ -2737,11 +2737,9 @@ function onPoseResults(results){
   analyzeExercise(lm,cv.width,cv.height);
 }
 
-// ── FULL-BODY TRACKING OVERLAY — the whole detected pose is drawn, so it
-// reads as genuine whole-body AI tracking rather than a single dot, but kept
-// refined: thin, low-opacity lines/nodes for the general skeleton, with real
-// emphasis (glow + color) reserved only for the joint(s)/bone(s) this specific
-// exercise is actually scoring, so it's still obvious what's being measured.
+// ── FULL-BODY TRACKING OVERLAY — uniform flat-color joints/bones across the
+// whole detected pose (no glow/gradient bloom, no primary/secondary split),
+// matching a clean sports-tracking look rather than a "video game" HUD.
 const SKEL_CONNECTIONS=[
   [0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],
   [9,10],[11,12],
@@ -2753,47 +2751,26 @@ const SKEL_CONNECTIONS=[
 ];
 function drawSkeleton(ctx,lm,W,H){
   if(!sessEx)return;
-  const pSet=new Set(sessEx.joints.p);
 
   ctx.save();
   ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.strokeStyle='rgba(0,229,160,.85)';
+  ctx.lineWidth=2.5;
 
   SKEL_CONNECTIONS.forEach(([a,b])=>{
     const A=lm[a],B=lm[b];
     if(!A||!B||typeof A.visibility!=='number'||typeof B.visibility!=='number'||A.visibility<0.4||B.visibility<0.4)return;
-    const x1=A.x*W,y1=A.y*H,x2=B.x*W,y2=B.y*H;
-    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
-    if(pSet.has(a)&&pSet.has(b)){
-      const g=ctx.createLinearGradient(x1,y1,x2,y2);
-      g.addColorStop(0,'rgba(225,29,72,.9)');
-      g.addColorStop(1,'rgba(251,113,133,.9)');
-      ctx.strokeStyle=g;ctx.lineWidth=4;
-      ctx.shadowColor='rgba(225,29,72,.5)';ctx.shadowBlur=10;
-    }else{
-      ctx.strokeStyle='rgba(255,255,255,.28)';ctx.lineWidth=1.5;ctx.shadowBlur=0;
-    }
-    ctx.stroke();ctx.shadowBlur=0;
+    ctx.beginPath();
+    ctx.moveTo(A.x*W,A.y*H);
+    ctx.lineTo(B.x*W,B.y*H);
+    ctx.stroke();
   });
 
   lm.forEach((pt,i)=>{
-    if(typeof pt.visibility!=='number'||pt.visibility<0.35)return;
+    if(typeof pt.visibility!=='number'||pt.visibility<0.4)return;
     const x=pt.x*W,y=pt.y*H;
-    if(pSet.has(i)){
-      const g=ctx.createRadialGradient(x,y,0,x,y,24);
-      g.addColorStop(0,'rgba(225,29,72,.32)');
-      g.addColorStop(1,'transparent');
-      ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,24,0,Math.PI*2);ctx.fill();
-
-      ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);
-      ctx.fillStyle='#e11d48';ctx.shadowColor='#e11d48';ctx.shadowBlur=12;
-      ctx.fill();ctx.shadowBlur=0;
-
-      ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);
-      ctx.fillStyle='#fff';ctx.fill();
-    }else{
-      ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);
-      ctx.fillStyle='rgba(255,255,255,.6)';ctx.fill();
-    }
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);
+    ctx.fillStyle='#00e5a0';ctx.fill();
   });
 
   ctx.restore();
