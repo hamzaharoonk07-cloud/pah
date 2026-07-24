@@ -2304,7 +2304,7 @@ const AIChat={
 // SESSION ENGINE — MediaPipe Pose Tracking (FIXED)
 // ═══════════════════════════════════════════════════════════
 let poseModel=null,poseLoaded=false,camStream=null;
-let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral';
+let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral',sessCompleting=false;
 let formScores=[],lastLM=null,raf=null,sessActive=false;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
@@ -2372,6 +2372,7 @@ const CamDiag={
 
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
+  sessCompleting=false;
   angleRawBuf=[];motionHistory=[];visLossStreak=0;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
@@ -2427,6 +2428,47 @@ function endSession(){
     saveU(u);renderDash();renderNavStreak();
     toast('Session saved — '+sessReps+' reps at '+avgF+'% form.');
   }
+}
+
+// Triggered once the exercise's own configured rep target is reached — speaks
+// a completion message, then closes out the session (camera off, saved to
+// the dashboard exactly like a manual "End Session") and shows a report.
+function completeSessionAuto(){
+  const avgF=formScores.length?Math.round(formScores.reduce((a,b)=>a+b,0)/formScores.length):sessScore;
+  const report={name:sessEx.name,reps:sessReps,target:sessEx.reps,form:avgF};
+  endSession();
+  showSessionReport(report);
+}
+
+function showSessionReport(d){
+  let m=document.getElementById('session-report-popup');
+  if(!m){
+    m=document.createElement('div');
+    m.id='session-report-popup';
+    m.style.cssText='position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);';
+    document.body.appendChild(m);
+  }
+  const grade=d.form>=80?'Excellent form — keep this up.':d.form>=60?'Good effort — a little more control will raise your score.':'Keep practicing — focus on slow, controlled movement over speed.';
+  m.innerHTML=`
+    <div style="background:var(--card1);border:1px solid var(--w10);border-radius:20px;padding:28px;max-width:100%;width:400px;color:var(--text);font-family:Inter,sans-serif;box-shadow:0 24px 70px var(--shadow-color);text-align:center;">
+      <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#be123c);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:28px;height:28px"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 style="margin:0 0 4px;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2rem;color:var(--heading);">Session Complete</h3>
+      <p style="margin:0 0 20px;color:var(--muted);font-size:.85rem;">${d.name}</p>
+      <div style="display:flex;gap:10px;margin-bottom:18px;">
+        <div style="flex:1;background:var(--w04);border:1px solid var(--w08);border-radius:14px;padding:14px;">
+          <div style="font-size:1.4rem;font-weight:800;color:var(--brand);">${d.reps}/${d.target}</div>
+          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Reps</div>
+        </div>
+        <div style="flex:1;background:var(--w04);border:1px solid var(--w08);border-radius:14px;padding:14px;">
+          <div style="font-size:1.4rem;font-weight:800;color:var(--brand);">${d.form}%</div>
+          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Form Score</div>
+        </div>
+      </div>
+      <p style="margin:0 0 20px;font-size:.8rem;color:var(--text);line-height:1.5;">${grade} This tracker isn't a substitute for professional medical advice — consult a physiotherapist if you experience pain.</p>
+      <button onclick="document.getElementById('session-report-popup').remove()" style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;">Done</button>
+    </div>`;
 }
 
 // ── CAMERA with full mobile compatibility & diagnostics ──
@@ -2854,10 +2896,13 @@ function doRep(){
   formScores.push(sessScore);
   const fl=document.getElementById('rep-flash');
   fl.textContent=sessReps;fl.classList.remove('go');void fl.offsetWidth;fl.classList.add('go');
-  VoiceCoach.speak('Rep '+sessReps);
-  if(sessReps>=sessEx.reps){
-    setFB('Target of '+sessEx.reps+' reps reached. You can continue or end the session.','good');
-    toast('Target reached — '+sessReps+' reps completed.');
+  if(sessReps>=sessEx.reps&&!sessCompleting){
+    sessCompleting=true;
+    setFB('Target of '+sessEx.reps+' reps reached — great work!','good');
+    VoiceCoach.speak('Great work! You completed all '+sessEx.reps+' reps. Ending the session now.',{priority:true});
+    setTimeout(completeSessionAuto,2200); // lets the completion voice line finish before the camera cuts out
+  }else{
+    VoiceCoach.speak('Rep '+sessReps);
   }
 }
 function updateScore(s){
