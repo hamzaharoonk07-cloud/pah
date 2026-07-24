@@ -1776,7 +1776,7 @@ const EX=[
     desc:'Stand flat, heels on the ground. Lift your toes and the front of your foot up toward your shins. Hold, then lower with control.',
     note:'Strengthens tibialis anterior. Reduces shin splint risk and complements calf raises by training the opposing ankle muscle group.',
     muscles:['Tibialis Anterior','Extensor Digitorum Longus'],
-    angles:{main:[27,31,29],pivot:27,threshold:{lo:3,hi:10}},
+    angles:{main:[27,31,29],pivot:27,threshold:{lo:1.5,hi:5}},
     joints:{p:[27,28,31,32],s:[25,26],lk:[[27,31],[28,32]],sk:[[25,27],[26,28]]}},
   {name:'Standing Hip Abduction',area:'Hip and Glutes',diff:'Beginner',tags:['Hip'],reps:12,det:'hip_abduction',
     desc:'Stand tall, holding on to something stable for balance. Lift one leg out to the side without leaning your torso. Hold, lower, and repeat.',
@@ -2943,9 +2943,14 @@ function smoothTorso(val){
 }
 // Real physios watch for compensation — swaying or leaning the trunk to fake
 // range of motion instead of moving the intended joint. Only applied to
-// exercises where the torso should stay still (excludes side_bend/mckenzie/
-// bilateral_raise, which involve intentional torso movement).
-const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_roll','knee_chest','calf_raise','ankle_circle','toe_raise','hip_abduction']);
+// exercises performed standing on both feet with no reason for the torso to
+// move at all. Excludes side_bend/mckenzie/bilateral_raise (intentional torso
+// movement), and also shoulder_roll (a large dynamic arm swing naturally
+// shifts the shoulder line even with perfect form), knee_chest/ankle_circle/
+// hip_abduction (single-leg-stance balance work — some torso/hip adjustment
+// to stay upright on one leg is normal, correct execution, not cheating) —
+// this check used to zero their score and silently block every rep.
+const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','calf_raise','toe_raise']);
 function checkTorsoCompensation(lm){
   if(!safe(lm,11,12,23,24))return false;
   const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
