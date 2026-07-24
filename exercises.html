@@ -979,7 +979,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Clinical Tracking · 3D Muscle Map · 11 Exercises
+      Clinical Tracking · 3D Muscle Map · 8 Exercises
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av">P</span>
@@ -997,7 +997,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <button class="pill" data-f="Back" onclick="setPill(this,'Back')">Back</button>
       <button class="pill" data-f="Hip" onclick="setPill(this,'Hip')">Hip</button>
       <button class="pill" data-f="Knee" onclick="setPill(this,'Knee')">Knee</button>
-      <button class="pill" data-f="Ankle" onclick="setPill(this,'Ankle')">Ankle</button>
       <button class="pill" data-f="Wrist" onclick="setPill(this,'Wrist')">Wrist</button>
     </div>
   </div>
@@ -1438,19 +1437,11 @@ function easeInOutSine(x){return -(Math.cos(Math.PI*Math.max(0,Math.min(1,x)))-1
 
 const DEMO_DEFS={
   neck_tilt:{kind:'hold',peak:{head:{x:.40,y:.115}},steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold 3 seconds'],highlight:['head','neck']},
-  shoulder_roll:{kind:'param',period:2400,param:(theta)=>{const dx=.035*Math.sin(theta),dy=-.03*(1-Math.cos(theta));
-      return{leftShoulder:{x:DEMO_REST.leftShoulder.x+dx,y:DEMO_REST.leftShoulder.y+dy},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx,y:DEMO_REST.rightShoulder.y+dy},
-             leftElbow:{x:DEMO_REST.leftElbow.x+dx*.7,y:DEMO_REST.leftElbow.y+dy*.7},rightElbow:{x:DEMO_REST.rightElbow.x+dx*.7,y:DEMO_REST.rightElbow.y+dy*.7}};},
-    steps:['Roll both shoulders in large backward circles'],highlight:['leftShoulder','rightShoulder']},
   mckenzie:{kind:'hold',base:{leftWrist:{x:.44,y:.56},rightWrist:{x:.56,y:.56},leftElbow:{x:.40,y:.46},rightElbow:{x:.60,y:.46}},
     peak:{neck:{x:.5,y:.175},head:{x:.52,y:.065},leftShoulder:{x:.39,y:.195},rightShoulder:{x:.61,y:.195}},
     steps:['Hands on lower back, stand tall','Arch backward gently — hold 3 seconds'],highlight:['neck','pelvis']},
   knee_chest:{kind:'hold',peak:{rightKnee:{x:.52,y:.46},rightAnkle:{x:.50,y:.40},rightFoot:{x:.49,y:.42}},
     steps:['Stand tall','Pull one knee up toward your chest — hold 3 seconds'],highlight:['rightHip','rightKnee']},
-  calf_raise:{kind:'hold',peak:shiftAllY(-.03),
-    steps:['Stand flat on both feet','Rise fully onto tiptoes — hold at the top'],highlight:['leftAnkle','rightAnkle']},
-  ankle_circle:{kind:'param',period:2400,param:(theta)=>({rightFoot:{x:.64+.035*Math.cos(theta),y:.955+.025*Math.sin(theta)}}),
-    steps:['Rotate ankle in full circles, both directions'],highlight:['rightAnkle']},
   side_bend:{kind:'hold',peak:{neck:{x:.42,y:.225},head:{x:.36,y:.145},leftShoulder:{x:.35,y:.245},rightShoulder:{x:.58,y:.20},
       leftElbow:{x:.30,y:.42},leftWrist:{x:.27,y:.60}},
     steps:['Stand tall, feet hip-width apart','Slide one hand down your leg, bend sideways — hold'],highlight:['neck','leftShoulder']},
@@ -1459,10 +1450,10 @@ const DEMO_DEFS={
   mini_squat:{kind:'hold',peak:{pelvis:{y:.61},leftHip:{y:.62},rightHip:{y:.62},
       leftKnee:{x:.40,y:.78},rightKnee:{x:.60,y:.78},leftAnkle:{y:.925},rightAnkle:{y:.925}},
     steps:['Stand tall, feet shoulder-width apart','Bend both knees into a shallow squat — pause, then stand'],highlight:['leftKnee','rightKnee']},
-  toe_raise:{kind:'hold',peak:{leftFoot:{y:.90},rightFoot:{y:.90}},
-    steps:['Stand flat, heels on the ground','Lift your toes up toward your shins — hold at the top'],highlight:['leftFoot','rightFoot']},
-  hip_abduction:{kind:'hold',peak:{leftKnee:{x:.30,y:.72},leftAnkle:{x:.26,y:.88},leftFoot:{x:.22,y:.90}},
-    steps:['Stand tall, holding on to something for balance','Lift one leg out to the side — hold 2 seconds'],highlight:['leftHip','leftKnee']},
+  lateral_raise:{kind:'hold',peak:{leftElbow:{x:.20,y:.22},leftWrist:{x:.10,y:.22},rightElbow:{x:.80,y:.22},rightWrist:{x:.90,y:.22}},
+    steps:['Arms relaxed at your sides','Raise both arms out to the sides to shoulder height — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
+  wrist_flex:{kind:'hold',peak:{leftWrist:{y:.49}},
+    steps:['Extend one arm forward, palm down','Bend your wrist up and down slowly'],highlight:['leftElbow','leftWrist']},
   _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
 };
 
@@ -1724,12 +1715,6 @@ const EX=[
     muscles:['Upper Trapezius','SCM','Scalenes'],
     angles:{main:[0,7,8],pivot:0,threshold:{lo:15,hi:40}},
     joints:{p:[0,7,8,11,12],s:[13,14],lk:[[0,7],[0,8],[7,8],[7,11],[8,12]],sk:[[11,13],[12,14]]}},
-  {name:'Shoulder Rolls',area:'Thoracic and Shoulder',diff:'Beginner',tags:['Shoulder'],reps:15,det:'shoulder_roll',
-    desc:'Roll both shoulders in large backward circles. Keep neck relaxed. Full amplitude circles.',
-    note:'Releases upper trapezius. Mobilizes glenohumeral joint. Corrects thoracic kyphosis.',
-    muscles:['Deltoid','Upper Trapezius','Rhomboids','Serratus Anterior'],
-    angles:{main:[11,13,15],pivot:11,threshold:{lo:30,hi:120}},
-    joints:{p:[11,12,13,14],s:[7,8,15,16],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12]]}},
   {name:'Gentle Back Arch',area:'Lower Back',diff:'Beginner',tags:['Back'],reps:10,det:'mckenzie',
     desc:'Place hands on lower back. Gently arch backward. Hold 3 seconds at end range. Stand tall between reps.',
     note:'McKenzie method. Primary treatment for L4-L5 disc herniation. Centralizes radiating leg pain.',
@@ -1741,19 +1726,7 @@ const EX=[
     note:'Hip flexor stretch with balance. Reduces anterior pelvic tilt and lumbar compression.',
     muscles:['Iliopsoas','Gluteus Maximus','Hip Flexors'],
     angles:{main:[23,25,27],pivot:25,threshold:{lo:50,hi:90}},
-    joints:{p:[23,24,25,26],s:[11,12,27,28],lk:[[23,24],[23,25],[24,26]],sk:[[11,23],[12,24],[25,27],[26,28]]}},
-  {name:'Calf Raises',area:'Ankle and Plantar Fascia',diff:'Beginner',tags:['Knee','Ankle'],reps:20,det:'calf_raise',
-    desc:'Feet shoulder-width. Rise onto toes fully. Pause at top. Lower over 3 seconds.',
-    note:'Strengthens soleus and gastrocnemius. Reduces plantar fasciitis. Improves gait efficiency.',
-    muscles:['Gastrocnemius','Soleus','Tibialis Anterior'],
-    angles:{main:[25,27,29],pivot:27,threshold:{lo:3,hi:10}},
-    joints:{p:[25,26,27,28,29,30],s:[23,24],lk:[[25,27],[26,28],[27,29],[28,30]],sk:[[23,25],[24,26]]}},
-  {name:'Ankle Alphabet',area:'Ankle Proprioception',diff:'Beginner',tags:['Ankle'],reps:10,det:'ankle_circle',
-    desc:'Lift one foot. Rotate ankle drawing full circles. Ten repetitions each direction per foot.',
-    note:'Restores talocrural mobility. Prevents recurrent sprains. Improves gait mechanics.',
-    muscles:['Peroneals','Tibialis Anterior','Gastrocnemius'],
-    angles:{main:[25,27,31],pivot:27,threshold:{lo:80,hi:140}},
-    joints:{p:[27,28,29,30,31,32],s:[25,26],lk:[[27,29],[28,30],[29,31],[30,32]],sk:[[25,27],[26,28]]}},
+    joints:{p:[23,24,25,26,27,28],s:[11,12],lk:[[23,24],[23,25],[24,26],[25,27],[26,28]],sk:[[11,23],[12,24]]}},
   {name:'Standing Side Bend',area:'Trunk Lateral Flexion',diff:'Beginner',tags:['Back'],reps:12,det:'side_bend',
     desc:'Stand tall, feet hip-width apart. Slide one hand down the outside of your leg, bending sideways at the waist. Hold, return to center, then bend the other way.',
     note:'Improves lateral spinal mobility and quadratus lumborum flexibility. Gentle daily mobility habit for a stiff lower back.',
@@ -1772,18 +1745,18 @@ const EX=[
     muscles:['Quadriceps','Gluteus Maximus','Hamstrings'],
     angles:{main:[23,25,27],pivot:25,threshold:{lo:135,hi:158}},
     joints:{p:[23,24,25,26,27,28],s:[],lk:[[23,24],[23,25],[24,26],[25,27],[26,28]],sk:[]}},
-  {name:'Toe Raises',area:'Shin and Ankle',diff:'Beginner',tags:['Ankle'],reps:15,det:'toe_raise',
-    desc:'Stand flat, heels on the ground. Lift your toes and the front of your foot up toward your shins. Hold, then lower with control.',
-    note:'Strengthens tibialis anterior. Reduces shin splint risk and complements calf raises by training the opposing ankle muscle group.',
-    muscles:['Tibialis Anterior','Extensor Digitorum Longus'],
-    angles:{main:[27,31,29],pivot:27,threshold:{lo:1.5,hi:5}},
-    joints:{p:[27,28,31,32],s:[25,26],lk:[[27,31],[28,32]],sk:[[25,27],[26,28]]}},
-  {name:'Standing Hip Abduction',area:'Hip and Glutes',diff:'Beginner',tags:['Hip'],reps:12,det:'hip_abduction',
-    desc:'Stand tall, holding on to something stable for balance. Lift one leg out to the side without leaning your torso. Hold, lower, and repeat.',
-    note:'Strengthens gluteus medius. Improves single-leg stability and pelvic control — reduces fall risk and hip drop during walking.',
-    muscles:['Gluteus Medius','Tensor Fasciae Latae'],
-    angles:{main:[24,23,25],pivot:23,threshold:{lo:15,hi:35}},
-    joints:{p:[23,24,25,26],s:[27,28],lk:[[23,24],[23,25],[24,26]],sk:[[25,27],[26,28]]}}
+  {name:'Lateral Arm Raise',area:'Shoulder Abduction (Both Arms)',diff:'Beginner',tags:['Shoulder'],reps:12,det:'lateral_raise',
+    desc:'Stand tall, arms at your sides. Raise both arms out to the sides up to shoulder height, slowly and with control. Lower with the same control.',
+    note:'Strengthens the lateral deltoid. Builds shoulder stability for daily reaching and lifting tasks.',
+    muscles:['Lateral Deltoid','Supraspinatus','Upper Trapezius'],
+    angles:{main:[23,11,15],pivot:11,threshold:{lo:70,hi:100}},
+    joints:{p:[11,12,13,14,15,16],s:[7,8,23,24],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12],[11,23],[12,24]]}},
+  {name:'Wrist Flexion Stretch',area:'Forearm and Wrist',diff:'Beginner',tags:['Wrist'],reps:15,det:'wrist_flex',
+    desc:'Extend one arm forward, palm down. Bend your wrist up and down slowly, keeping your forearm still.',
+    note:'Stretches and mobilizes the wrist flexors/extensors. Helpful for repetitive strain from typing or manual work.',
+    muscles:['Wrist Flexors','Wrist Extensors'],
+    angles:{main:[13,15,19],pivot:15,threshold:{lo:15,hi:40}},
+    joints:{p:[13,15,19],s:[11],lk:[[13,15],[15,19]],sk:[[11,13]]}}
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1808,16 +1781,13 @@ function filterEx(){
 // actually communicates what the exercise is at a glance.
 const ICON_BY_DET={
   neck_tilt:'M6 18L18 6M18 6H10M18 6v8', // lean/tilt arrow
-  shoulder_roll:'M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3', // full-circle repeat
   mckenzie:'M4 17Q12 3 20 17', // backward arch
   knee_chest:'M4 20h6a4 4 0 004-4V4M8 8l4-4 4 4', // lift toward chest
-  calf_raise:'M4 20l6-6 4 4 8-10M16 8h6v6', // rising trend
-  ankle_circle:'M23 4v6h-6M20.49 15a9 9 0 11-2.12-9.36L23 10', // rotation
   side_bend:'M11 17l-5-5 5-5M18 17l-5-5 5-5', // lateral motion
   bilateral_raise:'M17 11l-5-5-5 5M17 18l-5-5-5 5', // both arms up
   mini_squat:'M6 9l6 6 6-6M12 3v12', // dip down
-  toe_raise:'M6 15l6-6 6 6M12 21V9', // lift up
-  hip_abduction:'M4 12h10M14 6l6 6-6 6' // leg swings out to the side
+  lateral_raise:'M12 11l-6-5M12 11l6-5M12 11v9', // arms out to the sides
+  wrist_flex:'M5 12h9l-3-3M14 12l-3 3M17 8v8' // hinge up/down
 };
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
@@ -2327,9 +2297,6 @@ let poseModel=null,poseLoaded=false,camStream=null;
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral';
 let formScores=[],lastLM=null,raf=null,sessActive=false;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
-let ankleCirclePrevTheta=null,ankleCircleAccum=0; // true angular-sweep tracking for ankle_circle
-let shoulderRollPrevTheta=null,shoulderRollAccum=0; // same technique for shoulder_roll
-let shoulderRollCenter=null; // slow-EMA center the shoulder itself orbits around
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
 const REP_DEBOUNCE_MS=550; // minimum time between counted reps — filters jitter-driven double counts
 function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();}}
@@ -2395,11 +2362,8 @@ const CamDiag={
 
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
-  ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];visLossStreak=0;
+  angleRawBuf=[];motionHistory=[];visLossStreak=0;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
-  shoulderRollPrevTheta=null;shoulderRollAccum=0;shoulderRollCenter=null;
-  calfRaiseBaseline=null;calfRaiseCalSum=0;calfRaiseCalFrames=0;
-  toeRaiseBaseline=null;toeRaiseCalSum=0;toeRaiseCalFrames=0;
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2808,9 +2772,6 @@ function spineLeanZ(lm){
   const shoulderZ=(lm[11].z+lm[12].z)/2,hipZ=(lm[23].z+lm[24].z)/2;
   return(shoulderZ-hipZ)*100;
 }
-let calfRaiseBaseline=null,calfRaiseCalSum=0,calfRaiseCalFrames=0;
-let toeRaiseBaseline=null,toeRaiseCalSum=0,toeRaiseCalFrames=0;
-const BASELINE_CAL_FRAMES=12; // ~400ms at 30fps — averages out single-frame noise instead of snapshotting one frame as truth
 let angleRawBuf=[];
 function smoothAngle(val){
   // Median-of-3 rejects single-frame pose-estimation spikes before EMA smoothing —
@@ -2944,13 +2905,11 @@ function smoothTorso(val){
 // Real physios watch for compensation — swaying or leaning the trunk to fake
 // range of motion instead of moving the intended joint. Only applied to
 // exercises performed standing on both feet with no reason for the torso to
-// move at all. Excludes side_bend/mckenzie/bilateral_raise (intentional torso
-// movement), and also shoulder_roll (a large dynamic arm swing naturally
-// shifts the shoulder line even with perfect form), knee_chest/ankle_circle/
-// hip_abduction (single-leg-stance balance work — some torso/hip adjustment
-// to stay upright on one leg is normal, correct execution, not cheating) —
-// this check used to zero their score and silently block every rep.
-const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','calf_raise','toe_raise']);
+// move at all — everything else here either involves intentional torso
+// movement (side_bend, mckenzie) or is arm-based and uses its own symmetry
+// check instead (bilateral_raise, lateral_raise), or requires a single-leg
+// balance adjustment that would false-positive this check.
+const COMPENSATION_CHECK_DETS=new Set(['neck_tilt']);
 function checkTorsoCompensation(lm){
   if(!safe(lm,11,12,23,24))return false;
   const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
@@ -2999,9 +2958,14 @@ const HOLD_CFG={
     readyMsg:'Stand tall, slide one hand down your leg to bend sideways.'
   },
   knee_chest:{
-    vis:[23,25,27],
+    vis:[23,24,25,26,27,28],
+    // Track both legs and use whichever is more flexed — this alternates
+    // between knees, so hardcoding the left hip/knee/ankle (as this used to)
+    // meant lifting the right knee never registered at all.
     compute(lm){
-      return{value:smoothAngle(angleDeg(lm[23],lm[25],lm[27])),label:'Knee Flex',unit:'°'}; // hip-knee-ankle
+      const l=angleDeg(lm[23],lm[25],lm[27]);
+      const r=angleDeg(lm[24],lm[26],lm[28]);
+      return{value:smoothAngle(Math.min(l,r)),label:'Knee Flex',unit:'°'}; // hip-knee-ankle
     },
     isEngaged:(o,lo,hi)=>o.value<hi, // knee-flexion angle DECREASES as the knee lifts
     isReleased:(o)=>o.value>150,
@@ -3010,33 +2974,6 @@ const HOLD_CFG={
     releaseMsg:'Lower and raise the other knee.',
     shortHoldMsg:'Hold the lift a little longer for full credit.',
     readyMsg:'Stand tall. Pull one knee up toward your chest.'
-  },
-  calf_raise:{
-    vis:[25,27],
-    // Facing the camera, the ankle→heel axis points mostly along camera depth
-    // rather than across the image plane, so a 2D knee-ankle-heel angle barely
-    // changes during a real raise — and heel (29) is also one of the least
-    // reliably-tracked landmarks (near the bottom of frame). Track the ankle
-    // joint's own vertical rise instead, calibrated against this session's own
-    // resting baseline, calibrated fresh each session — a real calf raise visibly
-    // lifts the ankle upward regardless of camera angle or heel visibility.
-    compute(lm){
-      const ankleY=lm[27].y*100;
-      if(calfRaiseBaseline==null){
-        calfRaiseCalSum+=ankleY;calfRaiseCalFrames++;
-        if(calfRaiseCalFrames>=BASELINE_CAL_FRAMES)calfRaiseBaseline=calfRaiseCalSum/calfRaiseCalFrames;
-        return{value:0,label:'Rise',unit:''};
-      }
-      const rise=smoothAngle(Math.max(0,calfRaiseBaseline-ankleY));
-      return{value:rise,label:'Rise',unit:''};
-    },
-    isEngaged:(o,lo)=>o.value>lo,
-    isReleased:(o,lo)=>o.value<lo*0.3,
-    minHoldMs:700,activeLabel:'Up',
-    engagedMsg:'Full plantarflexion — hold at top.',
-    releaseMsg:'Lower slowly over 3 seconds.',
-    shortHoldMsg:'Pause at the top a little longer next time.',
-    readyMsg:'Rise fully onto tiptoes. Pause at the top for 1 second.'
   },
   mckenzie:{
     vis:[11,12,23,24],
@@ -3075,46 +3012,23 @@ const HOLD_CFG={
     shortHoldMsg:'Pause a moment at the bottom for full credit.',
     readyMsg:'Bend both knees into a shallow squat, keeping knees behind your toes.'
   },
-  toe_raise:{
-    vis:[27,31],
-    // Mirror image of calf_raise's fix: dorsiflexion lifts the forefoot/toe
-    // while the heel and ankle stay put, so track the toe landmark's own
-    // vertical rise from a session-calibrated baseline rather than a 2D angle
-    // (which has the same camera-depth blind spot calf_raise's old version had).
+  wrist_flex:{
+    vis:[13,15,19],
+    // The forearm-wrist-index angle is a genuine, real wrist flexion/extension
+    // measurement (not a proxy) — but the index-finger landmark is small and
+    // farther from the camera than the big-joint exercises in this app, so
+    // expect this one to need more lighting/framing care and possibly a
+    // threshold retune after live testing, same as the other new exercises did.
     compute(lm){
-      const toeY=lm[31].y*100;
-      if(toeRaiseBaseline==null){
-        toeRaiseCalSum+=toeY;toeRaiseCalFrames++;
-        if(toeRaiseCalFrames>=BASELINE_CAL_FRAMES)toeRaiseBaseline=toeRaiseCalSum/toeRaiseCalFrames;
-        return{value:0,label:'Lift',unit:''};
-      }
-      const lift=smoothAngle(Math.max(0,toeRaiseBaseline-toeY));
-      return{value:lift,label:'Lift',unit:''};
+      return{value:smoothAngle(Math.max(0,180-angleDeg(lm[13],lm[15],lm[19]))),label:'Wrist Flex',unit:'°'};
     },
     isEngaged:(o,lo)=>o.value>lo,
     isReleased:(o,lo)=>o.value<lo*0.3,
-    minHoldMs:600,activeLabel:'Up',
-    engagedMsg:'Full dorsiflexion — hold at the top.',
-    releaseMsg:'Lower your toes back down with control.',
-    shortHoldMsg:'Pause at the top a little longer next time.',
-    readyMsg:'Keep your heel down and lift your toes up toward your shin.'
-  },
-  hip_abduction:{
-    vis:[23,24,25],
-    // Same angleFromVertical pattern already proven for neck_tilt/side_bend —
-    // a leg swinging out sideways is a clean lateral (x/y-plane) motion from a
-    // front-facing camera, so no depth-axis blind spot here.
-    compute(lm){
-      const hipMid={x:(lm[23].x+lm[24].x)/2,y:(lm[23].y+lm[24].y)/2};
-      return{value:smoothAngle(angleFromVertical(hipMid,lm[25])),label:'Leg Lift',unit:'°'};
-    },
-    isEngaged:(o,lo)=>o.value>lo,
-    isReleased:(o,lo)=>o.value<lo*0.35,
-    minHoldMs:1200,activeLabel:'Lifted',
-    engagedMsg:'Good lift — hold 2 seconds, keep your hips level.',
-    releaseMsg:'Lower with control and repeat.',
-    shortHoldMsg:'Hold the lift a little longer for full credit.',
-    readyMsg:'Stand tall, lift one leg out to the side without leaning.'
+    minHoldMs:1000,activeLabel:'Flexed',
+    engagedMsg:'Good wrist flexion — hold 2 seconds.',
+    releaseMsg:'Straighten your wrist and repeat.',
+    shortHoldMsg:'Hold the flex a little longer for full credit.',
+    readyMsg:'Extend your arm forward, then bend your wrist up and down.'
   }
 };
 function runHold(det,lm){
@@ -3135,76 +3049,28 @@ function runHold(det,lm){
     updateScore(idle?0:scoreHold(o.value,lo,hi));
   }
 }
-// Shoulder rolls are a circular motion, not a hinge that swings between two
-// fixed angles. A real roll keeps the elbow close to the body the whole
-// time, so tracking the elbow-around-shoulder vector (the old approach)
-// barely moved and rarely crossed its own count thresholds — the part that
-// actually traces a circle is the shoulder joint itself (elevation →
-// retraction → depression → protraction), orbiting its own average
-// position. Track that directly: a slow-EMA "center" for the shoulder
-// midpoint, then the cumulative angular sweep of the shoulder around that
-// center (same technique as runAnkleCircle, self-referencing instead of
-// anchored to a second joint).
-function runShoulderRoll(lm){
-  if(!requireVisible(lm,11,12))return;
-  const mid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
-  if(shoulderRollCenter==null)shoulderRollCenter={x:mid.x,y:mid.y};
-  else{
-    shoulderRollCenter.x+=(mid.x-shoulderRollCenter.x)*0.015;
-    shoulderRollCenter.y+=(mid.y-shoulderRollCenter.y)*0.015;
-  }
-  const dx=mid.x-shoulderRollCenter.x,dy=mid.y-shoulderRollCenter.y;
-  const radius=Math.hypot(dx,dy);
-  const theta=Math.atan2(dy,dx);
-  if(shoulderRollPrevTheta!=null&&radius>0.008){
-    let delta=theta-shoulderRollPrevTheta;
-    if(delta>Math.PI)delta-=2*Math.PI;
-    if(delta<-Math.PI)delta+=2*Math.PI;
-    shoulderRollAccum+=delta;
-  }
-  shoulderRollPrevTheta=theta;
-  const sweptDeg=Math.abs(shoulderRollAccum)*180/Math.PI;
-  setAngle(Math.min(sweptDeg,360),'Rotation');
-  const moving=!trackStillness(sweptDeg);
-  updateScore(moving?96:0);
-  setFB(moving?'Good circle — keep rolling!':'Roll shoulders in large backward circles. Full range.',moving?'good':'warn');
-  setPhase('Rolling ('+Math.round(Math.min(sweptDeg,360))+'°)');
-  if(sweptDeg>=330){doRep();shoulderRollAccum=0;}
-}
-
-// Cumulative angular sweep (not a threshold crossing) — genuinely different
-// geometry from every other detector, kept bespoke.
-function runAnkleCircle(lm){
-  if(!requireVisible(lm,27,31))return;
-  const ankle=lm[27],foot=lm[31];
-  const theta=Math.atan2(foot.y-ankle.y,foot.x-ankle.x);
-  if(ankleCirclePrevTheta!=null){
-    let delta=theta-ankleCirclePrevTheta;
-    if(delta>Math.PI)delta-=2*Math.PI;
-    if(delta<-Math.PI)delta+=2*Math.PI;
-    ankleCircleAccum+=delta;
-  }
-  ankleCirclePrevTheta=theta;
-  const sweptDeg=Math.abs(ankleCircleAccum)*180/Math.PI;
-  setAngle(Math.min(sweptDeg,360),'Rotation');
-  const radius=Math.hypot(foot.x-ankle.x,foot.y-ankle.y);
-  const angularSpeed=trackStillness(sweptDeg)?0:1; // reuses the same stillness window on cumulative sweep
-  const moving=radius>0.025&&angularSpeed>0;
-  updateScore(moving?96:0);
-  setFB(moving?'Good circular motion — keep going.':'Rotate your ankle to begin — make the circle bigger.',moving?'good':'warn');
-  setPhase('Circling ('+Math.round(Math.min(sweptDeg,360))+'°)');
-  if(sweptDeg>=340){doRep();ankleCircleAccum=0;}
-}
-
-
 // Bilateral hold with a symmetry check — genuinely different from the single-
 // limb hold engine (two angles + a left/right error term), kept bespoke.
 // Wrists (not elbows) drive the angle — they stay visible more reliably than
-// elbows when arms are fully overhead (elbows are prone to self-occlusion/
-// frame-edge clipping right at the top of the movement, which used to silently
-// freeze tracking exactly when a rep should complete).
+// elbows when arms are fully overhead/out to the sides (elbows are prone to
+// self-occlusion/frame-edge clipping right at the top of the movement, which
+// used to silently freeze tracking exactly when a rep should complete).
+// Shared by both bilateral-arm exercises (overhead raise, lateral raise) —
+// same geometry (hip-shoulder-wrist angle + symmetry check), only the target
+// angle range and the direction-specific coaching text differ.
+const BILATERAL_CFG={
+  bilateral_raise:{
+    readyMsg:'Raise both arms forward and up together, nice and slow.',
+    engagedMsg:'Good — both arms raised overhead. Hold 2 seconds.'
+  },
+  lateral_raise:{
+    readyMsg:'Raise both arms out to the sides, up to shoulder height, nice and slow.',
+    engagedMsg:'Good — both arms at shoulder height. Hold 2 seconds.'
+  }
+};
 const bilateralArmCheck=makeGracedVisibilityCheck(15,'Step back so both raised arms stay fully in frame.');
 function runBilateralRaise(lm){
+  const cfg=BILATERAL_CFG[sessEx.det];
   if(!requireVisible(lm,11,12,23,24))return;
   const{lo,hi}=sessEx.angles.threshold;
   if(!bilateralArmCheck.check(lm,15,16)){setPhase('Adjust Framing');return;}
@@ -3215,7 +3081,7 @@ function runBilateralRaise(lm){
   setAngle(avg,'Arms');
   const idle=isIdleHold(avg,lo,hi);
   if(avg>lo){
-    if(repPhase!=='up'){setRepPhase('up');setFB('Good — both arms raised. Hold 2 seconds.','good');}
+    if(repPhase!=='up'){setRepPhase('up');setFB(cfg.engagedMsg,'good');}
     const penalty=symErr>20?15:0;
     updateScore(idle?0:Math.max(0,scoreHold(avg,lo,hi)-penalty));setPhase('Raised');
     if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
@@ -3223,12 +3089,13 @@ function runBilateralRaise(lm){
     if(phaseAge()>1200){setRepPhase('down');doRep();setFB('Lower complete — raise again with control.','');}
     else{setRepPhase('down');setFB('Lower a little slower for full credit.','warn');}
   }else{
-    setFB('Raise both arms forward and up together, nice and slow.','');
+    setFB(cfg.readyMsg,'');
     updateScore(idle?0:scoreHold(avg,lo,hi));
   }
 }
 
-const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','calf_raise','mckenzie','mini_squat','toe_raise','hip_abduction']);
+const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','wrist_flex']);
+const BILATERAL_DETS=new Set(['bilateral_raise','lateral_raise']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
@@ -3241,9 +3108,7 @@ function analyzeExercise(lm,W,H){
   }
 
   if(HOLD_DETS.has(det))return runHold(det,lm);
-  if(det==='shoulder_roll')return runShoulderRoll(lm);
-  if(det==='ankle_circle')return runAnkleCircle(lm);
-  if(det==='bilateral_raise')return runBilateralRaise(lm);
+  if(BILATERAL_DETS.has(det))return runBilateralRaise(lm);
 }
 </script>
 </body>
