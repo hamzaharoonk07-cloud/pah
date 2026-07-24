@@ -1746,7 +1746,7 @@ const EX=[
     desc:'Feet shoulder-width. Rise onto toes fully. Pause at top. Lower over 3 seconds.',
     note:'Strengthens soleus and gastrocnemius. Reduces plantar fasciitis. Improves gait efficiency.',
     muscles:['Gastrocnemius','Soleus','Tibialis Anterior'],
-    angles:{main:[25,27,29],pivot:27,threshold:{lo:80,hi:110}},
+    angles:{main:[25,27,29],pivot:27,threshold:{lo:3,hi:10}},
     joints:{p:[25,26,27,28,29,30],s:[23,24],lk:[[25,27],[26,28],[27,29],[28,30]],sk:[[23,25],[24,26]]}},
   {name:'Ankle Alphabet',area:'Ankle Proprioception',diff:'Beginner',tags:['Ankle'],reps:10,det:'ankle_circle',
     desc:'Lift one foot. Rotate ankle drawing full circles. Ten repetitions each direction per foot.',
@@ -2377,7 +2377,9 @@ function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];visLossStreak=0;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
-  shoulderRollPrevTheta=null;shoulderRollAccum=0;shoulderRollCenter=null;chinTuckBaseline=null;
+  shoulderRollPrevTheta=null;shoulderRollAccum=0;shoulderRollCenter=null;
+  chinTuckBaseline=null;chinTuckCalSum=0;chinTuckCalFrames=0;
+  calfRaiseBaseline=null;calfRaiseCalSum=0;calfRaiseCalFrames=0;
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2831,7 +2833,9 @@ function spineLeanZ(lm){
   const shoulderZ=(lm[11].z+lm[12].z)/2,hipZ=(lm[23].z+lm[24].z)/2;
   return(shoulderZ-hipZ)*100;
 }
-let chinTuckBaseline=null;
+let chinTuckBaseline=null,chinTuckCalSum=0,chinTuckCalFrames=0;
+let calfRaiseBaseline=null,calfRaiseCalSum=0,calfRaiseCalFrames=0;
+const BASELINE_CAL_FRAMES=12; // ~400ms at 30fps — averages out single-frame noise instead of snapshotting one frame as truth
 let angleRawBuf=[];
 function smoothAngle(val){
   // Median-of-3 rejects single-frame pose-estimation spikes before EMA smoothing —
@@ -3010,7 +3014,11 @@ const HOLD_CFG={
     // it works regardless of a person's resting posture or camera distance.
     compute(lm){
       const headZ=(lm[0].z-(lm[11].z+lm[12].z)/2)*100;
-      if(chinTuckBaseline==null)chinTuckBaseline=headZ;
+      if(chinTuckBaseline==null){
+        chinTuckCalSum+=headZ;chinTuckCalFrames++;
+        if(chinTuckCalFrames>=BASELINE_CAL_FRAMES)chinTuckBaseline=chinTuckCalSum/chinTuckCalFrames;
+        return{value:0,label:'Retraction',unit:''};
+      }
       const retraction=smoothAngle(Math.max(0,chinTuckBaseline-headZ));
       return{value:retraction,label:'Retraction',unit:''};
     },
@@ -3051,12 +3059,26 @@ const HOLD_CFG={
     readyMsg:'Stand tall. Pull one knee up toward your chest.'
   },
   calf_raise:{
-    vis:[25,27,29],
+    vis:[25,27],
+    // Facing the camera, the ankle→heel axis points mostly along camera depth
+    // rather than across the image plane, so a 2D knee-ankle-heel angle barely
+    // changes during a real raise — and heel (29) is also one of the least
+    // reliably-tracked landmarks (near the bottom of frame). Track the ankle
+    // joint's own vertical rise instead, calibrated against this session's own
+    // resting baseline (same pattern as chin_tuck) — a real calf raise visibly
+    // lifts the ankle upward regardless of camera angle or heel visibility.
     compute(lm){
-      return{value:smoothAngle(angleDeg(lm[25],lm[27],lm[29])),label:'Ankle',unit:'°'}; // knee-ankle-toe
+      const ankleY=lm[27].y*100;
+      if(calfRaiseBaseline==null){
+        calfRaiseCalSum+=ankleY;calfRaiseCalFrames++;
+        if(calfRaiseCalFrames>=BASELINE_CAL_FRAMES)calfRaiseBaseline=calfRaiseCalSum/calfRaiseCalFrames;
+        return{value:0,label:'Rise',unit:''};
+      }
+      const rise=smoothAngle(Math.max(0,calfRaiseBaseline-ankleY));
+      return{value:rise,label:'Rise',unit:''};
     },
-    isEngaged:(o,lo,hi)=>o.value>hi,
-    isReleased:(o,lo)=>o.value<lo,
+    isEngaged:(o,lo)=>o.value>lo,
+    isReleased:(o,lo)=>o.value<lo*0.3,
     minHoldMs:700,activeLabel:'Up',
     engagedMsg:'Full plantarflexion — hold at top.',
     releaseMsg:'Lower slowly over 3 seconds.',
