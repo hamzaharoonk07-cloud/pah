@@ -2740,15 +2740,21 @@ function onPoseResults(results){
 // ── FULL-BODY TRACKING OVERLAY — uniform flat-color joints/bones across the
 // whole detected pose (no glow/gradient bloom, no primary/secondary split),
 // matching a clean sports-tracking look rather than a "video game" HUD.
+// Face is reduced to nose + ears only (0,7,8) — the eye/eye-inner/eye-outer/
+// mouth landmarks (1-6,9,10) are dropped entirely: no exercise scores them,
+// they're packed into a tiny screen area where any estimation noise is
+// proportionally huge, and they extrapolate worst of all when a close-up
+// framing puts the shoulders out of frame — exactly what looked "wrong."
 const SKEL_CONNECTIONS=[
-  [0,1],[1,2],[2,3],[3,7],[0,4],[4,5],[5,6],[6,8],
-  [9,10],[11,12],
+  [0,7],[0,8],[7,8],
+  [11,12],
   [11,13],[13,15],[15,17],[15,19],[15,21],
   [12,14],[14,16],[16,18],[16,20],[16,22],
   [11,23],[12,24],[23,24],
   [23,25],[24,26],[25,27],[26,28],
   [27,29],[28,30],[29,31],[30,32]
 ];
+const SKEL_DOT_SKIP=new Set([1,2,3,4,5,6,9,10]);
 function drawSkeleton(ctx,lm,W,H){
   if(!sessEx)return;
 
@@ -2767,7 +2773,7 @@ function drawSkeleton(ctx,lm,W,H){
   });
 
   lm.forEach((pt,i)=>{
-    if(typeof pt.visibility!=='number'||pt.visibility<0.4)return;
+    if(SKEL_DOT_SKIP.has(i)||typeof pt.visibility!=='number'||pt.visibility<0.4)return;
     const x=pt.x*W,y=pt.y*H;
     ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);
     ctx.fillStyle='#00e5a0';ctx.fill();
