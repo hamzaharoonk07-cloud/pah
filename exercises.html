@@ -2734,8 +2734,8 @@ function drawSkeleton(ctx,lm,W,H){
 
   ctx.save();
   ctx.lineCap='round';ctx.lineJoin='round';
-  ctx.strokeStyle='rgba(0,229,160,.85)';
-  ctx.lineWidth=4.5;
+  ctx.strokeStyle='rgba(225,29,72,.9)';
+  ctx.lineWidth=6;
 
   SKEL_CONNECTIONS.forEach(([a,b])=>{
     const A=lm[a],B=lm[b];
@@ -2749,8 +2749,8 @@ function drawSkeleton(ctx,lm,W,H){
   lm.forEach((pt,i)=>{
     if(SKEL_DOT_SKIP.has(i)||typeof pt.visibility!=='number'||pt.visibility<0.4)return;
     const x=pt.x*W,y=pt.y*H;
-    ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);
-    ctx.fillStyle='#00e5a0';ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,10,0,Math.PI*2);
+    ctx.fillStyle='#e11d48';ctx.fill();
   });
 
   ctx.restore();
