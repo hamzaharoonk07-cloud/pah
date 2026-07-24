@@ -465,8 +465,17 @@ a{text-decoration:none;color:inherit}
   transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
   animation:fabPulse 3.2s ease-in-out infinite;
 }
+.coach-fab::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;padding:4px;
+  background:conic-gradient(from 0deg,var(--brand),var(--accent),#00e5a0,var(--brand));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:fabRingSpin 3.5s linear infinite;
+  pointer-events:none;
+}
+@keyframes fabRingSpin{to{transform:rotate(360deg)}}
 @keyframes fabPulse{0%,100%{box-shadow:0 8px 22px rgba(225,29,72,.4),0 0 0 0 rgba(225,29,72,.35)}50%{box-shadow:0 8px 22px rgba(225,29,72,.4),0 0 0 10px rgba(225,29,72,0)}}
-@media(prefers-reduced-motion:reduce){.coach-fab{animation:none}}
+@media(prefers-reduced-motion:reduce){.coach-fab{animation:none}.coach-fab::before{animation:none}}
 .coach-fab:hover{transform:scale(1.07);box-shadow:0 14px 40px rgba(225,29,72,.6)}
 .coach-fab svg{width:24px;height:24px;stroke:#fff;transition:opacity .15s,transform .2s}
 .coach-fab img.ic-chat{width:22px;height:auto;transition:opacity .15s,transform .2s}
