@@ -979,7 +979,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Clinical Tracking · 3D Muscle Map · 9 Exercises
+      Clinical Tracking · 3D Muscle Map · 8 Exercises
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av">P</span>
@@ -1438,7 +1438,6 @@ function easeInOutSine(x){return -(Math.cos(Math.PI*Math.max(0,Math.min(1,x)))-1
 
 const DEMO_DEFS={
   neck_tilt:{kind:'hold',peak:{head:{x:.40,y:.115}},steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold 3 seconds'],highlight:['head','neck']},
-  chin_tuck:{kind:'hold',peak:{head:{x:.5,y:.135}},steps:['Start with a neutral head position','Draw chin straight back — hold 5 seconds'],highlight:['head','neck']},
   shoulder_roll:{kind:'param',period:2400,param:(theta)=>{const dx=.035*Math.sin(theta),dy=-.03*(1-Math.cos(theta));
       return{leftShoulder:{x:DEMO_REST.leftShoulder.x+dx,y:DEMO_REST.leftShoulder.y+dy},rightShoulder:{x:DEMO_REST.rightShoulder.x+dx,y:DEMO_REST.rightShoulder.y+dy},
              leftElbow:{x:DEMO_REST.leftElbow.x+dx*.7,y:DEMO_REST.leftElbow.y+dy*.7},rightElbow:{x:DEMO_REST.rightElbow.x+dx*.7,y:DEMO_REST.rightElbow.y+dy*.7}};},
@@ -1718,12 +1717,6 @@ const EX=[
     muscles:['Upper Trapezius','SCM','Scalenes'],
     angles:{main:[0,7,8],pivot:0,threshold:{lo:15,hi:40}},
     joints:{p:[0,7,8,11,12],s:[13,14],lk:[[0,7],[0,8],[7,8],[7,11],[8,12]],sk:[[11,13],[12,14]]}},
-  {name:'Chin Tucks',area:'Forward Head Posture',diff:'Beginner',tags:['Neck'],reps:15,det:'chin_tuck',
-    desc:'Draw chin straight backward (double-chin motion). Hold 5 seconds. Keep eyes level throughout.',
-    note:'Retrains deep cervical flexors. Reverses forward head posture. Reduces cervicogenic headaches.',
-    muscles:['Deep Cervical Flexors','Longus Colli','Suboccipitals'],
-    angles:{main:[0,7,8],pivot:0,threshold:{lo:3,hi:10}},
-    joints:{p:[0,7,8,11,12],s:[],lk:[[0,7],[0,8],[7,8],[7,11],[8,12]],sk:[]}},
   {name:'Shoulder Rolls',area:'Thoracic and Shoulder',diff:'Beginner',tags:['Shoulder'],reps:15,det:'shoulder_roll',
     desc:'Roll both shoulders in large backward circles. Keep neck relaxed. Full amplitude circles.',
     note:'Releases upper trapezius. Mobilizes glenohumeral joint. Corrects thoracic kyphosis.',
@@ -1790,7 +1783,6 @@ function filterEx(){
 // actually communicates what the exercise is at a glance.
 const ICON_BY_DET={
   neck_tilt:'M6 18L18 6M18 6H10M18 6v8', // lean/tilt arrow
-  chin_tuck:'M9 14l-5-5 5-5M4 9h10a5 5 0 015 5v6', // retraction curl-back
   shoulder_roll:'M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3', // full-circle repeat
   mckenzie:'M4 17Q12 3 20 17', // backward arch
   knee_chest:'M4 20h6a4 4 0 004-4V4M8 8l4-4 4 4', // lift toward chest
@@ -2378,7 +2370,6 @@ function openSession(idx){
   ankleCirclePrevTheta=null;ankleCircleAccum=0;angleRawBuf=[];motionHistory=[];visLossStreak=0;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
   shoulderRollPrevTheta=null;shoulderRollAccum=0;shoulderRollCenter=null;
-  chinTuckBaseline=null;chinTuckCalSum=0;chinTuckCalFrames=0;
   calfRaiseBaseline=null;calfRaiseCalSum=0;calfRaiseCalFrames=0;
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
@@ -2815,7 +2806,6 @@ function spineLeanZ(lm){
   const shoulderZ=(lm[11].z+lm[12].z)/2,hipZ=(lm[23].z+lm[24].z)/2;
   return(shoulderZ-hipZ)*100;
 }
-let chinTuckBaseline=null,chinTuckCalSum=0,chinTuckCalFrames=0;
 let calfRaiseBaseline=null,calfRaiseCalSum=0,calfRaiseCalFrames=0;
 const BASELINE_CAL_FRAMES=12; // ~400ms at 30fps — averages out single-frame noise instead of snapshotting one frame as truth
 let angleRawBuf=[];
@@ -2952,7 +2942,7 @@ function smoothTorso(val){
 // range of motion instead of moving the intended joint. Only applied to
 // exercises where the torso should stay still (excludes side_bend/mckenzie/
 // bilateral_raise, which involve intentional torso movement).
-const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','chin_tuck','shoulder_roll','knee_chest','calf_raise','ankle_circle']);
+const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_roll','knee_chest','calf_raise','ankle_circle']);
 function checkTorsoCompensation(lm){
   if(!safe(lm,11,12,23,24))return false;
   const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
@@ -2984,33 +2974,6 @@ const HOLD_CFG={
     releaseMsg:'Good — return and tilt the other side.',
     shortHoldMsg:'Hold the tilt a little longer for full credit.',
     readyMsg:'Slowly tilt your head to one side, hold 3 seconds.'
-  },
-  chin_tuck:{
-    vis:[0,11,12],
-    // A chin tuck is a front-to-back (depth) head translation, not a left-right
-    // one — measuring nose-vs-ear X position (as this used to) barely changes
-    // during a real chin tuck when facing the camera, since almost none of the
-    // motion happens on that axis. Track the head's Z-depth relative to the
-    // shoulders instead (same axis the posture scan uses for forward-head
-    // detection), calibrated against this exercise's own starting position so
-    // it works regardless of a person's resting posture or camera distance.
-    compute(lm){
-      const headZ=(lm[0].z-(lm[11].z+lm[12].z)/2)*100;
-      if(chinTuckBaseline==null){
-        chinTuckCalSum+=headZ;chinTuckCalFrames++;
-        if(chinTuckCalFrames>=BASELINE_CAL_FRAMES)chinTuckBaseline=chinTuckCalSum/chinTuckCalFrames;
-        return{value:0,label:'Retraction',unit:''};
-      }
-      const retraction=smoothAngle(Math.max(0,chinTuckBaseline-headZ));
-      return{value:retraction,label:'Retraction',unit:''};
-    },
-    isEngaged:(o,lo)=>o.value>lo,
-    isReleased:(o,lo)=>o.value<lo*0.3,
-    minHoldMs:2500,activeLabel:'Tucked',
-    engagedMsg:'Good chin tuck — hold 5 seconds. Keep eyes level.',
-    releaseMsg:'Release and repeat the tuck motion.',
-    shortHoldMsg:'Hold the tuck a little longer for full credit.',
-    readyMsg:'Draw your chin straight backward — like making a double chin.'
   },
   side_bend:{
     vis:[11,12,23,24],
@@ -3047,7 +3010,7 @@ const HOLD_CFG={
     // changes during a real raise — and heel (29) is also one of the least
     // reliably-tracked landmarks (near the bottom of frame). Track the ankle
     // joint's own vertical rise instead, calibrated against this session's own
-    // resting baseline (same pattern as chin_tuck) — a real calf raise visibly
+    // resting baseline, calibrated fresh each session — a real calf raise visibly
     // lifts the ankle upward regardless of camera angle or heel visibility.
     compute(lm){
       const ankleY=lm[27].y*100;
@@ -3072,7 +3035,7 @@ const HOLD_CFG={
     // Backward arching is a front-to-back (depth) spinal movement. A camera
     // facing the user sees almost none of that on the x/y plane — angleDeg
     // there only picks up the small residual vertical foreshortening, not the
-    // real motion — so this needs the z axis (same idea as chin_tuck above).
+    // real motion — so this needs the z axis instead.
     compute(lm){
       const lean=smoothAngle(spineLeanZ(lm));
       return{value:Math.max(0,lean),lean,label:'Spine',unit:''};
@@ -3197,7 +3160,7 @@ function runBilateralRaise(lm){
   }
 }
 
-const HOLD_DETS=new Set(['neck_tilt','chin_tuck','side_bend','knee_chest','calf_raise','mckenzie']);
+const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','calf_raise','mckenzie']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
   const det=sessEx.det;
