@@ -295,6 +295,7 @@ a{text-decoration:none;color:inherit}
 
 /* ═══ SCROLL REVEAL ═══ */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
+.ex-card.reveal,.hosp-card.reveal,.research-card.reveal{transform:translateY(32px) scale(.95)}
 .reveal.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
@@ -524,7 +525,9 @@ a{text-decoration:none;color:inherit}
 .coach-scope-note{font-size:.62rem;color:var(--submuted);padding:0 14px 10px;line-height:1.5;position:relative;z-index:1;background:var(--card1)}
 #chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;position:relative;z-index:1}
 .chat-row{position:relative;z-index:1}
-.cm{max-width:88%;padding:11px 14px;border-radius:14px;font-size:.81rem;line-height:1.65}
+.cm{max-width:88%;padding:11px 14px;border-radius:14px;font-size:.81rem;line-height:1.65;animation:cmIn .35s cubic-bezier(.2,.8,.2,1) both}
+@keyframes cmIn{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.cm{animation:none}}
 .cm.bot{background:var(--w04);align-self:flex-start;border:1px solid var(--w06)}
 .cm.user{background:var(--brand);color:#fff;align-self:flex-end}
 .cm strong{display:block;color:var(--brand);font-size:.72rem;margin-bottom:4px}

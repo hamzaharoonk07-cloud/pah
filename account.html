@@ -122,11 +122,39 @@ button{cursor:pointer;font-family:inherit}
 .acct-profile-grid span{display:block;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
 .acct-profile-grid strong{font-size:.9rem;color:var(--heading);font-weight:700;text-transform:capitalize}
 @media(max-width:540px){.acct-profile-grid{grid-template-columns:1fr 1fr}}
-.acct-logout-btn{width:100%;justify-content:center;padding:12px;font-size:.85rem}
+
+/* CONTINUE-RECOVERY CTA */
+.acct-cta{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  background:linear-gradient(135deg,rgba(225,29,72,.12),rgba(139,92,246,.08));
+  border:1px solid rgba(225,29,72,.25);border-radius:20px;padding:24px 28px;margin-bottom:20px;
+  animation:cardRise .5s .08s cubic-bezier(.2,.8,.2,1) both;
+}
+.acct-cta-text h3{font-size:1.1rem;font-weight:800;margin-bottom:4px}
+.acct-cta-text p{color:var(--muted);font-size:.83rem}
+.acct-cta-btn{
+  display:inline-flex;align-items:center;gap:8px;flex-shrink:0;padding:12px 24px;border-radius:100px;
+  background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;
+  box-shadow:0 10px 28px rgba(225,29,72,.4);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+}
+.acct-cta-btn svg{width:16px;height:16px;transition:transform .2s}
+.acct-cta-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(225,29,72,.55)}
+.acct-cta-btn:hover svg{transform:translateX(3px)}
+.acct-cta-btn:active{transform:scale(.96)}
+
+/* LOGOUT — deliberately last, muted (not a primary action) */
+.acct-logout-row{display:flex;justify-content:center;margin-top:8px}
+.acct-logout-btn{
+  display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:100px;
+  background:transparent;border:1px solid var(--w09);color:var(--submuted);cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;font-weight:600;
+  transition:all .2s;
+}
 .acct-logout-btn svg{transition:transform .2s}
 .acct-logout-btn:hover{color:var(--brand);border-color:rgba(225,29,72,.4);background:rgba(225,29,72,.06)}
 .acct-logout-btn:hover svg{transform:translateX(2px)}
-.acct-logout-btn:active{transform:scale(.98)}
+.acct-logout-btn:active{transform:scale(.96)}
 
 /* STREAK GREETING */
 .dash-greet{
@@ -279,11 +307,19 @@ button{cursor:pointer;font-family:inherit}
         <div><span>Weight</span><strong id="acct-weight">—</strong></div>
         <div><span>Height</span><strong id="acct-height">—</strong></div>
         <div><span>Condition</span><strong id="acct-condition">—</strong></div>
+        <div><span>Member Since</span><strong id="acct-joined">—</strong></div>
       </div>
-      <button class="nav-home acct-logout-btn" onclick="logoutUser()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        Logout
-      </button>
+    </div>
+
+    <div class="acct-cta">
+      <div class="acct-cta-text">
+        <h3>Ready for today's session?</h3>
+        <p id="acct-cta-sub">Pick up where you left off and keep your streak going.</p>
+      </div>
+      <a href="exercises.html#hero" class="acct-cta-btn">
+        Continue Recovery
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
     </div>
 
     <div class="dash-greet" id="dash-greet">
@@ -336,6 +372,13 @@ button{cursor:pointer;font-family:inherit}
         </div>
         <div id="recent-list"><div class="dash-empty">No sessions yet — start your first exercise on the Exercises page.</div></div>
       </div>
+    </div>
+
+    <div class="acct-logout-row">
+      <button class="acct-logout-btn" onclick="logoutUser()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </button>
     </div>
   </div>
 </section>
@@ -464,6 +507,7 @@ function renderDash(){
   document.getElementById('acct-weight').textContent=acc.weight+' kg';
   document.getElementById('acct-height').textContent=acc.height+' cm';
   document.getElementById('acct-condition').textContent=acc.condition||'—';
+  document.getElementById('acct-joined').textContent=acc.joined||'—';
 
   const u=loadU();
   document.getElementById('dash-greet-h').textContent='Good '+time+', '+first;
@@ -471,6 +515,12 @@ function renderDash(){
     u.sessions===0
       ?'Your rehabilitation journey starts today. Complete your first session on the Exercises page.'
       :'You have completed '+u.sessions+' sessions and '+u.reps+' total reps. Keep going!';
+  document.getElementById('acct-cta-sub').textContent=
+    u.sessions===0
+      ?'Your first session is just a click away.'
+      :u.streak>0
+      ?`You're on a ${u.streak}-day streak — don't break it now.`
+      :'Pick up where you left off and start a new streak.';
   renderDash();
 })();
 </script>
