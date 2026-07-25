@@ -427,63 +427,6 @@ a{text-decoration:none;color:inherit}
   .research-grid{grid-template-columns:1fr}
 }
 
-/* ═══ DASHBOARD ═══ */
-.dash-greet{
-  background:rgba(225,29,72,.06);border:1px solid rgba(225,29,72,.16);
-  border-radius:20px;padding:24px 28px;margin-bottom:20px;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;
-}
-.dash-greet-text h3{font-size:1.2rem;font-weight:800;margin-bottom:4px}
-.dash-greet-text p{color:var(--muted);font-size:.83rem}
-.dash-streak-ring{position:relative;width:64px;height:64px;flex-shrink:0}
-.dash-streak-ring svg{width:64px;height:64px}
-.dash-streak-ring-txt{
-  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-}
-.dash-streak-ring-txt strong{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;line-height:1;color:var(--heading)}
-.dash-streak-ring-txt span{font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
-.dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
-.dash-m{
-  background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:22px;
-  transition:border-color .25s,transform .25s,box-shadow .25s;
-  box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px var(--shadow-color);
-}
-.dash-m:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
-.dash-m:active,.dash-card:active{transform:scale(.98)}
-.dash-m-ic{
-  width:36px;height:36px;border-radius:10px;background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.2);
-  display:flex;align-items:center;justify-content:center;margin-bottom:14px;
-}
-.dash-m-ic svg{width:17px;height:17px;stroke:var(--brand)}
-.dash-m-val{font-size:2.1rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;color:var(--heading);line-height:1}
-.dash-m-lbl{font-size:.7rem;color:var(--muted);margin-top:6px}
-.dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.dash-card{background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:22px;box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px var(--shadow-color)}
-.dash-card-t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:18px;display:flex;align-items:center;gap:7px}
-.dash-card-t svg{width:15px;height:15px;stroke:var(--brand)}
-#weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:6px}
-.wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
-.wbar-track{width:100%;background:var(--w03);border-radius:4px;flex:1;position:relative;overflow:hidden}
-.wbar-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--brand),var(--accent));border-radius:4px;transition:height 1.2s cubic-bezier(.2,.8,.2,1)}
-.wbar-lbl{font-size:.6rem;color:var(--muted);font-weight:600}
-#recent-list{display:flex;flex-direction:column;gap:7px}
-.recent-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:11px;background:var(--w03);border:1px solid var(--w05);transition:border-color .2s}
-.recent-row:hover{border-color:rgba(225,29,72,.25)}
-.recent-name{font-weight:700;font-size:.79rem}
-.recent-date{font-size:.6rem;color:var(--muted);margin-top:1px}
-.recent-reps{font-size:.9rem;font-weight:800;color:var(--brand);text-align:right}
-.recent-form{font-size:.6rem;color:var(--muted);text-align:right;margin-top:1px}
-.dash-empty{color:var(--muted);font-size:.78rem;text-align:center;padding:24px 0}
-@media(max-width:1024px){.dash-metrics{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:768px){.dash-grid2{grid-template-columns:1fr}}
-@media(max-width:540px){.dash-metrics{grid-template-columns:1fr 1fr}}
-.acct-profile-card{margin-bottom:20px}
-.acct-profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.acct-profile-grid div{background:var(--w03);border:1px solid var(--w06);border-radius:12px;padding:11px 13px}
-.acct-profile-grid span{display:block;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
-.acct-profile-grid strong{font-size:.86rem;color:var(--heading);font-weight:700;text-transform:capitalize}
-@media(max-width:540px){.acct-profile-grid{grid-template-columns:1fr 1fr}}
-
 /* ═══ FLOATING AI COACH WIDGET ═══ */
 .coach-fab{
   position:fixed;bottom:24px;right:24px;z-index:800;
@@ -970,7 +913,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <a href="#hero" class="nl">Exercises</a>
     <a href="#hospitals" class="nl">Hospitals</a>
     <a href="#research" class="nl">Research</a>
-    <a href="#dashboard" class="nl">Account</a>
+    <a href="account.html" class="nl">Account</a>
     <a href="about.html" class="nl">About</a>
   </div>
   <div class="nav-right">
@@ -983,10 +926,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
       Home
     </a>
-    <button class="nav-home" id="nav-logout" onclick="logoutUser()" style="display:none" title="Log out and clear your profile">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-      Logout
-    </button>
     <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
       <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -1000,9 +939,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <a href="#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
   <a href="#hospitals" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
   <a href="#research" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
-  <a href="#dashboard" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Account</a>
+  <a href="account.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Account</a>
   <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
-  <a href="#" class="nl" id="mob-logout" style="display:none" onclick="logoutUser();return false;">Logout</a>
 </div>
 
 <!-- ══════════ HERO ══════════ -->
@@ -1065,87 +1003,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     </div>
     <div class="who-stats-bar" id="who-stats-bar"></div>
     <div class="research-grid" id="research-grid"></div>
-  </div>
-</section>
-
-<!-- ══════════ DASHBOARD ══════════ -->
-<section class="section" id="dashboard" style="background:linear-gradient(180deg,var(--bg),var(--bg-alt))">
-  <div class="sec-blob" style="width:320px;height:320px;top:-100px;right:-110px;background:radial-gradient(circle,rgba(225,29,72,.14),transparent 70%);animation-delay:-5s"></div>
-  <div class="sec-in">
-    <span class="sec-tag">Your Account</span>
-    <h2 class="sec-h">Profile &amp; <span>Progress</span></h2>
-    <p class="sec-p">Every session you complete is saved on this device. Watch your streak, reps, and form score build over time.</p>
-
-    <div class="dash-card acct-profile-card" id="acct-profile-card" style="display:none">
-      <div class="dash-card-t">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-        Your Profile
-      </div>
-      <div class="acct-profile-grid">
-        <div><span>Name</span><strong id="acct-name">—</strong></div>
-        <div><span>Gender</span><strong id="acct-gender">—</strong></div>
-        <div><span>Age</span><strong id="acct-age">—</strong></div>
-        <div><span>Weight</span><strong id="acct-weight">—</strong></div>
-        <div><span>Height</span><strong id="acct-height">—</strong></div>
-        <div><span>Condition</span><strong id="acct-condition">—</strong></div>
-      </div>
-      <button class="nav-home" onclick="logoutUser()" style="margin-top:16px;width:100%;justify-content:center;padding:11px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        Logout
-      </button>
-    </div>
-
-    <div class="dash-greet" id="dash-greet">
-      <div class="dash-greet-text">
-        <h3 id="dash-greet-h">Welcome to PhysioSync</h3>
-        <p id="dash-greet-p">Your rehabilitation journey starts here.</p>
-      </div>
-      <div class="dash-streak-ring" id="dash-streak-ring">
-        <svg viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="27" fill="none" stroke="var(--w08)" stroke-width="5"/>
-          <circle id="dash-ring-c" cx="32" cy="32" r="27" fill="none" stroke="url(#dashRingGrad)" stroke-width="5"
-            stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 32 32)"
-            style="transition:stroke-dashoffset .8s ease"/>
-          <defs><linearGradient id="dashRingGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e11d48"/><stop offset="100%" stop-color="#fb7185"/></linearGradient></defs>
-        </svg>
-        <div class="dash-streak-ring-txt"><strong id="dash-streak-num">0</strong><span>day streak</span></div>
-      </div>
-    </div>
-
-    <div class="dash-metrics">
-      <div class="dash-m">
-        <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-        <div class="dash-m-val" id="d-sessions">0</div>
-        <div class="dash-m-lbl">Sessions Completed</div>
-      </div>
-      <div class="dash-m">
-        <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-        <div class="dash-m-val" id="d-reps">0</div>
-        <div class="dash-m-lbl">Total Reps Performed</div>
-      </div>
-      <div class="dash-m">
-        <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="dash-m-val" id="d-form">—</div>
-        <div class="dash-m-lbl">Average Form Score</div>
-      </div>
-    </div>
-
-    <div class="dash-grid2">
-      <div class="dash-card">
-        <div class="dash-card-t">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          Weekly Activity
-        </div>
-        <div id="weekly-bars"></div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-t">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Recent Sessions
-        </div>
-        <div id="recent-list"><div class="dash-empty">No sessions yet — start your first exercise above.</div></div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1305,7 +1162,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <a href="#hero">Exercises</a>
         <a href="#hospitals">Hospitals</a>
         <a href="#research">Research</a>
-        <a href="#dashboard">Account</a>
+        <a href="account.html">Account</a>
         <a href="index.html">3D Body Map</a>
       </div>
     </div>
@@ -1672,37 +1529,17 @@ function gateSubmit(e){
   initApp(acc);
 }
 
-function logoutUser(){
-  localStorage.removeItem('pah_acc');
-  location.reload();
-}
-
 function initApp(acc){
   const hr=new Date().getHours();
   const time=hr<12?'morning':hr<17?'afternoon':'evening';
   const first=acc.name.split(' ')[0];
   document.getElementById('nav-greet').style.display='flex';
   document.getElementById('nav-name').textContent=first;
-  document.getElementById('nav-logout').style.display='flex';
-  document.getElementById('mob-logout').style.display='block';
-  document.getElementById('acct-profile-card').style.display='block';
-  document.getElementById('acct-name').textContent=acc.name;
-  document.getElementById('acct-gender').textContent=acc.gender;
-  document.getElementById('acct-age').textContent=acc.age+' yrs';
-  document.getElementById('acct-weight').textContent=acc.weight+' kg';
-  document.getElementById('acct-height').textContent=acc.height+' cm';
-  document.getElementById('acct-condition').textContent=acc.condition||'—';
   document.getElementById('hero-welcome').style.display='inline-flex';
   document.getElementById('hero-time').textContent=time;
   document.getElementById('hero-name').textContent=first;
   document.getElementById('hero-welcome-av').textContent=first.charAt(0).toUpperCase();
   const u=loadU();
-  document.getElementById('dash-greet-h').textContent='Good '+time+', '+first;
-  document.getElementById('dash-greet-p').textContent=
-    u.sessions===0
-      ?'Your rehabilitation journey starts today. Complete your first session above.'
-      :'You have completed '+u.sessions+' sessions and '+u.reps+' total reps. Keep going!';
-  renderDash();
   renderNavStreak();
   greetReturningUser(first,u);
 }
@@ -1718,38 +1555,6 @@ function renderNavStreak(){
 // ═══════════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════
-function renderDash(){
-  const u=loadU();
-  document.getElementById('dash-streak-num').textContent=u.streak;
-  const ringPerc=Math.min(u.streak/14,1); // full ring at a 2-week streak
-  document.getElementById('dash-ring-c').style.strokeDashoffset=169.6*(1-ringPerc);
-  document.getElementById('d-sessions').textContent=u.sessions;
-  document.getElementById('d-reps').textContent=u.reps;
-  const avg=u.formScores.length
-    ?Math.round(u.formScores.reduce((a,b)=>a+b,0)/u.formScores.length)
-    :null;
-  document.getElementById('d-form').textContent=avg!=null?avg+'%':'—';
-
-  const days=['M','T','W','T','F','S','S'];
-  const maxR=Math.max(...u.weeklyReps,1);
-  document.getElementById('weekly-bars').innerHTML=u.weeklyReps.map((r,i)=>`
-    <div class="wbar">
-      <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(r/maxR*100)}%"></div></div>
-      <div class="wbar-lbl">${days[i]}</div>
-    </div>`).join('');
-
-  const rl=document.getElementById('recent-list');
-  if(!u.recent||!u.recent.length){
-    rl.innerHTML='<div class="dash-empty">No sessions yet — start your first exercise above.</div>';
-    return;
-  }
-  rl.innerHTML=u.recent.slice(0,6).map(r=>`
-    <div class="recent-row">
-      <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.date}</div></div>
-      <div><div class="recent-reps">${r.reps} reps</div><div class="recent-form">${r.form}% form</div></div>
-    </div>`).join('');
-}
-
 // ── Returning-user greeting (once per browser session) ──
 function greetReturningUser(first,u){
   if(sessionStorage.getItem('pah_greeted'))return;
@@ -2493,7 +2298,7 @@ function endSession(){
     u.recent=u.recent||[];
     u.recent.unshift({name:sessEx.name,reps:sessReps,form:avgF,date:now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})});
     if(u.recent.length>10)u.recent=u.recent.slice(0,10);
-    saveU(u);renderDash();renderNavStreak();
+    saveU(u);renderNavStreak();
     toast('Session saved — '+sessReps+' reps at '+avgF+'% form.');
   }
 }
