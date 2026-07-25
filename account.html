@@ -6,72 +6,21 @@
 <title>Your Account – PhysioSync</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
+<link rel="stylesheet" href="styles.css">
+<script src="reveal.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script>
 <style>
-:root{
-  --brand:#e11d48;--accent:#fb7185;--green:#12d999;--yellow:#f5a524;--blue:#3b82f6;
-  --purple:#a78bfa;
-  --card:rgba(17,17,22,1);--text:#f2f2f5;--muted:#a3a7b7;--submuted:#75798c;
-  --bg:#08080b;--bg-strong:#000;--bg-alt:#0d0812;--heading:#fbfbfd;--glass:rgba(7,7,10,.9);
-  --w03:rgba(255,255,255,.035);--w04:rgba(255,255,255,.045);--w05:rgba(255,255,255,.06);
-  --w06:rgba(255,255,255,.07);--w07:rgba(255,255,255,.085);--w08:rgba(255,255,255,.1);
-  --w09:rgba(255,255,255,.11);--w10:rgba(255,255,255,.13);--w12:rgba(255,255,255,.16);
-  --card1:#131318;--card2:#141419;--shadow-color:rgba(0,0,0,.55);
-}
-:root[data-theme="light"]{
-  --card:#ffffff;--text:#1a1a22;--muted:#5b5f70;--submuted:#828596;
-  --bg:#faf9fb;--bg-strong:#ffffff;--bg-alt:#f2f1f6;--heading:#0c0c12;--glass:rgba(255,255,255,.82);
-  --w03:rgba(20,20,30,.03);--w04:rgba(20,20,30,.04);--w05:rgba(20,20,30,.05);
-  --w06:rgba(20,20,30,.06);--w07:rgba(20,20,30,.075);--w08:rgba(20,20,30,.085);
-  --w09:rgba(20,20,30,.1);--w10:rgba(20,20,30,.11);--w12:rgba(20,20,30,.13);
-  --card1:#ffffff;--card2:#ffffff;--shadow-color:rgba(20,20,35,.1);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;width:100%}
-body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;min-height:100vh;width:100%;max-width:100vw;transition:background .3s ease,color .3s ease;animation:pageFadeIn .5s ease both}
-@keyframes pageFadeIn{from{opacity:0}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){body{animation:none}}
-h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
+/* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
+   blobFloat/gradShift keyframes, .reveal base, and .footer/.f-* now live in
+   styles.css. This block keeps only account.html-specific layout/components. */
 img{max-width:100%;display:block}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:inherit}
+.nl{position:relative}
 
-/* Ambient edge glow — same signature motion used across the app */
-.edge-glow{position:fixed;z-index:9998;pointer-events:none;
-  background:linear-gradient(90deg,var(--brand),var(--purple),var(--blue),var(--accent),var(--brand));
-  background-size:300% 100%;animation:edgeGlowShift 8s linear infinite;
-  box-shadow:0 0 16px rgba(225,29,72,.55)}
-.edge-glow.et{top:0;left:0;right:0;height:3px}
-.edge-glow.eb{bottom:0;left:0;right:0;height:3px}
-.edge-glow.el{top:0;bottom:0;left:0;width:3px;background:linear-gradient(180deg,var(--brand),var(--purple),var(--blue),var(--accent),var(--brand));background-size:100% 300%;animation-name:edgeGlowShiftV}
-.edge-glow.er{top:0;bottom:0;right:0;width:3px;background:linear-gradient(180deg,var(--brand),var(--purple),var(--blue),var(--accent),var(--brand));background-size:100% 300%;animation-name:edgeGlowShiftV}
-@keyframes edgeGlowShift{0%{background-position:0% 0}100%{background-position:300% 0}}
-@keyframes edgeGlowShiftV{0%{background-position:0 0%}100%{background-position:0 300%}}
-@media(prefers-reduced-motion:reduce){.edge-glow{animation:none}}
-
-/* NAVBAR */
-#navbar{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:62px;background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--w06);gap:12px}
-.nav-logo{display:flex;align-items:center;gap:9px}
-.brand-icon,.brand-text{width:auto;display:block}
-.brand-text-light{display:none}
-:root[data-theme="light"] .brand-text-dark{display:none}
-:root[data-theme="light"] .brand-text-light{display:block}
-.nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
-.nl{position:relative;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.74rem;letter-spacing:.04em;padding:6px 13px;border-radius:8px;transition:all .2s}
-.nl:hover{color:var(--heading);background:var(--w06)}
-.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.nav-home{padding:6px 14px;border-radius:8px;border:1px solid var(--w10);background:transparent;appearance:none;-webkit-appearance:none;cursor:pointer;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:5px}
-.nav-home:hover{color:var(--heading);border-color:var(--w12)}
-.theme-tgl{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--w05);border:1px solid var(--w10);color:var(--heading);cursor:pointer;transition:all .2s;flex-shrink:0}
-.theme-tgl:hover{background:var(--w08);border-color:var(--w12);transform:scale(1.1) rotate(-8deg)}
-.theme-tgl:active{transform:scale(.9)}
-.theme-tgl svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer}
-.ham span{display:block;width:20px;height:2px;background:var(--heading);border-radius:1px}
-.mob-menu{display:none;position:fixed;top:62px;left:0;right:0;z-index:499;background:var(--glass);border-bottom:1px solid var(--w06);padding:14px 20px;flex-direction:column;gap:4px}
-.mob-menu.open{display:flex}
-.mob-menu .nl{font-size:.88rem;padding:11px 12px}
+/* NAVBAR (account.html keeps its own 860px collapse breakpoint, matching
+   about.html — narrower than the other pages' 768px, pre-existing behavior) */
 @media(max-width:860px){.nav-links{display:none}.nav-home{display:none}.ham{display:flex}}
 
 /* HERO */
@@ -81,15 +30,12 @@ button{cursor:pointer;font-family:inherit}
 .hero-blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0;animation:blobFloat 16s ease-in-out infinite}
 .hero-blob.b1{width:420px;height:420px;top:-180px;left:-120px;background:radial-gradient(circle,rgba(225,29,72,.28),transparent 70%)}
 .hero-blob.b2{width:380px;height:380px;top:-120px;right:-140px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%);animation-delay:-6s}
-@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.08)}}
 @media(prefers-reduced-motion:reduce){.hero-blob{animation:none}}
 :root[data-theme="light"] .hero-blob,:root[data-theme="light"] .sec-blob{opacity:.4}
 .ab-tag{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brand);border:1px solid rgba(225,29,72,.3);padding:5px 16px;border-radius:100px;background:rgba(225,29,72,.07);margin-bottom:18px}
 .ab-h{font-size:clamp(1.9rem,5.5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:14px;letter-spacing:-.03em;animation:heroFadeUp .8s .1s cubic-bezier(.2,.8,.2,1) both}
-@keyframes heroFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.ab-h{animation:none}}
 .ab-h span{background:linear-gradient(100deg,var(--brand),var(--accent),var(--purple),var(--brand));background-size:300% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradShift 7s ease-in-out infinite}
-@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @media(prefers-reduced-motion:reduce){.ab-h span{animation:none}}
 .ab-sub{color:var(--muted);font-size:1rem;line-height:1.8;max-width:560px;margin:0 auto}
 
@@ -98,9 +44,12 @@ button{cursor:pointer;font-family:inherit}
 .sec-blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:blobFloat 18s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.sec-blob{animation:none}}
 .sec-in{max-width:1000px;margin:0 auto;position:relative;z-index:1}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
-.reveal.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+/* #acct-content uses .load-in, not .reveal — it fades in unconditionally on
+   load once the profile is ready, not on scroll (see init() below), so it's
+   named separately to avoid implying scroll-reveal semantics it doesn't have. */
+.load-in{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
+.load-in.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.load-in{opacity:1;transform:none;transition:none}}
 
 /* NOT LOGGED IN STATE */
 .acct-empty{text-align:center;padding:60px 24px;max-width:440px;margin:0 auto}
@@ -110,12 +59,12 @@ button{cursor:pointer;font-family:inherit}
 .acct-empty-ic svg{width:28px;height:28px;stroke:var(--brand)}
 .acct-empty h2{font-size:1.3rem;margin-bottom:10px}
 .acct-empty p{color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:24px}
-.acct-empty-btn{display:inline-block;padding:13px 30px;border-radius:100px;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.87rem;box-shadow:0 10px 32px rgba(225,29,72,.4);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
+.acct-empty-btn{display:inline-block;padding:13px 30px;border-radius:var(--r-pill);background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.87rem;box-shadow:var(--shadow-glow-brand);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s}
 .acct-empty-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 14px 40px rgba(225,29,72,.55)}
 .acct-empty-btn:active{transform:scale(.97)}
 
 /* PROFILE CARD */
-.dash-card{background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:22px;box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px var(--shadow-color);transition:border-color .25s,transform .25s,box-shadow .25s}
+.dash-card{background:var(--card2);border:1px solid var(--w07);border-radius:var(--r-lg);padding:22px;box-shadow:var(--shadow-md);transition:border-color .25s,transform .25s,box-shadow .25s}
 .dash-card:active{transform:scale(.99)}
 .dash-card-t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:18px;display:flex;align-items:center;gap:8px}
 .dash-card-t svg{width:16px;height:16px;stroke:var(--brand)}
@@ -131,16 +80,16 @@ button{cursor:pointer;font-family:inherit}
 .acct-cta{
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
   background:linear-gradient(135deg,rgba(225,29,72,.12),rgba(139,92,246,.08));
-  border:1px solid rgba(225,29,72,.25);border-radius:20px;padding:24px 28px;margin-bottom:20px;
+  border:1px solid rgba(225,29,72,.25);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:20px;
   animation:cardRise .5s .08s cubic-bezier(.2,.8,.2,1) both;
 }
 .acct-cta-text h3{font-size:1.1rem;font-weight:800;margin-bottom:4px}
 .acct-cta-text p{color:var(--muted);font-size:.83rem}
 .acct-cta-btn{
-  display:inline-flex;align-items:center;gap:8px;flex-shrink:0;padding:12px 24px;border-radius:100px;
+  display:inline-flex;align-items:center;gap:8px;flex-shrink:0;padding:12px 24px;border-radius:var(--r-pill);
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
   font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;
-  box-shadow:0 10px 28px rgba(225,29,72,.4);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+  box-shadow:var(--shadow-glow-brand);transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
 }
 .acct-cta-btn svg{width:16px;height:16px;transition:transform .2s}
 .acct-cta-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(225,29,72,.55)}
@@ -163,25 +112,23 @@ button{cursor:pointer;font-family:inherit}
 /* STREAK GREETING */
 .dash-greet{
   background:rgba(225,29,72,.06);border:1px solid rgba(225,29,72,.16);
-  border-radius:20px;padding:24px 28px;margin-bottom:20px;
+  border-radius:var(--r-lg);padding:24px 28px;margin-bottom:20px;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;
   animation:cardRise .5s .05s cubic-bezier(.2,.8,.2,1) both;
 }
 @keyframes cardRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .dash-greet-text h3{font-size:1.2rem;font-weight:800;margin-bottom:4px}
 .dash-greet-text p{color:var(--muted);font-size:.83rem}
-.dash-streak-ring{position:relative;width:64px;height:64px;flex-shrink:0}
-.dash-streak-ring svg{width:64px;height:64px}
-.dash-streak-ring-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.dash-streak-ring-txt strong{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;line-height:1;color:var(--heading)}
-.dash-streak-ring-txt span{font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.dash-streak-ring{position:relative;width:116px;height:116px;flex-shrink:0}
+.dash-streak-ring svg{width:116px;height:116px}
+.dash-streak-ring svg circle{transition:stroke-dashoffset 1s ease .3s}
 
 /* METRICS */
 .dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
 .dash-m{
-  background:var(--card2);border:1px solid var(--w07);border-radius:18px;padding:22px;
+  background:var(--card2);border:1px solid var(--w07);border-radius:var(--r-lg);padding:22px;
   transition:border-color .25s,transform .25s,box-shadow .25s;
-  box-shadow:0 1px 0 var(--w05) inset,0 20px 36px -28px var(--shadow-color);
+  box-shadow:var(--shadow-md);
   animation:cardRise .5s .1s cubic-bezier(.2,.8,.2,1) both;
 }
 .dash-m:hover{border-color:rgba(225,29,72,.3);transform:translateY(-3px)}
@@ -231,7 +178,7 @@ button{cursor:pointer;font-family:inherit}
 /* SESSION DETAIL MODAL */
 .sd-popup{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);animation:sdFade .2s ease both}
 @keyframes sdFade{from{opacity:0}to{opacity:1}}
-.sd-card{background:var(--card1);border:1px solid var(--w10);border-radius:20px;padding:28px;max-width:100%;width:420px;box-shadow:0 24px 70px var(--shadow-color);max-height:85vh;overflow-y:auto;animation:sdRise .3s cubic-bezier(.2,.8,.2,1) both}
+.sd-card{background:var(--card1);border:1px solid var(--w10);border-radius:var(--r-xl);padding:28px;max-width:100%;width:420px;box-shadow:0 24px 70px var(--shadow-color);max-height:85vh;overflow-y:auto;animation:sdRise .3s cubic-bezier(.2,.8,.2,1) both}
 @keyframes sdRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.sd-popup,.sd-card{animation:none}}
 .sd-card h3{margin:0 0 4px;font-size:1.15rem;color:var(--heading)}
@@ -248,28 +195,15 @@ button{cursor:pointer;font-family:inherit}
 .sd-close:hover{box-shadow:0 10px 28px rgba(225,29,72,.4);transform:translateY(-1px)}
 .sd-close:active{transform:scale(.97)}
 
-/* FOOTER */
+/* FOOTER — .footer/.footer-cols/.f-bot keep page-specific max-width:1200px
+   overrides (styles.css's shared rules use exercises.html's 1320px); the
+   rest was byte-identical to the shared rules and removed. */
 .footer{background:var(--bg-strong);border-top:1px solid var(--w06);padding:48px 24px 24px;position:relative;z-index:1}
 .footer-cols{max-width:1200px;margin:0 auto 30px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
 @media(max-width:768px){.footer-cols{grid-template-columns:1fr 1fr}}
 @media(max-width:540px){.footer-cols{grid-template-columns:1fr}}
-.f-brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .f-brand img.brand-logo{width:auto}
-.f-desc{color:var(--muted);font-size:.79rem;line-height:1.7;max-width:260px}
-.f-hd{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--heading);margin-bottom:13px}
-.f-lks{display:flex;flex-direction:column;gap:9px}
-.f-lks a,.f-lks span{color:var(--submuted);font-size:.79rem;transition:color .2s}
-.f-lks a:hover{color:var(--heading)}
 .f-bot{max-width:1200px;margin:0 auto;padding-top:16px;border-top:1px solid var(--w05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.f-bot span{color:var(--submuted);font-size:.69rem}
-.f-soc{display:flex;gap:12px}
-.f-soc a{width:30px;height:30px;border-radius:50%;background:var(--w05);border:1px solid var(--w08);display:flex;align-items:center;justify-content:center;color:var(--submuted);transition:all .2s}
-.f-soc a svg{width:15px;height:15px}
-.f-soc a:hover{color:#fff;background:var(--brand);border-color:var(--brand);transform:translateY(-2px)}
-.f-soc a:active{transform:scale(.9)}
-.f-bot-lks{display:flex;gap:18px}
-.f-bot-lks a{color:var(--submuted);font-size:.69rem;transition:color .2s}
-.f-bot-lks a:hover{color:var(--heading)}
 </style>
 </head>
 <body>
@@ -332,7 +266,7 @@ button{cursor:pointer;font-family:inherit}
 </section>
 
 <!-- ACCOUNT CONTENT -->
-<section class="section reveal" id="acct-content" style="display:none">
+<section class="section load-in" id="acct-content" style="display:none">
   <div class="sec-blob" style="width:320px;height:320px;top:-100px;right:-110px;background:radial-gradient(circle,rgba(225,29,72,.14),transparent 70%)"></div>
   <div class="sec-in">
 
@@ -363,15 +297,23 @@ button{cursor:pointer;font-family:inherit}
         <h3 id="dash-greet-h">Welcome to PhysioSync</h3>
         <p id="dash-greet-p">Your rehabilitation journey starts here.</p>
       </div>
-      <div class="dash-streak-ring" id="dash-streak-ring">
-        <svg viewBox="0 0 64 64">
-          <circle cx="32" cy="32" r="27" fill="none" stroke="var(--w08)" stroke-width="5"/>
-          <circle id="dash-ring-c" cx="32" cy="32" r="27" fill="none" stroke="url(#dashRingGrad)" stroke-width="5"
-            stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 32 32)"
-            style="transition:stroke-dashoffset 1s ease .3s"/>
-          <defs><linearGradient id="dashRingGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e11d48"/><stop offset="100%" stop-color="#fb7185"/></linearGradient></defs>
+      <div class="dash-streak-ring" id="dash-streak-ring" title="Streak (outer) · Sessions (middle) · Avg form score (inner)">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="var(--w09)" stroke-width="5"/>
+          <circle id="dash-ring-streak" cx="50" cy="50" r="44" fill="none" stroke="url(#dashRingGradStreak)" stroke-width="5"
+            stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="32" fill="none" stroke="var(--w09)" stroke-width="5"/>
+          <circle id="dash-ring-sessions" cx="50" cy="50" r="32" fill="none" stroke="url(#dashRingGradSessions)" stroke-width="5"
+            stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 50 50)"/>
+          <circle cx="50" cy="50" r="20" fill="none" stroke="var(--w09)" stroke-width="5"/>
+          <circle id="dash-ring-form" cx="50" cy="50" r="20" fill="none" stroke="url(#dashRingGradForm)" stroke-width="5"
+            stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="125.7" transform="rotate(-90 50 50)"/>
+          <defs>
+            <linearGradient id="dashRingGradStreak" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e11d48"/><stop offset="100%" stop-color="#fb7185"/></linearGradient>
+            <linearGradient id="dashRingGradSessions" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
+            <linearGradient id="dashRingGradForm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#12d999"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
+          </defs>
         </svg>
-        <div class="dash-streak-ring-txt"><strong id="dash-streak-num">0</strong><span>day streak</span></div>
       </div>
     </div>
 
@@ -511,34 +453,23 @@ function logoutUser(){
   location.href='exercises.html';
 }
 
-// Animates a number from 0 up to its real value instead of just appearing -
-// small touch, but static numbers are one of the more obvious "flat" spots.
-function countUp(el,end,opts){
-  opts=opts||{};
-  const suffix=opts.suffix||'',duration=opts.duration||900;
-  const start=performance.now();
-  function tick(now){
-    const t=Math.min((now-start)/duration,1);
-    const eased=1-Math.pow(1-t,3); // ease-out cubic
-    el.textContent=Math.round(end*eased)+suffix;
-    if(t<1)requestAnimationFrame(tick);
-  }
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=end+suffix;return;}
-  requestAnimationFrame(tick);
-}
+// countUp is shared in reveal.js (previously duplicated).
 
 function renderDash(){
   const u=loadU();
-  countUp(document.getElementById('dash-streak-num'),u.streak);
-  const ringPerc=Math.min(u.streak/14,1); // full ring at a 2-week streak
-  document.getElementById('dash-ring-c').style.strokeDashoffset=169.6*(1-ringPerc);
+  const streakPerc=Math.min(u.streak/14,1); // full ring at a 2-week streak
+  document.getElementById('dash-ring-streak').style.strokeDashoffset=276.5*(1-streakPerc);
   countUp(document.getElementById('d-sessions'),u.sessions);
+  const sessionsPerc=Math.min(u.sessions/20,1); // full ring at 20 sessions completed
+  document.getElementById('dash-ring-sessions').style.strokeDashoffset=201.1*(1-sessionsPerc);
   countUp(document.getElementById('d-reps'),u.reps);
   const avg=u.formScores.length
     ?Math.round(u.formScores.reduce((a,b)=>a+b,0)/u.formScores.length)
     :null;
   if(avg!=null)countUp(document.getElementById('d-form'),avg,{suffix:'%'});
   else document.getElementById('d-form').textContent='—';
+  const formPerc=avg!=null?avg/100:0; // form score is already a real 0-100%, no arbitrary cap needed
+  document.getElementById('dash-ring-form').style.strokeDashoffset=125.7*(1-formPerc);
   renderActivity();
   renderRecent();
 }
@@ -699,25 +630,10 @@ function showSessionDetail(idx){
       ?`You're on a ${u.streak}-day streak — don't break it now.`
       :'Pick up where you left off and start a new streak.';
   renderDash();
+  initScrollReveal('.dash-m,.recent-row',{stagger:60});
 })();
 
-(function initMagnetic(){
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  if(matchMedia('(hover: none)').matches)return;
-  document.querySelectorAll('.acct-cta-btn,.acct-empty-btn').forEach(el=>{
-    el.addEventListener('mousemove',e=>{
-      const r=el.getBoundingClientRect();
-      const tx=(e.clientX-r.left-r.width/2)*.25;
-      const ty=(e.clientY-r.top-r.height/2)*.25;
-      el.style.transition='';
-      el.style.transform=`translate(${tx}px,${ty}px)`;
-    });
-    el.addEventListener('mouseleave',()=>{
-      el.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';
-      el.style.transform='';
-    });
-  });
-})();
+initMagnetic('.acct-cta-btn,.acct-empty-btn');
 
 (function initBlobParallax(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
