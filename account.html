@@ -190,6 +190,14 @@ button{cursor:pointer;font-family:inherit}
 .dash-m-lbl{font-size:.7rem;color:var(--muted);margin-top:6px}
 .dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .dash-grid2 .dash-card{animation:cardRise .5s .28s cubic-bezier(.2,.8,.2,1) both}
+.week-nav{display:flex;gap:4px}
+.week-nav-btn{width:24px;height:24px;border-radius:50%;background:var(--w04);border:1px solid var(--w08);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.week-nav-btn svg{width:12px;height:12px}
+.week-nav-btn:hover:not(:disabled){background:var(--w08);color:var(--heading);border-color:var(--w10)}
+.week-nav-btn:active:not(:disabled){transform:scale(.9)}
+.week-nav-btn:disabled{opacity:.35;cursor:not-allowed}
+.week-range{font-size:.68rem;color:var(--muted);margin:-10px 0 14px;text-align:center}
+.recent-row{cursor:pointer}
 #weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:6px}
 .wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
 .wbar-track{width:100%;background:var(--w03);border-radius:4px;flex:1;position:relative;overflow:hidden}
@@ -206,6 +214,26 @@ button{cursor:pointer;font-family:inherit}
 @media(max-width:1024px){.dash-metrics{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:768px){.dash-grid2{grid-template-columns:1fr}}
 @media(max-width:540px){.dash-metrics{grid-template-columns:1fr 1fr}}
+
+/* SESSION DETAIL MODAL */
+.sd-popup{position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);animation:sdFade .2s ease both}
+@keyframes sdFade{from{opacity:0}to{opacity:1}}
+.sd-card{background:var(--card1);border:1px solid var(--w10);border-radius:20px;padding:28px;max-width:100%;width:420px;box-shadow:0 24px 70px var(--shadow-color);max-height:85vh;overflow-y:auto;animation:sdRise .3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes sdRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.sd-popup,.sd-card{animation:none}}
+.sd-card h3{margin:0 0 4px;font-size:1.15rem;color:var(--heading)}
+.sd-when{color:var(--muted);font-size:.78rem;margin-bottom:18px}
+.sd-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.sd-stats>div{background:var(--w04);border:1px solid var(--w08);border-radius:12px;padding:12px;transition:border-color .2s,transform .2s}
+.sd-stats>div:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
+.sd-val{font-size:1.3rem;font-weight:800;color:var(--brand)}
+.sd-val-sm{font-size:.85rem;font-weight:700;color:var(--heading)}
+.sd-lbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.sd-note{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:14px}
+.sd-note strong{color:var(--heading)}
+.sd-close{width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:6px}
+.sd-close:hover{box-shadow:0 10px 28px rgba(225,29,72,.4);transform:translateY(-1px)}
+.sd-close:active{transform:scale(.97)}
 
 /* FOOTER */
 .footer{background:var(--bg-strong);border-top:1px solid var(--w06);padding:48px 24px 24px;position:relative;z-index:1}
@@ -359,10 +387,21 @@ button{cursor:pointer;font-family:inherit}
 
     <div class="dash-grid2">
       <div class="dash-card">
-        <div class="dash-card-t">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          Weekly Activity
+        <div class="dash-card-t" style="justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Weekly Activity
+          </span>
+          <span class="week-nav">
+            <button class="week-nav-btn" id="week-prev" onclick="weekNav(-1)" aria-label="Previous week">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="week-nav-btn" id="week-next" onclick="weekNav(1)" aria-label="Next week">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </span>
         </div>
+        <div class="week-range" id="weekly-range">—</div>
         <div id="weekly-bars"></div>
       </div>
       <div class="dash-card">
@@ -446,11 +485,14 @@ function toggleTheme(){
 syncThemeIcon();
 
 function loadU(){
-  return JSON.parse(localStorage.getItem('pah_v5')||JSON.stringify({
+  const u=JSON.parse(localStorage.getItem('pah_v5')||JSON.stringify({
     streak:0,sessions:0,reps:0,formScores:[],
     weeklyReps:[0,0,0,0,0,0,0],recent:[],lastDate:''
   }));
+  u.dailyReps=u.dailyReps||{};
+  return u;
 }
+function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
 function logoutUser(){
   localStorage.removeItem('pah_acc');
@@ -468,25 +510,87 @@ function renderDash(){
     ?Math.round(u.formScores.reduce((a,b)=>a+b,0)/u.formScores.length)
     :null;
   document.getElementById('d-form').textContent=avg!=null?avg+'%':'—';
+  renderWeekly();
+  renderRecent();
+}
 
-  const days=['M','T','W','T','F','S','S'];
-  const maxR=Math.max(...u.weeklyReps,1);
-  document.getElementById('weekly-bars').innerHTML=u.weeklyReps.map((r,i)=>`
+// ── WEEKLY ACTIVITY — browsable by week, with a month-aware date range label ──
+let weekOffset=0;
+function mondayOf(d){
+  const dt=new Date(d);
+  const day=dt.getDay();
+  dt.setDate(dt.getDate()+(day===0?-6:1-day));
+  dt.setHours(0,0,0,0);
+  return dt;
+}
+function renderWeekly(){
+  const u=loadU();
+  const dayLbls=['M','T','W','T','F','S','S'];
+  const monday=mondayOf(new Date());
+  monday.setDate(monday.getDate()+weekOffset*7);
+  const weekDates=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return d;});
+  const reps=weekDates.map(d=>u.dailyReps[dateKey(d)]||0);
+  const maxR=Math.max(...reps,1);
+  document.getElementById('weekly-bars').innerHTML=reps.map((r,i)=>`
     <div class="wbar">
       <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(r/maxR*100)}%"></div></div>
-      <div class="wbar-lbl">${days[i]}</div>
+      <div class="wbar-lbl">${dayLbls[i]}</div>
     </div>`).join('');
+  const fmt=(d,withYear)=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:withYear?'numeric':undefined});
+  document.getElementById('weekly-range').textContent=fmt(weekDates[0])+' – '+fmt(weekDates[6],true);
+  document.getElementById('week-next').disabled=weekOffset>=0;
+}
+function weekNav(dir){
+  if(dir>0&&weekOffset>=0)return;
+  weekOffset+=dir;
+  renderWeekly();
+}
 
+// ── RECENT SESSIONS — click a row for full session detail ──
+function renderRecent(){
+  const u=loadU();
   const rl=document.getElementById('recent-list');
   if(!u.recent||!u.recent.length){
     rl.innerHTML='<div class="dash-empty">No sessions yet — start your first exercise on the Exercises page.</div>';
     return;
   }
-  rl.innerHTML=u.recent.slice(0,6).map(r=>`
-    <div class="recent-row">
+  rl.innerHTML=u.recent.slice(0,8).map((r,i)=>`
+    <div class="recent-row" onclick="showSessionDetail(${i})">
       <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.date}</div></div>
       <div><div class="recent-reps">${r.reps} reps</div><div class="recent-form">${r.form}% form</div></div>
     </div>`).join('');
+}
+
+function showSessionDetail(idx){
+  const u=loadU();
+  const r=u.recent[idx];
+  if(!r)return;
+  let m=document.getElementById('session-detail-popup');
+  if(!m){
+    m=document.createElement('div');
+    m.id='session-detail-popup';
+    m.className='sd-popup';
+    m.onclick=(e)=>{if(e.target===m)m.remove();};
+    document.body.appendChild(m);
+  }
+  const whenStr=r.timestamp
+    ?new Date(r.timestamp).toLocaleString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})
+    :r.date;
+  const durStr=r.durationSec!=null?(r.durationSec>=60?Math.floor(r.durationSec/60)+'m '+(r.durationSec%60)+'s':r.durationSec+'s'):'—';
+  m.innerHTML=`
+    <div class="sd-card">
+      <h3>${r.name}</h3>
+      <p class="sd-when">${whenStr}</p>
+      <div class="sd-stats">
+        <div><div class="sd-val">${r.reps}${r.target?'/'+r.target:''}</div><div class="sd-lbl">Reps</div></div>
+        <div><div class="sd-val">${r.form}%</div><div class="sd-lbl">Form Score</div></div>
+        <div><div class="sd-val">${durStr}</div><div class="sd-lbl">Duration</div></div>
+        <div><div class="sd-val sd-val-sm">${r.area||'—'}</div><div class="sd-lbl">Focus Area</div></div>
+      </div>
+      ${r.muscles&&r.muscles.length?`<p class="sd-note"><strong>Muscles targeted:</strong> ${r.muscles.join(', ')}</p>`:''}
+      ${r.note?`<p class="sd-note">${r.note}</p>`:''}
+      <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">Close</button>
+    </div>`;
 }
 
 (function init(){

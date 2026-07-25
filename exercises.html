@@ -1496,12 +1496,15 @@ function closeDemoOverlay(){
 // USER STATE
 // ═══════════════════════════════════════════════════════════
 function loadU(){
-  return JSON.parse(localStorage.getItem('pah_v5')||JSON.stringify({
+  const u=JSON.parse(localStorage.getItem('pah_v5')||JSON.stringify({
     streak:0,sessions:0,reps:0,formScores:[],
     weeklyReps:[0,0,0,0,0,0,0],recent:[],lastDate:''
   }));
+  u.dailyReps=u.dailyReps||{}; // 'YYYY-MM-DD' -> reps that day, real dates so weekly history can be browsed by month
+  return u;
 }
 function saveU(u){localStorage.setItem('pah_v5',JSON.stringify(u));}
+function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 
 // ═══════════════════════════════════════════════════════════
 // GATE
@@ -2185,7 +2188,7 @@ const AIChat={
 // SESSION ENGINE — MediaPipe Pose Tracking (FIXED)
 // ═══════════════════════════════════════════════════════════
 let poseModel=null,poseLoaded=false,camStream=null;
-let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral',sessCompleting=false;
+let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral',sessCompleting=false,sessStartAt=null;
 let formScores=[],lastLM=null,raf=null,sessActive=false;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
@@ -2301,14 +2304,24 @@ function endSession(){
     u.sessions++;u.reps+=sessReps;
     u.formScores.push(avgF);if(u.formScores.length>30)u.formScores.shift();
     const dow=new Date().getDay();u.weeklyReps[dow===0?6:dow-1]+=sessReps;
-    u.streak++;
     const now=new Date();
+    const dk=dateKey(now);
+    u.dailyReps[dk]=(u.dailyReps[dk]||0)+sessReps;
+    u.streak++;
+    const durationSec=sessStartAt?Math.round((Date.now()-sessStartAt)/1000):null;
     u.recent=u.recent||[];
-    u.recent.unshift({name:sessEx.name,reps:sessReps,form:avgF,date:now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})});
-    if(u.recent.length>10)u.recent=u.recent.slice(0,10);
+    u.recent.unshift({
+      id:Date.now()+'-'+Math.random().toString(36).slice(2,7),
+      name:sessEx.name,area:sessEx.area,muscles:sessEx.muscles,note:sessEx.note,
+      reps:sessReps,target:sessEx.reps,form:avgF,durationSec,
+      timestamp:now.toISOString(),
+      date:now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})
+    });
+    if(u.recent.length>30)u.recent=u.recent.slice(0,30);
     saveU(u);renderNavStreak();
     toast('Session saved — '+sessReps+' reps at '+avgF+'% form.');
   }
+  sessStartAt=null;
 }
 
 // Triggered once the exercise's own configured rep target is reached — speaks
@@ -2458,6 +2471,7 @@ async function startCamera(){
   VoiceCoach.speak('Camera is live. Stand back so your full body is visible.',{priority:true});
 
   sessActive=true;
+  sessStartAt=Date.now();
   await loadPoseModel();
   startLoop();
 }
