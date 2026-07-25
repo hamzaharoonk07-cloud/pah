@@ -28,7 +28,9 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden;width:100%}
-body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;min-height:100vh;width:100%;max-width:100vw;transition:background .3s ease,color .3s ease}
+body{font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);overflow-x:hidden;min-height:100vh;width:100%;max-width:100vw;transition:background .3s ease,color .3s ease;animation:pageFadeIn .5s ease both}
+@keyframes pageFadeIn{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){body{animation:none}}
 h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
 img{max-width:100%;display:block}
 a{text-decoration:none;color:inherit}
@@ -61,7 +63,9 @@ button{cursor:pointer;font-family:inherit}
 .nav-home{padding:6px 14px;border-radius:8px;border:1px solid var(--w10);background:transparent;appearance:none;-webkit-appearance:none;cursor:pointer;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:.73rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:5px}
 .nav-home:hover{color:var(--heading);border-color:var(--w12)}
 .theme-tgl{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--w05);border:1px solid var(--w10);color:var(--heading);cursor:pointer;transition:all .2s;flex-shrink:0}
-.theme-tgl:hover{background:var(--w08);border-color:var(--w12)}
+.theme-tgl:hover{background:var(--w08);border-color:var(--w12);transform:scale(1.1) rotate(-8deg)}
+.theme-tgl:active{transform:scale(.9)}
+.theme-tgl svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
 .ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer}
 .ham span{display:block;width:20px;height:2px;background:var(--heading);border-radius:1px}
 .mob-menu{display:none;position:fixed;top:62px;left:0;right:0;z-index:499;background:var(--glass);border-bottom:1px solid var(--w06);padding:14px 20px;flex-direction:column;gap:4px}
