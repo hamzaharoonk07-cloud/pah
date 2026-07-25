@@ -337,8 +337,7 @@ button{cursor:pointer;font-family:inherit}
         <div><span>Name</span><strong id="acct-name">—</strong></div>
         <div><span>Gender</span><strong id="acct-gender">—</strong></div>
         <div><span>Age</span><strong id="acct-age">—</strong></div>
-        <div><span>Weight</span><strong id="acct-weight">—</strong></div>
-        <div><span>Height</span><strong id="acct-height">—</strong></div>
+        <div><span>Weight / Height</span><strong id="acct-weight-height">—</strong></div>
         <div><span>Condition</span><strong id="acct-condition">—</strong></div>
         <div><span>Member Since</span><strong id="acct-joined">—</strong></div>
       </div>
@@ -662,8 +661,7 @@ function showSessionDetail(idx){
   document.getElementById('acct-name').textContent=acc.name;
   document.getElementById('acct-gender').textContent=acc.gender;
   document.getElementById('acct-age').textContent=acc.age+' yrs';
-  document.getElementById('acct-weight').textContent=acc.weight+' kg';
-  document.getElementById('acct-height').textContent=acc.height+' cm';
+  document.getElementById('acct-weight-height').textContent=acc.weight+'kg / '+acc.height+'cm';
   document.getElementById('acct-condition').textContent=acc.condition||'—';
   document.getElementById('acct-joined').textContent=acc.joined||'—';
 
