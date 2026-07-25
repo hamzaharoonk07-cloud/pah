@@ -507,17 +507,34 @@ function logoutUser(){
   location.href='exercises.html';
 }
 
+// Animates a number from 0 up to its real value instead of just appearing -
+// small touch, but static numbers are one of the more obvious "flat" spots.
+function countUp(el,end,opts){
+  opts=opts||{};
+  const suffix=opts.suffix||'',duration=opts.duration||900;
+  const start=performance.now();
+  function tick(now){
+    const t=Math.min((now-start)/duration,1);
+    const eased=1-Math.pow(1-t,3); // ease-out cubic
+    el.textContent=Math.round(end*eased)+suffix;
+    if(t<1)requestAnimationFrame(tick);
+  }
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=end+suffix;return;}
+  requestAnimationFrame(tick);
+}
+
 function renderDash(){
   const u=loadU();
-  document.getElementById('dash-streak-num').textContent=u.streak;
+  countUp(document.getElementById('dash-streak-num'),u.streak);
   const ringPerc=Math.min(u.streak/14,1); // full ring at a 2-week streak
   document.getElementById('dash-ring-c').style.strokeDashoffset=169.6*(1-ringPerc);
-  document.getElementById('d-sessions').textContent=u.sessions;
-  document.getElementById('d-reps').textContent=u.reps;
+  countUp(document.getElementById('d-sessions'),u.sessions);
+  countUp(document.getElementById('d-reps'),u.reps);
   const avg=u.formScores.length
     ?Math.round(u.formScores.reduce((a,b)=>a+b,0)/u.formScores.length)
     :null;
-  document.getElementById('d-form').textContent=avg!=null?avg+'%':'—';
+  if(avg!=null)countUp(document.getElementById('d-form'),avg,{suffix:'%'});
+  else document.getElementById('d-form').textContent='—';
   renderActivity();
   renderRecent();
 }

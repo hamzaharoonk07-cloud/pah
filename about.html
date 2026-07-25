@@ -256,10 +256,10 @@ button{cursor:pointer;font-family:inherit}
     <span class="sec-tag">In Numbers</span>
     <h2 class="sec-h">What's in the app today</h2>
     <div class="stats-strip">
-      <div class="stat-box"><div class="stat-num">9</div><div class="stat-lbl">Beginner Exercises</div></div>
-      <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">Partner Hospitals</div></div>
-      <div class="stat-box"><div class="stat-num">0</div><div class="stat-lbl">Data Uploaded</div></div>
-      <div class="stat-box"><div class="stat-num">100%</div><div class="stat-lbl">Free to Use</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="8">0</div><div class="stat-lbl">Beginner Exercises</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="5">0</div><div class="stat-lbl">Partner Hospitals</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="0">0</div><div class="stat-lbl">Data Uploaded</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="100" data-suffix="%">0</div><div class="stat-lbl">Free to Use</div></div>
     </div>
   </div>
 </section>
@@ -335,11 +335,32 @@ function toggleTheme(){
 }
 syncThemeIcon();
 
+function countUp(el,end,suffix,duration){
+  suffix=suffix||'';duration=duration||1100;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){el.textContent=end+suffix;return;}
+  const start=performance.now();
+  function tick(now){
+    const t=Math.min((now-start)/duration,1);
+    const eased=1-Math.pow(1-t,3);
+    el.textContent=Math.round(end*eased)+suffix;
+    if(t<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
 (function initScrollReveal(){
   const targets=document.querySelectorAll('.reveal');
-  if(!('IntersectionObserver' in window)){targets.forEach(el=>el.classList.add('in'));return;}
+  const statNums=document.querySelectorAll('.stat-num');
+  const runStats=()=>statNums.forEach(el=>countUp(el,Number(el.dataset.count),el.dataset.suffix));
+  if(!('IntersectionObserver' in window)){targets.forEach(el=>el.classList.add('in'));runStats();return;}
   const io=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        if(e.target.querySelector('.stats-strip'))runStats();
+        io.unobserve(e.target);
+      }
+    });
   },{threshold:.12});
   targets.forEach(el=>io.observe(el));
   setTimeout(()=>{targets.forEach(el=>{if(!el.classList.contains('in'))el.classList.add('in');});},2500);
