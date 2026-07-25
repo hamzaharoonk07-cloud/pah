@@ -549,15 +549,25 @@ a{text-decoration:none;color:inherit}
 .coach-panel.open::before{opacity:1;animation:fabEdgeGlowShift 8s linear infinite}
 @media(prefers-reduced-motion:reduce){.coach-panel::before{animation:none}}
 .coach-panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-.coach-wrap{background:transparent;display:flex;flex-direction:column;height:100%}
-.coach-head{padding:14px 18px;border-bottom:1px solid var(--w06);display:flex;align-items:center;gap:12px}
+.coach-wrap{background:transparent;display:flex;flex-direction:column;height:100%;position:relative}
+.coach-wrap::before{
+  content:'';position:absolute;top:50%;left:50%;width:190px;height:190px;z-index:0;pointer-events:none;
+  background-image:url('physiosync-icon-white.png');background-size:contain;background-repeat:no-repeat;background-position:center;
+  transform:translate(-50%,-50%);opacity:.05;
+  animation:coachLogoBreathe 6s ease-in-out infinite;
+}
+:root[data-theme="light"] .coach-wrap::before{background-image:url('physiosync-icon.png')}
+@keyframes coachLogoBreathe{0%,100%{opacity:.04;transform:translate(-50%,-50%) scale(1)}50%{opacity:.1;transform:translate(-50%,-50%) scale(1.06)}}
+@media(prefers-reduced-motion:reduce){.coach-wrap::before{animation:none}}
+.coach-head{padding:14px 18px;border-bottom:1px solid var(--w06);display:flex;align-items:center;gap:12px;position:relative;z-index:1;background:var(--card1)}
 .coach-av{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand),#be123c);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .coach-av img{width:19px;height:auto}
 .coach-online{display:flex;align-items:center;gap:5px;margin-top:2px;font-size:.61rem;color:#00e5a0}
 .cdot{width:6px;height:6px;border-radius:50%;background:#00e5a0;animation:cdblink 2s infinite}
 @keyframes cdblink{0%,100%{opacity:1}50%{opacity:.3}}
-.coach-scope-note{font-size:.62rem;color:var(--submuted);padding:0 14px 10px;line-height:1.5}
-#chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
+.coach-scope-note{font-size:.62rem;color:var(--submuted);padding:0 14px 10px;line-height:1.5;position:relative;z-index:1;background:var(--card1)}
+#chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;position:relative;z-index:1}
+.chat-row{position:relative;z-index:1}
 .cm{max-width:88%;padding:11px 14px;border-radius:14px;font-size:.81rem;line-height:1.65}
 .cm.bot{background:var(--w04);align-self:flex-start;border:1px solid var(--w06)}
 .cm.user{background:var(--brand);color:#fff;align-self:flex-end}
@@ -921,15 +931,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <p class="gate-sub">Set up your recovery profile to get personalized guidance.</p>
     <form id="gate-form" onsubmit="gateSubmit(event)">
       <div class="frow">
-        <div class="fl"><label for="g-name">Full Name</label><input id="g-name" type="text" required placeholder="Your full name" autocomplete="given-name"></div>
+        <div class="fl"><label for="g-name">Full Name</label><input id="g-name" type="text" required placeholder="Your full name" autocomplete="given-name" pattern="[A-Za-z\s\-'\.]+" title="Letters only, no numbers" oninput="this.value=this.value.replace(/[^A-Za-z\s\-'\.]/g,'')"></div>
         <div class="fl"><label for="g-gender">Gender</label><select id="g-gender" required><option value="" disabled selected>Select</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
       </div>
       <div class="frow">
-        <div class="fl"><label for="g-age">Age (years)</label><input id="g-age" type="number" required min="5" max="120" placeholder="e.g. 30"></div>
-        <div class="fl"><label for="g-weight">Weight (kg)</label><input id="g-weight" type="number" required min="10" max="300" placeholder="e.g. 70"></div>
+        <div class="fl"><label for="g-age">Age (years)</label><input id="g-age" type="number" required min="5" max="120" placeholder="e.g. 30" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="fl"><label for="g-weight">Weight (kg)</label><input id="g-weight" type="number" required min="10" max="300" placeholder="e.g. 70" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       </div>
       <div class="frow1">
-        <div class="fl"><label for="g-height">Height (cm)</label><input id="g-height" type="number" required min="50" max="260" placeholder="e.g. 175"></div>
+        <div class="fl"><label for="g-height">Height (cm)</label><input id="g-height" type="number" required min="50" max="260" placeholder="e.g. 175" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       </div>
       <div class="frow1">
         <div class="fl"><label for="g-condition">Primary Condition (optional)</label><input id="g-condition" type="text" placeholder="e.g. Lower back pain, Knee OA"></div>
@@ -964,6 +974,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
       Home
     </a>
+    <button class="nav-home" id="nav-logout" onclick="logoutUser()" style="display:none" title="Log out and clear your profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Logout
+    </button>
     <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
       <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -979,6 +993,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <a href="#research" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
   <a href="#dashboard" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Dashboard</a>
   <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
+  <a href="#" class="nl" id="mob-logout" style="display:none" onclick="logoutUser();return false;">Logout</a>
 </div>
 
 <!-- ══════════ HERO ══════════ -->
@@ -1612,13 +1627,26 @@ function gateSubmit(e){
   const weight=document.getElementById('g-weight').value;
   const height=document.getElementById('g-height').value;
   const condition=document.getElementById('g-condition').value.trim();
+  const errEl=document.getElementById('gate-err');
   if(!name||!gender||!age||!weight||!height){
-    document.getElementById('gate-err').style.display='block';return;
+    errEl.textContent='Please complete all required fields.';errEl.style.display='block';return;
   }
+  if(!/^[A-Za-z\s\-'.]+$/.test(name)){
+    errEl.textContent='Name can only contain letters.';errEl.style.display='block';return;
+  }
+  if(!/^[0-9]+$/.test(age)||!/^[0-9]+$/.test(weight)||!/^[0-9]+$/.test(height)){
+    errEl.textContent='Age, weight, and height can only contain numbers.';errEl.style.display='block';return;
+  }
+  errEl.style.display='none';
   const acc={name,gender,age,weight,height,condition,joined:new Date().toLocaleDateString()};
   localStorage.setItem('pah_acc',JSON.stringify(acc));
   document.getElementById('gate').classList.add('hidden');
   initApp(acc);
+}
+
+function logoutUser(){
+  localStorage.removeItem('pah_acc');
+  location.reload();
 }
 
 function initApp(acc){
@@ -1627,6 +1655,8 @@ function initApp(acc){
   const first=acc.name.split(' ')[0];
   document.getElementById('nav-greet').style.display='flex';
   document.getElementById('nav-name').textContent=first;
+  document.getElementById('nav-logout').style.display='flex';
+  document.getElementById('mob-logout').style.display='block';
   document.getElementById('hero-welcome').style.display='inline-flex';
   document.getElementById('hero-time').textContent=time;
   document.getElementById('hero-name').textContent=first;
@@ -1789,15 +1819,18 @@ function filterEx(){
 
 // One deliberate icon per movement type (not a rotating grab-bag) so the glyph
 // actually communicates what the exercise is at a glance.
+// Stick-figure pictograms on a shared grid (head circle ~r2 at top, torso down
+// the middle, limbs off the shoulder/hip points) so every icon reads as an
+// actual body performing the movement instead of an abstract arrow.
 const ICON_BY_DET={
-  neck_tilt:'M6 18L18 6M18 6H10M18 6v8', // lean/tilt arrow
-  mckenzie:'M4 17Q12 3 20 17', // backward arch
-  knee_chest:'M4 20h6a4 4 0 004-4V4M8 8l4-4 4 4', // lift toward chest
-  side_bend:'M11 17l-5-5 5-5M18 17l-5-5 5-5', // lateral motion
-  bilateral_raise:'M17 11l-5-5-5 5M17 18l-5-5-5 5', // both arms up
-  mini_squat:'M6 9l6 6 6-6M12 3v12', // dip down
-  lateral_raise:'M12 11l-6-5M12 11l6-5M12 11v9', // arms out to the sides
-  wrist_flex:'M5 12h9l-3-3M14 12l-3 3M17 8v8' // hinge up/down
+  neck_tilt:'M9,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M11,6l1,3v6M12,8l-3,5M12,8l3,5M12,15l-3,6M12,15l3,6', // head tilted off-center
+  mckenzie:'M12,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M14,6q-4,5,0,9M14,15l-3,6M14,15l3,6M14,10l3,1M14,10l-3,1', // torso arched backward
+  knee_chest:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8l-3,5M12,8l3,5M12,15l3,6M12,15l-3,-3M9,12l1,4', // one knee lifted toward torso
+  side_bend:'M9,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M11,6q3,4,2,9M13,8l4,2M13,15l3,6M13,15l-1,6', // torso curved sideways
+  bilateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8l-3,-4M12,8l3,-4M12,15l-3,6M12,15l3,6', // both arms overhead
+  mini_squat:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v7M12,8l-3,4M12,8l3,4M12,13l-4,4l1,3M12,13l4,4l-1,3', // knees bent into a squat
+  lateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8h-6M12,8h6M12,15l-3,6M12,15l3,6', // arms straight out to the sides
+  wrist_flex:'M4,14h10M14,14l4,-4M14,14l4,4M18,10q2,4,0,8' // forearm with hand bending up/down
 };
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
