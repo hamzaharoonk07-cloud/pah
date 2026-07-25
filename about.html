@@ -86,11 +86,9 @@ button{cursor:pointer;font-family:inherit}
 .sec-p{color:var(--muted);font-size:.95rem;line-height:1.85;max-width:680px}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
 .reveal.in{opacity:1;transform:none}
-.reveal .sec-h{clip-path:inset(0 100% 0 0);transition:clip-path .8s .1s cubic-bezier(.2,.8,.2,1)}
-.reveal.in .sec-h{clip-path:inset(0 0 0 0)}
-@keyframes heroWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-.ab-h{animation:heroWipe 1s .3s cubic-bezier(.2,.8,.2,1) both}
-@media(prefers-reduced-motion:reduce){.reveal .sec-h{clip-path:none;transition:none}.ab-h{animation:none}}
+@keyframes heroFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.ab-h{animation:heroFadeUp .8s .1s cubic-bezier(.2,.8,.2,1) both}
+@media(prefers-reduced-motion:reduce){.ab-h{animation:none}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 
 /* MISSION SPLIT */
