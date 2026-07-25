@@ -529,8 +529,9 @@ a{text-decoration:none;color:inherit}
 .cm.user{background:var(--brand);color:#fff;align-self:flex-end}
 .cm strong{display:block;color:var(--brand);font-size:.72rem;margin-bottom:4px}
 .cm.user strong{color:rgba(255,255,255,.7)}
-.qchip{cursor:pointer;background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.2);color:var(--accent);padding:4px 12px;border-radius:100px;font-size:.7rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;transition:background .2s}
-.qchip:hover{background:rgba(225,29,72,.18)}
+.qchip{cursor:pointer;background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.2);color:var(--accent);padding:4px 12px;border-radius:100px;font-size:.7rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;transition:background .2s,transform .15s}
+.qchip:hover{background:rgba(225,29,72,.18);transform:translateY(-1px)}
+.qchip:active{transform:scale(.94)}
 .chat-row{padding:11px 13px;border-top:1px solid var(--w06);display:flex;gap:8px}
 #chat-in{flex:1;background:var(--w04);border:1px solid var(--w09);border-radius:11px;padding:10px 14px;color:var(--heading);font-family:'Inter',sans-serif;font-size:.81rem;outline:none}
 #chat-in:focus{border-color:var(--brand)}
