@@ -310,7 +310,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="hero-blob b2"></div>
   <div class="ab-hero-inner">
     <span class="ab-tag">Your Account</span>
-    <h1 class="ab-h">Profile &amp; <span>Progress</span></h1>
+    <h1 class="ab-h" id="acct-hero-h">Welcome back<span>.</span></h1>
     <p class="ab-sub">Everything about your recovery journey, in one place — your details and every session you've completed, saved on this device.</p>
   </div>
 </section>
@@ -333,10 +333,6 @@ button{cursor:pointer;font-family:inherit}
   <div class="sec-in">
 
     <div class="dash-card acct-profile-card">
-      <div class="dash-card-t">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-        Your Profile
-      </div>
       <div class="acct-profile-grid">
         <div><span>Name</span><strong id="acct-name">—</strong></div>
         <div><span>Gender</span><strong id="acct-gender">—</strong></div>
@@ -662,6 +658,7 @@ function showSessionDetail(idx){
   const hr=new Date().getHours();
   const time=hr<12?'morning':hr<17?'afternoon':'evening';
   const first=acc.name.split(' ')[0];
+  document.getElementById('acct-hero-h').innerHTML='Good '+time+', <span>'+first+'</span>';
   document.getElementById('acct-name').textContent=acc.name;
   document.getElementById('acct-gender').textContent=acc.gender;
   document.getElementById('acct-age').textContent=acc.age+' yrs';
@@ -671,7 +668,7 @@ function showSessionDetail(idx){
   document.getElementById('acct-joined').textContent=acc.joined||'—';
 
   const u=loadU();
-  document.getElementById('dash-greet-h').textContent='Good '+time+', '+first;
+  document.getElementById('dash-greet-h').textContent=u.streak>0?u.streak+'-Day Streak':'Your Streak';
   document.getElementById('dash-greet-p').textContent=
     u.sessions===0
       ?'Your rehabilitation journey starts today. Complete your first session on the Exercises page.'
