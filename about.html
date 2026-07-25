@@ -365,6 +365,24 @@ function countUp(el,end,suffix,duration){
   targets.forEach(el=>io.observe(el));
   setTimeout(()=>{targets.forEach(el=>{if(!el.classList.contains('in'))el.classList.add('in');});},2500);
 })();
+
+(function initMagnetic(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(matchMedia('(hover: none)').matches)return;
+  document.querySelectorAll('.ab-cta-btn').forEach(el=>{
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const tx=(e.clientX-r.left-r.width/2)*.25;
+      const ty=(e.clientY-r.top-r.height/2)*.25;
+      el.style.transition='';
+      el.style.transform=`translate(${tx}px,${ty}px)`;
+    });
+    el.addEventListener('mouseleave',()=>{
+      el.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';
+      el.style.transform='';
+    });
+  });
+})();
 </script>
 </body>
 </html>

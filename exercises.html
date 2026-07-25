@@ -1930,6 +1930,59 @@ document.getElementById('research-grid').innerHTML=RESEARCH.map(r=>`
 })();
 
 // ═══════════════════════════════════════════════════════════
+// INTERACTIVE MOTION — magnetic buttons + 3D card tilt that track the
+// cursor, spring back to rest on mouseleave. Skipped entirely under
+// prefers-reduced-motion. Pure mouse interaction (desktop) — touch just
+// falls back to the existing static hover/press CSS, no regression there.
+// ═══════════════════════════════════════════════════════════
+(function initInteractiveMotion(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(matchMedia('(hover: none)').matches)return; // touch devices — no cursor to track
+
+  function magnetic(el,strength){
+    let raf=null;
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const tx=(e.clientX-r.left-r.width/2)*strength;
+      const ty=(e.clientY-r.top-r.height/2)*strength;
+      el.style.transition='';
+      if(raf)cancelAnimationFrame(raf);
+      raf=requestAnimationFrame(()=>{el.style.transform=`translate(${tx}px,${ty}px)`;});
+    });
+    el.addEventListener('mouseleave',()=>{
+      el.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';
+      el.style.transform='';
+    });
+  }
+  document.querySelectorAll('.gate-btn,.ex-start-btn,.coach-fab,.chat-send,.s-cam-btn').forEach(el=>magnetic(el,.25));
+
+  function tilt(el,maxDeg){
+    el.style.transformStyle='preserve-3d';
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+      const rx=(0.5-py)*maxDeg*2,ry=(px-0.5)*maxDeg*2;
+      el.style.transition='';
+      el.style.transform=`perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
+    });
+    el.addEventListener('mouseleave',()=>{
+      el.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';
+      el.style.transform='';
+    });
+  }
+  // Delegated so cards added later (search/filter re-renders) still get it —
+  // re-scan whenever the grid changes rather than only binding once at load.
+  function bindCardTilt(){
+    document.querySelectorAll('.ex-card:not([data-tilt]),.hosp-card:not([data-tilt]),.research-card:not([data-tilt])').forEach(el=>{
+      el.dataset.tilt='1';
+      tilt(el,5);
+    });
+  }
+  bindCardTilt();
+  new MutationObserver(bindCardTilt).observe(document.getElementById('ex-grid'),{childList:true});
+})();
+
+// ═══════════════════════════════════════════════════════════
 // AI COACH — Fixed with fallback engine & retry logic
 // ═══════════════════════════════════════════════════════════
 const AIChat={

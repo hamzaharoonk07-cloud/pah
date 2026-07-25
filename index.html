@@ -558,6 +558,26 @@ window.addEventListener('resize', () => {
     io.observe(el);
   });
 })();
+
+// Magnetic CTAs — cursor-follow pull with a springy return, skipped for
+// reduced-motion and touch (no cursor to track there).
+(function initMagnetic(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(matchMedia('(hover: none)').matches)return;
+  document.querySelectorAll('.nav-cta,.gate-submit').forEach(el=>{
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const tx=(e.clientX-r.left-r.width/2)*.25;
+      const ty=(e.clientY-r.top-r.height/2)*.25;
+      el.style.transition='';
+      el.style.transform=`translate(${tx}px,${ty}px)`;
+    });
+    el.addEventListener('mouseleave',()=>{
+      el.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';
+      el.style.transform='';
+    });
+  });
+})();
 </script>
 
 <footer class="site-footer">

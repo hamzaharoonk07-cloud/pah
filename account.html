@@ -696,6 +696,24 @@ function showSessionDetail(idx){
       :'Pick up where you left off and start a new streak.';
   renderDash();
 })();
+
+(function initMagnetic(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(matchMedia('(hover: none)').matches)return;
+  document.querySelectorAll('.acct-cta-btn,.acct-empty-btn').forEach(el=>{
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const tx=(e.clientX-r.left-r.width/2)*.25;
+      const ty=(e.clientY-r.top-r.height/2)*.25;
+      el.style.transition='';
+      el.style.transform=`translate(${tx}px,${ty}px)`;
+    });
+    el.addEventListener('mouseleave',()=>{
+      el.style.transition='transform .5s cubic-bezier(.34,1.56,.64,1)';
+      el.style.transform='';
+    });
+  });
+})();
 </script>
 </body>
 </html>
