@@ -190,13 +190,17 @@ button{cursor:pointer;font-family:inherit}
 .dash-m-lbl{font-size:.7rem;color:var(--muted);margin-top:6px}
 .dash-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .dash-grid2 .dash-card{animation:cardRise .5s .28s cubic-bezier(.2,.8,.2,1) both}
-.week-nav{display:flex;gap:4px}
-.week-nav-btn{width:24px;height:24px;border-radius:50%;background:var(--w04);border:1px solid var(--w08);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.view-toggle{display:flex;gap:3px;background:var(--w04);border:1px solid var(--w07);border-radius:100px;padding:2px}
+.view-toggle-btn{border:none;background:transparent;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:.66rem;font-weight:700;padding:4px 11px;border-radius:100px;cursor:pointer;transition:all .2s}
+.view-toggle-btn.on{background:var(--brand);color:#fff}
+.view-toggle-btn:not(.on):hover{color:var(--heading)}
+.week-range-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}
+.week-nav-btn{width:24px;height:24px;border-radius:50%;background:var(--w04);border:1px solid var(--w08);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
 .week-nav-btn svg{width:12px;height:12px}
 .week-nav-btn:hover:not(:disabled){background:var(--w08);color:var(--heading);border-color:var(--w10)}
 .week-nav-btn:active:not(:disabled){transform:scale(.9)}
 .week-nav-btn:disabled{opacity:.35;cursor:not-allowed}
-.week-range{font-size:.68rem;color:var(--muted);margin:-10px 0 14px;text-align:center}
+.week-range{font-size:.68rem;color:var(--muted);text-align:center;min-width:110px}
 .recent-row{cursor:pointer}
 #weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:6px}
 .wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
@@ -390,18 +394,22 @@ button{cursor:pointer;font-family:inherit}
         <div class="dash-card-t" style="justify-content:space-between">
           <span style="display:flex;align-items:center;gap:8px">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            Weekly Activity
+            Activity
           </span>
-          <span class="week-nav">
-            <button class="week-nav-btn" id="week-prev" onclick="weekNav(-1)" aria-label="Previous week">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button class="week-nav-btn" id="week-next" onclick="weekNav(1)" aria-label="Next week">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
+          <span class="view-toggle">
+            <button class="view-toggle-btn on" id="view-week-btn" onclick="setViewMode('week')">Week</button>
+            <button class="view-toggle-btn" id="view-month-btn" onclick="setViewMode('month')">Month</button>
           </span>
         </div>
-        <div class="week-range" id="weekly-range">—</div>
+        <div class="week-range-row">
+          <button class="week-nav-btn" id="week-prev" onclick="weekNav(-1)" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="week-range" id="weekly-range">—</div>
+          <button class="week-nav-btn" id="week-next" onclick="weekNav(1)" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
         <div id="weekly-bars"></div>
       </div>
       <div class="dash-card">
@@ -510,18 +518,30 @@ function renderDash(){
     ?Math.round(u.formScores.reduce((a,b)=>a+b,0)/u.formScores.length)
     :null;
   document.getElementById('d-form').textContent=avg!=null?avg+'%':'—';
-  renderWeekly();
+  renderActivity();
   renderRecent();
 }
 
-// ── WEEKLY ACTIVITY — browsable by week, with a month-aware date range label ──
-let weekOffset=0;
+// ── ACTIVITY CHART — Week view (7 daily bars, browsable by week) or Month
+// view (one bar per ~7-day chunk of the month, browsable by month), both
+// reading from the real date-keyed dailyReps map so history keeps forever
+// instead of the old perpetual weekday bucket.
+let viewMode='week',weekOffset=0,monthOffset=0;
 function mondayOf(d){
   const dt=new Date(d);
   const day=dt.getDay();
   dt.setDate(dt.getDate()+(day===0?-6:1-day));
   dt.setHours(0,0,0,0);
   return dt;
+}
+function setViewMode(mode){
+  viewMode=mode;
+  document.getElementById('view-week-btn').classList.toggle('on',mode==='week');
+  document.getElementById('view-month-btn').classList.toggle('on',mode==='month');
+  renderActivity();
+}
+function renderActivity(){
+  if(viewMode==='week')renderWeekly();else renderMonthly();
 }
 function renderWeekly(){
   const u=loadU();
@@ -540,10 +560,39 @@ function renderWeekly(){
   document.getElementById('weekly-range').textContent=fmt(weekDates[0])+' – '+fmt(weekDates[6],true);
   document.getElementById('week-next').disabled=weekOffset>=0;
 }
+function renderMonthly(){
+  const u=loadU();
+  const base=new Date();
+  base.setDate(1);
+  base.setMonth(base.getMonth()+monthOffset);
+  const year=base.getFullYear(),month=base.getMonth();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const weeks=[];
+  for(let d=1;d<=daysInMonth;d+=7){
+    let total=0;
+    for(let i=d;i<Math.min(d+7,daysInMonth+1);i++){
+      total+=u.dailyReps[dateKey(new Date(year,month,i))]||0;
+    }
+    weeks.push(total);
+  }
+  const maxR=Math.max(...weeks,1);
+  document.getElementById('weekly-bars').innerHTML=weeks.map((r,i)=>`
+    <div class="wbar">
+      <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(r/maxR*100)}%"></div></div>
+      <div class="wbar-lbl">W${i+1}</div>
+    </div>`).join('');
+  document.getElementById('weekly-range').textContent=base.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  document.getElementById('week-next').disabled=monthOffset>=0;
+}
 function weekNav(dir){
-  if(dir>0&&weekOffset>=0)return;
-  weekOffset+=dir;
-  renderWeekly();
+  if(viewMode==='week'){
+    if(dir>0&&weekOffset>=0)return;
+    weekOffset+=dir;
+  }else{
+    if(dir>0&&monthOffset>=0)return;
+    monthOffset+=dir;
+  }
+  renderActivity();
 }
 
 // ── RECENT SESSIONS — click a row for full session detail ──
@@ -576,7 +625,9 @@ function showSessionDetail(idx){
   const whenStr=r.timestamp
     ?new Date(r.timestamp).toLocaleString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})
     :r.date;
-  const durStr=r.durationSec!=null?(r.durationSec>=60?Math.floor(r.durationSec/60)+'m '+(r.durationSec%60)+'s':r.durationSec+'s'):'—';
+  const durStr=r.durationSec!=null?(r.durationSec>=60?Math.floor(r.durationSec/60)+'m '+(r.durationSec%60)+'s':r.durationSec+'s'):'Not recorded';
+  const areaStr=r.area||'Not recorded';
+  const isLegacy=r.timestamp===undefined; // sessions saved before per-session detail tracking was added
   m.innerHTML=`
     <div class="sd-card">
       <h3>${r.name}</h3>
@@ -584,11 +635,12 @@ function showSessionDetail(idx){
       <div class="sd-stats">
         <div><div class="sd-val">${r.reps}${r.target?'/'+r.target:''}</div><div class="sd-lbl">Reps</div></div>
         <div><div class="sd-val">${r.form}%</div><div class="sd-lbl">Form Score</div></div>
-        <div><div class="sd-val">${durStr}</div><div class="sd-lbl">Duration</div></div>
-        <div><div class="sd-val sd-val-sm">${r.area||'—'}</div><div class="sd-lbl">Focus Area</div></div>
+        <div><div class="sd-val sd-val-sm">${durStr}</div><div class="sd-lbl">Duration</div></div>
+        <div><div class="sd-val sd-val-sm">${areaStr}</div><div class="sd-lbl">Focus Area</div></div>
       </div>
       ${r.muscles&&r.muscles.length?`<p class="sd-note"><strong>Muscles targeted:</strong> ${r.muscles.join(', ')}</p>`:''}
       ${r.note?`<p class="sd-note">${r.note}</p>`:''}
+      ${isLegacy?`<p class="sd-note">This session was logged before detailed tracking was added, so duration and focus area weren't captured.</p>`:''}
       <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">Close</button>
     </div>`;
 }
