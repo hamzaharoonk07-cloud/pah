@@ -207,6 +207,11 @@ button{cursor:pointer;font-family:inherit}
 .wbar-track{width:100%;background:var(--w03);border-radius:4px;flex:1;position:relative;overflow:hidden}
 .wbar-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--brand),var(--accent));border-radius:4px;transition:height 1.2s cubic-bezier(.2,.8,.2,1)}
 .wbar-lbl{font-size:.6rem;color:var(--muted);font-weight:600}
+#weekly-bars.month-mode{gap:2px}
+.month-mode .wbar{gap:3px}
+.month-mode .wbar-track{border-radius:2px}
+.month-mode .wbar-fill{border-radius:2px}
+.month-mode .wbar-lbl{font-size:.48rem}
 #recent-list{display:flex;flex-direction:column;gap:7px}
 .recent-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:11px;background:var(--w03);border:1px solid var(--w05);transition:border-color .2s,transform .2s}
 .recent-row:hover{border-color:rgba(225,29,72,.25);transform:translateX(2px)}
@@ -551,7 +556,9 @@ function renderWeekly(){
   const weekDates=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return d;});
   const reps=weekDates.map(d=>u.dailyReps[dateKey(d)]||0);
   const maxR=Math.max(...reps,1);
-  document.getElementById('weekly-bars').innerHTML=reps.map((r,i)=>`
+  const bars=document.getElementById('weekly-bars');
+  bars.classList.remove('month-mode');
+  bars.innerHTML=reps.map((r,i)=>`
     <div class="wbar">
       <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(r/maxR*100)}%"></div></div>
       <div class="wbar-lbl">${dayLbls[i]}</div>
@@ -567,19 +574,17 @@ function renderMonthly(){
   base.setMonth(base.getMonth()+monthOffset);
   const year=base.getFullYear(),month=base.getMonth();
   const daysInMonth=new Date(year,month+1,0).getDate();
-  const weeks=[];
-  for(let d=1;d<=daysInMonth;d+=7){
-    let total=0;
-    for(let i=d;i<Math.min(d+7,daysInMonth+1);i++){
-      total+=u.dailyReps[dateKey(new Date(year,month,i))]||0;
-    }
-    weeks.push(total);
-  }
-  const maxR=Math.max(...weeks,1);
-  document.getElementById('weekly-bars').innerHTML=weeks.map((r,i)=>`
-    <div class="wbar">
-      <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(r/maxR*100)}%"></div></div>
-      <div class="wbar-lbl">W${i+1}</div>
+  const days=Array.from({length:daysInMonth},(_,i)=>{
+    const dt=new Date(year,month,i+1);
+    return{day:i+1,reps:u.dailyReps[dateKey(dt)]||0,label:dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})};
+  });
+  const maxR=Math.max(...days.map(d=>d.reps),1);
+  const bars=document.getElementById('weekly-bars');
+  bars.classList.add('month-mode');
+  bars.innerHTML=days.map(d=>`
+    <div class="wbar" title="${d.label}: ${d.reps} rep${d.reps===1?'':'s'}">
+      <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(d.reps/maxR*100)}%"></div></div>
+      <div class="wbar-lbl">${d.day%5===1?d.day:''}</div>
     </div>`).join('');
   document.getElementById('weekly-range').textContent=base.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
   document.getElementById('week-next').disabled=monthOffset>=0;
