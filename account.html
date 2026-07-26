@@ -119,9 +119,14 @@ button{cursor:pointer;font-family:inherit}
 @keyframes cardRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .dash-greet-text h3{font-size:1.2rem;font-weight:800;margin-bottom:4px}
 .dash-greet-text p{color:var(--muted);font-size:.83rem}
+.dash-ring-block{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0}
 .dash-streak-ring{position:relative;width:116px;height:116px;flex-shrink:0}
 .dash-streak-ring svg{width:116px;height:116px}
 .dash-streak-ring svg circle{transition:stroke-dashoffset 1s ease .3s}
+.dash-ring-key{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
+.dash-ring-key span{display:flex;align-items:center;gap:4px;font-size:.62rem;color:var(--muted);font-weight:600;white-space:nowrap}
+.dash-ring-key i{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+@media(max-width:540px){.dash-ring-key{max-width:140px}}
 
 /* METRICS */
 .dash-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
@@ -297,23 +302,30 @@ button{cursor:pointer;font-family:inherit}
         <h3 id="dash-greet-h">Welcome to PhysioSync</h3>
         <p id="dash-greet-p">Your rehabilitation journey starts here.</p>
       </div>
-      <div class="dash-streak-ring" id="dash-streak-ring" title="Streak (outer) · Sessions (middle) · Avg form score (inner)">
-        <svg viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="44" fill="none" stroke="var(--w09)" stroke-width="5"/>
-          <circle id="dash-ring-streak" cx="50" cy="50" r="44" fill="none" stroke="url(#dashRingGradStreak)" stroke-width="5"
-            stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 50 50)"/>
-          <circle cx="50" cy="50" r="32" fill="none" stroke="var(--w09)" stroke-width="5"/>
-          <circle id="dash-ring-sessions" cx="50" cy="50" r="32" fill="none" stroke="url(#dashRingGradSessions)" stroke-width="5"
-            stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 50 50)"/>
-          <circle cx="50" cy="50" r="20" fill="none" stroke="var(--w09)" stroke-width="5"/>
-          <circle id="dash-ring-form" cx="50" cy="50" r="20" fill="none" stroke="url(#dashRingGradForm)" stroke-width="5"
-            stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="125.7" transform="rotate(-90 50 50)"/>
-          <defs>
-            <linearGradient id="dashRingGradStreak" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e11d48"/><stop offset="100%" stop-color="#fb7185"/></linearGradient>
-            <linearGradient id="dashRingGradSessions" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
-            <linearGradient id="dashRingGradForm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#12d999"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
-          </defs>
-        </svg>
+      <div class="dash-ring-block">
+        <div class="dash-streak-ring" id="dash-streak-ring" title="Streak (outer) · Sessions (middle) · Avg form score (inner)">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="44" fill="none" stroke="var(--w09)" stroke-width="5"/>
+            <circle id="dash-ring-streak" cx="50" cy="50" r="44" fill="none" stroke="url(#dashRingGradStreak)" stroke-width="5"
+              stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 50 50)"/>
+            <circle cx="50" cy="50" r="32" fill="none" stroke="var(--w09)" stroke-width="5"/>
+            <circle id="dash-ring-sessions" cx="50" cy="50" r="32" fill="none" stroke="url(#dashRingGradSessions)" stroke-width="5"
+              stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 50 50)"/>
+            <circle cx="50" cy="50" r="20" fill="none" stroke="var(--w09)" stroke-width="5"/>
+            <circle id="dash-ring-form" cx="50" cy="50" r="20" fill="none" stroke="url(#dashRingGradForm)" stroke-width="5"
+              stroke-linecap="round" stroke-dasharray="125.7" stroke-dashoffset="125.7" transform="rotate(-90 50 50)"/>
+            <defs>
+              <linearGradient id="dashRingGradStreak" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e11d48"/><stop offset="100%" stop-color="#fb7185"/></linearGradient>
+              <linearGradient id="dashRingGradSessions" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
+              <linearGradient id="dashRingGradForm" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#12d999"/><stop offset="100%" stop-color="#3b82f6"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="dash-ring-key">
+          <span><i style="background:linear-gradient(135deg,#e11d48,#fb7185)"></i>Streak</span>
+          <span><i style="background:linear-gradient(135deg,#a78bfa,#8b5cf6)"></i>Sessions</span>
+          <span><i style="background:linear-gradient(135deg,#12d999,#3b82f6)"></i>Form Score</span>
+        </div>
       </div>
     </div>
 

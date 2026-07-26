@@ -2866,7 +2866,9 @@ function doRep(quality){
   }
 }
 function updateScore(s){
-  sessScore=Math.round(sessScore*0.5+s*0.5); // responsive blend — real changes show up in ~3-4 frames, not a slow decay
+  // Floored at 8 rather than letting the displayed score ever hit a stark 0 —
+  // still clearly reads as "not doing it," just not a discouraging dead zero.
+  sessScore=Math.round(sessScore*0.5+Math.max(8,s)*0.5); // responsive blend — real changes show up in ~3-4 frames, not a slow decay
   document.getElementById('s-score').textContent=sessScore+'%';
   setRing(sessScore);
 }
