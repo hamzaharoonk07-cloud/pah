@@ -543,24 +543,19 @@
 .s-ring svg{width:66px;height:66px}
 /* Angle meter */
 .s-ang{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:10;opacity:0;transition:opacity .4s}
-.s-hold-cd{
-  position:absolute;top:96px;left:50%;transform:translateX(-50%);z-index:11;
-  background:rgba(0,0,0,.78);border:2px solid rgba(245,158,11,.55);
-  border-radius:100px;padding:12px 30px;
-  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.7rem;
-  color:#f59e0b;display:none;align-items:center;gap:6px;
-  box-shadow:0 0 0 6px rgba(245,158,11,.14),0 10px 30px rgba(0,0,0,.45);
-  transition:color .3s,border-color .3s,box-shadow .3s;
-  animation:holdCdPulse 1s ease-in-out infinite;
+.s-hold-ring{
+  position:absolute;top:88px;left:50%;transform:translateX(-50%);z-index:11;
+  width:92px;height:92px;display:none;align-items:center;justify-content:center;
+  filter:drop-shadow(0 8px 20px rgba(0,0,0,.5));
 }
-@keyframes holdCdPulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.07)}}
-.s-hold-cd.done{
-  color:#00e5a0;border-color:rgba(0,229,160,.6);
-  box-shadow:0 0 0 8px rgba(0,229,160,.18),0 10px 30px rgba(0,0,0,.45);
-  animation:fbPulse .4s ease;
+.s-hold-ring svg{width:100%;height:100%}
+.s-hold-ring-txt{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.9rem;color:#f59e0b;
+  transition:color .3s;
 }
-@media(prefers-reduced-motion:reduce){.s-hold-cd{animation:none}}
-@media(max-width:540px){.s-hold-cd{top:80px;font-size:1.25rem;padding:9px 22px}}
+.s-hold-ring.done .s-hold-ring-txt{color:#00e5a0;animation:fbPulse .4s ease}
+@media(max-width:540px){.s-hold-ring{top:74px;width:74px;height:74px}.s-hold-ring-txt{font-size:1.5rem}}
 .s-ang.vis{opacity:1}
 /* Rep flash */
 .rep-flash{
@@ -980,7 +975,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   </div>
 
   <!-- Hold countdown — shown while correctly holding a target position -->
-  <div class="s-hold-cd" id="s-hold-cd"></div>
+  <div class="s-hold-ring" id="s-hold-ring">
+    <svg viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="var(--w08)" stroke-width="7"/>
+      <circle id="hold-ring-c" cx="50" cy="50" r="42" fill="none" stroke="#f59e0b" stroke-width="7"
+        stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="0"
+        transform="rotate(-90 50 50)" style="transition:stroke-dashoffset .15s linear,stroke .3s"/>
+    </svg>
+    <div class="s-hold-ring-txt" id="s-hold-ring-txt"></div>
+  </div>
 
   <!-- Rep counter flash -->
   <div class="rep-flash" id="rep-flash"></div>
@@ -2147,30 +2150,45 @@ let holdPraised=false; // reset each time the phase changes so the countdown/pra
 // passes through a dead zone between the engaged and released thresholds
 // before doRep() fires), so sampling it at that moment under-reports how well
 // the hold itself was actually performed.
-let repScoreSum=0,repScoreCount=0;
-function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;}}
+let repScoreSum=0,repScoreCount=0,lastSpokenHoldSec=null;
+function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;lastSpokenHoldSec=null;}}
 function phaseAge(){return performance.now()-phaseChangedAt;}
 
-// Live hold countdown — shown while the user is correctly holding a target
-// position, counting down to the exercise's own minHoldMs (the same gate
-// phaseAge() already uses to decide whether a rep counts). Purely additive
-// UI/voice feedback — never changes when a rep is actually counted, so the
-// existing anti-flick minimum-hold-time logic is untouched.
+// Live hold countdown — a depleting ring (not a bouncing badge) shown while
+// the user is correctly holding a target position, counting down to the
+// exercise's own minHoldMs (the same gate phaseAge() already uses to decide
+// whether a rep counts). The voice coach announces every second out loud
+// (priority:true so it always interrupts and is never dropped/skipped),
+// not just a single message at the end. Purely additive UI/voice feedback —
+// never changes when a rep is actually counted, so the existing anti-flick
+// minimum-hold-time logic is untouched.
+const HOLD_RING_CIRC=263.9; // matches the r=42 circle's circumference
 function updateHoldCountdown(engaged,minHoldMs){
-  const el=document.getElementById('s-hold-cd');
-  if(!engaged){el.style.display='none';return;}
+  const wrap=document.getElementById('s-hold-ring');
+  const ring=document.getElementById('hold-ring-c');
+  const txt=document.getElementById('s-hold-ring-txt');
+  if(!engaged){wrap.style.display='none';lastSpokenHoldSec=null;return;}
+  wrap.style.display='flex';
   const remaining=minHoldMs-phaseAge();
   if(remaining>0){
-    el.style.display='flex';
-    el.classList.remove('done');
-    el.textContent=Math.ceil(remaining/1000)+'s';
+    wrap.classList.remove('done');
+    const frac=Math.max(0,Math.min(1,remaining/minHoldMs));
+    ring.style.stroke='#f59e0b';
+    ring.style.strokeDashoffset=HOLD_RING_CIRC*(1-frac);
+    const sec=Math.ceil(remaining/1000);
+    txt.textContent=sec;
+    if(sec!==lastSpokenHoldSec){
+      lastSpokenHoldSec=sec;
+      VoiceCoach.speak(String(sec),{priority:true});
+    }
   }else{
-    el.style.display='flex';
-    el.classList.add('done');
-    el.textContent='✓ Release now';
+    wrap.classList.add('done');
+    ring.style.stroke='#00e5a0';
+    ring.style.strokeDashoffset=0;
+    txt.textContent='✓';
     if(!holdPraised){
       holdPraised=true;
-      VoiceCoach.speak('Nice, that\'s the hold — release now.',{priority:false});
+      VoiceCoach.speak('Release now.',{priority:true});
     }
   }
 }
@@ -2262,8 +2280,8 @@ function openSession(idx){
   document.getElementById('s-ang').classList.remove('vis');
   document.getElementById('s-instr').style.display='none';
   document.getElementById('demo-live-trigger').style.display='none';
-  document.getElementById('s-hold-cd').style.display='none';
-  holdPraised=false;
+  document.getElementById('s-hold-ring').style.display='none';
+  holdPraised=false;lastSpokenHoldSec=null;
   setFB('Activate your camera to begin the session.','');
   document.getElementById('sess').classList.add('open');
   document.body.style.overflow='hidden';
