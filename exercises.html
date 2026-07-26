@@ -3081,7 +3081,12 @@ function runHold(det,lm){
     const s=idle?8:scoreHold(o.value,lo,hi);
     updateScore(s);setPhase(cfg.activeLabel);
     if(!idle){repScoreSum+=s;repScoreCount++;}
-    if(!idle&&s>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
+    // Gate on sessScore (the smoothed value actually shown on screen and used
+    // for the skeleton color), not the raw per-frame s — s can already read
+    // "good" a frame or two before the displayed/blended score catches up,
+    // which let the countdown start while the user still saw a low, orange
+    // number on screen.
+    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
     else goodFormSince=null;
     updateHoldCountdown(goodFormSince,cfg.minHoldMs);
   }else if(cfg.isReleased(o,lo,hi)&&repPhase==='engaged'){
@@ -3139,7 +3144,8 @@ function runBilateralRaise(lm){
     updateScore(s);setPhase('Raised');
     if(!idle){repScoreSum+=s;repScoreCount++;}
     if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
-    if(!idle&&s>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
+    // Gate on sessScore (smoothed/displayed), not raw s — see runHold for why.
+    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
     else goodFormSince=null;
     updateHoldCountdown(goodFormSince,1200);
   }else if(avg<40&&repPhase==='up'){
