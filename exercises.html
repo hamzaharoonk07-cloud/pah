@@ -2130,7 +2130,7 @@ const AIChat={
 let poseModel=null,poseLoaded=false,camStream=null;
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral',sessCompleting=false,sessStartAt=null;
 let formScores=[],lastLM=null,raf=null,sessActive=false;
-let emaAngle=null,lastRepAt=0,phaseChangedAt=0;
+let emaAngle=null,lastRepAt=0,phaseChangedAt=0,neutralBaseline=null;
 const EMA_ALPHA=0.38;      // responsive-but-stable exponential smoothing for joint angles
 const REP_DEBOUNCE_MS=550; // minimum time between counted reps — filters jitter-driven double counts
 let holdPraised=false; // reset each time the phase changes so the countdown/praise cycle can repeat next hold
@@ -2222,7 +2222,7 @@ const CamDiag={
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   sessCompleting=false;
-  angleRawBuf=[];motionHistory=[];visLossStreak=0;
+  angleRawBuf=[];motionHistory=[];visLossStreak=0;neutralBaseline=null;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
@@ -2642,6 +2642,9 @@ const SKEL_CONNECTIONS=[
   [27,31],[28,32]
 ];
 const SKEL_DOT_SKIP=new Set([1,2,3,4,5,6,9,10,17,18,19,20,21,22,29,30]);
+// Only the functionally-tracked joints get a name label (nose/ears/toes still
+// get a dot for skeleton continuity, just no clutter of a label on each).
+const JOINT_LABELS={11:'Shoulder',12:'Shoulder',13:'Elbow',14:'Elbow',15:'Wrist',16:'Wrist',23:'Hip',24:'Hip',25:'Knee',26:'Knee',27:'Ankle',28:'Ankle'};
 // Smoothed toward the current form score each frame (rather than snapping),
 // so the skeleton overlay reads as a gradual red<->green shift with posture
 // quality instead of an instant flip the moment the score crosses a line.
@@ -2657,7 +2660,7 @@ function drawSkeleton(ctx,lm,W,H){
   ctx.save();
   ctx.lineCap='round';ctx.lineJoin='round';
   ctx.strokeStyle=lineCol;
-  ctx.lineWidth=6;
+  ctx.lineWidth=10;
 
   SKEL_CONNECTIONS.forEach(([a,b])=>{
     const A=lm[a],B=lm[b];
@@ -2671,8 +2674,24 @@ function drawSkeleton(ctx,lm,W,H){
   lm.forEach((pt,i)=>{
     if(SKEL_DOT_SKIP.has(i)||typeof pt.visibility!=='number'||pt.visibility<0.4)return;
     const x=pt.x*W,y=pt.y*H;
-    ctx.beginPath();ctx.arc(x,y,10,0,Math.PI*2);
+    ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);
     ctx.fillStyle=dotCol;ctx.fill();
+    ctx.lineWidth=2;ctx.strokeStyle='rgba(0,0,0,.55)';ctx.stroke();
+  });
+
+  // Joint name labels — drawn after all dots so text always sits on top
+  ctx.font='700 13px "Plus Jakarta Sans",sans-serif';
+  ctx.textBaseline='middle';
+  ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.fillStyle='#fff';
+  lm.forEach((pt,i)=>{
+    const label=JOINT_LABELS[i];
+    if(!label||typeof pt.visibility!=='number'||pt.visibility<0.4)return;
+    const x=pt.x*W,y=pt.y*H;
+    const tx=x+18,ty=y-14;
+    ctx.textAlign=x>W*0.7?'right':'left';
+    const drawX=ctx.textAlign==='right'?x-18:tx;
+    ctx.strokeText(label,drawX,ty);
+    ctx.fillText(label,drawX,ty);
   });
 
   ctx.restore();
@@ -2985,7 +3004,13 @@ function runHold(det,lm){
   const o=cfg.compute(lm);
   setAngle(o.value,o.label,o.unit);
   const idle=isIdleHold(o.value,lo,hi);
-  if(cfg.isEngaged(o,lo,hi)){
+  // Track the resting baseline while not engaged, and require the user to have
+  // actually MOVED a meaningful amount away from it before crediting engagement —
+  // otherwise someone whose resting posture already sits inside the target range
+  // (camera angle, natural stance) gets credited without ever intentionally moving.
+  if(repPhase!=='engaged')neutralBaseline=neutralBaseline==null?o.value:neutralBaseline+(o.value-neutralBaseline)*0.06;
+  const movedEnough=neutralBaseline==null||Math.abs(o.value-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
+  if(cfg.isEngaged(o,lo,hi)&&movedEnough){
     if(repPhase!=='engaged'){setRepPhase('engaged');setFB(cfg.engagedMsg,'good');}
     updateScore(idle?0:scoreHold(o.value,lo,hi));setPhase(cfg.activeLabel);
     updateHoldCountdown(!idle,cfg.minHoldMs);
@@ -2995,7 +3020,7 @@ function runHold(det,lm){
     else{setRepPhase('neutral');setFB(cfg.shortHoldMsg,'warn');}
   }else{
     setFB(cfg.readyMsg,'');setPhase('Ready');
-    updateScore(idle?0:scoreHold(o.value,lo,hi));
+    updateScore(idle||!movedEnough?0:scoreHold(o.value,lo,hi));
     updateHoldCountdown(false);
   }
 }
@@ -3031,7 +3056,9 @@ function runBilateralRaise(lm){
   const symErr=Math.abs(lAng-rAng);
   setAngle(avg,'Arms');
   const idle=isIdleHold(avg,lo,hi);
-  if(weaker>lo){
+  if(repPhase!=='up')neutralBaseline=neutralBaseline==null?avg:neutralBaseline+(avg-neutralBaseline)*0.06;
+  const movedEnough=neutralBaseline==null||Math.abs(avg-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
+  if(weaker>lo&&movedEnough){
     if(repPhase!=='up'){setRepPhase('up');setFB(cfg.engagedMsg,'good');}
     const penalty=symErr>20?15:0;
     updateScore(idle?0:Math.max(0,scoreHold(avg,lo,hi)-penalty));setPhase('Raised');
@@ -3043,7 +3070,7 @@ function runBilateralRaise(lm){
     else{setRepPhase('down');setFB('Lower a little slower for full credit.','warn');}
   }else{
     setFB(cfg.readyMsg,'');
-    updateScore(idle?0:scoreHold(avg,lo,hi));
+    updateScore(idle||!movedEnough?0:scoreHold(avg,lo,hi));
     updateHoldCountdown(false);
   }
 }
