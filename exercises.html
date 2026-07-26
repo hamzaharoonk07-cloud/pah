@@ -2778,9 +2778,17 @@ function smoothAngle(val){
 // no hardcoded per-exercise constants. 'hold' rewards sitting inside [lo,hi];
 // 'oscillate' rewards reaching close to either extreme (full range of motion).
 function scoreHold(val,lo,hi){
-  if(val>=lo&&val<=hi)return 100;
+  // Graduated, not a flat 100 anywhere inside the target range — reaching the
+  // range at all is correct form (so it never drops below a good baseline),
+  // but sitting precisely centered in it scores higher than barely grazing
+  // the edge, so the number actually reflects how well the position was held.
+  const mid=(lo+hi)/2,halfSpan=Math.max((hi-lo)/2,5);
+  if(val>=lo&&val<=hi){
+    const distFromCenter=Math.abs(val-mid)/halfSpan; // 0 at center, 1 at either edge
+    return Math.round(100-distFromCenter*15);
+  }
   const dist=val<lo?lo-val:val-hi;
-  return Math.max(0,100-(dist/Math.max(hi-lo,10))*140);
+  return Math.max(0,Math.round(85-(dist/Math.max(hi-lo,10))*140));
 }
 // Detects genuine stillness (not just "holding the target") so an idle, unengaged
 // body doesn't keep showing a leftover/false score.
