@@ -2152,8 +2152,16 @@ let holdPraised=false; // reset each time the phase changes so the countdown/pra
 // before doRep() fires), so sampling it at that moment under-reports how well
 // the hold itself was actually performed.
 let repScoreSum=0,repScoreCount=0,lastSpokenHoldSec=null;
-function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;lastSpokenHoldSec=null;}}
+function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;lastSpokenHoldSec=null;goodFormSince=null;}}
 function phaseAge(){return performance.now()-phaseChangedAt;}
+// Separate from phaseAge(): phaseAge() starts the instant the angle merely
+// crosses into the engaged threshold, even if form is still poor right at
+// that edge. goodFormSince only starts once the score actually reaches
+// GOOD_FORM_THRESHOLD, and resets the moment it drops back below — so the
+// countdown (and, more importantly, whether a rep counts at all) reflects
+// sustained GOOD form, not just "technically past the minimum."
+let goodFormSince=null;
+const GOOD_FORM_THRESHOLD=70;
 
 // Live hold countdown — a depleting ring (not a bouncing badge) shown while
 // the user is correctly holding a target position, counting down to the
@@ -2164,13 +2172,13 @@ function phaseAge(){return performance.now()-phaseChangedAt;}
 // never changes when a rep is actually counted, so the existing anti-flick
 // minimum-hold-time logic is untouched.
 const HOLD_RING_CIRC=263.9; // matches the r=42 circle's circumference
-function updateHoldCountdown(engaged,minHoldMs){
+function updateHoldCountdown(goodFormStart,minHoldMs){
   const wrap=document.getElementById('s-hold-ring');
   const ring=document.getElementById('hold-ring-c');
   const txt=document.getElementById('s-hold-ring-txt');
-  if(!engaged){wrap.style.display='none';lastSpokenHoldSec=null;return;}
+  if(goodFormStart==null){wrap.style.display='none';lastSpokenHoldSec=null;return;}
   wrap.style.display='flex';
-  const remaining=minHoldMs-phaseAge();
+  const remaining=minHoldMs-(performance.now()-goodFormStart);
   if(remaining>0){
     wrap.classList.remove('done');
     const frac=Math.max(0,Math.min(1,remaining/minHoldMs));
@@ -2255,7 +2263,7 @@ const CamDiag={
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   sessCompleting=false;
-  angleRawBuf=[];motionHistory=[];visLossStreak=0;neutralBaseline=null;
+  angleRawBuf=[];motionHistory=[];visLossStreak=0;neutralBaseline=null;goodFormSince=null;
   torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
@@ -3057,7 +3065,7 @@ const HOLD_CFG={
 };
 function runHold(det,lm){
   const cfg=HOLD_CFG[det];
-  if(!requireVisible(lm,...cfg.vis)){updateHoldCountdown(false);return;}
+  if(!requireVisible(lm,...cfg.vis)){updateHoldCountdown(null);return;}
   const{lo,hi}=sessEx.angles.threshold;
   const o=cfg.compute(lm);
   setAngle(o.value,o.label,o.unit);
@@ -3073,10 +3081,12 @@ function runHold(det,lm){
     const s=idle?8:scoreHold(o.value,lo,hi);
     updateScore(s);setPhase(cfg.activeLabel);
     if(!idle){repScoreSum+=s;repScoreCount++;}
-    updateHoldCountdown(!idle,cfg.minHoldMs);
+    if(!idle&&s>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
+    else goodFormSince=null;
+    updateHoldCountdown(goodFormSince,cfg.minHoldMs);
   }else if(cfg.isReleased(o,lo,hi)&&repPhase==='engaged'){
-    updateHoldCountdown(false);
-    if(phaseAge()>cfg.minHoldMs){
+    updateHoldCountdown(null,cfg.minHoldMs);
+    if(goodFormSince!=null&&performance.now()-goodFormSince>cfg.minHoldMs){
       const repAvg=repScoreCount?Math.round(repScoreSum/repScoreCount):sessScore;
       setRepPhase('neutral');doRep(repAvg);setFB(cfg.releaseMsg,'');
     }
@@ -3084,7 +3094,8 @@ function runHold(det,lm){
   }else{
     setFB(cfg.readyMsg,'');setPhase('Ready');
     updateScore(idle||!movedEnough?8:scoreHold(o.value,lo,hi));
-    updateHoldCountdown(false);
+    goodFormSince=null;
+    updateHoldCountdown(null);
   }
 }
 // Bilateral hold with a symmetry check — genuinely different from the single-
@@ -3109,9 +3120,9 @@ const BILATERAL_CFG={
 const bilateralArmCheck=makeGracedVisibilityCheck(15,'Step back so both raised arms stay fully in frame.');
 function runBilateralRaise(lm){
   const cfg=BILATERAL_CFG[sessEx.det];
-  if(!requireVisible(lm,11,12,23,24)){updateHoldCountdown(false);return;}
+  if(!requireVisible(lm,11,12,23,24)){updateHoldCountdown(null);return;}
   const{lo,hi}=sessEx.angles.threshold;
-  if(!bilateralArmCheck.check(lm,15,16)){setPhase('Adjust Framing');updateHoldCountdown(false);return;}
+  if(!bilateralArmCheck.check(lm,15,16)){setPhase('Adjust Framing');updateHoldCountdown(null);return;}
   const lAng=angleDeg(lm[23],lm[11],lm[15]);
   const rAng=angleDeg(lm[24],lm[12],lm[16]);
   const avg=smoothAngle((lAng+rAng)/2);
@@ -3128,10 +3139,12 @@ function runBilateralRaise(lm){
     updateScore(s);setPhase('Raised');
     if(!idle){repScoreSum+=s;repScoreCount++;}
     if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
-    updateHoldCountdown(!idle,1200);
+    if(!idle&&s>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
+    else goodFormSince=null;
+    updateHoldCountdown(goodFormSince,1200);
   }else if(avg<40&&repPhase==='up'){
-    updateHoldCountdown(false);
-    if(phaseAge()>1200){
+    updateHoldCountdown(null,1200);
+    if(goodFormSince!=null&&performance.now()-goodFormSince>1200){
       const repAvg=repScoreCount?Math.round(repScoreSum/repScoreCount):sessScore;
       setRepPhase('down');doRep(repAvg);setFB('Lower complete — raise again with control.','');
     }
@@ -3139,7 +3152,8 @@ function runBilateralRaise(lm){
   }else{
     setFB(cfg.readyMsg,'');
     updateScore(idle||!movedEnough?8:scoreHold(avg,lo,hi));
-    updateHoldCountdown(false);
+    goodFormSince=null;
+    updateHoldCountdown(null);
   }
 }
 
@@ -3153,7 +3167,8 @@ function analyzeExercise(lm,W,H){
     updateScore(8); // visibly bad form (compensating), but still tracked — not the same as camera/body not visible at all
     setFB('Keep your torso still and upright — move only the target joint, not your whole body.','warn');
     setPhase('Compensating');
-    updateHoldCountdown(false);
+    goodFormSince=null;
+    updateHoldCountdown(null);
     return;
   }
 
