@@ -2788,8 +2788,11 @@ function scoreHold(val,lo,hi){
     const distFromCenter=Math.abs(val-mid)/halfSpan; // 0 at center, 1 at either edge
     return Math.round(100-distFromCenter*15);
   }
+  // Floored at 8, not 0 — badly off-target while still actually being
+  // tracked reads as "very poor form," not a dead zero (true 0 is reserved
+  // for when the camera can't see the body at all — see requireVisible()).
   const dist=val<lo?lo-val:val-hi;
-  return Math.max(0,Math.round(85-(dist/Math.max(hi-lo,10))*140));
+  return Math.max(8,Math.round(85-(dist/Math.max(hi-lo,10))*140));
 }
 // Detects genuine stillness (not just "holding the target") so an idle, unengaged
 // body doesn't keep showing a leftover/false score.
@@ -2867,9 +2870,12 @@ function doRep(quality){
   }
 }
 function updateScore(s){
-  // Floored at 8 rather than letting the displayed score ever hit a stark 0 —
-  // still clearly reads as "not doing it," just not a discouraging dead zero.
-  sessScore=Math.round(sessScore*0.5+Math.max(8,s)*0.5); // responsive blend — real changes show up in ~3-4 frames, not a slow decay
+  // No floor here — a genuine 0 must be reachable (camera lost/body not
+  // visible calls this with a literal 0 via requireVisible, and that has to
+  // actually show 0%, not a fake minimum). The "never quite hits zero" floor
+  // for merely-poor-but-tracked form lives in scoreHold()/the idle-credit
+  // call sites instead, which only ever pass 8 as their floor, not 0.
+  sessScore=Math.round(sessScore*0.5+s*0.5); // responsive blend — real changes show up in ~3-4 frames, not a slow decay
   document.getElementById('s-score').textContent=sessScore+'%';
   setRing(sessScore);
 }
@@ -3064,7 +3070,7 @@ function runHold(det,lm){
   const movedEnough=neutralBaseline==null||Math.abs(o.value-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
   if(cfg.isEngaged(o,lo,hi)&&movedEnough){
     if(repPhase!=='engaged'){setRepPhase('engaged');setFB(cfg.engagedMsg,'good');}
-    const s=idle?0:scoreHold(o.value,lo,hi);
+    const s=idle?8:scoreHold(o.value,lo,hi);
     updateScore(s);setPhase(cfg.activeLabel);
     if(!idle){repScoreSum+=s;repScoreCount++;}
     updateHoldCountdown(!idle,cfg.minHoldMs);
@@ -3077,7 +3083,7 @@ function runHold(det,lm){
     else{setRepPhase('neutral');setFB(cfg.shortHoldMsg,'warn');}
   }else{
     setFB(cfg.readyMsg,'');setPhase('Ready');
-    updateScore(idle||!movedEnough?0:scoreHold(o.value,lo,hi));
+    updateScore(idle||!movedEnough?8:scoreHold(o.value,lo,hi));
     updateHoldCountdown(false);
   }
 }
@@ -3118,7 +3124,7 @@ function runBilateralRaise(lm){
   if(weaker>lo&&movedEnough){
     if(repPhase!=='up'){setRepPhase('up');setFB(cfg.engagedMsg,'good');}
     const penalty=symErr>20?15:0;
-    const s=idle?0:Math.max(0,scoreHold(avg,lo,hi)-penalty);
+    const s=idle?8:Math.max(8,scoreHold(avg,lo,hi)-penalty);
     updateScore(s);setPhase('Raised');
     if(!idle){repScoreSum+=s;repScoreCount++;}
     if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
@@ -3132,7 +3138,7 @@ function runBilateralRaise(lm){
     else{setRepPhase('down');setFB('Lower a little slower for full credit.','warn');}
   }else{
     setFB(cfg.readyMsg,'');
-    updateScore(idle||!movedEnough?0:scoreHold(avg,lo,hi));
+    updateScore(idle||!movedEnough?8:scoreHold(avg,lo,hi));
     updateHoldCountdown(false);
   }
 }
@@ -3144,7 +3150,7 @@ function analyzeExercise(lm,W,H){
   const det=sessEx.det;
 
   if(COMPENSATION_CHECK_DETS.has(det)&&checkTorsoCompensation(lm)){
-    updateScore(0);
+    updateScore(8); // visibly bad form (compensating), but still tracked — not the same as camera/body not visible at all
     setFB('Keep your torso still and upright — move only the target joint, not your whole body.','warn');
     setPhase('Compensating');
     updateHoldCountdown(false);
