@@ -857,7 +857,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="blob-parallax"><div class="hero-blob b3"></div></div>
   <div class="physio-ecg" aria-hidden="true">
     <svg viewBox="0 0 400 70" preserveAspectRatio="none">
-      <g class="ecg-track" data-unit-width="200">
+      <g class="ecg-track">
         <path d="M0,35 L60,35 L68,23 L76,35 L92,35 L100,4 L108,64 L116,35 L132,35 L140,21 L148,35 L200,35
                  L260,35 L268,23 L276,35 L292,35 L300,4 L308,64 L316,35 L332,35 L340,21 L348,35 L400,35"/>
       </g>
@@ -1852,7 +1852,6 @@ document.getElementById('research-grid').innerHTML=RESEARCH.map(r=>`
 // (shared implementation lives in reveal.js)
 // ═══════════════════════════════════════════════════════════
 initScrollReveal('.ex-card,.hosp-card,.research-card,.who-stat,.sec-tag,.sec-h,.sec-p',{stagger:55});
-initEcgPulse();
 
 // ═══════════════════════════════════════════════════════════
 // INTERACTIVE MOTION — magnetic buttons (shared implementation, incl. the
