@@ -251,13 +251,14 @@ button{cursor:pointer;font-family:inherit}
 <section class="ab-hero" id="acct-hero">
   <div class="blob-parallax"><div class="hero-blob b1"></div></div>
   <div class="blob-parallax"><div class="hero-blob b2"></div></div>
-  <svg class="physio-icon pi4" viewBox="0 0 60 100" style="width:78px;top:14%;right:10%" aria-hidden="true">
-    <circle cx="34" cy="14" r="8"/><line x1="34" y1="22" x2="26" y2="55"/>
-    <line x1="30" y1="30" x2="46" y2="18"/><line x1="26" y1="55" x2="14" y2="90"/><line x1="26" y1="55" x2="38" y2="90"/>
-  </svg>
-  <svg class="physio-icon pi3" viewBox="0 0 60 60" style="width:60px;bottom:10%;left:8%" aria-hidden="true">
-    <path d="M10 45 A25 25 0 0 1 50 30"/><circle cx="10" cy="45" r="3"/><circle cx="50" cy="30" r="3"/>
-  </svg>
+  <div class="physio-ecg" aria-hidden="true">
+    <svg viewBox="0 0 400 70" preserveAspectRatio="none">
+      <g class="ecg-track" data-unit-width="200">
+        <path d="M0,35 L60,35 L68,23 L76,35 L92,35 L100,4 L108,64 L116,35 L132,35 L140,21 L148,35 L200,35
+                 L260,35 L268,23 L276,35 L292,35 L300,4 L308,64 L316,35 L332,35 L340,21 L348,35 L400,35"/>
+      </g>
+    </svg>
+  </div>
   <div class="ab-hero-inner">
     <span class="ab-tag">Your Account</span>
     <h1 class="ab-h" id="acct-hero-h">Welcome back<span>.</span></h1>
@@ -653,6 +654,7 @@ function showSessionDetail(idx){
 })();
 
 initMagnetic('.acct-cta-btn,.acct-empty-btn');
+initEcgPulse();
 
 (function initBlobParallax(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;

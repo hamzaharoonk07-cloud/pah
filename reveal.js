@@ -79,3 +79,29 @@ function countUp(el,end,opts){
   }
   requestAnimationFrame(tick);
 }
+
+// ═══════════════════════════════════════════════════════════
+// ECG PULSE LINE — the ambient hero waveform ships in the DOM as a static
+// (non-scrolling) SVG so it's inert-by-default for reduced-motion users.
+// This injects an SMIL <animateTransform> that translates the <g> left by
+// exactly one waveform-unit width (the path is two identical units back to
+// back), producing a seamless infinite scroll — only when motion is
+// actually allowed. CSS media queries can't pause SMIL animations directly,
+// so gating happens here instead.
+// Usage: initEcgPulse() once per page after the markup exists.
+// ═══════════════════════════════════════════════════════════
+function initEcgPulse(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const SVGNS='http://www.w3.org/2000/svg';
+  document.querySelectorAll('.physio-ecg .ecg-track').forEach(g=>{
+    const unitWidth=g.dataset.unitWidth||'200';
+    const a=document.createElementNS(SVGNS,'animateTransform');
+    a.setAttribute('attributeName','transform');
+    a.setAttribute('type','translate');
+    a.setAttribute('from','0,0');
+    a.setAttribute('to',`-${unitWidth},0`);
+    a.setAttribute('dur','3.6s');
+    a.setAttribute('repeatCount','indefinite');
+    g.appendChild(a);
+  });
+}
