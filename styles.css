@@ -129,6 +129,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 /* ═══ SHARED KEYFRAMES (blobs + gradient shimmer) ═══ */
 @keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.08)}}
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ═══ AMBIENT PHYSIO-MOTION ICONS — constant, low-opacity line-art figures
+   (stretch/squat/joint-arc/lunge) drifting behind hero content, always
+   animating (not scroll-triggered), thematically physio rather than
+   generic abstract shapes ═══ */
+.physio-icon{
+  position:absolute;stroke:var(--brand);fill:none;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round;opacity:.09;
+  pointer-events:none;z-index:0;animation:physioFloat 22s ease-in-out infinite;
+}
+.physio-icon.pi2{stroke:var(--purple,#a78bfa);animation-duration:27s;animation-delay:-9s}
+.physio-icon.pi3{stroke:var(--blue,#3b82f6);animation-duration:24s;animation-delay:-15s}
+.physio-icon.pi4{animation-duration:30s;animation-delay:-4s}
+@keyframes physioFloat{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(22px,-26px) rotate(6deg)}}
+:root[data-theme="light"] .physio-icon{opacity:.13}
+@media(prefers-reduced-motion:reduce){.physio-icon{animation:none}}
 @keyframes heroFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
 /* ═══ SCROLL REVEAL (shared base — wired up per-page via reveal.js) ═══ */
