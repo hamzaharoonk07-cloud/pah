@@ -38,8 +38,34 @@
 .jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:var(--bg-strong)}
 
 #sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none;background:var(--bg-strong)}
-.jf-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;background:var(--bg-strong);font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;color:#64748b;transition:opacity .6s}
+.jf-loading{
+  position:absolute;inset:0;display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;
+  z-index:10;background:var(--bg-strong);font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;
+  color:#64748b;transition:opacity .6s;
+}
 .jf-loading.hide{opacity:0;pointer-events:none}
+/* Loading logo — fills with brand color from the bottom up like a glass of
+   water, instead of a plain "Loading…" line. Two stacked copies of the same
+   icon: a dim outline always visible, and a full-color copy revealed
+   progressively by an animated-height clipping wrapper underneath it. */
+.loader-logo{position:relative;width:64px;height:64px}
+.loader-logo-base{width:100%;height:100%;object-fit:contain;opacity:.16;filter:grayscale(1)}
+.loader-logo-fill{
+  position:absolute;left:0;bottom:0;width:100%;height:8%;overflow:hidden;
+  animation:loaderFillRise 2.2s ease-in-out infinite alternate;
+}
+.loader-logo-fill img{
+  position:absolute;left:0;bottom:0;width:64px;height:64px;object-fit:contain;
+  filter:drop-shadow(0 0 8px rgba(225,29,72,.55));
+}
+.loader-logo-fill::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);
+  animation:loaderWaveGlint 2.2s ease-in-out infinite alternate;
+}
+@keyframes loaderFillRise{0%{height:8%}100%{height:94%}}
+@keyframes loaderWaveGlint{0%{opacity:.3}100%{opacity:.9}}
+@media(prefers-reduced-motion:reduce){.loader-logo-fill{animation:none;height:94%}.loader-logo-fill::after{animation:none}}
 
 .jf-overlay-grad{
   position:absolute;inset:0;z-index:2;pointer-events:none;
@@ -338,7 +364,13 @@ syncThemeIcon();
       execution-while-out-of-viewport execution-while-not-rendered web-share>
     </iframe>
     <div class="jf-overlay-grad"></div>
-    <div class="jf-loading" id="jf-loading">Loading 3D Model…</div>
+    <div class="jf-loading" id="jf-loading">
+      <div class="loader-logo">
+        <img src="physiosync-icon.png" alt="" class="loader-logo-base">
+        <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
+      </div>
+      <span>Loading 3D Model…</span>
+    </div>
 
     <svg class="jf-line" id="jf-line"><line id="jf-line-el" x1="0" y1="0" x2="0" y2="0"/></svg>
     <div class="jf-dot" id="jf-dot"></div>
