@@ -93,9 +93,18 @@ function countUp(el,end,opts){
 // bridging the two page loads instead of an abrupt jump/blank flash.
 // Usage: initPageLoader() once per page after the markup exists.
 // ═══════════════════════════════════════════════════════════
+const PAGE_LOADER_LABELS={
+  'index.html':'Loading…',
+  'exercises.html':'Loading Exercises…',
+  'hospitals.html':'Loading Hospitals…',
+  'research.html':'Loading Research…',
+  'about.html':'Loading About…',
+  'account.html':'Loading Your Account…'
+};
 function initPageLoader(){
   const overlay=document.getElementById('page-loader');
   if(!overlay)return;
+  const subEl=overlay.querySelector('.loader-sub');
   const MIN_MS=550;
   const shownAt=performance.now();
   function hide(){
@@ -105,14 +114,24 @@ function initPageLoader(){
   if(document.readyState==='complete')hide();
   else window.addEventListener('load',hide);
 
-  document.querySelectorAll('a[href*=".html"]').forEach(a=>{
+  // Delegated on document, not attached per-link at load time — several
+  // links on this site (e.g. index.html's "Related Exercise" link) get
+  // their href rewritten dynamically after the page loads, so capturing
+  // href once up front (as this used to) meant clicking always navigated
+  // to whatever the link pointed to at page-load, not its current target.
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href*=".html"]');
+    if(!a)return;
     const href=a.getAttribute('href');
     if(!href||/^https?:\/\//i.test(href)||a.target==='_blank')return;
-    a.addEventListener('click',e=>{
-      if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0)return; // let open-in-new-tab etc. work normally
-      e.preventDefault();
-      overlay.classList.remove('hide');
-      setTimeout(()=>{location.href=href;},220);
-    });
+    if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0)return; // let open-in-new-tab etc. work normally
+    e.preventDefault();
+    // Label the destination being navigated TO, not the page being left —
+    // showing this page's own "Loading Exercises…" while leaving it for
+    // Hospitals was backwards and read as wrong/stale information.
+    const file=href.split('?')[0].split('#')[0].split('/').pop();
+    if(subEl&&PAGE_LOADER_LABELS[file])subEl.textContent=PAGE_LOADER_LABELS[file];
+    overlay.classList.remove('hide');
+    setTimeout(()=>{location.href=href;},220);
   });
 }
