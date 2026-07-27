@@ -37,7 +37,15 @@
 #joint-focus{position:relative}
 .jf-sticky{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:var(--bg-strong)}
 
-#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none;background:var(--bg-strong)}
+/* pointer-events:none — this model's camera is driven entirely by scroll
+   position (setCameraLookAt per panel via ScrollTrigger); it was never meant
+   to be manually orbited/zoomed. Sketchfab's own viewer has default mouse-wheel
+   zoom and drag-to-orbit controls, and since this iframe sits under the
+   cursor for the whole scroll-jacked section, every scroll attempt was being
+   captured by Sketchfab's internal camera zoom instead of reaching the page
+   — the page never scrolled, so the region-to-region focus animation never
+   advanced and all the user saw was the model zooming in/out. */
+#sketchfab-frame{position:absolute;inset:0;width:100%;height:100%;border:none;background:var(--bg-strong);pointer-events:none}
 .jf-loading{
   position:absolute;inset:0;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;
   z-index:10;background:var(--bg-strong);transition:opacity .6s;
@@ -78,7 +86,6 @@
 }
 #jf-debug-catch{position:absolute;inset:0;z-index:50;cursor:crosshair;display:none}
 #jf-debug-catch.on{display:block}
-.jf-sticky.debug #sketchfab-frame{pointer-events:none}
 
 .jf-overlay{
   position:absolute;right:0;bottom:0;z-index:5;
