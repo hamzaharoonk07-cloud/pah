@@ -2772,6 +2772,15 @@ function runHold(det,lm){
       setRepPhase('neutral');doRep(repAvg);setFB(cfg.releaseMsg,'');
     }
     else{setRepPhase('neutral');setFB(cfg.shortHoldMsg,'warn');}
+  }else if(repPhase==='engaged'){
+    // Neither isEngaged nor isReleased matched — a single noisy frame sitting
+    // in the dead zone between them, not an actual release. MediaPipe jitter
+    // near the threshold edge used to hit this branch and instantly reset
+    // goodFormSince + flash "Ready", killing an in-progress countdown/hold on
+    // one bad frame (same class of bug as un-debounced visibility loss —
+    // see requireVisible). Just hold the current countdown/state steady and
+    // wait for the next frame to resolve back to engaged or genuinely released.
+    updateHoldCountdown(goodFormSince,cfg.minHoldMs);
   }else{
     setFB(cfg.readyMsg,'');setPhase('Ready');
     updateScore(idle||!movedEnough?8:scoreHold(o.value,lo,hi));
@@ -2831,6 +2840,12 @@ function runBilateralRaise(lm){
       setRepPhase('down');doRep(repAvg);setFB('Lower complete — raise again with control.','');
     }
     else{setRepPhase('down');setFB('Lower a little slower for full credit.','warn');}
+  }else if(repPhase==='up'){
+    // Same dead-zone noise guard as runHold — a single frame where the
+    // weaker arm dips just under lo (or symErr briefly spikes) without
+    // actually dropping below the avg<40 release threshold isn't a real
+    // lower; don't erase the countdown for it.
+    updateHoldCountdown(goodFormSince,1200);
   }else{
     setFB(cfg.readyMsg,'');
     updateScore(idle||!movedEnough?8:scoreHold(avg,lo,hi));
