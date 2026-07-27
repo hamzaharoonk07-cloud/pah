@@ -122,7 +122,13 @@
 #ov-ex-name{font-weight:700}
 @media(max-width:768px){.jf-ex-link{margin-left:0}}
 
-.jf-panels{position:relative;margin-top:-100vh}
+/* pointer-events:none — these are invisible scroll-jacking spacers with no
+   content of their own (ScrollTrigger just watches them scroll past), but
+   since they come after .jf-sticky in DOM order at the same stacking level,
+   they were sitting on top of and silently swallowing clicks on the sticky
+   overlay's real interactive content (the "Related Exercise" link) even
+   though nothing about them is visible. */
+.jf-panels{position:relative;margin-top:-100vh;pointer-events:none}
 .jf-panel{height:100vh}
 
 /* NAVBAR */

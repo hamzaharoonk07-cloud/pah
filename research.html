@@ -18,6 +18,11 @@
 img{max-width:100%;display:block}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:inherit}
+/* nav-greet is intentionally disabled site-wide (exercises.html has this
+   same override) — the markup exists but the feature is unused, so keep
+   it hidden here too rather than showing unstyled "Welcome back," text. */
+.nav-greet{display:none!important}
+.nav-greet span{color:var(--heading)}
 
 /* ═══ SECTION COMMON ═══ */
 .section{padding:80px 24px;position:relative;overflow:hidden}
