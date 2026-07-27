@@ -643,6 +643,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 </style>
 </head>
 <body>
+<div class="page-loader" id="page-loader">
+  <div class="loader-logo">
+    <img src="physiosync-icon.png" alt="" class="loader-logo-base">
+    <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
+  </div>
+  <span class="loader-brand">PhysioSync</span>
+  <span class="loader-sub">Loading Exercises…</span>
+</div>
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
 <!-- ══════════ GATE ══════════ -->
@@ -1512,6 +1520,7 @@ document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>`
 // (shared implementation lives in reveal.js)
 // ═══════════════════════════════════════════════════════════
 initScrollReveal('.ex-card,.sec-tag,.sec-h,.sec-p',{stagger:55});
+initPageLoader();
 
 // ═══════════════════════════════════════════════════════════
 // INTERACTIVE MOTION — magnetic buttons (shared implementation, incl. the

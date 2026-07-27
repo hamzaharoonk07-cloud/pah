@@ -99,6 +99,14 @@ button{cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
+<div class="page-loader" id="page-loader">
+  <div class="loader-logo">
+    <img src="physiosync-icon.png" alt="" class="loader-logo-base">
+    <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
+  </div>
+  <span class="loader-brand">PhysioSync</span>
+  <span class="loader-sub">Loading About…</span>
+</div>
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
 <nav id="navbar">
@@ -292,6 +300,7 @@ syncThemeIcon();
 // Shared reveal (per-card granularity, matching exercises.html) instead of
 // the old whole-<section> reveal.
 initScrollReveal('.mission-card,.value-card,.stat-box,.sec-tag,.sec-h,.sec-p,.ab-cta-box');
+initPageLoader();
 
 (function initStatsCountUp(){
   const statsStrip=document.querySelector('.stats-strip');

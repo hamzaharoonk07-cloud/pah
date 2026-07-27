@@ -212,6 +212,14 @@ button{cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
+<div class="page-loader" id="page-loader">
+  <div class="loader-logo">
+    <img src="physiosync-icon.png" alt="" class="loader-logo-base">
+    <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
+  </div>
+  <span class="loader-brand">PhysioSync</span>
+  <span class="loader-sub">Loading Your Account…</span>
+</div>
 
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
@@ -647,6 +655,7 @@ function showSessionDetail(idx){
 })();
 
 initMagnetic('.acct-cta-btn,.acct-empty-btn');
+initPageLoader();
 
 (function initBlobParallax(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;

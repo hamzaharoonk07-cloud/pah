@@ -83,3 +83,36 @@ function countUp(el,end,opts){
 // ECG pulse line animation is pure CSS now (.ecg-track keyframe in
 // styles.css, GPU-composited transform) — no JS needed to run or to gate
 // reduced-motion, since a plain CSS media query handles that directly.
+
+// ═══════════════════════════════════════════════════════════
+// PAGE LOADER — this is a static multi-page site (no client-side router),
+// so every internal link click is a real browser navigation. This shows
+// the branded liquid-fill splash (#page-loader) for a minimum time on
+// arrival, and re-shows it the instant the user clicks a link to another
+// page on this site, so the transition reads as one continuous animation
+// bridging the two page loads instead of an abrupt jump/blank flash.
+// Usage: initPageLoader() once per page after the markup exists.
+// ═══════════════════════════════════════════════════════════
+function initPageLoader(){
+  const overlay=document.getElementById('page-loader');
+  if(!overlay)return;
+  const MIN_MS=550;
+  const shownAt=performance.now();
+  function hide(){
+    const wait=Math.max(0,MIN_MS-(performance.now()-shownAt));
+    setTimeout(()=>overlay.classList.add('hide'),wait);
+  }
+  if(document.readyState==='complete')hide();
+  else window.addEventListener('load',hide);
+
+  document.querySelectorAll('a[href*=".html"]').forEach(a=>{
+    const href=a.getAttribute('href');
+    if(!href||/^https?:\/\//i.test(href)||a.target==='_blank')return;
+    a.addEventListener('click',e=>{
+      if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0)return; // let open-in-new-tab etc. work normally
+      e.preventDefault();
+      overlay.classList.remove('hide');
+      setTimeout(()=>{location.href=href;},220);
+    });
+  });
+}

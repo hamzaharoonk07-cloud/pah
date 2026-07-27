@@ -42,34 +42,10 @@
   position:absolute;inset:0;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;
   z-index:10;background:var(--bg-strong);transition:opacity .6s;
 }
-.loader-brand{
-  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.15rem;
-  letter-spacing:.02em;color:#fff;margin-top:6px;
-}
-.loader-sub{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:#64748b}
 .jf-loading.hide{opacity:0;pointer-events:none}
-/* Loading logo — fills with brand color from the bottom up like a glass of
-   water, instead of a plain "Loading…" line. Two stacked copies of the same
-   icon: a dim outline always visible, and a full-color copy revealed
-   progressively by an animated-height clipping wrapper underneath it. */
-.loader-logo{position:relative;width:64px;height:64px}
-.loader-logo-base{width:100%;height:100%;object-fit:contain;opacity:.16;filter:grayscale(1)}
-.loader-logo-fill{
-  position:absolute;left:0;bottom:0;width:100%;height:8%;overflow:hidden;
-  animation:loaderFillRise 2.2s ease-in-out infinite alternate;
-}
-.loader-logo-fill img{
-  position:absolute;left:0;bottom:0;width:64px;height:64px;object-fit:contain;
-  filter:drop-shadow(0 0 8px rgba(225,29,72,.55));
-}
-.loader-logo-fill::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);
-  animation:loaderWaveGlint 2.2s ease-in-out infinite alternate;
-}
-@keyframes loaderFillRise{0%{height:8%}100%{height:94%}}
-@keyframes loaderWaveGlint{0%{opacity:.3}100%{opacity:.9}}
-@media(prefers-reduced-motion:reduce){.loader-logo-fill{animation:none;height:94%}.loader-logo-fill::after{animation:none}}
+/* .page-loader (full-page transition splash), .loader-logo/.loader-brand/
+   .loader-sub (the liquid-fill logo + text it's built from) now live in
+   styles.css, shared across every page. */
 
 .jf-overlay-grad{
   position:absolute;inset:0;z-index:2;pointer-events:none;
@@ -261,6 +237,14 @@
 </style>
 </head>
 <body>
+<div class="page-loader" id="page-loader">
+  <div class="loader-logo">
+    <img src="physiosync-icon.png" alt="" class="loader-logo-base">
+    <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
+  </div>
+  <span class="loader-brand">PhysioSync</span>
+  <span class="loader-sub">Loading…</span>
+</div>
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
 <div class="gate-overlay" id="gate-overlay">
@@ -570,6 +554,7 @@ initScrollReveal('.footer-cols>div,.footer-bottom',{stagger:70});
 
 // Magnetic CTAs — shared implementation in reveal.js (previously duplicated).
 initMagnetic('.nav-cta,.gate-submit');
+initPageLoader();
 </script>
 
 <footer class="site-footer">
