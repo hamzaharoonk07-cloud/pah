@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Research & Evidence – PhysioSync</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
+<link rel="stylesheet" href="styles.css">
+<script src="reveal.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script>
+<style>
+/* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
+   blobFloat/gradShift keyframes, .reveal base, and .footer/.f-* live in
+   styles.css. This block keeps only this page's own layout/components
+   (copied from exercises.html, since Research used to be a section there). */
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit}
+
+/* ═══ SECTION COMMON ═══ */
+.section{padding:80px 24px;position:relative;overflow:hidden}
+.section.section-hero{padding:150px 24px 70px}
+.sec-blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:blobFloat 18s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.sec-blob{animation:none}}
+.sec-in{max-width:1320px;margin:0 auto;position:relative;z-index:1}
+.sec-tag{display:inline-block;font-weight:700;font-size:.67rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+.sec-h{font-size:clamp(1.8rem,4.5vw,3rem);font-weight:900;line-height:1.1;margin-bottom:12px;letter-spacing:-.02em}
+.sec-h span{
+  background:linear-gradient(100deg,var(--brand),var(--accent),var(--purple),var(--brand));
+  background-size:300% 100%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:gradShift 7s ease-in-out infinite;
+}
+@media(prefers-reduced-motion:reduce){.sec-h span{animation:none}}
+.sec-p{color:var(--muted);font-size:.92rem;line-height:1.78;max-width:560px;margin-bottom:44px}
+
+/* ═══ WHO STATS BAR ═══ */
+.who-stats-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  margin-bottom:48px;
+}
+.who-stat{
+  background:var(--card2);border:1px solid var(--w07);
+  border-radius:16px;padding:24px;text-align:center;
+  transition:border-color .25s;
+}
+.who-stat:hover{border-color:rgba(225,29,72,.3)}
+.who-stat-num{
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:900;font-size:2.4rem;
+  background:linear-gradient(135deg,var(--brand),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:6px;
+}
+.who-stat-lbl{font-size:.68rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:600;line-height:1.5}
+.who-stat-src{
+  display:block;font-size:.58rem;color:var(--submuted);margin-top:10px;
+  text-decoration:none;transition:color .2s;
+}
+.who-stat-src:hover{color:var(--accent)}
+
+/* ═══ RESEARCH CARDS ═══ */
+.research-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.research-card{
+  background:var(--card2);border:1px solid var(--w07);
+  border-radius:var(--r-lg);padding:24px;transition:border-color .25s,transform .25s,box-shadow .25s;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow-md);
+}
+.research-card:hover{border-color:rgba(225,29,72,.35);transform:translateY(-3px)}
+.research-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--brand),var(--accent));
+  opacity:0;transition:opacity .3s;
+}
+.research-card:hover::before{opacity:1}
+.research-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:14px;
+}
+.research-icon svg{width:20px;height:20px;stroke:var(--brand)}
+.research-tag{
+  display:inline-block;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;padding:2px 10px;border-radius:100px;
+  background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.15);margin-bottom:10px;
+}
+.research-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.98rem;line-height:1.35;margin-bottom:8px}
+.research-desc{color:var(--muted);font-size:.79rem;line-height:1.7;margin-bottom:12px}
+.research-fact{
+  display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:9px;
+  background:rgba(0,229,160,.06);border:1px solid rgba(0,229,160,.15);
+  font-size:.72rem;color:var(--submuted);line-height:1.5;
+}
+.research-fact svg{width:14px;height:14px;stroke:var(--green);flex-shrink:0;margin-top:1px}
+.research-fact strong{color:#00e5a0;font-weight:700}
+.research-src{
+  display:inline-flex;align-items:center;gap:4px;margin-top:13px;
+  font-size:.68rem;font-weight:700;color:var(--brand);text-decoration:none;
+  letter-spacing:.02em;transition:color .2s,gap .2s;
+}
+.research-src:hover{color:var(--accent);gap:7px}
+.who-badge{
+  display:inline-flex;align-items:center;gap:7px;margin-bottom:14px;
+  padding:6px 16px;border-radius:100px;background:var(--w04);
+  border:1px solid var(--w10);font-size:.68rem;font-weight:600;color:var(--muted);
+}
+.who-badge strong{color:var(--heading);font-weight:800}
+.who-badge svg{width:13px;height:13px;stroke:#00e5a0;flex-shrink:0}
+
+.toast{
+  position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);z-index:2000;
+  background:var(--card1);border:1px solid var(--w10);border-radius:12px;padding:13px 20px;
+  font-size:.83rem;box-shadow:0 20px 50px rgba(0,0,0,.4);opacity:0;transition:all .3s;
+  display:flex;align-items:center;gap:10px;max-width:90vw;
+}
+.toast::before{content:'';width:7px;height:7px;margin-top:0;border-radius:50%;background:var(--brand);box-shadow:0 0 8px var(--brand);flex-shrink:0}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+#scroll-top{
+  position:fixed;bottom:33px;right:33px;z-index:400;
+  width:40px;height:40px;border-radius:50%;background:var(--brand);border:none;color:#fff;
+  display:none;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-glow-brand);transition:transform .2s;
+}
+#scroll-top.vis{display:flex}
+#scroll-top:hover{transform:translateY(-2px)}
+#scroll-top svg{width:16px;height:16px;stroke:#fff}
+
+@media(max-width:768px){
+  #navbar{padding:0 18px}
+  .nav-logo{font-size:.92rem}
+  .nav-logo .brand-icon{height:30px}
+  .nav-logo .brand-text{height:20px}
+  .nav-streak,.nav-greet{display:none!important}
+  .nav-right{gap:6px}
+  .who-stats-bar{grid-template-columns:repeat(2,1fr)}
+  .research-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:52px">
+    <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:26px">
+    <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:26px">
+  </a>
+  <div class="nav-links">
+    <a href="exercises.html#hero" class="nl">Exercises</a>
+    <a href="hospitals.html" class="nl">Hospitals</a>
+    <a href="research.html" class="nl">Research</a>
+    <a href="about.html" class="nl">About</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-greet" id="nav-greet" style="display:none">Welcome back, <span id="nav-name">—</span></div>
+    <div class="nav-streak" id="nav-streak" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor" stroke="none"/></svg>
+      <span id="nav-streak-val">0</span>d streak
+    </div>
+    <a href="index.html" class="theme-tgl" aria-label="Home" title="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+    </a>
+    <a href="account.html" class="theme-tgl" aria-label="Your account" title="Your account">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+    </a>
+    <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+    <div class="ham" id="ham" onclick="document.getElementById('mob-nav').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mob-menu" id="mob-nav">
+  <a href="exercises.html#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
+  <a href="hospitals.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
+  <a href="research.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
+  <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
+</div>
+
+<!-- ══════════ RESEARCH ══════════ -->
+<section class="section section-hero" id="research" style="background:var(--bg)">
+  <div class="sec-blob" style="width:300px;height:300px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%);animation-delay:-3s"></div>
+  <div class="sec-blob" style="width:360px;height:360px;bottom:-160px;right:-120px;background:radial-gradient(circle,rgba(0,229,160,.1),transparent 70%);animation-delay:-12s"></div>
+  <div class="sec-in">
+    <span class="sec-tag">WHO Evidence & Global Data</span>
+    <h2 class="sec-h">The Science Behind <span>Rehabilitation</span></h2>
+    <p class="sec-p">All PhysioSync protocols are built on evidence from the World Health Organization, peer-reviewed clinical trials, and systematic reviews. These are the facts driving modern rehabilitation practice worldwide.</p>
+    <div class="who-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Every statistic below is sourced from <strong>who.int</strong> — tap any citation to verify it yourself.
+    </div>
+    <div class="who-stats-bar" id="who-stats-bar"></div>
+    <div class="research-grid" id="research-grid"></div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer">
+  <div class="f-badges">
+    <div class="f-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Camera never leaves your device
+    </div>
+    <div class="f-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Research sourced directly from who.int
+    </div>
+  </div>
+  <div class="footer-cols">
+    <div>
+      <div class="f-brand">
+        <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:58px">
+        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:30px">
+        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:30px">
+      </div>
+      <p class="f-desc">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
+    </div>
+    <div>
+      <div class="f-hd">Platform</div>
+      <div class="f-lks">
+        <a href="exercises.html#hero">Exercises</a>
+        <a href="hospitals.html">Hospitals</a>
+        <a href="research.html">Research</a>
+        <a href="account.html">Account</a>
+        <a href="index.html">3D Body Map</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-hd">Company</div>
+      <div class="f-lks">
+        <a href="about.html">About PhysioSync</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-hd">Contact</div>
+      <div class="f-lks">
+        <span>physiosync@gmail.com</span>
+        <span>0316 2404444</span>
+        <span>Karachi, Pakistan</span>
+      </div>
+    </div>
+  </div>
+  <div class="f-bot">
+    <span>&copy; 2026 PhysioSync. All rights reserved.</span>
+    <div class="f-soc">
+      <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
+      <a href="https://instagram.com/physiosync" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
+      <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
+    </div>
+    <div class="f-bot-lks"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script>
+function syncThemeIcon(){
+  const light=document.documentElement.getAttribute('data-theme')==='light';
+  const sun=document.getElementById('theme-ic-sun'),moon=document.getElementById('theme-ic-moon');
+  if(sun&&moon){sun.style.display=light?'block':'none';moon.style.display=light?'none':'block';}
+}
+function toggleTheme(){
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  if(isLight){document.documentElement.removeAttribute('data-theme');localStorage.setItem('pah-theme','dark');}
+  else{document.documentElement.setAttribute('data-theme','light');localStorage.setItem('pah-theme','light');}
+  syncThemeIcon();
+}
+syncThemeIcon();
+
+function loadU(){
+  const u=JSON.parse(localStorage.getItem('pah_v5')||JSON.stringify({
+    streak:0,sessions:0,reps:0,formScores:[],
+    weeklyReps:[0,0,0,0,0,0,0],recent:[],lastDate:''
+  }));
+  u.dailyReps=u.dailyReps||{};
+  return u;
+}
+function renderNavStreak(){
+  const u=loadU();
+  if(u.streak>0){
+    document.getElementById('nav-streak').style.display='flex';
+    document.getElementById('nav-streak-val').textContent=u.streak;
+  }
+}
+renderNavStreak();
+(function(){
+  const acc=JSON.parse(localStorage.getItem('pah_acc')||'null');
+  if(acc){
+    document.getElementById('nav-greet').style.display='flex';
+    document.getElementById('nav-name').textContent=acc.name.split(' ')[0];
+  }
+})();
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('scroll-top').classList.toggle('vis',window.scrollY>400);
+});
+
+// ═══════════════════════════════════════════════════════════
+// WHO RESEARCH & EVIDENCE
+// ═══════════════════════════════════════════════════════════
+const WHO_STATS=[
+  {num:'2.4B',lbl:'People currently living with a condition that may benefit from rehabilitation',src:'WHO Rehabilitation Fact Sheet, 2023',url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'},
+  {num:'1 in 3',lbl:'People globally may need rehabilitation at some point in their life',src:'WHO Rehabilitation 2030 Initiative',url:'https://www.who.int/initiatives/rehabilitation-2030'},
+  {num:'619M',lbl:'People living with low back pain — the world\'s leading cause of disability',src:'WHO Low Back Pain Fact Sheet, 2023',url:'https://www.who.int/news-room/fact-sheets/detail/low-back-pain'},
+  {num:'<10',lbl:'Skilled rehabilitation workers per million people in many lower-income countries',src:'WHO Rehabilitation Fact Sheet, 2023',url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'}
+];
+
+const RESEARCH=[
+  {
+    title:'Rehabilitation 2030: A Call for Action',
+    tag:'WHO Initiative',
+    desc:'Launched in February 2017, this WHO initiative addresses the profound unmet need for rehabilitation worldwide. It establishes 10 priority areas including leadership, workforce development, financing, and integrating rehabilitation into universal health coverage.',
+    fact:'Rehabilitation is now recognized as an essential health service for achieving Universal Health Coverage (UHC).',
+    icon:'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
+    url:'https://www.who.int/initiatives/rehabilitation-2030'
+  },
+  {
+    title:'Global Unmet Need for Rehabilitation',
+    tag:'WHO Statistics',
+    desc:'An estimated 2.4 billion people worldwide are currently living with a health condition that may benefit from rehabilitation. In many low- and middle-income countries, more than half of those who need it do not receive it.',
+    fact:'Musculoskeletal disorders are the greatest contributor to global rehabilitation needs, with low back pain affecting 619 million people.',
+    icon:'M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z',
+    url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'
+  },
+  {
+    title:'WHA76.6: Historic Resolution',
+    tag:'Global Policy',
+    desc:'In May 2023, the World Health Assembly passed resolution WHA76.6 — the first time in 75 years that rehabilitation was recognized as a core global public health priority. It mandates WHO to develop global rehabilitation targets and indicators for 2030.',
+    fact:'WHO now supports roughly 78 countries directly in strengthening their national rehabilitation services.',
+    icon:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+    url:'https://www.who.int/initiatives/rehabilitation-2030'
+  },
+  {
+    title:'Low Back Pain: The Leading Cause of Disability',
+    tag:'WHO Fact Sheet',
+    desc:'Low back pain is the single leading cause of disability worldwide. WHO projects cases will rise from 619 million today to 843 million by 2050 as populations age and grow.',
+    fact:'About 90% of low back pain cases are "non-specific" — meaning no single structural cause is found, and movement-based rehabilitation is the primary treatment.',
+    icon:'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z',
+    url:'https://www.who.int/news-room/fact-sheets/detail/low-back-pain'
+  },
+  {
+    title:'Physiotherapy Access Gap',
+    tag:'WHO Workforce Data',
+    desc:'Many low- and middle-income countries have fewer than 10 skilled rehabilitation practitioners per million people — far below what is needed to meet demand.',
+    fact:'This shortage is a central reason WHO promotes accessible, evidence-based home rehabilitation programs like guided exercise therapy.',
+    icon:'M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z',
+    url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'
+  },
+  {
+    title:'An Aging World Needs More Rehabilitation',
+    tag:'WHO Projections',
+    desc:'The number of people aged over 60 is projected to double by 2050 — driving sustained growth in demand for rehabilitation and physiotherapy services worldwide.',
+    fact:'WHO frames accessible rehabilitation as essential infrastructure for healthy aging, not an optional add-on to healthcare.',
+    icon:'M22 12h-4l-3 9L9 3l-3 9H2',
+    url:'https://www.who.int/news-room/fact-sheets/detail/rehabilitation'
+  }
+];
+
+const checkSVG='<svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+document.getElementById('who-stats-bar').innerHTML=WHO_STATS.map(s=>`
+<div class="who-stat">
+  <div class="who-stat-num">${s.num}</div>
+  <div class="who-stat-lbl">${s.lbl}</div>
+  <a class="who-stat-src" href="${s.url}" target="_blank" rel="noopener noreferrer">Source: ${s.src} ↗</a>
+</div>`).join('');
+
+document.getElementById('research-grid').innerHTML=RESEARCH.map(r=>`
+<div class="research-card">
+  <div class="research-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="${r.icon}"/>
+    </svg>
+  </div>
+  <div class="research-tag">${r.tag}</div>
+  <h3 class="research-title">${r.title}</h3>
+  <p class="research-desc">${r.desc}</p>
+  <div class="research-fact">
+    ${checkSVG}
+    <span><strong>WHO Fact:</strong> ${r.fact}</span>
+  </div>
+  <a class="research-src" href="${r.url}" target="_blank" rel="noopener noreferrer">View source on who.int ↗</a>
+</div>`).join('');
+
+initScrollReveal('.research-card,.who-stat,.sec-tag,.sec-h,.sec-p',{stagger:55});
+</script>
+</body>
+</html>
