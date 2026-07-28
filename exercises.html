@@ -2597,11 +2597,12 @@ function requireVisible(lm,...idx){
 // of landmarks that are expected to flicker in and out more than the core body
 // (e.g. wrists at full overhead extension) — never a single-frame silent freeze;
 // after the grace window it surfaces an actionable message instead of going mute.
-function makeGracedVisibilityCheck(grace,msg){
+function makeGracedVisibilityCheck(grace,msg,minVis=0.35){
   let streak=0;
+  const seen=(lm,idx)=>idx.every(i=>lm[i]&&typeof lm[i].visibility==='number'&&lm[i].visibility>minVis);
   return{
     check(lm,...idx){
-      if(safe(lm,...idx)){streak=0;return true;}
+      if(seen(lm,idx)){streak=0;return true;}
       streak++;
       if(streak<grace)return true;
       setFB(msg,'warn');
@@ -2824,7 +2825,11 @@ const BILATERAL_CFG={
     engagedMsg:'Good — both arms at shoulder height. Hold 2 seconds.'
   }
 };
-const bilateralArmCheck=makeGracedVisibilityCheck(15,'Step back so both raised arms stay fully in frame.');
+// Lower confidence bar (0.15 vs. the default 0.35) — wrists genuinely read lower-confidence
+// from MediaPipe at full overhead/lateral extension (foreshortened toward the camera, near
+// the frame edge) even while still actually in frame and actually trackable; the standard
+// threshold was flagging "Adjust Framing" on correctly-visible-but-less-confident wrists.
+const bilateralArmCheck=makeGracedVisibilityCheck(15,'Step back so both raised arms stay fully in frame.',0.15);
 function runBilateralRaise(lm){
   const cfg=BILATERAL_CFG[sessEx.det];
   if(!requireVisible(lm,11,12,23,24)){updateHoldCountdown(null);return;}
