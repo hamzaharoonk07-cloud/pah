@@ -1939,8 +1939,8 @@ const CamDiag={
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   sessCompleting=false;
-  angleRawBuf=[];motionHistory=[];visLossStreak=0;neutralBaseline=null;goodFormSince=null;
-  torsoRawBuf=[];torsoEma=null;bilateralArmCheck.reset();
+  angleRawBuf=[];motionHistory=[];visLossStreak=0;noPoseStreak=0;neutralBaseline=null;goodFormSince=null;
+  torsoRawBuf=[];torsoEma=null;compensationStreak=0;bilateralArmCheck.reset();
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
@@ -2309,6 +2309,10 @@ function startLoop(){
 }
 
 // ── POSE RESULTS with landmark loss handling — FIXED ──
+let noPoseStreak=0;
+const NO_POSE_GRACE=6; // ~200ms at 30fps — matches VIS_LOSS_GRACE; a single missed-detection
+// frame from MediaPipe (motion blur, brief occlusion mid-rep) is normal noise, not real tracking
+// loss, so it must not instantly zero the score — only a genuine multi-frame miss should.
 function onPoseResults(results){
   if(!sessActive)return;
   const cv=document.getElementById('s-canvas');
@@ -2316,10 +2320,16 @@ function onPoseResults(results){
   ctx.clearRect(0,0,cv.width,cv.height);
 
   if(!results||!results.poseLandmarks||!results.poseLandmarks.length){
+    noPoseStreak++;
     if(lastLM){
       ctx.globalAlpha=0.35;
       drawSkeleton(ctx,lastLM,cv.width,cv.height);
       ctx.globalAlpha=1.0;
+    }
+    if(noPoseStreak<NO_POSE_GRACE&&lastLM){
+      // Brief dip — keep analyzing off the last known landmarks instead of freezing/zeroing.
+      analyzeExercise(lastLM,cv.width,cv.height);
+      return;
     }
     updateScore(0);
     setAngle(0,'—','');
@@ -2328,6 +2338,7 @@ function onPoseResults(results){
     return;
   }
 
+  noPoseStreak=0;
   const lm=results.poseLandmarks;
   lastLM=lm;
 
@@ -2618,11 +2629,17 @@ function smoothTorso(val){
 // check instead (bilateral_raise, lateral_raise), or requires a single-leg
 // balance adjustment that would false-positive this check.
 const COMPENSATION_CHECK_DETS=new Set(['neck_tilt']);
+let compensationStreak=0;
+const COMPENSATION_GRACE=6; // ~200ms at 30fps, same debounce pattern as requireVisible —
+// a momentary torso-lean spike (balance shift, natural sway) is normal noise, not real
+// compensation, and must not instantly wipe out an in-progress hold countdown.
 function checkTorsoCompensation(lm){
-  if(!safe(lm,11,12,23,24))return false;
+  if(!safe(lm,11,12,23,24)){compensationStreak=0;return false;}
   const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
   const hipMid={x:(lm[23].x+lm[24].x)/2,y:(lm[23].y+lm[24].y)/2};
-  return smoothTorso(angleFromVertical(hipMid,shoulderMid))>20;
+  const leaning=smoothTorso(angleFromVertical(hipMid,shoulderMid))>20;
+  compensationStreak=leaning?compensationStreak+1:0;
+  return compensationStreak>=COMPENSATION_GRACE;
 }
 
 // ═══════════════════════════════════════════════════════════
