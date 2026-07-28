@@ -130,62 +130,29 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 @keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(24px,-18px) scale(1.08)}}
 @keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-/* ═══ AMBIENT TRACKING-THEMED DECORATION SET — three background motifs that
-   replace the old generic heart-monitor line with visuals that actually echo
-   what this app does (joint-angle tracking, movement, reps), not a stock
-   hospital cliché. Each is a single inert div (no JS, no scroll-trigger),
-   pointer-events:none, low opacity, gated behind prefers-reduced-motion, and
-   dimmed slightly further in light theme same as the existing blobs. ═══ */
-
-/* Ambient skeleton — a faint stick-figure silhouette that softly breathes/
-   drifts in place, echoing the live tracking overlay's own skeleton without
-   claiming to actually track anything here. Position per placement via
-   inline top/left/right on the element. */
-.physio-skeleton{
-  position:absolute;width:150px;height:206px;pointer-events:none;z-index:0;
-  opacity:.32;filter:drop-shadow(0 0 6px rgba(225,29,72,.5));
-  background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 110'%3E%3Ccircle cx='40' cy='14' r='9' fill='none' stroke='%23e11d48' stroke-width='2.5'/%3E%3Cpath d='M40,23 L24,28 M40,23 L56,28 M24,28 L14,48 L10,68 M56,28 L66,48 L70,68 M24,28 L30,60 M56,28 L50,60 M30,60 L50,60 M30,60 L26,84 L22,105 M50,60 L54,84 L58,105' fill='none' stroke='%23e11d48' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='24' cy='28' r='3' fill='%23e11d48'/%3E%3Ccircle cx='56' cy='28' r='3' fill='%23e11d48'/%3E%3Ccircle cx='14' cy='48' r='3' fill='%23e11d48'/%3E%3Ccircle cx='66' cy='48' r='3' fill='%23e11d48'/%3E%3Ccircle cx='10' cy='68' r='3' fill='%23e11d48'/%3E%3Ccircle cx='70' cy='68' r='3' fill='%23e11d48'/%3E%3Ccircle cx='30' cy='60' r='3' fill='%23e11d48'/%3E%3Ccircle cx='50' cy='60' r='3' fill='%23e11d48'/%3E%3Ccircle cx='26' cy='84' r='3' fill='%23e11d48'/%3E%3Ccircle cx='54' cy='84' r='3' fill='%23e11d48'/%3E%3Ccircle cx='22' cy='105' r='3' fill='%23e11d48'/%3E%3Ccircle cx='58' cy='105' r='3' fill='%23e11d48'/%3E%3C/svg%3E");
-  animation:skeletonBreathe 6s ease-in-out infinite;
-}
-@keyframes skeletonBreathe{0%,100%{transform:translateY(0) scale(1);opacity:.28}50%{transform:translateY(-8px) scale(1.03);opacity:.4}}
-@media(prefers-reduced-motion:reduce){.physio-skeleton{animation:none}}
-:root[data-theme="light"] .physio-skeleton{opacity:.24}
-
-/* Goniometer — a static protractor arc (background image) with a needle
-   (a ::after line element, so it can rotate independently via plain CSS
-   transform) sweeping back and forth like measuring a joint's range of
-   motion — the app's actual core mechanic, just as ambient decoration. */
-.physio-goniometer{
-  position:absolute;width:130px;height:130px;pointer-events:none;z-index:0;
-  opacity:.35;filter:drop-shadow(0 0 5px rgba(139,92,246,.5));
-  background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M15,70 A40,40 0 0,1 85,70' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round' opacity='.55'/%3E%3Ccircle cx='50' cy='70' r='2.5' fill='%238b5cf6'/%3E%3C/svg%3E");
-}
-.physio-goniometer::after{
-  content:'';position:absolute;left:50%;bottom:30%;width:2.5px;height:38%;
-  background:linear-gradient(to top,#e11d48,rgba(225,29,72,0));
-  border-radius:2px;transform-origin:bottom center;
-  animation:goniometerSweep 4.5s ease-in-out infinite;
-}
-@keyframes goniometerSweep{0%,100%{transform:translateX(-50%) rotate(-42deg)}50%{transform:translateX(-50%) rotate(42deg)}}
-@media(prefers-reduced-motion:reduce){.physio-goniometer::after{animation:none;transform:translateX(-50%) rotate(0deg)}}
-:root[data-theme="light"] .physio-goniometer{opacity:.28}
-
-/* Rep-cycle wave — same proven repeating-background-tile scroll technique as
-   the old ECG line (see git history), but a smooth sine curve instead of a
-   spiky cardiac trace, reframed as a rep's up/down cycle rather than a
-   heartbeat. Confined to a fixed-height strip clear of surrounding text. */
-.physio-repwave{
-  position:absolute;width:100%;height:40px;overflow:hidden;
-  pointer-events:none;z-index:0;opacity:.4;
-  filter:drop-shadow(0 0 4px rgba(139,92,246,.55));
+/* ═══ AMBIENT ECG PULSE LINE — a glowing heart-monitor waveform continuously
+   scrolling across the hero, constant and not scroll-triggered. Built as a
+   repeating CSS background tile (background-repeat:repeat-x) rather than a
+   fixed number of duplicated SVG copies — the earlier duplicated-copy
+   approach only ever drew exactly 2 units across the full container width,
+   so once scrolled it ran out of pattern to show and visibly went blank
+   before snapping back. A repeat-x background tiles as many copies as the
+   container needs regardless of width, so shifting by exactly one tile
+   width is seamless by construction, with no gap. Confined to a fixed-
+   height strip well clear of surrounding content so it never overlaps
+   text/badges. ═══ */
+.physio-ecg{
+  position:absolute;top:68px;left:0;width:100%;height:40px;overflow:hidden;
+  pointer-events:none;z-index:0;opacity:.45;
+  filter:drop-shadow(0 0 4px rgba(225,29,72,.65));
   background-repeat:repeat-x;
   background-size:160px 40px;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 40'%3E%3Cpath d='M0,20 C13,4 27,4 40,20 C53,36 67,36 80,20 C93,4 107,4 120,20 C133,36 147,36 160,20' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-  animation:repwaveScroll 4s linear infinite;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 40'%3E%3Cpath d='M0,20 L28,20 L33,12 L38,20 L48,20 L54,3 L60,36 L66,20 L76,20 L82,10 L88,20 L160,20' fill='none' stroke='%23e11d48' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  animation:ecgScroll 3.2s linear infinite;
 }
-@keyframes repwaveScroll{from{background-position-x:0}to{background-position-x:-160px}}
-@media(prefers-reduced-motion:reduce){.physio-repwave{animation:none}}
-:root[data-theme="light"] .physio-repwave{opacity:.32}
+@keyframes ecgScroll{from{background-position-x:0}to{background-position-x:-160px}}
+@media(prefers-reduced-motion:reduce){.physio-ecg{animation:none}}
+:root[data-theme="light"] .physio-ecg{opacity:.4}
 @keyframes heroFadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
 /* ═══ SCROLL REVEAL (shared base — wired up per-page via reveal.js) ═══ */
