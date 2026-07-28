@@ -2583,8 +2583,13 @@ function safe(lm,...idx){return idx.every(i=>lm[i]&&vis(lm[i]));}
 // false tracking-loss state while the user is actually moving correctly.
 let visLossStreak=0;
 const VIS_LOSS_GRACE=6; // ~200ms at 30fps
-function requireVisible(lm,...idx){
-  if(safe(lm,...idx)){visLossStreak=0;return true;}
+// minVis defaults to safe()'s standard 0.35 for big core-body joints, but a detector can pass
+// a lower bar for a small/far extremity landmark (e.g. wrist_flex's index-finger tip) that
+// genuinely reads lower confidence from MediaPipe even while actually visible and trackable —
+// same reasoning as the bilateral-raise wrist check.
+function requireVisible(lm,minVis,...idx){
+  const seen=idx.every(i=>lm[i]&&typeof lm[i].visibility==='number'&&lm[i].visibility>minVis);
+  if(seen){visLossStreak=0;return true;}
   visLossStreak++;
   if(visLossStreak<VIS_LOSS_GRACE)return true; // brief dip — keep using the last landmarks, don't flag yet
   updateScore(0);
@@ -2742,9 +2747,11 @@ const HOLD_CFG={
     vis:[13,15,19],
     // The forearm-wrist-index angle is a genuine, real wrist flexion/extension
     // measurement (not a proxy) — but the index-finger landmark is small and
-    // farther from the camera than the big-joint exercises in this app, so
-    // expect this one to need more lighting/framing care and possibly a
-    // threshold retune after live testing, same as the other new exercises did.
+    // farther from the camera than the big-joint exercises in this app, so it
+    // genuinely reads lower MediaPipe confidence even while actually visible
+    // and trackable — same reasoning and same fix as the bilateral-raise
+    // wrist check, just on the primary visibility gate instead of a secondary one.
+    minVis:0.2,
     compute(lm){
       return{value:smoothAngle(Math.max(0,180-angleDeg(lm[13],lm[15],lm[19]))),label:'Wrist Flex',unit:'°'};
     },
@@ -2759,7 +2766,7 @@ const HOLD_CFG={
 };
 function runHold(det,lm){
   const cfg=HOLD_CFG[det];
-  if(!requireVisible(lm,...cfg.vis)){updateHoldCountdown(null);return;}
+  if(!requireVisible(lm,cfg.minVis??0.35,...cfg.vis)){updateHoldCountdown(null);return;}
   const{lo,hi}=sessEx.angles.threshold;
   const o=cfg.compute(lm);
   setAngle(o.value,o.label,o.unit);
@@ -2832,7 +2839,7 @@ const BILATERAL_CFG={
 const bilateralArmCheck=makeGracedVisibilityCheck(15,'Step back so both raised arms stay fully in frame.',0.15);
 function runBilateralRaise(lm){
   const cfg=BILATERAL_CFG[sessEx.det];
-  if(!requireVisible(lm,11,12,23,24)){updateHoldCountdown(null);return;}
+  if(!requireVisible(lm,0.35,11,12,23,24)){updateHoldCountdown(null);return;}
   const{lo,hi}=sessEx.angles.threshold;
   if(!bilateralArmCheck.check(lm,15,16)){setPhase('Adjust Framing');updateHoldCountdown(null);return;}
   const lAng=angleDeg(lm[23],lm[11],lm[15]);
