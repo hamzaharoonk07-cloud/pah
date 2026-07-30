@@ -1877,8 +1877,18 @@ function phaseAge(){return performance.now()-phaseChangedAt;}
 // GOOD_FORM_THRESHOLD, and resets the moment it drops back below — so the
 // countdown (and, more importantly, whether a rep counts at all) reflects
 // sustained GOOD form, not just "technically past the minimum."
+//
+// scoreHold() never scores below 85 anywhere INSIDE the target [lo,hi] range
+// — including a single frame that just barely grazed the near edge, the same
+// instant isEngaged first fires. A threshold of 70 sat below that floor, so
+// the countdown could start the moment the engaged phase began, before any
+// real depth/hold quality — exactly "barely moved and it's already counting
+// down." 88 sits above the in-range floor, so reaching the edge of the
+// target range is no longer enough on its own; the user has to move
+// noticeably in from that edge (roughly the inner 80% of the range) before
+// the hold countdown begins.
 let goodFormSince=null;
-const GOOD_FORM_THRESHOLD=70;
+const GOOD_FORM_THRESHOLD=88;
 
 // Live hold countdown — a depleting ring (not a bouncing badge) shown while
 // the user is correctly holding a target position, counting down to the
