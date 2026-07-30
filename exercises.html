@@ -1855,6 +1855,7 @@ const AIChat={
 // SESSION ENGINE — MediaPipe Pose Tracking (FIXED)
 // ═══════════════════════════════════════════════════════════
 let poseModel=null,poseLoaded=false,camStream=null;
+let firstPoseReceivedAt=null,modelStuckTimer=null; // see startLoop()/onPoseResults() below
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral',sessCompleting=false,sessStartAt=null;
 let formScores=[],lastLM=null,raf=null,sessActive=false;
 let emaAngle=null,lastRepAt=0,phaseChangedAt=0,neutralBaseline=null;
@@ -2202,8 +2203,45 @@ async function startCamera(){
 
   sessActive=true;
   sessStartAt=Date.now();
+  firstPoseReceivedAt=null;
   await loadPoseModel();
   startLoop();
+  armModelStuckWatchdog();
+}
+
+// The MediaPipe CDN occasionally serves a transient error on one of the
+// model's asset files (observed: pose_solution_packed_assets.data briefly
+// returning 503). When that happens the WASM runtime just waits forever on
+// that dependency, poseModel.send() never resolves or rejects, and nothing
+// in this file was watching for it — tracking silently hung forever with no
+// error and no way to recover short of ending the session. This watchdog
+// gives it a fair window to initialize, and if not a single real pose has
+// arrived by then, surfaces an actual message with a one-tap retry instead
+// of leaving the user staring at "Stand so your full body is visible."
+// forever with a camera that will never track anything.
+function armModelStuckWatchdog(){
+  clearTimeout(modelStuckTimer);
+  modelStuckTimer=setTimeout(()=>{
+    if(sessActive&&firstPoseReceivedAt==null){
+      setFB('Tracking engine failed to start — this can be a brief hiccup loading the AI model. Tap to retry.','warn');
+      const fb=document.getElementById('s-fb');
+      fb.style.cursor='pointer';
+      fb.onclick=retryPoseModel;
+      VoiceCoach.speak('Tracking failed to start. Tap the message to retry.',{priority:true});
+    }
+  },15000);
+}
+async function retryPoseModel(){
+  const fb=document.getElementById('s-fb');
+  fb.onclick=null;fb.style.cursor='';
+  setFB('Retrying tracking engine…','');
+  poseLoaded=false;poseModel=null;firstPoseReceivedAt=null;
+  try{
+    await loadPoseModel();
+    armModelStuckWatchdog();
+  }catch(e){
+    setFB('Tracking engine error. End session and restart.','warn');
+  }
 }
 
 function showCamError(title,msg){
@@ -2312,6 +2350,19 @@ function initPose(){
   poseLoaded=true;
 }
 
+// A stuck/never-resolving poseModel.send() (e.g. the WASM runtime still
+// "waiting on run dependencies" forever because one CDN asset request came
+// back with a transient error) must not hang forever — race it against a
+// timeout so the existing failCount/MAX_FAIL recovery below actually gets a
+// chance to run instead of isProcessing staying true forever and freezing
+// every future frame silently.
+function sendWithTimeout(model,frame,ms){
+  return Promise.race([
+    model.send(frame),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error('pose send timed out')),ms))
+  ]);
+}
+
 // ── RENDER LOOP with auto-recovery — FIXED ──
 function startLoop(){
   const vid=document.getElementById('s-vid');
@@ -2321,12 +2372,12 @@ function startLoop(){
 
   async function loop(){
     if(!sessActive)return;
-    
+
     // Prevent frame pile-up: skip if still processing previous frame
     if(!isProcessing&&poseModel&&vid.readyState>=2){
       isProcessing=true;
       try{
-        await poseModel.send({image:vid});
+        await sendWithTimeout(poseModel,{image:vid},4000);
         failCount=0;
       }catch(e){
         failCount++;
@@ -2358,6 +2409,16 @@ const NO_POSE_GRACE=6; // ~200ms at 30fps — matches VIS_LOSS_GRACE; a single m
 // loss, so it must not instantly zero the score — only a genuine multi-frame miss should.
 function onPoseResults(results){
   if(!sessActive)return;
+  // Reaching here at all (regardless of whether a body was detected in this
+  // particular frame) proves poseModel.send() actually resolved, i.e. the
+  // WASM/model finished loading and is genuinely running — cancel the
+  // stuck-model watchdog and undo any retry prompt it may have shown.
+  if(firstPoseReceivedAt==null){
+    firstPoseReceivedAt=performance.now();
+    clearTimeout(modelStuckTimer);
+    const fb=document.getElementById('s-fb');
+    fb.onclick=null;fb.style.cursor='';
+  }
   const cv=document.getElementById('s-canvas');
   const ctx=cv.getContext('2d');
   ctx.clearRect(0,0,cv.width,cv.height);
