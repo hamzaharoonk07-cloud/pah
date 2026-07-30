@@ -184,32 +184,27 @@ button{cursor:pointer;font-family:inherit}
 @media(max-width:768px){.dash-grid2{grid-template-columns:1fr}}
 @media(max-width:540px){.dash-metrics{grid-template-columns:1fr 1fr}}
 
-/* WEEKLY PLAN BUILDER */
-.plan-card{margin-bottom:20px}
-.plan-focus{font-size:.72rem;color:var(--muted);margin:-8px 0 14px}
-.plan-shuffle-btn{width:26px;height:26px;border-radius:50%;background:var(--w04);border:1px solid var(--w08);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;flex-shrink:0}
-.plan-shuffle-btn svg{width:13px;height:13px}
-.plan-shuffle-btn:hover{background:var(--w08);color:var(--heading);border-color:var(--w10);transform:rotate(180deg)}
-#plan-body{display:flex;flex-direction:column;gap:6px}
-.plan-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:11px;background:var(--w03);border:1px solid var(--w05)}
-.plan-row.plan-today{border-color:rgba(225,29,72,.4);background:rgba(225,29,72,.07)}
-.plan-day{font-size:.66rem;font-weight:800;color:var(--muted);width:40px;flex-shrink:0;display:flex;flex-direction:column;gap:2px;text-transform:uppercase;letter-spacing:.03em}
-.plan-today-tag{font-size:.5rem;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.04em}
-.plan-ex{flex:1;font-size:.78rem;font-weight:600;color:var(--heading)}
-.plan-rest{color:var(--muted);font-weight:500;font-style:italic}
-.plan-start{display:flex;align-items:center;gap:4px;font-size:.66rem;font-weight:700;color:var(--brand);text-decoration:none;flex-shrink:0;padding:5px 10px;border-radius:100px;background:rgba(225,29,72,.1);transition:background .2s}
-.plan-start:hover{background:rgba(225,29,72,.18)}
-.plan-start svg{width:11px;height:11px}
-@media(max-width:480px){.plan-day{width:32px}}
-
 /* FORM SCORE TREND */
 .trend-card{margin-top:14px;animation:cardRise .5s .34s cubic-bezier(.2,.8,.2,1) both}
 @media(prefers-reduced-motion:reduce){.trend-card{animation:none}}
 .trend-select{background:var(--w04);border:1px solid var(--w08);color:var(--heading);font-family:'Inter',sans-serif;font-size:.68rem;font-weight:600;padding:5px 10px;border-radius:100px;cursor:pointer;max-width:60%}
-.trend-svg-wrap{width:100%;height:130px;margin-top:6px}
-.trend-svg-wrap svg{width:100%;height:100%;overflow:visible}
-.trend-pt{transition:r .2s}
-.trend-axis-lbl{font-size:5.5px;fill:var(--muted)}
+.trend-meta{display:flex;justify-content:space-between;align-items:baseline;margin:-6px 0 2px}
+.trend-avg{font-size:.68rem;color:var(--muted)}
+.trend-avg strong{color:var(--heading);font-size:.95rem;font-weight:800;margin-left:4px}
+.trend-count{font-size:.64rem;color:var(--muted)}
+/* Line/area drawn in an SVG stretched to fill the box (fine — the axes are
+   arbitrary index/percent space, not a fixed real-world ratio), but the score
+   dots are separate absolutely-positioned HTML circles rather than SVG
+   <circle> elements — an SVG circle inside a non-uniformly stretched viewBox
+   renders as a warped ellipse, not a circle, once the box is wider than it
+   is tall (which it always is here). Plain HTML dots stay perfectly round
+   regardless of the chart's aspect ratio. */
+.trend-svg-wrap{width:100%;height:150px;margin-top:4px;position:relative}
+.trend-svg-wrap svg{width:100%;height:100%;display:block;overflow:visible}
+.trend-grid{stroke:var(--w06);stroke-width:1;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.trend-dots{position:absolute;inset:0;pointer-events:none}
+.trend-dot{position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;border:2px solid var(--card2);box-shadow:0 1px 3px rgba(0,0,0,.35);pointer-events:auto;transition:transform .15s ease;cursor:default}
+.trend-dot:hover{transform:scale(1.5)}
 .trend-foot{display:flex;justify-content:space-between;margin-top:8px;font-size:.6rem;color:var(--muted)}
 
 /* REP-BY-REP BREAKDOWN (inside session detail popup) */
@@ -346,20 +341,6 @@ button{cursor:pointer;font-family:inherit}
         Continue Recovery
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
-    </div>
-
-    <div class="dash-card plan-card">
-      <div class="dash-card-t" style="justify-content:space-between">
-        <span style="display:flex;align-items:center;gap:8px">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Your Weekly Plan
-        </span>
-        <button class="plan-shuffle-btn" onclick="regeneratePlan()" title="Shuffle this week's plan" aria-label="Shuffle this week's plan">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
-        </button>
-      </div>
-      <p class="plan-focus" id="plan-focus">—</p>
-      <div id="plan-body"></div>
     </div>
 
     <div class="dash-greet" id="dash-greet">
@@ -562,90 +543,6 @@ function renderDash(){
   renderActivity();
   renderRecent();
   renderTrend();
-  renderPlan();
-}
-
-// ── WEEKLY PLAN BUILDER — sequences the real 10-exercise library into a
-// repeating Mon-Sun template, biased toward whatever body area the free-text
-// "condition" field from signup mentions (same keyword-matching idea as the
-// AI coach's location detection in exercises.html, just a fixed tag set here).
-// Kept as its own small metadata table (not read from exercises.html) since
-// each page here is a standalone file with no shared data module — same
-// duplication pattern loadU()/dateKey() already use across the two pages.
-const PLAN_EXERCISES=[
-  {det:'neck_tilt',name:'Neck Tilt Stretch',tags:['Neck']},
-  {det:'mckenzie',name:'Gentle Back Arch',tags:['Back']},
-  {det:'knee_chest',name:'Knee to Chest',tags:['Hip','Back','Knee']},
-  {det:'side_bend',name:'Standing Side Bend',tags:['Back']},
-  {det:'bilateral_raise',name:'Arms Overhead Raise',tags:['Shoulder']},
-  {det:'mini_squat',name:'Mini Squats',tags:['Hip','Knee']},
-  {det:'lateral_raise',name:'Lateral Arm Raise',tags:['Shoulder']},
-  {det:'wrist_flex',name:'Wrist Flexion Stretch',tags:['Wrist']},
-  {det:'scap_squeeze',name:'Shoulder Blade Squeeze',tags:['Shoulder']},
-  {det:'shoulder_shrug',name:'Shoulder Shrugs',tags:['Shoulder']}
-];
-const PLAN_TAG_KEYWORDS={
-  Neck:/\b(neck|cervical|whiplash|tension headache)\b/i,
-  Back:/\b(back|spine|spinal|lumbar|disc|sciatica|posture)\b/i,
-  Shoulder:/\b(shoulder|rotator cuff|frozen shoulder|impingement|trapezius|scapula)\b/i,
-  Hip:/\b(hip|glute)\b/i,
-  Knee:/\b(knee|patella|acl|meniscus)\b/i,
-  Wrist:/\b(wrist|carpal|forearm|typing)\b/i
-};
-function matchPlanTags(condition){
-  if(!condition)return[];
-  return Object.keys(PLAN_TAG_KEYWORDS).filter(tag=>PLAN_TAG_KEYWORDS[tag].test(condition));
-}
-function planPool(condition){
-  const tags=matchPlanTags(condition);
-  if(!tags.length)return PLAN_EXERCISES; // no condition given, or nothing matched — balanced full-library rotation
-  const pool=PLAN_EXERCISES.filter(e=>e.tags.some(t=>tags.includes(t)));
-  return pool.length?pool:PLAN_EXERCISES;
-}
-function shufflePool(arr){
-  const a=arr.slice();
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-  return a;
-}
-const PLAN_DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-function buildPlan(condition){
-  const pool=shufflePool(planPool(condition));
-  const days=PLAN_DAYS.map((d,i)=>{
-    // Sunday is a rest/recovery day, not another training slot — beginners
-    // recovering from an injury shouldn't be pushed to train every single
-    // day, and a real physio program always builds in a rest day.
-    if(i===6)return{day:d,rest:true};
-    const ex=pool[i%pool.length];
-    return{day:d,det:ex.det,name:ex.name};
-  });
-  return{condition:condition||'',matchedTags:matchPlanTags(condition),days,generatedAt:Date.now()};
-}
-function loadPlan(){try{return JSON.parse(localStorage.getItem('pah_plan')||'null');}catch(e){return null;}}
-function savePlan(p){localStorage.setItem('pah_plan',JSON.stringify(p));}
-function regeneratePlan(){
-  const acc=JSON.parse(localStorage.getItem('pah_acc')||'null');
-  savePlan(buildPlan(acc?acc.condition:''));
-  renderPlan();
-}
-function renderPlan(){
-  const acc=JSON.parse(localStorage.getItem('pah_acc')||'null');
-  if(!acc)return;
-  let plan=loadPlan();
-  // Rebuild (keeping the same shape) if there's no saved plan yet, or the
-  // profile's condition text has changed since the plan was last generated.
-  if(!plan||plan.condition!==(acc.condition||'')){plan=buildPlan(acc.condition);savePlan(plan);}
-  const todayIdx=(new Date().getDay()+6)%7; // Mon=0..Sun=6, matches PLAN_DAYS order
-  const focusLine=plan.matchedTags.length
-    ?`Focused on your ${plan.matchedTags.join(' & ').toLowerCase()} — matched from your profile, repeats weekly.`
-    :'A balanced rotation across your full exercise library, repeats weekly.';
-  document.getElementById('plan-focus').textContent=focusLine;
-  document.getElementById('plan-body').innerHTML=plan.days.map((d,i)=>`
-    <div class="plan-row${i===todayIdx?' plan-today':''}">
-      <div class="plan-day">${d.day.slice(0,3)}${i===todayIdx?'<span class="plan-today-tag">Today</span>':''}</div>
-      ${d.rest
-        ?'<div class="plan-ex plan-rest">Rest &amp; Recovery</div>'
-        :`<div class="plan-ex">${d.name}</div><a class="plan-start" href="exercises.html?ex=${d.det}">Start<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>`}
-    </div>`).join('');
 }
 
 // ── FORM SCORE TREND — line chart over the same u.recent history the
@@ -675,20 +572,29 @@ function renderTrend(){
     body.innerHTML=`<div class="dash-empty">Complete a couple more sessions${filter==='__all'?'':' of this exercise'} to see a trend.</div>`;
     return;
   }
-  const W=300,H=100,padB=14,padT=8;
-  const xStep=W/(rows.length-1);
-  const yFor=s=>padT+(100-s)/100*(H-padT-padB);
-  const pts=rows.map((r,i)=>({x:i*xStep,y:yFor(r.form),form:r.form,date:r.date}));
-  const line=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-  const area=`0,${H-padB} ${line} ${W},${H-padB}`;
-  const dots=pts.map(p=>`<circle class="trend-pt" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${scoreColorFor(p.form/100)}"><title>${p.date}: ${p.form}%</title></circle>`).join('');
+  // Percent-space (0-100 both axes) so the SVG can stretch to fill the card
+  // at any width without needing per-container pixel math.
+  const padX=4,padTop=10,padBot=16;
+  const innerW=100-padX*2,innerH=100-padTop-padBot;
+  const xFor=i=>rows.length===1?50:padX+i/(rows.length-1)*innerW;
+  const yFor=s=>padTop+(100-s)/100*innerH;
+  const pts=rows.map((r,i)=>({x:xFor(i),y:yFor(r.form),form:r.form,date:r.date}));
+  const line=pts.map(p=>`${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
+  const area=`${pts[0].x.toFixed(2)},${100-padBot} ${line} ${pts[pts.length-1].x.toFixed(2)},${100-padBot}`;
+  const gridLines=[25,50,75].map(s=>`<line x1="${padX}" y1="${yFor(s).toFixed(2)}" x2="${100-padX}" y2="${yFor(s).toFixed(2)}" class="trend-grid"/>`).join('');
+  const dots=pts.map(p=>`<div class="trend-dot" style="left:${p.x}%;top:${p.y}%;background:${scoreColorFor(p.form/100)}" title="${p.date}: ${p.form}%"></div>`).join('');
+  const avg=Math.round(rows.reduce((a,r)=>a+r.form,0)/rows.length);
   body.innerHTML=`
-    <div class="trend-svg-wrap"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-      <defs><linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--brand)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>
-      <polygon points="${area}" fill="url(#trendFill)" opacity=".18"/>
-      <polyline points="${line}" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-      ${dots}
-    </svg></div>
+    <div class="trend-meta"><span class="trend-avg">Average<strong>${avg}%</strong></span><span class="trend-count">${rows.length} session${rows.length===1?'':'s'}</span></div>
+    <div class="trend-svg-wrap">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs><linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--brand)" stop-opacity=".3"/><stop offset="100%" stop-color="var(--brand)" stop-opacity="0"/></linearGradient></defs>
+        ${gridLines}
+        <polygon points="${area}" fill="url(#trendFill)"/>
+        <polyline points="${line}" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <div class="trend-dots">${dots}</div>
+    </div>
     <div class="trend-foot"><span>${rows[0].date}</span><span>${rows[rows.length-1].date}</span></div>`;
 }
 

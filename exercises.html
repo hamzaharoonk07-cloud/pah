@@ -416,18 +416,33 @@
 /* Angle meter */
 .s-ang{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:10;opacity:0;transition:opacity .4s}
 .s-hold-ring{
-  position:absolute;top:88px;left:50%;transform:translateX(-50%);z-index:11;
-  width:92px;height:92px;display:none;align-items:center;justify-content:center;
+  position:absolute;top:88px;left:50%;z-index:11;
+  width:92px;height:92px;display:flex;align-items:center;justify-content:center;
   filter:drop-shadow(0 8px 20px rgba(0,0,0,.5));
+  opacity:0;pointer-events:none;transform:translateX(-50%) scale(.8);
+  transition:opacity .25s ease,transform .3s cubic-bezier(.34,1.56,.64,1);
 }
-.s-hold-ring svg{width:100%;height:100%}
+.s-hold-ring.show{opacity:1;transform:translateX(-50%) scale(1)}
+.s-hold-ring.done{animation:holdDonePulse .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes holdDonePulse{0%{transform:translateX(-50%) scale(1)}45%{transform:translateX(-50%) scale(1.14)}100%{transform:translateX(-50%) scale(1)}}
+.s-hold-ring::before{
+  content:'';position:absolute;inset:5px;border-radius:50%;
+  background:radial-gradient(circle,rgba(10,10,15,.6),rgba(10,10,15,.32) 68%,transparent 100%);
+}
+.s-hold-ring svg{width:100%;height:100%;position:relative}
 .s-hold-ring-txt{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.9rem;color:#f59e0b;
   transition:color .3s;
 }
+.s-hold-ring-txt.tick{animation:holdTick .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes holdTick{0%{transform:scale(1.4);opacity:.5}100%{transform:scale(1);opacity:1}}
 .s-hold-ring.done .s-hold-ring-txt{color:#00e5a0;animation:fbPulse .4s ease}
 @media(max-width:540px){.s-hold-ring{top:74px;width:74px;height:74px}.s-hold-ring-txt{font-size:1.5rem}}
+@media(prefers-reduced-motion:reduce){
+  .s-hold-ring{transition:opacity .15s ease}
+  .s-hold-ring.done,.s-hold-ring-txt.tick{animation:none}
+}
 .s-ang.vis{opacity:1}
 /* Rep flash */
 .rep-flash{
@@ -1903,8 +1918,8 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
   const wrap=document.getElementById('s-hold-ring');
   const ring=document.getElementById('hold-ring-c');
   const txt=document.getElementById('s-hold-ring-txt');
-  if(goodFormStart==null){wrap.style.display='none';lastSpokenHoldSec=null;return;}
-  wrap.style.display='flex';
+  if(goodFormStart==null){wrap.classList.remove('show','done');lastSpokenHoldSec=null;return;}
+  wrap.classList.add('show');
   const remaining=minHoldMs-(performance.now()-goodFormStart);
   if(remaining>0){
     wrap.classList.remove('done');
@@ -1912,9 +1927,12 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
     ring.style.stroke='#f59e0b';
     ring.style.strokeDashoffset=HOLD_RING_CIRC*(1-frac);
     const sec=Math.ceil(remaining/1000);
-    txt.textContent=sec;
     if(sec!==lastSpokenHoldSec){
       lastSpokenHoldSec=sec;
+      txt.textContent=sec;
+      // Pop the number in on each new second instead of just swapping the
+      // digit in place — a plain textContent update reads as flat/static.
+      txt.classList.remove('tick');void txt.offsetWidth;txt.classList.add('tick');
       VoiceCoach.speak(String(sec),{priority:true});
     }
   }else{
@@ -2017,7 +2035,7 @@ function openSession(idx){
   document.getElementById('s-ang').classList.remove('vis');
   document.getElementById('s-instr').style.display='none';
   document.getElementById('demo-live-trigger').style.display='none';
-  document.getElementById('s-hold-ring').style.display='none';
+  document.getElementById('s-hold-ring').classList.remove('show','done');
   holdPraised=false;lastSpokenHoldSec=null;
   setFB('Activate your camera to begin the session.','');
   document.getElementById('sess').classList.add('open');
