@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PhysioSync – AI Physiotherapy</title>
 <link rel="icon" type="image/png" href="favicon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#e11d48">
+<link rel="apple-touch-icon" href="physiosync-icon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link rel="stylesheet" href="styles.css">
 <script src="reveal.js"></script>
@@ -734,7 +737,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Clinical Tracking · 3D Muscle Map · 8 Exercises
+      Clinical Tracking · 3D Muscle Map · 10 Exercises
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av">P</span>
@@ -763,7 +766,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 <!-- Hospitals and Research are now their own pages: hospitals.html, research.html -->
 
 <!-- ══════════ SESSION OVERLAY ══════════ -->
-<div id="sess">
+<div id="sess" role="dialog" aria-modal="true" aria-label="Live exercise tracking session">
+  <!-- Screen-reader-only live region: mirrors the same coaching cues (and their
+       debounce/priority) that VoiceCoach already speaks, plus each completed
+       rep — so a screen-reader user gets the same real-time feedback a
+       sighted/hearing user gets from the visual banner + voice, not silence. -->
+  <div id="sr-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
   <!-- fullscreen camera -->
   <video id="s-vid" autoplay playsinline muted style="display:none"></video>
   <!-- skeleton canvas (mirrored) -->
@@ -1432,7 +1440,21 @@ const EX=[
     warn:'Check with your doctor first if your wrist is still healing from a fracture/sprain, or if it’s currently swollen or unstable. Stop if tingling or numbness in your fingers increases.',
     muscles:['Wrist Flexors','Wrist Extensors'],
     angles:{main:[13,15,19],pivot:15,threshold:{lo:28,hi:50}},
-    joints:{p:[13,15,19],s:[11],lk:[[13,15],[15,19]],sk:[[11,13]]}}
+    joints:{p:[13,15,19],s:[11],lk:[[13,15],[15,19]],sk:[[11,13]]}},
+  {name:'Shoulder Blade Squeeze',area:'Scapular Retraction (Both Shoulders)',diff:'Beginner',tags:['Shoulder'],reps:12,det:'scap_squeeze',
+    desc:'Stand tall, bend both elbows to about 90°. Squeeze your shoulder blades together, pulling elbows back, hold 3 seconds, then relax forward.',
+    note:'Strengthens the mid-trapezius and rhomboids. Counters the rounded-shoulder posture from prolonged desk or phone use.',
+    warn:'Check with your doctor first if you have a recent shoulder dislocation, an unhealed shoulder or collarbone fracture, or if the movement causes sharp pain between your shoulder blades.',
+    muscles:['Rhomboids','Middle Trapezius','Posterior Deltoid'],
+    angles:{main:[13,11,12],pivot:11,threshold:{lo:6,hi:22}},
+    joints:{p:[11,12,13,14],s:[15,16],lk:[[11,12],[11,13],[12,14]],sk:[[13,15],[14,16]]}},
+  {name:'Shoulder Shrugs',area:'Upper Trapezius (Both Shoulders)',diff:'Beginner',tags:['Shoulder'],reps:12,det:'shoulder_shrug',
+    desc:'Let both arms relax at your sides. Lift both shoulders straight up toward your ears, hold 2 seconds, then let them drop fully.',
+    note:'Activates and releases tension in the upper trapezius. A gentle first step for tight, stressed, or desk-strained shoulders and neck.',
+    warn:'Check with your doctor first if you have a diagnosed cervical nerve impingement, or if shrugging causes tingling or numbness radiating down your arm.',
+    muscles:['Upper Trapezius','Levator Scapulae'],
+    angles:{main:[7,11,12],pivot:11,threshold:{lo:0.10,hi:0.28}},
+    joints:{p:[7,8,11,12],s:[],lk:[[11,12]],sk:[[7,11],[8,12]]}}
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1466,7 +1488,9 @@ const ICON_BY_DET={
   bilateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8l-3,-4M12,8l3,-4M12,15l-3,6M12,15l3,6', // both arms overhead
   mini_squat:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v7M12,8l-3,4M12,8l3,4M12,13l-4,4l1,3M12,13l4,4l-1,3', // knees bent into a squat
   lateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8h-6M12,8h6M12,15l-3,6M12,15l3,6', // arms straight out to the sides
-  wrist_flex:'M4,14h10M14,14l4,-4M14,14l4,4M18,10q2,4,0,8' // forearm with hand bending up/down
+  wrist_flex:'M4,14h10M14,14l4,-4M14,14l4,4M18,10q2,4,0,8', // forearm with hand bending up/down
+  scap_squeeze:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8l-4,3M8,11l2,-2M12,8l4,3M16,11l-2,-2M12,15l-3,6M12,15l3,6', // elbows bent, pulled back, blades squeezed
+  shoulder_shrug:'M10,3a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,5v1M7,6h10M7,6v8M17,6v8M12,14l-3,6M12,14l3,6' // shoulders raised close to a short neck, arms hanging straight
 };
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
@@ -1942,6 +1966,7 @@ function openSession(idx){
   angleRawBuf=[];motionHistory=[];visLossStreak=0;noPoseStreak=0;neutralBaseline=null;goodFormSince=null;
   torsoRawBuf=[];torsoEma=null;compensationStreak=0;bilateralArmCheck.reset();
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
+  document.getElementById('sr-announcer').textContent='';
   document.getElementById('s-reps').textContent='0';
   document.getElementById('s-target').textContent=sessEx.reps;
   document.getElementById('s-score').textContent='—%';
@@ -2001,6 +2026,7 @@ function endSession(){
       id:Date.now()+'-'+Math.random().toString(36).slice(2,7),
       name:sessEx.name,area:sessEx.area,muscles:sessEx.muscles,note:sessEx.note,
       reps:sessReps,target:sessEx.reps,form:avgF,durationSec,
+      repScores:formScores.slice(), // per-rep quality, for the dashboard's rep-by-rep breakdown
       timestamp:now.toISOString(),
       date:now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})
     });
@@ -2460,6 +2486,23 @@ function spineLeanZ(lm){
   const shoulderZ=(lm[11].z+lm[12].z)/2,hipZ=(lm[23].z+lm[24].z)/2;
   return(shoulderZ-hipZ)*100;
 }
+// Same depth-axis reasoning as spineLeanZ: pulling the elbows straight back to
+// squeeze the shoulder blades together is also a front-to-back movement a
+// front-facing camera barely sees in x/y — elbows moving further from the
+// camera than the shoulder line (positive) is genuine scapular retraction.
+function scapRetractZ(lm){
+  const elbowZ=(lm[13].z+lm[14].z)/2,shoulderZ=(lm[11].z+lm[12].z)/2;
+  return(elbowZ-shoulderZ)*100;
+}
+// Vertical ear-to-shoulder gap, normalized by shoulder width so it scales with
+// build/camera distance rather than raw pixels — shrinks as the shoulders lift
+// toward the ears during a shrug. Ears (not the nose) are the reference since
+// they move with the head as a rigid unit, same as the shoulders move as a unit.
+function shrugGap(lm){
+  const earY=(lm[7].y+lm[8].y)/2,shoulderY=(lm[11].y+lm[12].y)/2;
+  const shoulderW=Math.max(Math.hypot(lm[11].x-lm[12].x,lm[11].y-lm[12].y),0.05);
+  return Math.max(0,(shoulderY-earY)/shoulderW);
+}
 let angleRawBuf=[];
 function smoothAngle(val){
   // Median-of-3 rejects single-frame pose-estimation spikes before EMA smoothing —
@@ -2529,6 +2572,17 @@ function setRing(score){
   document.getElementById('ring-c').style.stroke=scoreColor(p);
   document.getElementById('ring-t').textContent=Math.round(score)+'%';
 }
+// Re-sets (rather than just re-assigns) the live region's text so a screen
+// reader announces it even when the incoming message is identical to what's
+// already there — most SR/aria-live implementations only fire on a real
+// text-content change, and coaching cues legitimately repeat (e.g. the same
+// "hold longer" message on consecutive reps).
+function announceSR(msg){
+  const el=document.getElementById('sr-announcer');
+  if(!el||!msg)return;
+  el.textContent='';
+  requestAnimationFrame(()=>{el.textContent=msg;});
+}
 let lastVoiceMsg='',lastVoiceAt=0,lastFbMsg='';
 function setFB(msg,cls){
   const el=document.getElementById('s-fb');
@@ -2541,6 +2595,7 @@ function setFB(msg,cls){
     const now=performance.now();
     if(msg!==lastVoiceMsg||now-lastVoiceAt>7000){
       VoiceCoach.speak(msg,{priority:cls==='warn'});
+      announceSR(msg); // same cadence/debounce as voice, so SR users get the same coaching rate
       lastVoiceMsg=msg;lastVoiceAt=now;
     }
   }
@@ -2562,6 +2617,7 @@ function doRep(quality){
     setTimeout(completeSessionAuto,2200); // lets the completion voice line finish before the camera cuts out
   }else{
     VoiceCoach.speak('Rep '+sessReps);
+    announceSR('Rep '+sessReps+' of '+sessEx.reps+' complete.');
   }
 }
 function updateScore(s){
@@ -2633,8 +2689,10 @@ function smoothTorso(val){
 // move at all — everything else here either involves intentional torso
 // movement (side_bend, mckenzie) or is arm-based and uses its own symmetry
 // check instead (bilateral_raise, lateral_raise), or requires a single-leg
-// balance adjustment that would false-positive this check.
-const COMPENSATION_CHECK_DETS=new Set(['neck_tilt']);
+// balance adjustment that would false-positive this check. Scapular squeeze
+// and shoulder shrugs are both standing, both-feet, torso-still exercises
+// with no intentional trunk motion, so they get the same guard as neck_tilt.
+const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','scap_squeeze','shoulder_shrug']);
 let compensationStreak=0;
 const COMPENSATION_GRACE=6; // ~200ms at 30fps, same debounce pattern as requireVisible —
 // a momentary torso-lean spike (balance shift, natural sway) is normal noise, not real
@@ -2762,6 +2820,33 @@ const HOLD_CFG={
     releaseMsg:'Straighten your wrist and repeat.',
     shortHoldMsg:'Hold the flex a little longer for full credit.',
     readyMsg:'Extend your arm forward, then bend your wrist up and down.'
+  },
+  scap_squeeze:{
+    vis:[11,12,13,14],
+    compute(lm){
+      const retract=smoothAngle(scapRetractZ(lm));
+      return{value:Math.max(0,retract),retract,label:'Retraction',unit:''};
+    },
+    isEngaged:(o)=>o.retract>6,
+    isReleased:(o)=>o.retract<2,
+    minHoldMs:3000,activeLabel:'Squeezed',
+    engagedMsg:'Good — shoulder blades squeezed together. Hold 3 seconds.',
+    releaseMsg:'Relax your arms forward and repeat the squeeze.',
+    shortHoldMsg:'Hold the squeeze a little longer for full credit.',
+    readyMsg:'Bend both elbows to about 90°, then squeeze your shoulder blades together.'
+  },
+  shoulder_shrug:{
+    vis:[7,8,11,12],
+    compute(lm){
+      return{value:smoothAngle(shrugGap(lm)),label:'Shrug',unit:''};
+    },
+    isEngaged:(o,lo,hi)=>o.value<hi, // ear-shoulder gap SHRINKS as the shoulders lift toward the ears
+    isReleased:(o)=>o.value>0.38,
+    minHoldMs:1500,activeLabel:'Shrugged',
+    engagedMsg:'Good — shoulders lifted toward your ears. Hold 2 seconds.',
+    releaseMsg:'Let your shoulders drop fully and repeat.',
+    shortHoldMsg:'Hold the shrug a little longer for full credit.',
+    readyMsg:'Relax your arms at your sides, then lift both shoulders straight up toward your ears.'
   }
 };
 function runHold(det,lm){
@@ -2883,7 +2968,7 @@ function runBilateralRaise(lm){
   }
 }
 
-const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','wrist_flex']);
+const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','wrist_flex','scap_squeeze','shoulder_shrug']);
 const BILATERAL_DETS=new Set(['bilateral_raise','lateral_raise']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;

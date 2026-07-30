@@ -1,0 +1,15 @@
+{
+  "name": "PhysioSync – AI Physiotherapy",
+  "short_name": "PhysioSync",
+  "description": "Clinical-grade, privacy-first AI physiotherapy — camera-tracked exercises, a 3D anatomy reference, and a personal recovery dashboard, all stored on your device.",
+  "start_url": "exercises.html",
+  "scope": "./",
+  "id": "/exercises.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0f",
+  "theme_color": "#e11d48",
+  "icons": [
+    { "src": "favicon.png", "sizes": "256x256", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -85,6 +85,16 @@ function countUp(el,end,opts){
 // reduced-motion, since a plain CSS media query handles that directly.
 
 // ═══════════════════════════════════════════════════════════
+// SERVICE WORKER — registers sw.js (shared here since reveal.js is already
+// loaded on every page) so the app installs and its own pages/assets keep
+// working offline after a first visit. See sw.js for what genuinely can't be
+// made offline-capable (live camera pose tracking, the 3D anatomy embed).
+// ═══════════════════════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});
+}
+
+// ═══════════════════════════════════════════════════════════
 // PAGE LOADER — this is a static multi-page site (no client-side router),
 // so every internal link click is a real browser navigation. This shows
 // the branded liquid-fill splash (#page-loader) for a minimum time on
