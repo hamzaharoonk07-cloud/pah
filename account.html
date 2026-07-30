@@ -162,7 +162,8 @@ button{cursor:pointer;font-family:inherit}
 .week-range{font-size:.68rem;color:var(--muted);text-align:center;min-width:110px}
 .recent-row{cursor:pointer}
 #weekly-bars{display:flex;align-items:flex-end;justify-content:space-between;height:110px;gap:6px}
-.wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+.wbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;cursor:pointer}
+.wbar:hover .wbar-fill{filter:brightness(1.15)}
 .wbar-track{width:100%;background:var(--w03);border-radius:4px;flex:1;position:relative;overflow:hidden}
 .wbar-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--brand),var(--accent));border-radius:4px;transition:height 1.2s cubic-bezier(.2,.8,.2,1)}
 .wbar-lbl{font-size:.6rem;color:var(--muted);font-weight:600}
@@ -224,6 +225,9 @@ button{cursor:pointer;font-family:inherit}
 .sd-card{background:var(--card1);border:1px solid var(--w10);border-radius:var(--r-xl);padding:28px;max-width:100%;width:420px;box-shadow:0 24px 70px var(--shadow-color);max-height:85vh;overflow-y:auto;animation:sdRise .3s cubic-bezier(.2,.8,.2,1) both}
 @keyframes sdRise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.sd-popup,.sd-card{animation:none}}
+.sd-logo-row{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.sd-logo-row .brand-icon{height:26px;width:auto}
+.sd-logo-row .brand-text{height:14px;width:auto}
 .sd-card h3{margin:0 0 4px;font-size:1.15rem;color:var(--heading)}
 .sd-when{color:var(--muted);font-size:.78rem;margin-bottom:18px}
 .sd-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
@@ -528,6 +532,7 @@ function loadU(){
     weeklyReps:[0,0,0,0,0,0,0],recent:[],lastDate:''
   }));
   u.dailyReps=u.dailyReps||{};
+  u.dailyCount=u.dailyCount||{};
   return u;
 }
 function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
@@ -718,9 +723,9 @@ function renderWeekly(){
   const maxR=Math.max(...reps,1);
   const bars=document.getElementById('weekly-bars');
   bars.classList.remove('month-mode');
-  bars.innerHTML=reps.map((r,i)=>`
-    <div class="wbar">
-      <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(r/maxR*100)}%"></div></div>
+  bars.innerHTML=weekDates.map((d,i)=>`
+    <div class="wbar" onclick="showDayDetail('${dateKey(d)}')">
+      <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(reps[i]/maxR*100)}%"></div></div>
       <div class="wbar-lbl">${dayLbls[i]}</div>
     </div>`).join('');
   const fmt=(d,withYear)=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:withYear?'numeric':undefined});
@@ -742,7 +747,7 @@ function renderMonthly(){
   const bars=document.getElementById('weekly-bars');
   bars.classList.add('month-mode');
   bars.innerHTML=days.map(d=>`
-    <div class="wbar" title="${d.label}: ${d.reps} rep${d.reps===1?'':'s'}">
+    <div class="wbar" title="${d.label}: ${d.reps} rep${d.reps===1?'':'s'}" onclick="showDayDetail('${dateKey(new Date(year,month,d.day))}')">
       <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(d.reps/maxR*100)}%"></div></div>
       <div class="wbar-lbl">${d.day%5===1?d.day:''}</div>
     </div>`).join('');
@@ -758,6 +763,54 @@ function weekNav(dir){
     monthOffset+=dir;
   }
   renderActivity();
+}
+
+// ── DAY DETAIL — click a weekly/monthly activity bar to see how many
+// exercises (not just reps) were completed that day, and which ones if
+// they're still within the last-30-sessions history.
+function showDayDetail(dk){
+  const u=loadU();
+  const count=u.dailyCount[dk]||0;
+  const reps=u.dailyReps[dk]||0;
+  const[y,mo,da]=dk.split('-').map(Number);
+  const dateObj=new Date(y,mo-1,da);
+  const whenStr=dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const sessions=(u.recent||[]).filter(r=>r.timestamp&&dateKey(new Date(r.timestamp))===dk);
+  let m=document.getElementById('session-detail-popup');
+  if(!m){
+    m=document.createElement('div');
+    m.id='session-detail-popup';
+    m.className='sd-popup';
+    m.onclick=(e)=>{if(e.target===m)m.remove();};
+    document.body.appendChild(m);
+  }
+  const listHtml=sessions.length?`
+    <div class="sd-reps-hd">Exercises completed</div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+      ${sessions.map(r=>`
+        <div class="recent-row" onclick="document.getElementById('session-detail-popup').remove();showSessionDetail(${u.recent.indexOf(r)})">
+          <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.area||''}</div></div>
+          <div><div class="recent-reps">${r.reps} reps</div><div class="recent-form">${r.form}% form</div></div>
+        </div>`).join('')}
+    </div>`
+    :(count>0
+      ?`<p class="sd-note">${count} exercise${count===1?'':'s'} completed this day, but the individual session details have since rolled off history.</p>`
+      :`<p class="sd-note">No exercises were completed on this day.</p>`);
+  m.innerHTML=`
+    <div class="sd-card">
+      <div class="sd-logo-row">
+        <img src="physiosync-icon.png" alt="" class="brand-icon">
+        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark">
+        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light">
+      </div>
+      <h3>${whenStr}</h3>
+      <div class="sd-stats">
+        <div><div class="sd-val">${count}</div><div class="sd-lbl">Exercises Done</div></div>
+        <div><div class="sd-val">${reps}</div><div class="sd-lbl">Total Reps</div></div>
+      </div>
+      ${listHtml}
+      <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">Close</button>
+    </div>`;
 }
 
 // ── RECENT SESSIONS — click a row for full session detail ──
@@ -802,6 +855,11 @@ function showSessionDetail(idx){
         </div>`).join('')}</div>`:'';
   m.innerHTML=`
     <div class="sd-card">
+      <div class="sd-logo-row">
+        <img src="physiosync-icon.png" alt="" class="brand-icon">
+        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark">
+        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light">
+      </div>
       <h3>${r.name}</h3>
       <p class="sd-when">${whenStr}</p>
       <div class="sd-stats">

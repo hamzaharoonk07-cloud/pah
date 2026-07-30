@@ -373,7 +373,9 @@
   padding:18px 20px;
   background:linear-gradient(to bottom,rgba(0,0,0,.85) 0%,transparent 100%);
 }
-.sh-info{}
+.sh-info{display:flex;align-items:center;gap:10px}
+.sh-logo{height:28px;width:auto;flex-shrink:0}
+.sh-text{min-width:0}
 .sh-name{font-size:1.15rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif}
 .sh-area{color:var(--muted);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
 .sh-close{
@@ -637,6 +639,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
      shrank), pushing End Session off-screen entirely. */
   .sh{padding:14px 14px;gap:8px}
   .sh-info{min-width:0;overflow:hidden}
+  .sh-logo{height:20px}
+  .sh-text{min-width:0;overflow:hidden}
   .sh-name{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .sh-area{font-size:.6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .voice-toggle-btn{width:30px;height:30px}
@@ -780,8 +784,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <!-- header -->
   <div class="sh">
     <div class="sh-info">
-      <div class="sh-name" id="sh-name">Exercise</div>
-      <div class="sh-area" id="sh-area">Focus Area</div>
+      <img src="physiosync-icon-white.png" alt="" class="sh-logo">
+      <div class="sh-text">
+        <div class="sh-name" id="sh-name">Exercise</div>
+        <div class="sh-area" id="sh-area">Focus Area</div>
+      </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
       <button class="voice-toggle-btn" id="voice-toggle-btn" onclick="VoiceCoach.toggle()" aria-label="Mute voice coach" title="Mute voice coach">
@@ -1286,6 +1293,7 @@ function loadU(){
     weeklyReps:[0,0,0,0,0,0,0],recent:[],lastDate:''
   }));
   u.dailyReps=u.dailyReps||{}; // 'YYYY-MM-DD' -> reps that day, real dates so weekly history can be browsed by month
+  u.dailyCount=u.dailyCount||{}; // 'YYYY-MM-DD' -> number of exercises (sessions) completed that day
   return u;
 }
 function saveU(u){localStorage.setItem('pah_v5',JSON.stringify(u));}
@@ -2019,6 +2027,7 @@ function endSession(){
     const now=new Date();
     const dk=dateKey(now);
     u.dailyReps[dk]=(u.dailyReps[dk]||0)+sessReps;
+    u.dailyCount[dk]=(u.dailyCount[dk]||0)+1;
     u.streak++;
     const durationSec=sessStartAt?Math.round((Date.now()-sessStartAt)/1000):null;
     u.recent=u.recent||[];
