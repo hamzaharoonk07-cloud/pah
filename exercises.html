@@ -432,8 +432,8 @@
 }
 .s-hold-bar-wrap.done .s-hold-bar-fill{background:linear-gradient(90deg,#00e5a0,#12d999)}
 .s-hold-bar-txt{
-  flex-shrink:0;min-width:22px;text-align:right;
-  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.92rem;color:#f59e0b;
+  flex-shrink:0;white-space:nowrap;text-align:right;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;color:#f59e0b;
   transition:color .3s;
 }
 .s-hold-bar-wrap.done .s-hold-bar-txt{color:#00e5a0}
@@ -629,6 +629,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   .nav-streak,.nav-greet{display:none!important}
   .nav-right{gap:6px}
   .s-stats{gap:6px}.s-stat-v{font-size:1.3rem}
+  .s-hold-bar-txt{font-size:.7rem}
   .s-ring svg{width:54px;height:54px}.s-ring{top:72px;right:10px}
   .s-ang{right:6px}
   .s-instr{top:150px;max-width:calc(100vw - 32px);font-size:.72rem}
@@ -1920,7 +1921,7 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
     const sec=Math.ceil(remaining/1000);
     if(sec!==lastSpokenHoldSec){
       lastSpokenHoldSec=sec;
-      txt.textContent=sec+'s';
+      txt.textContent='Hold '+sec+'s';
       // Nudge the number in on each new second instead of just swapping the
       // digit in place — a plain textContent update reads as flat/static.
       txt.classList.remove('tick');void txt.offsetWidth;txt.classList.add('tick');
@@ -1929,7 +1930,7 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
   }else{
     wrap.classList.add('done');
     fill.style.width='100%';
-    txt.textContent='✓';
+    txt.textContent='Release! ✓';
     if(!holdPraised){
       holdPraised=true;
       VoiceCoach.speak('Release now.',{priority:true});
