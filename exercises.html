@@ -1150,6 +1150,14 @@ const DEMO_DEFS={
     steps:['Arms relaxed at your sides','Raise both arms out to the sides to shoulder height — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
   wrist_flex:{kind:'hold',peak:{leftWrist:{y:.38},leftElbow:{y:.44}},
     steps:['Extend one arm forward, palm down','Bend your wrist up and down slowly'],highlight:['leftElbow','leftWrist']},
+  scap_squeeze:{kind:'hold',base:{leftElbow:{x:.30,y:.34},leftWrist:{x:.36,y:.30},rightElbow:{x:.70,y:.34},rightWrist:{x:.64,y:.30}},
+    peak:{leftElbow:{x:.20,y:.32},rightElbow:{x:.80,y:.32},leftShoulder:{x:.34},rightShoulder:{x:.66}},
+    steps:['Bend both elbows to about 90°, hands in front','Squeeze your shoulder blades together, pulling elbows back — hold 3 seconds'],
+    highlight:['leftElbow','rightElbow','leftShoulder','rightShoulder']},
+  shoulder_shrug:{kind:'hold',
+    peak:{leftShoulder:{y:.185},rightShoulder:{y:.185},leftElbow:{y:.345},rightElbow:{y:.345},leftWrist:{y:.495},rightWrist:{y:.495}},
+    steps:['Relax both arms at your sides','Lift both shoulders straight up toward your ears — hold 2 seconds'],
+    highlight:['leftShoulder','rightShoulder','neck']},
   _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
 };
 
