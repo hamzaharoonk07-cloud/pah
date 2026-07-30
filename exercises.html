@@ -1469,7 +1469,7 @@ const EX=[
     note:'Activates and releases tension in the upper trapezius. A gentle first step for tight, stressed, or desk-strained shoulders and neck.',
     warn:'Check with your doctor first if you have a diagnosed cervical nerve impingement, or if shrugging causes tingling or numbness radiating down your arm.',
     muscles:['Upper Trapezius','Levator Scapulae'],
-    angles:{main:[7,11,12],pivot:11,threshold:{lo:0.10,hi:0.28}},
+    angles:{main:[7,11,12],pivot:11,threshold:{lo:0.05,hi:0.20}}, // delta from this session's own tracked resting ratio, not an absolute ratio
     joints:{p:[7,8,11,12],s:[],lk:[[11,12]],sk:[[7,11],[8,12]]}}
 ];
 
@@ -2911,12 +2911,19 @@ const HOLD_CFG={
   },
   scap_squeeze:{
     vis:[11,12,13,14],
+    // scapRetractZ is a z-depth signal — no universal "textbook" degree value,
+    // and MediaPipe's z estimate can carry a per-session/per-camera-angle
+    // offset even at true rest. Score against how far it's moved from THIS
+    // session's own tracked resting depth (neutralBaseline), not a fixed
+    // absolute number, so a biased baseline cancels out instead of silently
+    // shifting every reading.
     compute(lm){
-      const retract=smoothAngle(scapRetractZ(lm));
-      return{value:Math.max(0,retract),retract,label:'Retraction',unit:''};
+      const raw=smoothAngle(scapRetractZ(lm));
+      const rel=neutralBaseline==null?0:raw-neutralBaseline;
+      return{value:Math.max(0,rel),raw,label:'Retraction',unit:''};
     },
-    isEngaged:(o)=>o.retract>6,
-    isReleased:(o)=>o.retract<2,
+    isEngaged:(o)=>o.value>6,
+    isReleased:(o)=>o.value<2,
     minHoldMs:3000,activeLabel:'Squeezed',
     engagedMsg:'Good — shoulder blades squeezed together. Hold 3 seconds.',
     releaseMsg:'Relax your arms forward and repeat the squeeze.',
@@ -2925,11 +2932,22 @@ const HOLD_CFG={
   },
   shoulder_shrug:{
     vis:[7,8,11,12],
+    // shrugGap is a normalized on-screen ratio (ear-shoulder gap / shoulder
+    // width), not a physical angle — its resting value varies with build,
+    // head tilt, and camera angle, so a fixed absolute threshold can only ever
+    // guess at THIS session's actual resting ratio. Score against how much
+    // it's SHRUNK from this session's own tracked resting baseline instead —
+    // self-calibrating to whatever the real resting value turns out to be.
+    // Flipped to increase-with-engagement (baseline minus current, not the
+    // raw ratio) so this follows the same "value>lo" pattern every other
+    // increasing-metric exercise here already uses.
     compute(lm){
-      return{value:smoothAngle(shrugGap(lm)),label:'Shrug',unit:''};
+      const raw=smoothAngle(shrugGap(lm));
+      const rel=neutralBaseline==null?0:neutralBaseline-raw;
+      return{value:Math.max(0,rel),raw,label:'Shrug',unit:''};
     },
-    isEngaged:(o,lo,hi)=>o.value<hi, // ear-shoulder gap SHRINKS as the shoulders lift toward the ears
-    isReleased:(o)=>o.value>0.38,
+    isEngaged:(o,lo)=>o.value>lo,
+    isReleased:(o,lo)=>o.value<lo*0.3,
     minHoldMs:1500,activeLabel:'Shrugged',
     engagedMsg:'Good — shoulders lifted toward your ears. Hold 2 seconds.',
     releaseMsg:'Let your shoulders drop fully and repeat.',
@@ -2944,12 +2962,23 @@ function runHold(det,lm){
   const o=cfg.compute(lm);
   setAngle(o.value,o.label,o.unit);
   const idle=isIdleHold(o.value,lo,hi);
+  // Some detectors (scap_squeeze, shoulder_shrug) can't use a fixed real-world
+  // angle threshold — their signal (z-depth, a normalized on-screen ratio) has
+  // no universal "textbook" value, so a hardcoded absolute threshold is only
+  // ever a guess at THIS session's camera angle/body scale. Those compute()
+  // functions instead return o.value already expressed relative to this
+  // session's own tracked neutralBaseline, and separately expose the true raw
+  // signal as o.raw so baseline-tracking itself stays anchored to the real
+  // physical quantity, not to a value that's already relative to the baseline
+  // it's updating (which would be circular). Detectors that don't set o.raw
+  // are unaffected — raw just falls back to o.value, identical to before.
+  const raw=o.raw!=null?o.raw:o.value;
   // Track the resting baseline while not engaged, and require the user to have
   // actually MOVED a meaningful amount away from it before crediting engagement —
   // otherwise someone whose resting posture already sits inside the target range
   // (camera angle, natural stance) gets credited without ever intentionally moving.
-  if(repPhase!=='engaged')neutralBaseline=neutralBaseline==null?o.value:neutralBaseline+(o.value-neutralBaseline)*0.06;
-  const movedEnough=neutralBaseline==null||Math.abs(o.value-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
+  if(repPhase!=='engaged')neutralBaseline=neutralBaseline==null?raw:neutralBaseline+(raw-neutralBaseline)*0.06;
+  const movedEnough=neutralBaseline==null||Math.abs(raw-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
   if(cfg.isEngaged(o,lo,hi)&&movedEnough){
     if(repPhase!=='engaged'){setRepPhase('engaged');setFB(cfg.engagedMsg,'good');}
     const s=idle?8:scoreHold(o.value,lo,hi);
