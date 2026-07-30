@@ -1875,7 +1875,14 @@ const IS_MOBILE=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
 // joints everything else here uses) that genuinely needs the higher
 // resolution the mobile branch above otherwise drops.
 const FINE_DETAIL_DETS=new Set(['wrist_flex']);
-let poseModel=null,poseLoaded=false,camStream=null;
+// Exercises measured off MediaPipe's z (depth) axis, not x/y joint angles —
+// confirmed via live testing that mobile's lighter modelComplexity:0 (the
+// "lite" model, needed elsewhere for phone performance) produces z estimates
+// too noisy for these to reliably cross their engagement threshold at all,
+// even though the same lite model tracks x/y joint angles for every other
+// exercise just fine. These two get the full model even on mobile.
+const Z_DEPTH_DETS=new Set(['mckenzie','scap_squeeze']);
+let poseModel=null,poseLoaded=false,poseComplexity=null,camStream=null;
 let firstPoseReceivedAt=null,modelStuckTimer=null; // see startLoop()/onPoseResults() below
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral',sessCompleting=false,sessStartAt=null;
 let formScores=[],lastLM=null,raf=null,sessActive=false;
@@ -2352,20 +2359,33 @@ function showCameraDiagnostics(){
 
 // ── LOAD MEDIAPIPE with mobile optimization — FIXED ──
 async function loadPoseModel(){
-  if(poseLoaded)return;
+  const desired=desiredModelComplexity();
+  if(poseLoaded){
+    // Already loaded, but a different exercise may need a different
+    // complexity than whatever the FIRST exercise this page-session started
+    // with picked — poseLoaded only reflects "a model exists," not "at the
+    // right complexity for what's about to be tracked." setOptions() can
+    // reconfigure the existing instance directly, no need to reload the
+    // whole script/WASM module for this.
+    if(poseComplexity!==desired){
+      poseModel.setOptions({modelComplexity:desired,smoothLandmarks:true,enableSegmentation:false,smoothSegmentation:false,minDetectionConfidence:0.65,minTrackingConfidence:0.65});
+      poseComplexity=desired;
+    }
+    return;
+  }
   return new Promise((resolve,reject)=>{
     // Check if already loaded by another script tag
     if(typeof window.Pose!=='undefined'){
-      initPose();
+      initPose(desired);
       resolve();
       return;
     }
-    
+
     const script=document.createElement('script');
     script.src='https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js';
     script.crossOrigin='anonymous';
     script.onload=()=>{
-      initPose();
+      initPose(desired);
       resolve();
     };
     script.onerror=()=>{
@@ -2377,10 +2397,16 @@ async function loadPoseModel(){
   });
 }
 
-function initPose(){
+// Full model (complexity 1) on desktop always; on mobile, full model ONLY
+// for the z-depth exercises that need it, lite model (0) for everything
+// else — see Z_DEPTH_DETS above for why.
+function desiredModelComplexity(){
+  return(IS_MOBILE&&sessEx&&!Z_DEPTH_DETS.has(sessEx.det))?0:1;
+}
+function initPose(complexity){
   poseModel=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${f}`});
   poseModel.setOptions({
-    modelComplexity:IS_MOBILE?0:1,
+    modelComplexity:complexity,
     smoothLandmarks:true,
     enableSegmentation:false,
     smoothSegmentation:false,
@@ -2389,6 +2415,7 @@ function initPose(){
   });
   poseModel.onResults(onPoseResults);
   poseLoaded=true;
+  poseComplexity=complexity;
 }
 
 // A stuck/never-resolving poseModel.send() (e.g. the WASM runtime still
