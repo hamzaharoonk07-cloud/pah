@@ -1863,6 +1863,14 @@ const AIChat={
 // ═══════════════════════════════════════════════════════════
 // SESSION ENGINE — MediaPipe Pose Tracking (FIXED)
 // ═══════════════════════════════════════════════════════════
+// Phones need every corner cut: full 720p decode + pose inference + a
+// full-res skeleton redraw every frame is enough to make a mid-range Android
+// phone fall behind, which reads as "laggy and the numbers are frozen" —
+// the render loop's own isProcessing guard then skips piling-up frames,
+// so it isn't broken, it's just not keeping up. Lower the camera's
+// requested resolution and the canvas's device-pixel-ratio cap on mobile so
+// there's meaningfully less to decode/infer/draw per frame in the first place.
+const IS_MOBILE=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 let poseModel=null,poseLoaded=false,camStream=null;
 let firstPoseReceivedAt=null,modelStuckTimer=null; // see startLoop()/onPoseResults() below
 let sessEx=null,sessReps=0,sessScore=100,repPhase='neutral',sessCompleting=false,sessStartAt=null;
@@ -2153,12 +2161,17 @@ async function startCamera(){
     CamDiag.add('WARN','Permission query unavailable: '+e.message);
   }
 
-  // 4. Progressive constraint fallback
+  // 4. Progressive constraint fallback — mobile asks for 480p up front
+  // instead of 720p; a phone CPU running full-res decode + pose inference +
+  // skeleton redraw every frame is exactly what turns into visible lag and
+  // stale-looking numbers, and 480p is still plenty of resolution for pose
+  // landmark detection.
   const vid=document.getElementById('s-vid');
+  const idealW=IS_MOBILE?640:1280,idealH=IS_MOBILE?480:720;
   const constraints=[
-    {video:{facingMode:{exact:'user'},width:{ideal:1280},height:{ideal:720}},audio:false},
-    {video:{facingMode:'user',width:{ideal:1280},height:{ideal:720}},audio:false},
-    {video:{width:{ideal:1280},height:{ideal:720}},audio:false},
+    {video:{facingMode:{exact:'user'},width:{ideal:idealW},height:{ideal:idealH}},audio:false},
+    {video:{facingMode:'user',width:{ideal:idealW},height:{ideal:idealH}},audio:false},
+    {video:{width:{ideal:idealW},height:{ideal:idealH}},audio:false},
     {video:{width:{ideal:640},height:{ideal:480}},audio:false},
     {video:true,audio:false}
   ];
@@ -2205,7 +2218,7 @@ async function startCamera(){
   const cv=document.getElementById('s-canvas');
   const vw=vid.videoWidth||1280;
   const vh=vid.videoHeight||720;
-  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const dpr=Math.min(window.devicePixelRatio||1,IS_MOBILE?1:2);
   cv.width=vw*dpr;
   cv.height=vh*dpr;
   cv.style.display='block';
@@ -2356,10 +2369,9 @@ async function loadPoseModel(){
 }
 
 function initPose(){
-  const isMobile=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   poseModel=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${f}`});
   poseModel.setOptions({
-    modelComplexity:isMobile?0:1,
+    modelComplexity:IS_MOBILE?0:1,
     smoothLandmarks:true,
     enableSegmentation:false,
     smoothSegmentation:false,
