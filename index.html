@@ -136,7 +136,7 @@ body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-heigh
   background-size:300% 100%;background-position:100% 0;
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   animation:jfTitleShimmer 6s ease-in-out infinite;
-  filter:drop-shadow(0 2px 16px rgba(0,0,0,.55)) drop-shadow(0 1px 4px rgba(0,0,0,.65));
+  filter:drop-shadow(0 2px 16px rgba(0,0,0,.55)) drop-shadow(0 1px 4px rgba(0,0,0,.65)) drop-shadow(0 0 20px rgba(225,29,72,.4));
 }
 @keyframes jfTitleShimmer{0%{background-position:180% 0}50%{background-position:-80% 0}100%{background-position:180% 0}}
 @media(prefers-reduced-motion:reduce){
@@ -199,7 +199,9 @@ body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-heigh
 .theme-tgl:hover{background:var(--w08);border-color:var(--w12);transform:scale(1.1) rotate(-8deg)}
 .theme-tgl:active{transform:scale(.9)}
 .theme-tgl svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.nav-ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer;background:none;border:none;margin-left:10px}
+/* Always visible (not just mobile) — Conditions/About have no other nav
+   entry point since the plain text links were removed from the navbar. */
+.nav-ham{display:flex;flex-direction:column;gap:4px;padding:5px;cursor:pointer;background:none;border:none;margin-left:2px}
 .nav-ham span{display:block;width:20px;height:2px;background:var(--heading);border-radius:1px}
 .nav-mob-menu{
   display:none;position:fixed;top:62px;left:0;right:0;z-index:199;
@@ -409,8 +411,16 @@ syncGateLangBtns();
       <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
     </button>
+    <button class="nav-ham" id="nav-ham" onclick="document.getElementById('nav-mob-menu').classList.toggle('open')" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<div class="nav-mob-menu" id="nav-mob-menu">
+  <a href="#joint-focus" data-ur="حالات" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Conditions</a>
+  <a href="exercises.html#hero" data-ur="ورزشیں" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Exercises</a>
+  <a href="about.html" data-ur="ہمارے بارے میں" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">About</a>
+</div>
 
 <section id="joint-focus">
   <div class="jf-sticky" id="jf-sticky">
