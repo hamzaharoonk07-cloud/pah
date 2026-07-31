@@ -113,6 +113,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
    account.html. Shared by every page that has the icon (exercises.html,
    hospitals.html, research.html); account.html/about.html don't show it
    (you're either already there or it never had the icon). */
+.nav-streak{
+  display:flex;align-items:center;gap:6px;padding:5px 13px;border-radius:100px;
+  background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.25);
+  color:var(--accent);font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;white-space:nowrap;
+}
 .acct-dd{position:relative}
 .acct-dd-trigger{overflow:hidden}
 .acct-dd-panel{
