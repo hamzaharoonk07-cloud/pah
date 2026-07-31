@@ -23,7 +23,7 @@ button{cursor:pointer;font-family:inherit}
 
 /* NAVBAR (about.html keeps its own 860px collapse breakpoint, narrower than
    the other pages' 768px — pre-existing behavior, unchanged here) */
-@media(max-width:860px){.nav-links{display:none}.nav-home{display:none}.ham{display:flex}}
+@media(max-width:860px){.nav-links{display:none}.nav-home{display:none}.ham{display:flex}#navbar{padding:0 18px}}
 
 /* HERO */
 .ab-hero{padding:130px 24px 70px;text-align:center;position:relative;overflow:hidden}
@@ -141,10 +141,10 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </nav>
 <div class="mob-menu" id="mob-nav">
-  <a href="exercises.html#hero" class="nl">Exercises</a>
-  <a href="hospitals.html" class="nl">Hospitals</a>
-  <a href="research.html" class="nl">Research</a>
-  <a href="about.html" class="nl">About</a>
+  <a href="exercises.html#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
+  <a href="hospitals.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
+  <a href="research.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
+  <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
 </div>
 
 <!-- HERO -->
