@@ -1316,6 +1316,10 @@ function loadU(){
 }
 function saveU(u){localStorage.setItem('pah_v5',JSON.stringify(u));}
 function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+// User-facing date display — always day/month/year, numeric with slashes
+// (e.g. 30/07/2026), never the browser's default locale order.
+function fmtDMY(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
+function fmtDM(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');}
 
 // ═══════════════════════════════════════════════════════════
 // GATE
@@ -1345,7 +1349,7 @@ function gateSubmit(e){
     errEl.textContent='Age, weight, and height can only contain numbers.';errEl.style.display='block';return;
   }
   errEl.style.display='none';
-  const acc={name,gender,age,weight,height,condition,joined:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
+  const acc={name,gender,age,weight,height,condition,joined:fmtDMY(new Date())};
   localStorage.setItem('pah_acc',JSON.stringify(acc));
   document.getElementById('gate').classList.add('hidden');
   initApp(acc);
@@ -2086,7 +2090,7 @@ function endSession(){
       reps:sessReps,target:sessEx.reps,form:avgF,durationSec,
       repScores:formScores.slice(), // per-rep quality, for the dashboard's rep-by-rep breakdown
       timestamp:now.toISOString(),
-      date:now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})
+      date:fmtDM(now)
     });
     if(u.recent.length>30)u.recent=u.recent.slice(0,30);
     saveU(u);renderNavStreak();

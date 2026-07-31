@@ -311,7 +311,9 @@
       error.style.display = 'block';
       return false;
     }
-    localStorage.setItem('pah_acc', JSON.stringify({name, gender, age, weight, height, joined:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}));
+    const __d=new Date();
+    const joined=String(__d.getDate()).padStart(2,'0')+'/'+String(__d.getMonth()+1).padStart(2,'0')+'/'+__d.getFullYear();
+    localStorage.setItem('pah_acc', JSON.stringify({name, gender, age, weight, height, joined}));
     overlay.classList.add('hidden');
     return false;
   });

@@ -517,6 +517,10 @@ function loadU(){
   return u;
 }
 function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+// User-facing date display — always day/month/year, numeric with slashes
+// (e.g. 30/07/2026), never the browser's default locale order.
+function fmtDMY(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
+function fmtDM(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');}
 
 function logoutUser(){
   localStorage.removeItem('pah_acc');
@@ -634,7 +638,7 @@ function renderWeekly(){
       <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(reps[i]/maxR*100)}%"></div></div>
       <div class="wbar-lbl">${dayLbls[i]}</div>
     </div>`).join('');
-  const fmt=(d,withYear)=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:withYear?'numeric':undefined});
+  const fmt=(d,withYear)=>withYear?fmtDMY(d):fmtDM(d);
   document.getElementById('weekly-range').textContent=fmt(weekDates[0])+' – '+fmt(weekDates[6],true);
   document.getElementById('week-next').disabled=weekOffset>=0;
 }
@@ -647,7 +651,7 @@ function renderMonthly(){
   const daysInMonth=new Date(year,month+1,0).getDate();
   const days=Array.from({length:daysInMonth},(_,i)=>{
     const dt=new Date(year,month,i+1);
-    return{day:i+1,reps:u.dailyReps[dateKey(dt)]||0,label:dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})};
+    return{day:i+1,reps:u.dailyReps[dateKey(dt)]||0,label:fmtDM(dt)};
   });
   const maxR=Math.max(...days.map(d=>d.reps),1);
   const bars=document.getElementById('weekly-bars');
@@ -680,7 +684,7 @@ function showDayDetail(dk){
   const reps=u.dailyReps[dk]||0;
   const[y,mo,da]=dk.split('-').map(Number);
   const dateObj=new Date(y,mo-1,da);
-  const whenStr=dateObj.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const whenStr=dateObj.toLocaleDateString('en-GB',{weekday:'long'})+', '+fmtDMY(dateObj);
   const sessions=(u.recent||[]).filter(r=>r.timestamp&&dateKey(new Date(r.timestamp))===dk);
   let m=document.getElementById('session-detail-popup');
   if(!m){
@@ -747,7 +751,7 @@ function showSessionDetail(idx){
     document.body.appendChild(m);
   }
   const whenStr=r.timestamp
-    ?new Date(r.timestamp).toLocaleString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})
+    ?(()=>{const dt=new Date(r.timestamp);return dt.toLocaleDateString('en-GB',{weekday:'long'})+', '+fmtDMY(dt)+', '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});})()
     :r.date;
   const durStr=r.durationSec!=null?(r.durationSec>=60?Math.floor(r.durationSec/60)+'m '+(r.durationSec%60)+'s':r.durationSec+'s'):'Not recorded';
   const areaStr=r.area||'Not recorded';
