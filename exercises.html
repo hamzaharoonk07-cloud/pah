@@ -1226,10 +1226,6 @@ const DEMO_DEFS={
     peak:{leftShoulder:{y:.185},rightShoulder:{y:.185},leftElbow:{y:.345},rightElbow:{y:.345},leftWrist:{y:.495},rightWrist:{y:.495}},
     steps:['Relax both arms at your sides','Lift both shoulders straight up toward your ears — hold 2 seconds'],
     highlight:['leftShoulder','rightShoulder','neck']},
-  calf_raise:{kind:'hold',
-    peak:{pelvis:{y:.52},leftHip:{y:.53},rightHip:{y:.53},leftKnee:{y:.72},rightKnee:{y:.72},leftAnkle:{y:.89},rightAnkle:{y:.89}},
-    steps:['Stand tall, feet hip-width apart','Rise up onto your toes as high as you can — hold, then lower'],
-    highlight:['leftAnkle','rightAnkle','leftFoot','rightFoot']},
   _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
 };
 
@@ -1459,10 +1455,6 @@ const UR_MAP={
   'Nice — stand tall and repeat.':'بہت خوب — سیدھے کھڑے ہوں اور دہرائیں۔',
   'Pause a moment at the bottom for full credit.':'مکمل نمبر کے لیے نیچے ایک لمحہ رکیں۔',
   'Bend both knees into a shallow squat, keeping knees behind your toes.':'دونوں گھٹنے ہلکا سا موڑ کر بیٹھیں، گھٹنوں کو پیر کی انگلیوں سے آگے نہ جانے دیں۔',
-  'Good — heels lifted high. Hold, then lower with control.':'اچھا — ایڑیاں اونچی اٹھی ہوئی ہیں۔ رکیں، پھر آہستگی سے نیچے لائیں۔',
-  'Nice — lower fully and repeat.':'بہت خوب — مکمل نیچے لائیں اور دہرائیں۔',
-  'Hold the raise a little longer for full credit.':'مکمل نمبر کے لیے اٹھاؤ تھوڑی دیر مزید رکھیں۔',
-  'Stand tall, then rise up onto your toes as high as you can.':'سیدھے کھڑے ہوں، پھر جتنا ممکن ہو پیر کی انگلیوں پر اونچا اٹھیں۔',
   'Good wrist bend — hold 2 seconds.':'اچھا کلائی کا موڑ — 2 سیکنڈ تک رکھیں۔',
   'Straighten your wrist and bend the other way.':'کلائی سیدھی کریں اور دوسری طرف موڑیں۔',
   'Extend your arm forward, then bend your wrist side to side.':'اپنا بازو آگے کی طرف سیدھا کریں، پھر کلائی کو دائیں بائیں موڑیں۔',
@@ -1555,11 +1547,7 @@ const EX_UR={
   shoulder_shrug:{name:'کندھے اچکانا',area:'اوپری ٹریپیزیئس (دونوں کندھے)',
     desc:'دونوں بازو پہلوؤں میں ڈھیلے چھوڑیں۔ دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں، 2 سیکنڈ تک رکھیں، پھر مکمل نیچے آنے دیں۔',
     note:'اوپری ٹریپیزیئس میں تناؤ کو فعال اور ریلیز کرتا ہے۔ اکڑے ہوئے یا ڈیسک کے کام سے تھکے کندھوں اور گردن کے لیے ہلکا پہلا قدم۔',
-    warn:'اگر آپ کو گردن کے اعصاب دبنے کی تشخیص ہے، یا کندھے اچکانے سے بازو میں جھنجھناہٹ یا سُن پن پھیلے تو پہلے ڈاکٹر سے رجوع کریں۔'},
-  calf_raise:{name:'ایڑی اٹھانا',area:'ٹخنے کا نیچے جھکاؤ (دونوں ٹخنے)',
-    desc:'سیدھے کھڑے ہوں، پیر کندھوں جتنے فاصلے پر۔ جتنا ممکن ہو پیر کی انگلیوں پر اونچا اٹھیں، رکیں، پھر قابو کے ساتھ ایڑیاں واپس نیچے لائیں۔',
-    note:'پنڈلی کے پٹھوں اور ٹخنے کو مضبوط کرتا ہے۔ چلنے، سیڑھیاں چڑھنے اور کھڑے رہنے کی طاقت اور توازن بناتا ہے۔',
-    warn:'اگر آپ کو ایکلیز ٹینڈن کی چوٹ ہے یا حالیہ ٹخنے کا فریکچر ہوا ہے، یا اٹھاتے وقت ٹخنے یا پنڈلی کے پچھلے حصے میں تیز درد محسوس ہو تو پہلے ڈاکٹر سے رجوع کریں — اگر غیرمستحکم محسوس ہو تو دیوار یا کرسی کا سہارا لیں۔'}
+    warn:'اگر آپ کو گردن کے اعصاب دبنے کی تشخیص ہے، یا کندھے اچکانے سے بازو میں جھنجھناہٹ یا سُن پن پھیلے تو پہلے ڈاکٹر سے رجوع کریں۔'}
 };
 function exIntroMsg(ex){
   const ur=EX_UR[ex.det];
@@ -1816,14 +1804,7 @@ const EX=[
     // real reps overshoot into the harsh out-of-range formula. Widened so a
     // real full shrug lands inside the graduated in-range band instead.
     angles:{main:[7,11,12],pivot:11,threshold:{lo:0.05,hi:0.6}}, // delta from this session's own tracked resting ratio, not an absolute ratio
-    joints:{p:[7,8,11,12],s:[],lk:[[11,12]],sk:[[7,11],[8,12]]}},
-  {name:'Calf Raises',area:'Ankle Plantarflexion (Both Ankles)',diff:'Beginner',tags:['Ankle'],reps:15,det:'calf_raise',
-    desc:'Stand tall, feet hip-width apart. Rise up onto your toes as high as you can, pause, then lower your heels back down with control.',
-    note:'Strengthens the calf muscles and ankle plantarflexors. Builds push-off power and balance for walking, stairs, and standing endurance.',
-    warn:'Check with your doctor first if you have an Achilles tendon injury or a recent ankle fracture, or if you feel sharp pain in the back of your ankle or calf during the lift — hold onto a wall or chair if you feel unsteady.',
-    muscles:['Gastrocnemius','Soleus','Tibialis Anterior'],
-    angles:{main:[25,27,31],pivot:27,threshold:{lo:130,hi:160}},
-    joints:{p:[25,26,27,28],s:[23,24],lk:[[25,27],[26,28]],sk:[[23,25],[24,26]]}}
+    joints:{p:[7,8,11,12],s:[],lk:[[11,12]],sk:[[7,11],[8,12]]}}
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1858,8 +1839,7 @@ const ICON_BY_DET={
   mini_squat:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v7M12,8l-3,4M12,8l3,4M12,13l-4,4l1,3M12,13l4,4l-1,3', // knees bent into a squat
   lateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8h-6M12,8h6M12,15l-3,6M12,15l3,6', // arms straight out to the sides
   wrist_dev:'M4,14h10M14,14l5,-3M14,14l5,3', // forearm with hand bending side to side
-  shoulder_shrug:'M10,3a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,5v1M7,6h10M7,6v8M17,6v8M12,14l-3,6M12,14l3,6', // shoulders raised close to a short neck, arms hanging straight
-  calf_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,15l-3,5M9,20l2,-1M12,15l3,5M15,20l-2,-1' // standing with heels lifted, up on toes
+  shoulder_shrug:'M10,3a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,5v1M7,6h10M7,6v8M17,6v8M12,14l-3,6M12,14l3,6' // shoulders raised close to a short neck, arms hanging straight
 };
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
@@ -3315,7 +3295,7 @@ function smoothTorso(val){
 // balance adjustment that would false-positive this check. Shoulder shrugs
 // and calf raises are both standing, both-feet, torso-still exercises with
 // no intentional trunk motion, so they get the same guard as neck_tilt.
-const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_shrug','calf_raise']);
+const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_shrug']);
 let compensationStreak=0;
 // Reported live: users were seeing "Keep your torso still... / Compensating"
 // almost constantly, even standing normally — confirmed by simulating this
@@ -3433,32 +3413,6 @@ const HOLD_CFG={
     releaseMsg:'Nice — stand tall and repeat.',
     shortHoldMsg:'Pause a moment at the bottom for full credit.',
     readyMsg:'Bend both knees into a shallow squat, keeping knees behind your toes.'
-  },
-  calf_raise:{
-    vis:[25,26,27,28,31,32],
-    // Same averaged-both-legs approach as mini_squat, one joint further down
-    // the chain (knee-ankle-toe instead of hip-knee-ankle) — the toe stays
-    // planted as a pivot while the heel lifts, so this angle opens up as you
-    // rise onto your toes and closes back toward flat-footed as you lower.
-    // Toe/foot-index landmarks (31/32) read lower MediaPipe confidence than
-    // big joints even when genuinely visible and tracked correctly — they're
-    // small, near the bottom frame edge, and often partly occluded by shoes —
-    // same reasoning as wrist_dev's lowered bar for the index-finger tip.
-    // Without this, feet routinely sat below the default 0.35 and the whole
-    // exercise flipped to "Lost" almost constantly.
-    minVis:0.2,
-    compute(lm){
-      const l=angleDeg(lm[25],lm[27],lm[31]);
-      const r=angleDeg(lm[26],lm[28],lm[32]);
-      return{value:smoothAngle((l+r)/2),label:'Ankle Ext',unit:'°'};
-    },
-    isEngaged:(o,lo)=>o.value>lo,
-    isReleased:(o)=>o.value<115,
-    minHoldMs:1000,activeLabel:'Raised',
-    engagedMsg:'Good — heels lifted high. Hold, then lower with control.',
-    releaseMsg:'Nice — lower fully and repeat.',
-    shortHoldMsg:'Hold the raise a little longer for full credit.',
-    readyMsg:'Stand tall, then rise up onto your toes as high as you can.'
   },
   wrist_dev:{
     vis:[13,15,19],
@@ -3639,7 +3593,7 @@ function runBilateralRaise(lm){
   }
 }
 
-const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','wrist_dev','shoulder_shrug','calf_raise']);
+const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','wrist_dev','shoulder_shrug']);
 const BILATERAL_DETS=new Set(['bilateral_raise','lateral_raise']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
