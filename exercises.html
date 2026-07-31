@@ -3296,14 +3296,19 @@ function smoothTorso(val){
 // no intentional trunk motion, so they get the same guard as neck_tilt.
 const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_shrug','calf_raise']);
 let compensationStreak=0;
-const COMPENSATION_GRACE=6; // ~200ms at 30fps, same debounce pattern as requireVisible —
-// a momentary torso-lean spike (balance shift, natural sway) is normal noise, not real
-// compensation, and must not instantly wipe out an in-progress hold countdown.
+// Reported live: users were seeing "Keep your torso still... / Compensating"
+// almost constantly, even standing normally — confirmed by simulating this
+// check with realistic (not perfectly vertical) landmarks that a real camera
+// with normal noise/sway would produce. 20 degrees over just ~200ms is easily
+// reached by ordinary MediaPipe jitter and natural standing sway, not just
+// genuine cheating — raised to a threshold/duration a physio would actually
+// call "leaning to compensate" (30 degrees, sustained ~500ms).
+const COMPENSATION_GRACE=15; // ~500ms at 30fps
 function checkTorsoCompensation(lm){
   if(!safe(lm,11,12,23,24)){compensationStreak=0;return false;}
   const shoulderMid={x:(lm[11].x+lm[12].x)/2,y:(lm[11].y+lm[12].y)/2};
   const hipMid={x:(lm[23].x+lm[24].x)/2,y:(lm[23].y+lm[24].y)/2};
-  const leaning=smoothTorso(angleFromVertical(hipMid,shoulderMid))>20;
+  const leaning=smoothTorso(angleFromVertical(hipMid,shoulderMid))>30;
   compensationStreak=leaning?compensationStreak+1:0;
   return compensationStreak>=COMPENSATION_GRACE;
 }
