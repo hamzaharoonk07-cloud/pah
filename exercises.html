@@ -1345,7 +1345,7 @@ function gateSubmit(e){
     errEl.textContent='Age, weight, and height can only contain numbers.';errEl.style.display='block';return;
   }
   errEl.style.display='none';
-  const acc={name,gender,age,weight,height,condition,joined:new Date().toLocaleDateString()};
+  const acc={name,gender,age,weight,height,condition,joined:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})};
   localStorage.setItem('pah_acc',JSON.stringify(acc));
   document.getElementById('gate').classList.add('hidden');
   initApp(acc);
