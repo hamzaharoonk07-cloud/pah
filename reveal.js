@@ -127,6 +127,43 @@ function logoutUser(){
 }
 
 // ═══════════════════════════════════════════════════════════
+// LANGUAGE TOGGLE (English / Urdu) — shared across every page. A page
+// with its own dynamic content (exercise cards, dashboard stats, etc.)
+// can define a top-level onLangChange() function; applyLang() calls it
+// after the generic sweep so that content re-renders in the new language.
+// A page with its own coaching-specific dictionary (exercises.html's
+// UR_MAP/T()) keeps that separate — this only handles the toggle state,
+// the [data-ur]/[data-ur-ph] sweep, and the lang-ur font class.
+// ═══════════════════════════════════════════════════════════
+let currentLang=localStorage.getItem('pah-lang')||'en';
+function syncLangBtn(){
+  const el=document.getElementById('lang-tgl-txt');
+  if(el)el.textContent=currentLang==='ur'?'اردو':'EN';
+  const btn=document.getElementById('lang-tgl');
+  if(btn)btn.title='Switch language ('+(currentLang==='ur'?'Urdu → English':'English → Urdu')+')';
+}
+function applyLang(){
+  document.body.classList.toggle('lang-ur',currentLang==='ur');
+  document.querySelectorAll('[data-ur]').forEach(el=>{
+    if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;
+    el.innerHTML=currentLang==='ur'?el.dataset.ur:el.dataset.en;
+  });
+  document.querySelectorAll('[data-ur-ph]').forEach(el=>{
+    if(el.dataset.enPh===undefined)el.dataset.enPh=el.placeholder;
+    el.placeholder=currentLang==='ur'?el.dataset.urPh:el.dataset.enPh;
+  });
+  if(typeof onLangChange==='function')onLangChange();
+}
+function toggleLang(){
+  currentLang=currentLang==='ur'?'en':'ur';
+  localStorage.setItem('pah-lang',currentLang);
+  syncLangBtn();
+  applyLang();
+}
+syncLangBtn();
+document.addEventListener('DOMContentLoaded',()=>{if(currentLang==='ur')applyLang();});
+
+// ═══════════════════════════════════════════════════════════
 // SERVICE WORKER — registers sw.js (shared here since reveal.js is already
 // loaded on every page) so the app installs and its own pages/assets keep
 // working offline after a first visit. See sw.js for what genuinely can't be

@@ -118,6 +118,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   background:rgba(225,29,72,.1);border:1px solid rgba(225,29,72,.25);
   color:var(--accent);font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;white-space:nowrap;
 }
+/* Urdu language mode — applies once the shared toggle (reveal.js) adds
+   body.lang-ur. Noto Sans Arabic for general text (more readable at
+   compact UI sizes); each page may layer its own Noto Nastaliq Urdu
+   override (the traditional Urdu script style) onto its own large
+   headings/prose selectors, since those class names differ per page. */
+body.lang-ur,body.lang-ur *{font-family:'Noto Sans Arabic','Inter',sans-serif!important}
 .acct-dd{position:relative}
 .acct-dd-trigger{overflow:hidden}
 .acct-dd-panel{

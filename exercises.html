@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="physiosync-icon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link rel="stylesheet" href="styles.css">
-<script src="reveal.js"></script>
+<script src="reveal.js?v=2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,11 +25,10 @@
    from Arabic's Naskh) reserved for large headings/prose where it's both
    authentic-looking and easy to read. Nastaliq needs extra line-height —
    its diagonal stacking overlaps at normal Latin line-heights. */
-body.lang-ur{font-family:'Noto Sans Arabic','Inter',sans-serif}
 body.lang-ur .hero-h,body.lang-ur .gate-h,body.lang-ur .ex-name,
 body.lang-ur .ex-desc,body.lang-ur .ex-physio span,body.lang-ur .ex-warn span,
 body.lang-ur .hero-sub,body.lang-ur .cm,body.lang-ur .f-desc{
-  font-family:'Noto Nastaliq Urdu','Noto Sans Arabic',sans-serif;line-height:2.3;
+  font-family:'Noto Nastaliq Urdu','Noto Sans Arabic',sans-serif!important;line-height:2.3;
 }
 body.lang-ur .hero-h{line-height:1.9}
 :root[data-theme="light"] body::before{
@@ -1343,18 +1342,14 @@ function closeDemoOverlay(){
 // USER STATE
 // ═══════════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════════
-// LANGUAGE — coaching language toggle (English / Urdu). Covers voice
-// coaching, the on-screen session feedback banner, and the AI chat
-// widget's canned replies. Does not translate the rest of the site's
-// UI chrome (that's a much larger i18n project, out of scope here).
+// LANGUAGE — exercises.html-specific pieces. The shared toggle state
+// (currentLang), the syncLangBtn/applyLang/toggleLang machinery, and the
+// [data-ur]/[data-ur-ph] sweep now live in reveal.js (shared by every
+// page). This page hooks its own dynamic re-render (hero greeting,
+// exercise cards) into that sweep via onLangChange(), and keeps its own
+// coaching-specific dictionary (UR_MAP/T()) for voice/feedback text that
+// reveal.js has no reason to know about.
 // ═══════════════════════════════════════════════════════════
-let currentLang=localStorage.getItem('pah-lang')||'en';
-function syncLangBtn(){
-  const el=document.getElementById('lang-tgl-txt');
-  if(el)el.textContent=currentLang==='ur'?'اردو':'EN';
-  const btn=document.getElementById('lang-tgl');
-  if(btn)btn.title='Switch coaching language ('+(currentLang==='ur'?'Urdu → English':'English → Urdu')+')';
-}
 let lastGreetTime='morning',lastGreetFirst='';
 function renderHeroGreeting(){
   const el=document.getElementById('hero-welcome-txt');
@@ -1366,27 +1361,10 @@ function renderHeroGreeting(){
     el.innerHTML=`Good <span id="hero-time">${lastGreetTime}</span>, <strong id="hero-name">${lastGreetFirst}</strong>. Ready for your session?`;
   }
 }
-function applyLang(){
-  document.body.classList.toggle('lang-ur',currentLang==='ur');
-  document.querySelectorAll('[data-ur]').forEach(el=>{
-    if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;
-    el.innerHTML=currentLang==='ur'?el.dataset.ur:el.dataset.en;
-  });
-  document.querySelectorAll('[data-ur-ph]').forEach(el=>{
-    if(el.dataset.enPh===undefined)el.dataset.enPh=el.placeholder;
-    el.placeholder=currentLang==='ur'?el.dataset.urPh:el.dataset.enPh;
-  });
+function onLangChange(){
   renderHeroGreeting();
   if(typeof renderExGrid==='function'){renderExGrid();if(typeof filterEx==='function')filterEx();}
 }
-function toggleLang(){
-  currentLang=currentLang==='ur'?'en':'ur';
-  localStorage.setItem('pah-lang',currentLang);
-  syncLangBtn();
-  applyLang();
-}
-syncLangBtn();
-document.addEventListener('DOMContentLoaded',()=>{if(currentLang==='ur')applyLang();});
 
 // Exact-match English->Urdu dictionary for fixed coaching/UI strings used
 // by setFB() and VoiceCoach.speak(). T() falls back to the original English
