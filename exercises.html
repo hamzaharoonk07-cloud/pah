@@ -2910,6 +2910,16 @@ let skelColorRGB=[225,29,72];
 function drawSkeleton(ctx,lm,W,H){
   if(!sessEx)return;
 
+  // Every stroke/radius/font-size below is an absolute pixel value, tuned to
+  // look right on a ~1280px-wide canvas. Mobile's default (non-fine-detail)
+  // capture is only 640px wide (see startCamera()) — drawn at those same
+  // absolute sizes, the overlay ends up covering roughly 2x more of the
+  // frame than on a wider canvas, reading as a thick, fat skeleton. Scaling
+  // everything down proportionally below the reference width fixes that
+  // without touching desktop or the 1280px fine-detail mobile exercises,
+  // which already looked correct (scale caps at 1, never scales up).
+  const scale=Math.min(1,W/1280);
+
   const target=scoreColorRGB(Math.max(0,Math.min(100,sessScore))/100);
   for(let i=0;i<3;i++)skelColorRGB[i]+=(target[i]-skelColorRGB[i])*0.12;
   const[r,g,b]=skelColorRGB.map(Math.round);
@@ -2918,7 +2928,7 @@ function drawSkeleton(ctx,lm,W,H){
   ctx.save();
   ctx.lineCap='round';ctx.lineJoin='round';
   ctx.strokeStyle=lineCol;
-  ctx.lineWidth=10;
+  ctx.lineWidth=10*scale;
 
   SKEL_CONNECTIONS.forEach(([a,b])=>{
     const A=lm[a],B=lm[b];
@@ -2932,9 +2942,9 @@ function drawSkeleton(ctx,lm,W,H){
   lm.forEach((pt,i)=>{
     if(SKEL_DOT_SKIP.has(i)||typeof pt.visibility!=='number'||pt.visibility<0.4)return;
     const x=pt.x*W,y=pt.y*H;
-    ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);
+    ctx.beginPath();ctx.arc(x,y,14*scale,0,Math.PI*2);
     ctx.fillStyle=dotCol;ctx.fill();
-    ctx.lineWidth=2;ctx.strokeStyle='rgba(0,0,0,.55)';ctx.stroke();
+    ctx.lineWidth=2*scale;ctx.strokeStyle='rgba(0,0,0,.55)';ctx.stroke();
   });
 
   // Joint name labels — drawn after all dots so text always sits on top.
@@ -2942,16 +2952,16 @@ function drawSkeleton(ctx,lm,W,H){
   // which would flip any text drawn normally into backwards/mirrored writing —
   // each label is drawn inside its own local mirror so the outer CSS flip
   // un-mirrors it back to normal, readable text.
-  ctx.font='700 13px "Plus Jakarta Sans",sans-serif';
+  ctx.font=`700 ${13*scale}px "Plus Jakarta Sans",sans-serif`;
   ctx.textBaseline='middle';
-  ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.fillStyle='#fff';
+  ctx.lineWidth=3*scale;ctx.strokeStyle='rgba(0,0,0,.75)';ctx.fillStyle='#fff';
   lm.forEach((pt,i)=>{
     const label=JOINT_LABELS[i];
     if(!label||typeof pt.visibility!=='number'||pt.visibility<0.4)return;
     const x=pt.x*W,y=pt.y*H;
     const nearEdge=x>W*0.7;
-    const ty=y-14;
-    const offset=nearEdge?-18:18;
+    const ty=y-14*scale;
+    const offset=nearEdge?-18*scale:18*scale;
     ctx.save();
     ctx.translate(x+offset,ty);
     ctx.scale(-1,1);
