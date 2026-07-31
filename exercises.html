@@ -12,10 +12,26 @@
 <link rel="stylesheet" href="styles.css">
 <script src="reveal.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&family=Noto+Sans+Arabic:wght@100..900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script><style>
 /* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
    blobFloat/gradShift keyframes, .reveal base, and .footer/.f-* now live in
    styles.css. This block keeps only exercises.html-specific layout/components. */
+/* Urdu coaching mode — Noto Sans Arabic for compact UI text (nav, buttons,
+   badges, pills) since Nastaliq's diagonal flow is harder to read at small
+   sizes; Noto Nastaliq Urdu (the traditional Urdu script style, distinct
+   from Arabic's Naskh) reserved for large headings/prose where it's both
+   authentic-looking and easy to read. Nastaliq needs extra line-height —
+   its diagonal stacking overlaps at normal Latin line-heights. */
+body.lang-ur{font-family:'Noto Sans Arabic','Inter',sans-serif}
+body.lang-ur .hero-h,body.lang-ur .gate-h,body.lang-ur .ex-name,
+body.lang-ur .ex-desc,body.lang-ur .ex-physio span,body.lang-ur .ex-warn span,
+body.lang-ur .hero-sub,body.lang-ur .cm,body.lang-ur .f-desc{
+  font-family:'Noto Nastaliq Urdu','Noto Sans Arabic',sans-serif;line-height:2.3;
+}
+body.lang-ur .hero-h{line-height:1.9}
 :root[data-theme="light"] body::before{
   content:'';position:fixed;inset:-10%;z-index:-1;pointer-events:none;
   background:
@@ -661,7 +677,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
   </div>
   <span class="loader-brand">PhysioSync</span>
-  <span class="loader-sub">Loading Exercises…</span>
+  <span class="loader-sub" data-ur="ورزشیں لوڈ ہو رہی ہیں…">Loading Exercises…</span>
 </div>
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
@@ -673,28 +689,28 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:40px">
       <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:40px">
     </div>
-    <h2 class="gate-h">Create Your Profile</h2>
-    <p class="gate-sub">Set up your recovery profile to get personalized guidance.</p>
+    <h2 class="gate-h" data-ur="اپنا پروفائل بنائیں">Create Your Profile</h2>
+    <p class="gate-sub" data-ur="ذاتی رہنمائی حاصل کرنے کے لیے اپنا بحالی پروفائل بنائیں۔">Set up your recovery profile to get personalized guidance.</p>
     <form id="gate-form" onsubmit="gateSubmit(event)">
       <div class="frow">
-        <div class="fl"><label for="g-name">Full Name</label><input id="g-name" type="text" required placeholder="Your full name" autocomplete="given-name" pattern="[A-Za-z\s\-'\.]+" title="Letters only, no numbers" oninput="this.value=this.value.replace(/[^A-Za-z\s\-'\.]/g,'')"></div>
-        <div class="fl"><label for="g-gender">Gender</label><select id="g-gender" required><option value="" disabled selected>Select</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
+        <div class="fl"><label for="g-name" data-ur="پورا نام">Full Name</label><input id="g-name" type="text" required placeholder="Your full name" data-ur-ph="آپ کا پورا نام" autocomplete="given-name" pattern="[A-Za-z\s\-'\.]+" title="Letters only, no numbers" oninput="this.value=this.value.replace(/[^A-Za-z\s\-'\.]/g,'')"></div>
+        <div class="fl"><label for="g-gender" data-ur="جنس">Gender</label><select id="g-gender" required><option value="" disabled selected>Select</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
       </div>
       <div class="frow1">
-        <div class="fl"><label for="g-email">Email</label><input id="g-email" type="email" required placeholder="you@example.com" autocomplete="email"></div>
+        <div class="fl"><label for="g-email" data-ur="ای میل">Email</label><input id="g-email" type="email" required placeholder="you@example.com" autocomplete="email"></div>
       </div>
       <div class="frow">
-        <div class="fl"><label for="g-age">Age (years)</label><input id="g-age" type="number" required min="5" max="120" placeholder="e.g. 30" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-        <div class="fl"><label for="g-weight">Weight (kg)</label><input id="g-weight" type="number" required min="10" max="300" placeholder="e.g. 70" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="fl"><label for="g-age" data-ur="عمر (سال)">Age (years)</label><input id="g-age" type="number" required min="5" max="120" placeholder="e.g. 30" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="fl"><label for="g-weight" data-ur="وزن (کلوگرام)">Weight (kg)</label><input id="g-weight" type="number" required min="10" max="300" placeholder="e.g. 70" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       </div>
       <div class="frow1">
-        <div class="fl"><label for="g-height">Height (cm)</label><input id="g-height" type="number" required min="50" max="260" placeholder="e.g. 175" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="fl"><label for="g-height" data-ur="قد (سینٹی میٹر)">Height (cm)</label><input id="g-height" type="number" required min="50" max="260" placeholder="e.g. 175" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       </div>
       <div class="frow1">
-        <div class="fl"><label for="g-condition">Primary Condition (optional)</label><input id="g-condition" type="text" placeholder="e.g. Lower back pain, Knee OA"></div>
+        <div class="fl"><label for="g-condition" data-ur="بنیادی مسئلہ (اختیاری)">Primary Condition (optional)</label><input id="g-condition" type="text" placeholder="e.g. Lower back pain, Knee OA"></div>
       </div>
-      <button type="submit" class="gate-btn">Start My Recovery Program</button>
-      <div class="gate-err" id="gate-err">Please complete all required fields.</div>
+      <button type="submit" class="gate-btn" data-ur="میرا بحالی پروگرام شروع کریں">Start My Recovery Program</button>
+      <div class="gate-err" id="gate-err" data-ur="براہ کرم تمام ضروری خانے پُر کریں۔">Please complete all required fields.</div>
     </form>
   </div>
 </div>
@@ -707,10 +723,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:26px">
   </a>
   <div class="nav-links">
-    <a href="#hero" class="nl">Exercises</a>
-    <a href="hospitals.html" class="nl">Hospitals</a>
-    <a href="research.html" class="nl">Research</a>
-    <a href="about.html" class="nl">About</a>
+    <a href="#hero" class="nl" data-ur="ورزشیں">Exercises</a>
+    <a href="hospitals.html" class="nl" data-ur="ہسپتال">Hospitals</a>
+    <a href="research.html" class="nl" data-ur="تحقیق">Research</a>
+    <a href="about.html" class="nl" data-ur="ہمارے بارے میں">About</a>
   </div>
   <div class="nav-right">
     <div class="nav-greet" id="nav-greet" style="display:none">Welcome back, <span id="nav-name">—</span></div>
@@ -759,10 +775,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   </div>
 </nav>
 <div class="mob-menu" id="mob-nav">
-  <a href="#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
-  <a href="hospitals.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
-  <a href="research.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
-  <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
+  <a href="#hero" class="nl" data-ur="ورزشیں" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
+  <a href="hospitals.html" class="nl" data-ur="ہسپتال" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
+  <a href="research.html" class="nl" data-ur="تحقیق" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
+  <a href="about.html" class="nl" data-ur="ہمارے بارے میں" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
 </div>
 
 <!-- ══════════ HERO ══════════ -->
@@ -774,26 +790,26 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      Clinical Tracking · 3D Muscle Map · 10 Exercises
+      <span data-ur="کلینیکل ٹریکنگ · 3D پٹھوں کا نقشہ · 10 ورزشیں">Clinical Tracking · 3D Muscle Map · 10 Exercises</span>
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av"><img id="hero-welcome-img" alt="" style="display:none"><span id="hero-welcome-letter">P</span></span>
-      <span>Good <span id="hero-time">day</span>, <strong id="hero-name">—</strong>. Ready for your session?</span>
+      <span id="hero-welcome-txt">Good <span id="hero-time">day</span>, <strong id="hero-name">—</strong>. Ready for your session?</span>
     </div>
-    <h1 class="hero-h">Your <span>Recovery</span><br>Guided by PhysioSync</h1>
-    <p class="hero-sub">Physio-approved exercises with real-time MediaPipe pose tracking and live form scoring — all private, all on your device.</p>
+    <h1 class="hero-h" data-ur="آپ کی <span>بحالی</span><br>PhysioSync کی رہنمائی میں">Your <span>Recovery</span><br>Guided by PhysioSync</h1>
+    <p class="hero-sub" data-ur="فزیو کی تصدیق شدہ ورزشیں، لائیو MediaPipe پوز ٹریکنگ اور فارم اسکورنگ کے ساتھ — سب کچھ نجی، سب کچھ آپ کی ڈیوائس پر۔">Physio-approved exercises with real-time MediaPipe pose tracking and live form scoring — all private, all on your device.</p>
     <div class="search-row">
-      <input class="ex-search" id="ex-search" type="text" placeholder="Search exercises, muscles, joints..." oninput="filterEx()">
+      <input class="ex-search" id="ex-search" type="text" placeholder="Search exercises, muscles, joints..." data-ur-ph="ورزش، پٹھے، جوڑ تلاش کریں..." oninput="filterEx()">
     </div>
     <div class="pills" id="pills">
-      <button class="pill on" data-f="all" onclick="setPill(this,'all')">All</button>
-      <button class="pill" data-f="Neck" onclick="setPill(this,'Neck')">Neck</button>
-      <button class="pill" data-f="Shoulder" onclick="setPill(this,'Shoulder')">Shoulder</button>
-      <button class="pill" data-f="Back" onclick="setPill(this,'Back')">Back</button>
-      <button class="pill" data-f="Hip" onclick="setPill(this,'Hip')">Hip</button>
-      <button class="pill" data-f="Knee" onclick="setPill(this,'Knee')">Knee</button>
-      <button class="pill" data-f="Ankle" onclick="setPill(this,'Ankle')">Ankle</button>
-      <button class="pill" data-f="Wrist" onclick="setPill(this,'Wrist')">Wrist</button>
+      <button class="pill on" data-f="all" data-ur="تمام" onclick="setPill(this,'all')">All</button>
+      <button class="pill" data-f="Neck" data-ur="گردن" onclick="setPill(this,'Neck')">Neck</button>
+      <button class="pill" data-f="Shoulder" data-ur="کندھا" onclick="setPill(this,'Shoulder')">Shoulder</button>
+      <button class="pill" data-f="Back" data-ur="کمر" onclick="setPill(this,'Back')">Back</button>
+      <button class="pill" data-f="Hip" data-ur="کولہا" onclick="setPill(this,'Hip')">Hip</button>
+      <button class="pill" data-f="Knee" data-ur="گھٹنا" onclick="setPill(this,'Knee')">Knee</button>
+      <button class="pill" data-f="Ankle" data-ur="ٹخنہ" onclick="setPill(this,'Ankle')">Ankle</button>
+      <button class="pill" data-f="Wrist" data-ur="کلائی" onclick="setPill(this,'Wrist')">Wrist</button>
     </div>
   </div>
 </section>
@@ -829,7 +845,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>
         <svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
       </button>
-      <button class="sh-close" onclick="endSession()">End Session</button>
+      <button class="sh-close" data-ur="سیشن ختم کریں" onclick="endSession()">End Session</button>
     </div>
   </div>
 
@@ -954,11 +970,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="f-badges">
     <div class="f-badge">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-      Camera never leaves your device
+      <span data-ur="کیمرہ کبھی آپ کی ڈیوائس سے باہر نہیں جاتا">Camera never leaves your device</span>
     </div>
     <div class="f-badge">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      Research sourced directly from who.int
+      <span data-ur="تحقیق براہ راست who.int سے حاصل کی گئی">Research sourced directly from who.int</span>
     </div>
   </div>
   <div class="footer-cols">
@@ -968,37 +984,37 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:30px">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:30px">
       </div>
-      <p class="f-desc">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
+      <p class="f-desc" data-ur="PhysioSync کلینیکل معیار کی فزیوتھراپی فراہم کرتا ہے — کرنسی درست کرتا ہے، بحالی میں رہنمائی کرتا ہے، اور ہر ڈیوائس پر پیش رفت ٹریک کرتا ہے۔">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
     </div>
     <div>
-      <div class="f-hd">Platform</div>
+      <div class="f-hd" data-ur="پلیٹ فارم">Platform</div>
       <div class="f-lks">
-        <a href="#hero">Exercises</a>
-        <a href="hospitals.html">Hospitals</a>
-        <a href="research.html">Research</a>
-        <a href="account.html">Account</a>
-        <a href="index.html">3D Body Map</a>
+        <a href="#hero" data-ur="ورزشیں">Exercises</a>
+        <a href="hospitals.html" data-ur="ہسپتال">Hospitals</a>
+        <a href="research.html" data-ur="تحقیق">Research</a>
+        <a href="account.html" data-ur="اکاؤنٹ">Account</a>
+        <a href="index.html" data-ur="3D باڈی میپ">3D Body Map</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Company</div>
+      <div class="f-hd" data-ur="کمپنی">Company</div>
       <div class="f-lks">
-        <a href="about.html">About PhysioSync</a>
+        <a href="about.html" data-ur="PhysioSync کے بارے میں">About PhysioSync</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Contact</div>
+      <div class="f-hd" data-ur="رابطہ">Contact</div>
       <div class="f-lks">
         <span>physiosync@gmail.com</span>
         <span>0316 2404444</span>
-        <span>Karachi, Pakistan</span>
+        <span data-ur="کراچی، پاکستان">Karachi, Pakistan</span>
       </div>
     </div>
   </div>
   <div class="f-bot">
     <div class="f-bot-brand">
-      <span>&copy; 2026 PhysioSync. All rights reserved.</span>
-      <span class="f-powered"><img src="physiosync-icon.png" alt="">Powered by PhysioSync</span>
+      <span data-ur="&copy; 2026 PhysioSync۔ جملہ حقوق محفوظ ہیں۔">&copy; 2026 PhysioSync. All rights reserved.</span>
+      <span class="f-powered"><img src="physiosync-icon.png" alt=""><span data-ur="PhysioSync کی طاقت سے">Powered by PhysioSync</span></span>
     </div>
     <div class="f-soc">
       <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
@@ -1006,7 +1022,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
       <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
     </div>
-    <div class="f-bot-lks"><a href="#">Privacy</a><a href="#">Terms</a></div>
+    <div class="f-bot-lks"><a href="#" data-ur="پرائیویسی">Privacy</a><a href="#" data-ur="شرائط">Terms</a></div>
   </div>
 </footer>
 
@@ -1022,23 +1038,23 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <div class="coach-av"><img src="physiosync-icon-white.png" alt=""></div>
       <div>
         <div style="font-weight:800;font-size:.92rem;font-family:'Plus Jakarta Sans',sans-serif">PhysioSync Clinical Chatbot</div>
-        <div class="coach-online"><span class="cdot"></span>Online — Evidence-Based Protocol</div>
+        <div class="coach-online"><span class="cdot"></span><span data-ur="آن لائن — ثبوت پر مبنی پروٹوکول">Online — Evidence-Based Protocol</span></div>
       </div>
     </div>
-    <div class="coach-scope-note">Physiotherapy questions and using PhysioSync — pain, injuries, exercises, tracking, and your dashboard.</div>
+    <div class="coach-scope-note" data-ur="فزیوتھراپی سوالات اور PhysioSync کا استعمال — درد، چوٹ، ورزشیں، ٹریکنگ، اور آپ کا ڈیش بورڈ۔">Physiotherapy questions and using PhysioSync — pain, injuries, exercises, tracking, and your dashboard.</div>
     <div id="chat-msgs">
-      <div class="cm bot"><strong>PhysioSync Clinical Chatbot</strong>Hello! Describe your pain — location, severity (1-10), and how long you have had it. I will build a personalized rehabilitation program based on clinical evidence.</div>
-      <div class="cm bot"><strong>Quick Start</strong>
+      <div class="cm bot"><strong>PhysioSync Clinical Chatbot</strong><span data-ur="ہیلو! اپنا درد بیان کریں — مقام، شدت (1-10)، اور یہ کب سے ہے۔ میں طبی شواہد پر مبنی ذاتی بحالی پروگرام بناؤں گا۔">Hello! Describe your pain — location, severity (1-10), and how long you have had it. I will build a personalized rehabilitation program based on clinical evidence.</span></div>
+      <div class="cm bot"><strong data-ur="فوری آغاز">Quick Start</strong>
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
-          <span class="qchip" onclick="AIChat.send('neck pain cervical spondylosis stiffness severity 6/10')">Neck Pain</span>
-          <span class="qchip" onclick="AIChat.send('shoulder pain rotator cuff impingement severity 5/10')">Shoulder Pain</span>
-          <span class="qchip" onclick="AIChat.send('lower back pain L4-L5 disc herniation severity 7/10 for 3 weeks')">Back Pain</span>
-          <span class="qchip" onclick="AIChat.send('ankle sprain grade 2 rehabilitation 2 weeks post injury')">Ankle Sprain</span>
+          <span class="qchip" data-ur="گردن کا درد" onclick="AIChat.send('neck pain cervical spondylosis stiffness severity 6/10')">Neck Pain</span>
+          <span class="qchip" data-ur="کندھے کا درد" onclick="AIChat.send('shoulder pain rotator cuff impingement severity 5/10')">Shoulder Pain</span>
+          <span class="qchip" data-ur="کمر کا درد" onclick="AIChat.send('lower back pain L4-L5 disc herniation severity 7/10 for 3 weeks')">Back Pain</span>
+          <span class="qchip" data-ur="ٹخنے کی موچ" onclick="AIChat.send('ankle sprain grade 2 rehabilitation 2 weeks post injury')">Ankle Sprain</span>
         </div>
       </div>
     </div>
     <div class="chat-row">
-      <input id="chat-in" type="text" placeholder="e.g. lower back pain 7/10 for 3 weeks..." onkeypress="if(event.key==='Enter')AIChat.send()">
+      <input id="chat-in" type="text" placeholder="e.g. lower back pain 7/10 for 3 weeks..." data-ur-ph="مثلاً کمر کا نچلا درد 7/10، 3 ہفتوں سے..." onkeypress="if(event.key==='Enter')AIChat.send()">
       <button class="chat-send" onclick="AIChat.send()">
         <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg>
       </button>
@@ -1050,8 +1066,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
   <div onclick="toggleCoach(true);document.getElementById('coach-invite').classList.remove('show')">
-    <strong>How may I assist you?</strong>
-    <span>Describe your pain and I'll suggest an exercise.</span>
+    <strong data-ur="میں آپ کی کیسے مدد کر سکتا ہوں؟">How may I assist you?</strong>
+    <span data-ur="اپنا درد بیان کریں اور میں ایک ورزش تجویز کروں گا۔">Describe your pain and I'll suggest an exercise.</span>
   </div>
 </div>
 <button class="coach-fab" id="coach-fab" onclick="toggleCoach()" aria-label="Open PhysioSync Chatbot" title="Ask the PhysioSync chatbot">
@@ -1326,6 +1342,253 @@ function closeDemoOverlay(){
 // ═══════════════════════════════════════════════════════════
 // USER STATE
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// LANGUAGE — coaching language toggle (English / Urdu). Covers voice
+// coaching, the on-screen session feedback banner, and the AI chat
+// widget's canned replies. Does not translate the rest of the site's
+// UI chrome (that's a much larger i18n project, out of scope here).
+// ═══════════════════════════════════════════════════════════
+let currentLang=localStorage.getItem('pah-lang')||'en';
+function syncLangBtn(){
+  const el=document.getElementById('lang-tgl-txt');
+  if(el)el.textContent=currentLang==='ur'?'اردو':'EN';
+  const btn=document.getElementById('lang-tgl');
+  if(btn)btn.title='Switch coaching language ('+(currentLang==='ur'?'Urdu → English':'English → Urdu')+')';
+}
+let lastGreetTime='morning',lastGreetFirst='';
+function renderHeroGreeting(){
+  const el=document.getElementById('hero-welcome-txt');
+  if(!el)return;
+  if(currentLang==='ur'){
+    const timeUr={morning:'صبح',afternoon:'دوپہر',evening:'شام'}[lastGreetTime]||'دن';
+    el.innerHTML=`<strong id="hero-name">${lastGreetFirst}</strong>، ${timeUr} بخیر۔ سیشن کے لیے تیار ہیں؟`;
+  }else{
+    el.innerHTML=`Good <span id="hero-time">${lastGreetTime}</span>, <strong id="hero-name">${lastGreetFirst}</strong>. Ready for your session?`;
+  }
+}
+function applyLang(){
+  document.body.classList.toggle('lang-ur',currentLang==='ur');
+  document.querySelectorAll('[data-ur]').forEach(el=>{
+    if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;
+    el.innerHTML=currentLang==='ur'?el.dataset.ur:el.dataset.en;
+  });
+  document.querySelectorAll('[data-ur-ph]').forEach(el=>{
+    if(el.dataset.enPh===undefined)el.dataset.enPh=el.placeholder;
+    el.placeholder=currentLang==='ur'?el.dataset.urPh:el.dataset.enPh;
+  });
+  renderHeroGreeting();
+  if(typeof renderExGrid==='function'){renderExGrid();if(typeof filterEx==='function')filterEx();}
+}
+function toggleLang(){
+  currentLang=currentLang==='ur'?'en':'ur';
+  localStorage.setItem('pah-lang',currentLang);
+  syncLangBtn();
+  applyLang();
+}
+syncLangBtn();
+document.addEventListener('DOMContentLoaded',()=>{if(currentLang==='ur')applyLang();});
+
+// Exact-match English->Urdu dictionary for fixed coaching/UI strings used
+// by setFB() and VoiceCoach.speak(). T() falls back to the original English
+// untouched if a phrase has no entry, so voice/text output is never blank
+// or broken — it just silently stays English for anything untranslated.
+const UR_MAP={
+  // Session/camera/tracking status (setFB + VoiceCoach)
+  'Activate your camera to begin the session.':'سیشن شروع کرنے کے لیے اپنا کیمرہ آن کریں۔',
+  'Camera requires a secure HTTPS connection.':'کیمرے کے لیے محفوظ HTTPS کنکشن درکار ہے۔',
+  'Stand so your full body is visible. Ensure good lighting.':'اس طرح کھڑے ہوں کہ آپ کا پورا جسم نظر آئے۔ روشنی اچھی ہونی چاہیے۔',
+  'Tracking engine failed to start — this can be a brief hiccup loading the AI model. Tap to retry.':'ٹریکنگ انجن شروع نہیں ہو سکا — یہ AI ماڈل لوڈ ہونے میں معمولی رکاوٹ ہو سکتی ہے۔ دوبارہ کوشش کے لیے ٹیپ کریں۔',
+  'Retrying tracking engine…':'ٹریکنگ انجن دوبارہ شروع کیا جا رہا ہے…',
+  'Tracking engine error. End session and restart.':'ٹریکنگ انجن میں خرابی۔ سیشن ختم کر کے دوبارہ شروع کریں۔',
+  'Body not fully visible. Please step back into frame.':'جسم مکمل طور پر نظر نہیں آ رہا۔ براہ کرم پیچھے ہو کر فریم میں آئیں۔',
+  'Body not fully visible — step back so the tracked joints are in frame.':'جسم مکمل طور پر نظر نہیں آ رہا — پیچھے ہٹیں تاکہ جوڑ فریم میں آ جائیں۔',
+  'Camera is live. Stand back so your full body is visible.':'کیمرہ آن ہے۔ پیچھے ہٹیں تاکہ آپ کا پورا جسم نظر آئے۔',
+  'Tracking failed to start. Tap the message to retry.':'ٹریکنگ شروع نہیں ہو سکی۔ دوبارہ کوشش کے لیے پیغام پر ٹیپ کریں۔',
+  'Release now.':'اب چھوڑ دیں۔',
+  // Camera error messages (handleCameraError -> showCamError -> setFB)
+  'Unable to start camera.':'کیمرہ شروع نہیں ہو سکا۔',
+  'Unknown camera error. Please refresh and try again.':'نامعلوم کیمرہ خرابی۔ براہ کرم صفحہ ریفریش کر کے دوبارہ کوشش کریں۔',
+  'Camera permission denied. Tap "Allow" when prompted, or check browser settings.':'کیمرے کی اجازت نہیں دی گئی۔ پوچھے جانے پر "Allow" پر ٹیپ کریں، یا براؤزر کی سیٹنگز چیک کریں۔',
+  'No camera found. Please connect a camera device.':'کوئی کیمرہ نہیں ملا۔ براہ کرم کیمرہ ڈیوائس منسلک کریں۔',
+  'Camera is in use by another app. Please close other apps using the camera.':'کیمرہ کسی دوسری ایپ میں استعمال ہو رہا ہے۔ براہ کرم کیمرہ استعمال کرنے والی دیگر ایپس بند کریں۔',
+  'Camera does not support requested settings. Trying fallback...':'کیمرہ درخواست کردہ سیٹنگز سپورٹ نہیں کرتا۔ متبادل کوشش کی جا رہی ہے...',
+  'Camera blocked for security. Ensure you are on HTTPS or localhost.':'حفاظتی وجوہات کی بنا پر کیمرہ مسدود ہے۔ یقینی بنائیں کہ آپ HTTPS یا localhost پر ہیں۔',
+  'Camera start was aborted. Please try again.':'کیمرہ شروع ہوتے ہوتے رک گیا۔ براہ کرم دوبارہ کوشش کریں۔',
+  'Camera initialization error. Please refresh and try again.':'کیمرہ شروع کرنے میں خرابی۔ براہ کرم صفحہ ریفریش کر کے دوبارہ کوشش کریں۔',
+  // Generic form-compensation feedback (setFB)
+  'Raise both arms evenly — keep them symmetric.':'دونوں بازو برابر اٹھائیں — انہیں یکساں رکھیں۔',
+  'Lower complete — raise again with control.':'نیچے لانا مکمل — دوبارہ آہستگی سے اٹھائیں۔',
+  'Lower a little slower for full credit.':'مکمل نمبر کے لیے تھوڑا آہستہ نیچے لائیں۔',
+  'Keep your torso still and upright — move only the target joint, not your whole body.':'اپنا دھڑ سیدھا اور ساکت رکھیں — صرف مطلوبہ جوڑ کو حرکت دیں، پورے جسم کو نہیں۔',
+  // Per-exercise cfg messages (engagedMsg/releaseMsg/shortHoldMsg/readyMsg)
+  'Good tilt — hold this position for 3 seconds.':'اچھا جھکاؤ — اس پوزیشن کو 3 سیکنڈ تک رکھیں۔',
+  'Good — return and tilt the other side.':'اچھا — واپس آئیں اور دوسری طرف جھکائیں۔',
+  'Hold the tilt a little longer for full credit.':'مکمل نمبر کے لیے جھکاؤ تھوڑی دیر مزید رکھیں۔',
+  'Slowly tilt your head to one side, hold 3 seconds.':'اپنا سر آہستگی سے ایک طرف جھکائیں، 3 سیکنڈ تک رکھیں۔',
+  'Good side bend — hold 2 seconds.':'اچھا سائیڈ بینڈ — 2 سیکنڈ تک رکھیں۔',
+  'Good — return upright and bend the other side.':'اچھا — سیدھے ہوں اور دوسری طرف جھکیں۔',
+  'Hold the bend a little longer for full credit.':'مکمل نمبر کے لیے جھکاؤ تھوڑی دیر مزید رکھیں۔',
+  'Stand tall, slide one hand down your leg to bend sideways.':'سیدھے کھڑے ہوں، ایک ہاتھ ٹانگ پر نیچے سرکائیں تاکہ آپ سائیڈ کی طرف جھکیں۔',
+  'Good — pull knee toward chest. Hold 3 seconds.':'اچھا — گھٹنے کو سینے کی طرف کھینچیں۔ 3 سیکنڈ تک رکھیں۔',
+  'Lower and raise the other knee.':'نیچے لائیں اور دوسرا گھٹنا اٹھائیں۔',
+  'Hold the lift a little longer for full credit.':'مکمل نمبر کے لیے اٹھاؤ تھوڑی دیر مزید رکھیں۔',
+  'Stand tall. Pull one knee up toward your chest.':'سیدھے کھڑے ہوں۔ ایک گھٹنا اپنے سینے کی طرف اوپر کھینچیں۔',
+  'Good backward extension — hold 3 seconds.':'اچھا پچھلی طرف کھنچاؤ — 3 سیکنڈ تک رکھیں۔',
+  'Stand tall and repeat the extension.':'سیدھے کھڑے ہوں اور کھنچاؤ دہرائیں۔',
+  'Hold the extension a little longer for full credit.':'مکمل نمبر کے لیے کھنچاؤ تھوڑی دیر مزید رکھیں۔',
+  'Place hands on lower back and gently arch backward.':'ہاتھ کمر کے نچلے حصے پر رکھیں اور آہستگی سے پیچھے کی طرف جھکیں۔',
+  'Good depth — pause, then stand back up with control.':'اچھی گہرائی — رکیں، پھر آہستگی سے واپس کھڑے ہوں۔',
+  'Nice — stand tall and repeat.':'بہت خوب — سیدھے کھڑے ہوں اور دہرائیں۔',
+  'Pause a moment at the bottom for full credit.':'مکمل نمبر کے لیے نیچے ایک لمحہ رکیں۔',
+  'Bend both knees into a shallow squat, keeping knees behind your toes.':'دونوں گھٹنے ہلکا سا موڑ کر بیٹھیں، گھٹنوں کو پیر کی انگلیوں سے آگے نہ جانے دیں۔',
+  'Good — heels lifted high. Hold, then lower with control.':'اچھا — ایڑیاں اونچی اٹھی ہوئی ہیں۔ رکیں، پھر آہستگی سے نیچے لائیں۔',
+  'Nice — lower fully and repeat.':'بہت خوب — مکمل نیچے لائیں اور دہرائیں۔',
+  'Hold the raise a little longer for full credit.':'مکمل نمبر کے لیے اٹھاؤ تھوڑی دیر مزید رکھیں۔',
+  'Stand tall, then rise up onto your toes as high as you can.':'سیدھے کھڑے ہوں، پھر جتنا ممکن ہو پیر کی انگلیوں پر اونچا اٹھیں۔',
+  'Good wrist bend — hold 2 seconds.':'اچھا کلائی کا موڑ — 2 سیکنڈ تک رکھیں۔',
+  'Straighten your wrist and bend the other way.':'کلائی سیدھی کریں اور دوسری طرف موڑیں۔',
+  'Extend your arm forward, then bend your wrist side to side.':'اپنا بازو آگے کی طرف سیدھا کریں، پھر کلائی کو دائیں بائیں موڑیں۔',
+  'Good — shoulders lifted toward your ears. Hold 2 seconds.':'اچھا — کندھے کانوں کی طرف اٹھے ہوئے ہیں۔ 2 سیکنڈ تک رکھیں۔',
+  'Let your shoulders drop fully and repeat.':'کندھوں کو مکمل نیچے آنے دیں اور دہرائیں۔',
+  'Hold the shrug a little longer for full credit.':'مکمل نمبر کے لیے کندھے اٹھائے رکھیں تھوڑی دیر مزید۔',
+  'Relax your arms at your sides, then lift both shoulders straight up toward your ears.':'اپنے بازو پہلوؤں میں ڈھیلے چھوڑیں، پھر دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں۔',
+  'Raise both arms forward and up together, nice and slow.':'دونوں بازو آگے اور اوپر کی طرف اکٹھے، آہستگی سے اٹھائیں۔',
+  'Good — both arms raised overhead. Hold 2 seconds.':'اچھا — دونوں بازو سر کے اوپر اٹھے ہوئے ہیں۔ 2 سیکنڈ تک رکھیں۔',
+  'Raise both arms out to the sides, up to shoulder height, nice and slow.':'دونوں بازو سائیڈ کی طرف، کندھے کی اونچائی تک، آہستگی سے اٹھائیں۔',
+  'Good — both arms at shoulder height. Hold 2 seconds.':'اچھا — دونوں بازو کندھے کی اونچائی پر ہیں۔ 2 سیکنڈ تک رکھیں۔',
+  // Chat widget canned replies
+  "I can't answer that — I'm PhysioSync's assistant for human physiotherapy only.":'میں اس کا جواب نہیں دے سکتا — میں صرف انسانی فزیوتھراپی کے لیے PhysioSync کا معاون ہوں۔',
+  "I'm PhysioSync's physiotherapy assistant, so I can only help with pain, injuries, exercises, rehabilitation, and using this site. Try describing a symptom — for example, \"lower back pain, 6/10, for 2 weeks\" — or ask something like \"how do I start a session?\"":'میں PhysioSync کا فزیوتھراپی معاون ہوں، اس لیے صرف درد، چوٹ، ورزشوں، بحالی اور اس ویب سائٹ کے استعمال میں مدد کر سکتا ہوں۔ اپنی تکلیف بیان کریں — مثلاً "کمر کے نچلے حصے میں درد، 6/10، 2 ہفتوں سے" — یا پوچھیں "سیشن کیسے شروع کروں؟"',
+  "Your camera feed never leaves your device — PhysioSync tracks your movement locally in the browser using MediaPipe. Nothing is recorded or uploaded anywhere.":'آپ کا کیمرہ فیڈ کبھی آپ کی ڈیوائس سے باہر نہیں جاتا — PhysioSync براؤزر میں MediaPipe کے ذریعے آپ کی حرکت مقامی طور پر ٹریک کرتا ہے۔ کچھ بھی ریکارڈ یا اپ لوڈ نہیں ہوتا۔',
+  "Pick any exercise card in the library above and tap \"Start Your Physio.\" Allow camera access when prompted, then follow the on-screen form guidance — reps and form score are tracked automatically.":'اوپر لائبریری میں کوئی بھی ورزش کارڈ منتخب کریں اور "Start Your Physio" پر ٹیپ کریں۔ پوچھے جانے پر کیمرے کی اجازت دیں، پھر اسکرین پر دی گئی ہدایات پر عمل کریں — دہرائی اور فارم اسکور خودکار طور پر ٹریک ہوتے ہیں۔',
+  "Your Dashboard (bottom of this page) tracks sessions completed, total reps, average form score, your day streak, and a weekly activity chart — all saved on this device, no account needed.":'آپ کا ڈیش بورڈ (اس صفحے کے نیچے) مکمل سیشنز، کل دہرائیاں، اوسط فارم اسکور، آپ کی دن کی لگاتار حاضری، اور ہفتہ وار سرگرمی چارٹ دکھاتا ہے — یہ سب اسی ڈیوائس پر محفوظ ہوتا ہے، کسی اکاؤنٹ کی ضرورت نہیں۔',
+  "The Hospitals section lists partner hospitals across Pakistan with a direct link to each one's physiotherapy department, for when a case needs in-person clinical care.":'ہسپتال سیکشن پاکستان بھر کے شراکت دار ہسپتالوں کی فہرست دیتا ہے، ہر ایک کے فزیوتھراپی شعبے کے براہ راست لنک کے ساتھ، جب کسی کیس کو بالمشافہ کلینیکل دیکھ بھال کی ضرورت ہو۔',
+  "The 3D Body Map on the home page is an interactive anatomy model — scroll through it to see common conditions by body region, each linking to a matching exercise.":'ہوم پیج پر 3D باڈی میپ ایک انٹرایکٹو اناٹومی ماڈل ہے — اسکرول کر کے جسم کے مختلف حصوں کی عام حالتیں دیکھیں، ہر ایک متعلقہ ورزش سے منسلک ہے۔',
+  "No account or signup is required — just fill in your name, age, weight, and height once so exercises can be tailored to you. That's stored on this device only.":'کسی اکاؤنٹ یا سائن اپ کی ضرورت نہیں — بس ایک بار اپنا نام، عمر، وزن اور قد درج کریں تاکہ ورزشیں آپ کے مطابق بنائی جا سکیں۔ یہ صرف اسی ڈیوائس پر محفوظ ہوتا ہے۔',
+  "Tap the sun/moon icon in the navbar to switch between dark and light mode — your preference is remembered automatically.":'ڈارک اور لائٹ موڈ کے درمیان تبدیل کرنے کے لیے نیویگیشن بار میں سورج/چاند آئیکن پر ٹیپ کریں — آپ کی ترجیح خودکار طور پر یاد رکھی جاتی ہے۔',
+  "PhysioSync tracks your exercise form live through your camera (fully on-device), scores your reps, and saves your progress to a personal dashboard — no account or uploads required. Ask me about a specific feature, like the camera, dashboard, or hospitals.":'PhysioSync آپ کے کیمرے کے ذریعے لائیو آپ کی ورزش کا فارم ٹریک کرتا ہے (مکمل طور پر آپ کی ڈیوائس پر)، آپ کی دہرائیوں کا اسکور نکالتا ہے، اور آپ کی پیش رفت ذاتی ڈیش بورڈ میں محفوظ کرتا ہے — کسی اکاؤنٹ یا اپ لوڈ کی ضرورت نہیں۔ کیمرہ، ڈیش بورڈ، یا ہسپتالوں جیسے کسی خاص فیچر کے بارے میں پوچھیں۔',
+  "Thanks for sharing that — to guide you properly, how would you rate the pain from 1 to 10, and how long has it been going on?":'یہ بتانے کا شکریہ — آپ کی صحیح رہنمائی کے لیے، درد کو 1 سے 10 کے پیمانے پر کیسے درجہ دیں گے، اور یہ کب سے ہو رہا ہے؟',
+  "Ice for about 15 minutes at a time works best in the first 48-72 hours. After that, heat tends to help more with stiffness.":'پہلے 48-72 گھنٹوں میں ایک وقت میں تقریباً 15 منٹ برف لگانا سب سے بہتر ہے۔ اس کے بعد، اکڑن میں گرمائش زیادہ مددگار ہوتی ہے۔',
+  "Heat for 10-15 minutes before exercising loosens things up well — just skip it on a fresh, swollen injury.":'ورزش سے پہلے 10-15 منٹ گرمائش دینے سے اچھی طرح ڈھیلا ہو جاتا ہے — البتہ تازہ، سوجی ہوئی چوٹ پر اس سے پرہیز کریں۔',
+  "Mild-to-moderate cases usually improve noticeably within 2-4 weeks of consistent exercise. No change after that? Time to see a physiotherapist in person.":'ہلکے سے درمیانے کیسز عام طور پر مسلسل ورزش کے 2-4 ہفتوں میں نمایاں بہتری دکھاتے ہیں۔ اس کے بعد بھی کوئی تبدیلی نہیں؟ تو کسی فزیوتھراپسٹ سے بالمشافہ ملنے کا وقت ہے۔',
+  "Get up and move every 30 minutes, and keep your screen at eye level — posture load adds up fast over a workday.":'ہر 30 منٹ بعد اٹھ کر تھوڑا چلیں، اور اپنی اسکرین آنکھوں کی سطح پر رکھیں — کام کے دن میں کرنسی کا بوجھ جلدی بڑھتا ہے۔',
+  "If it's getting worse, or you notice numbness, weakness, or pain that wakes you at night, please see a doctor or physiotherapist rather than waiting it out.":'اگر یہ بگڑ رہا ہے، یا آپ کو سُن ہونا، کمزوری، یا رات کو نیند سے جگا دینے والا درد محسوس ہو، تو انتظار کرنے کی بجائے ڈاکٹر یا فزیوتھراپسٹ سے رجوع کریں۔',
+  "A supportive pillow position that keeps the area neutral overnight helps — avoid positions that reproduce the pain.":'ایسا سہارا دینے والا تکیہ استعمال کریں جو رات بھر متاثرہ حصے کو غیرجانبدار پوزیشن میں رکھے — ایسی پوزیشنز سے پرہیز کریں جن سے درد دوبارہ ہو۔',
+  "Once or twice a day is a good starting frequency — quality of movement matters more than volume early on.":'دن میں ایک یا دو بار شروع کرنے کے لیے اچھا ہے — ابتدا میں حرکت کا معیار تعداد سے زیادہ اہم ہے۔',
+  "You're welcome — take it steady, and come back if anything changes.":'خوش آمدید — آہستگی سے کریں، اور اگر کچھ تبدیل ہو تو دوبارہ رابطہ کریں۔',
+  "Could you tell me a bit more specifically what you'd like to know — icing vs. heat, timeline, or a particular movement?":'کیا آپ تھوڑا واضح بتا سکتے ہیں کہ آپ کیا جاننا چاہتے ہیں — برف بمقابلہ گرمائش، وقت کا اندازہ، یا کوئی خاص حرکت؟',
+  "That sounds significant, so I'd recommend an in-person assessment with a physiotherapist soon — keep movement gentle and pain-free until then.":'یہ کافی شدید لگتا ہے، اس لیے جلد کسی فزیوتھراپسٹ سے بالمشافہ معائنہ کروانے کی سفارش کی جاتی ہے — اس وقت تک حرکت ہلکی اور درد سے پاک رکھیں۔',
+  "This is a reasonable case to begin managing with home rehabilitation.":'یہ گھر پر بحالی کی ورزشوں سے شروع کرنے کے لیے مناسب کیس ہے۔',
+  // fallbackResponse()'s tips[] array (distinct from the similarly-worded
+  // shortFollowUp() ice/heat strings above — different exact text, needs
+  // its own entries for the exact-match lookup to hit).
+  'Ice the area for 15 minutes at a time for the first 48-72 hours to calm inflammation.':'پہلے 48-72 گھنٹوں میں سوجن کم کرنے کے لیے متاثرہ جگہ پر ایک وقت میں 15 منٹ برف لگائیں۔',
+  'Heat for 10-15 minutes before moving helps loosen a stiff, longer-standing ache like this.':'حرکت سے پہلے 10-15 منٹ گرمائش دینے سے اس طرح کی دیرینہ اکڑن ڈھیلی ہو جاتی ہے۔',
+  'Since this is aggravated by posture, check your desk/phone height — micro-breaks every 30 minutes make a real difference.':'چونکہ یہ کرنسی سے بگڑتا ہے، اپنی ڈیسک/فون کی اونچائی چیک کریں — ہر 30 منٹ بعد مختصر وقفہ کافی فرق ڈالتا ہے۔',
+  'Avoid prolonged forward bending or heavy lifting until this settles — movements that centralize the pain (bring it closer to your spine) are a good sign.':'جب تک یہ ٹھیک نہ ہو جائے، زیادہ دیر آگے جھکنے یا بھاری چیزیں اٹھانے سے گریز کریں — وہ حرکتیں اچھی علامت ہیں جو درد کو ریڑھ کی ہڈی کے قریب لے آئیں۔',
+  'Mild presentations like this usually respond well to staying gently active rather than resting completely.':'اس طرح کے ہلکے کیسز عام طور پر مکمل آرام کی بجائے ہلکی سرگرمی جاری رکھنے سے بہتر ہوتے ہیں۔',
+  // Score-ring label (doubles as hold countdown) and session phase indicator
+  'Form':'فارم','Hold':'رکیں','Release':'چھوڑیں',
+  'Ready':'تیار','Lost':'گم','Raised':'اٹھایا ہوا','Compensating':'غلط انداز','Adjust Framing':'فریم درست کریں',
+  'Beginner':'ابتدائی','Start Your Physio':'اپنی فزیو تھراپی شروع کریں'
+};
+function T(str){
+  if(currentLang!=='ur'||!str)return str;
+  return UR_MAP[str]||str;
+}
+
+// Urdu name/description for each exercise, keyed by det id — used when
+// speaking the exercise intro at session start. Falls back to English
+// (via EX_UR[det] being undefined) if an exercise is ever added without
+// an entry here, so a missing translation never breaks the intro speech.
+const EX_UR={
+  neck_tilt:{name:'گردن کا جھکاؤ',area:'گردن کی ریڑھ کی ہڈی',
+    desc:'اپنا سر آہستگی سے دائیں بائیں جھکائیں، ہر انتہا پر 3 سیکنڈ تک رکیں۔ کندھے مکمل طور پر ڈھیلے رکھیں۔',
+    note:'گردن کے سپونڈیلوسس اور تناؤ کے سر درد کے لیے پہلا علاج۔ فیسٹ جوڑوں کو حرکت دیتا ہے۔',
+    warn:'اگر آپ کو گردن کی عدم استحکام کی تشخیص ہے، حالیہ گردن کی چوٹ ہے، یا جھکانے سے چکر آئے، نظر میں تبدیلی ہو، یا سر درد بڑھے — تو پہلے ڈاکٹر سے رجوع کریں اور ایسا ہونے پر فوراً رک جائیں۔'},
+  mckenzie:{name:'ہلکا کمر کا کھنچاؤ',area:'کمر کا نچلا حصہ',
+    desc:'ہاتھ کمر کے نچلے حصے پر رکھیں۔ آہستگی سے پیچھے کی طرف جھکیں۔ ہر انتہا پر 3 سیکنڈ تک رکیں۔ درمیان میں سیدھے کھڑے ہوں۔',
+    note:'میکنزی طریقہ۔ L4-L5 ڈسک کے کھسکنے کا بنیادی علاج۔ ٹانگ میں پھیلنے والے درد کو مرکزی حصے کی طرف لاتا ہے۔',
+    warn:'اگر آپ کو زیر ناف/رانوں کے اندرونی حصے میں سُن پن یا پیشاب/پاخانے میں نئی تبدیلی محسوس ہو تو فوراً رک کر ہنگامی طبی امداد لیں۔ اگر آپ کو اسپائنل سٹینوسس، اسپونڈیلولسٹھیسس ہے، یا اس کھنچاؤ کے دوران ٹانگ کا درد مزید نیچے پھیلے تو پہلے ڈاکٹر سے رجوع کریں۔'},
+  knee_chest:{name:'گھٹنا سینے کی طرف',area:'کولہے کے فلیکسرز اور کمر کا نچلا حصہ',
+    desc:'سیدھے کھڑے ہوں۔ گھٹنا سینے کی طرف کھینچیں اور 3 سیکنڈ تک رکھیں۔ کھڑی ٹانگ تھوڑی سی جھکی رہے۔ باری باری کریں۔',
+    note:'توازن کے ساتھ کولہے کے فلیکسر کا کھنچاؤ۔ کمر کے آگے کے جھکاؤ اور نچلی کمر کے دباؤ کو کم کرتا ہے۔',
+    warn:'اگر آپ کی چند ماہ کے اندر کولہے کی تبدیلی کی سرجری ہوئی ہے تو پہلے اپنے سرجن سے رجوع کریں۔ اگر آگے جھکنے سے کمر یا ٹانگ کا درد بڑھے تو بھی ڈاکٹر سے رجوع کریں۔'},
+  side_bend:{name:'کھڑے ہو کر سائیڈ بینڈ',area:'دھڑ کا سائیڈ جھکاؤ',
+    desc:'سیدھے کھڑے ہوں، پیر کندھوں جتنے فاصلے پر۔ ایک ہاتھ ٹانگ کے باہر کی طرف نیچے سرکائیں، کمر سے سائیڈ کی طرف جھکتے ہوئے۔ رکیں، درمیان میں واپس آئیں، پھر دوسری طرف جھکیں۔',
+    note:'ریڑھ کی ہڈی کی سائیڈ حرکت اور کمر کے پٹھوں کی لچک بہتر کرتا ہے۔ اکڑی ہوئی نچلی کمر کے لیے ہلکی روزانہ ورزش۔',
+    warn:'بار بار سائیڈ بینڈ کرنے سے پہلے، اگر آپ کو اسکولیوسس یا ڈسک کے کھسکنے کی تشخیص ہے تو پہلے اپنے فزیوتھراپسٹ سے رجوع کریں۔'},
+  bilateral_raise:{name:'دونوں بازو سامنے سے اوپر اٹھانا',area:'کندھے کا آگے اٹھاؤ (دونوں بازو)',
+    desc:'سیدھے کھڑے ہوں، بازو پہلوؤں میں۔ دونوں بازو آہستگی اور قابو کے ساتھ آگے اور اوپر سر کے اوپر تک اٹھائیں۔ اسی قابو کے ساتھ نیچے لائیں۔',
+    note:'دونوں کندھوں کا ہلکا آگے کا موڑ۔ کندھے کی حرکت اور ہم آہنگی بناتا ہے — زیادہ مشکل ایک بازو والی ورزشوں سے پہلے اچھا آغاز۔',
+    warn:'اگر آپ کو فروزن شولڈر کی شدت ہے، یا بازو اوپر نہیں رکھ پا رہے / اچانک چٹخنے کی آواز کے ساتھ چوٹ لگی ہے تو پہلے ڈاکٹر سے رجوع کریں — اگر درد اچانک بڑھے تو رک جائیں۔'},
+  mini_squat:{name:'ہلکی اسکواٹ',area:'کولہا اور گھٹنا',
+    desc:'پیر کندھوں جتنے فاصلے پر۔ دونوں گھٹنے ہلکا موڑ کر بیٹھیں، گھٹنے پیر کی انگلیوں سے آگے نہ جائیں۔ رکیں، پھر قابو کے ساتھ واپس کھڑے ہوں۔',
+    note:'بیٹھنے سے اٹھنے اور سیڑھیاں چڑھنے کے لیے ٹانگوں کی طاقت بناتا ہے۔ ہلکی رینج ابتدائی اور حساس گھٹنوں کے لیے محفوظ رکھتی ہے۔',
+    warn:'اگر آپ کے گھٹنے میں غیر واضح سوجن، جکڑن، یا گھٹنے کے کمزور پڑنے کا احساس ہے، یا حالیہ گھٹنے کی سرجری ہوئی ہے جس پر ابھی وزن ڈالنے کی اجازت نہیں ملی، تو پہلے ڈاکٹر سے رجوع کریں۔'},
+  lateral_raise:{name:'بازو سائیڈ سے اوپر اٹھانا',area:'کندھے کا سائیڈ اٹھاؤ (دونوں بازو)',
+    desc:'سیدھے کھڑے ہوں، بازو پہلوؤں میں۔ دونوں بازو سائیڈ کی طرف کندھے کی اونچائی تک آہستگی اور قابو کے ساتھ اٹھائیں۔ اسی قابو کے ساتھ نیچے لائیں۔',
+    note:'سائیڈ ڈیلٹائیڈ کو مضبوط کرتا ہے۔ روزمرہ کے کاموں کے لیے کندھے کا استحکام بناتا ہے۔',
+    warn:'اگر بازو اٹھانے سے درمیانی اونچائی پر (تقریباً کان سے کندھے کی سطح) خاص طور پر درد ہو جو مزید اوپر جانے پر کم ہو جائے — یہ کندھے کے امپنجمنٹ کی علامت ہو سکتی ہے، پہلے ڈاکٹر سے رجوع کریں۔'},
+  wrist_dev:{name:'کلائی کا سائیڈ موڑ',area:'بازو اور کلائی',
+    desc:'ایک بازو سامنے کی طرف سیدھا کریں، ہتھیلی نیچے کی طرف۔ کلائی کو انگوٹھے کی طرف، پھر چھوٹی انگلی کی طرف موڑیں — بازو ساکت رکھیں۔',
+    note:'کلائی کو سائیڈ کی طرف حرکت دیتا ہے، فلیکشن/ایکسٹینشن کے ساتھ ایک ضمنی حرکت۔ عمومی کلائی کی اکڑن اور ابتدائی ٹینڈن کی جلن کے لیے مفید۔',
+    warn:'اگر آپ کی کلائی ابھی فریکچر/موچ سے صحت یاب ہو رہی ہے، یا فی الحال سوجی ہوئی یا غیرمستحکم ہے تو پہلے ڈاکٹر سے رجوع کریں۔ اگر انگلیوں میں جھنجھناہٹ یا سُن پن بڑھے تو رک جائیں۔'},
+  shoulder_shrug:{name:'کندھے اچکانا',area:'اوپری ٹریپیزیئس (دونوں کندھے)',
+    desc:'دونوں بازو پہلوؤں میں ڈھیلے چھوڑیں۔ دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں، 2 سیکنڈ تک رکھیں، پھر مکمل نیچے آنے دیں۔',
+    note:'اوپری ٹریپیزیئس میں تناؤ کو فعال اور ریلیز کرتا ہے۔ اکڑے ہوئے یا ڈیسک کے کام سے تھکے کندھوں اور گردن کے لیے ہلکا پہلا قدم۔',
+    warn:'اگر آپ کو گردن کے اعصاب دبنے کی تشخیص ہے، یا کندھے اچکانے سے بازو میں جھنجھناہٹ یا سُن پن پھیلے تو پہلے ڈاکٹر سے رجوع کریں۔'},
+  calf_raise:{name:'ایڑی اٹھانا',area:'ٹخنے کا نیچے جھکاؤ (دونوں ٹخنے)',
+    desc:'سیدھے کھڑے ہوں، پیر کندھوں جتنے فاصلے پر۔ جتنا ممکن ہو پیر کی انگلیوں پر اونچا اٹھیں، رکیں، پھر قابو کے ساتھ ایڑیاں واپس نیچے لائیں۔',
+    note:'پنڈلی کے پٹھوں اور ٹخنے کو مضبوط کرتا ہے۔ چلنے، سیڑھیاں چڑھنے اور کھڑے رہنے کی طاقت اور توازن بناتا ہے۔',
+    warn:'اگر آپ کو ایکلیز ٹینڈن کی چوٹ ہے یا حالیہ ٹخنے کا فریکچر ہوا ہے، یا اٹھاتے وقت ٹخنے یا پنڈلی کے پچھلے حصے میں تیز درد محسوس ہو تو پہلے ڈاکٹر سے رجوع کریں — اگر غیرمستحکم محسوس ہو تو دیوار یا کرسی کا سہارا لیں۔'}
+};
+function exIntroMsg(ex){
+  const ur=EX_UR[ex.det];
+  if(currentLang==='ur'&&ur)return ur.name+'۔ '+ur.desc;
+  return ex.name+'. '+ex.desc;
+}
+function repVoiceMsg(n){return currentLang==='ur'?('دہرائی '+n):('Rep '+n);}
+function targetReachedMsg(n){
+  return currentLang==='ur'
+    ?(n+' دہرائیوں کا ہدف مکمل — بہت خوب!')
+    :('Target of '+n+' reps reached — great work!');
+}
+function sessionCompleteMsg(n){
+  return currentLang==='ur'
+    ?('شاباش! آپ نے تمام '+n+' دہرائیاں مکمل کر لیں۔ سیشن ختم کیا جا رہا ہے۔')
+    :('Great work! You completed all '+n+' reps. Ending the session now.');
+}
+function greetingMsg(first,u){
+  if(currentLang==='ur'){
+    if(u.sessions===0)return first+' کو خوش آمدید! اپنا پہلا سیشن شروع کرنے کے لیے نیچے سے ایک ورزش منتخب کریں۔';
+    if(u.streak>0)return first+'، واپسی پر خوش آمدید! آپ '+u.streak+' دن سے لگاتار ورزش کر رہے ہیں — بہت خوب۔';
+    return first+'، واپسی پر خوش آمدید! اپنی بحالی جاری رکھنے کے لیے تیار ہیں؟';
+  }
+  return u.sessions===0
+    ?`Welcome, ${first}! Pick an exercise below to start your first session.`
+    :u.streak>0
+    ?`Welcome back, ${first}! You're on a ${u.streak}-day streak — nice work.`
+    :`Welcome back, ${first}! Ready to continue your recovery?`;
+}
+// Vocabulary for the local (non-API) chat fallback's first-message clinical
+// assessment — see AIChat.fallbackResponse(). Urdu sentence order/grammar
+// differs enough from English that this composes a dedicated Urdu template
+// from the same parsed location/condition/duration/severity variables,
+// rather than trying to translate the English template word-for-word.
+const LOC_UR={neck:'گردن',shoulder:'کندھے',back:'کمر',hip:'کولہے',knee:'گھٹنے',ankle:'ٹخنے',wrist:'کلائی',elbow:'کہنی',general:'جسم'};
+const COND_UR={pain:'درد','disc herniation':'ڈسک کے کھسکنے',osteoarthritis:'جوڑوں کی ٹوٹ پھوٹ (اوسٹیوآرتھرائٹس)',sprain:'موچ',tendinopathy:'ٹینڈن کے مسئلے','post-fracture':'فریکچر کے بعد کی حالت',neurological:'اعصابی مسئلے','post-surgical':'سرجری کے بعد کی حالت',bursitis:'برسائٹس','degenerative spine':'ریڑھ کی ہڈی کے فرسودہ پن'};
+function durationUr(duration){
+  const m=duration.match(/^(\d+)\s+(day|days|week|weeks|month|months|year|years)$/);
+  if(m){
+    const unit={day:'دن',days:'دن',week:'ہفتہ',weeks:'ہفتے',month:'مہینہ',months:'مہینے',year:'سال',years:'سال'}[m[2]];
+    return m[1]+' '+unit;
+  }
+  if(duration==='chronic')return 'دیرینہ وقت';
+  if(duration==='acute')return 'اچانک شروع ہونے والی';
+  return 'حال ہی';
+}
+
 function loadU(){
   const u=JSON.parse(localStorage.getItem('pah_v5')||JSON.stringify({
     streak:0,sessions:0,reps:0,formScores:[],
@@ -1387,8 +1650,8 @@ function initApp(acc){
   document.getElementById('nav-greet').style.display='flex';
   document.getElementById('nav-name').textContent=first;
   document.getElementById('hero-welcome').style.display='inline-flex';
-  document.getElementById('hero-time').textContent=time;
-  document.getElementById('hero-name').textContent=first;
+  lastGreetTime=time;lastGreetFirst=first;
+  renderHeroGreeting();
   if(acc.photo){
     document.getElementById('hero-welcome-img').src=acc.photo;
     document.getElementById('hero-welcome-img').style.display='block';
@@ -1555,7 +1818,18 @@ const ICON_BY_DET={
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
 
-document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>`
+function renderExGrid(){
+  document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>{
+    const ur=currentLang==='ur'?EX_UR[ex.det]:null;
+    const area=ur?ur.area:ex.area;
+    const name=ur?ur.name:ex.name;
+    const desc=ur?ur.desc:ex.desc;
+    const note=ur?ur.note:ex.note;
+    const warn=ur&&ur.warn?ur.warn:ex.warn;
+    const target=currentLang==='ur'
+      ?(ex.reps===1?'رکنا — مکمل کرنسی اسکرین':ex.reps+' دہرائیوں کا ہدف')
+      :(ex.reps===1?'Hold — Full Postural Screen':ex.reps+' Reps Target');
+    return`
 <div class="ex-card" data-i="${i}" style="--ac:${AREA_COLOR[ex.tags[0]]||'var(--brand)'}">
   <span class="ex-idx">${String(i+1).padStart(2,'0')}</span>
   <div class="ex-icon">
@@ -1564,23 +1838,26 @@ document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>`
     </svg>
   </div>
   <div class="ex-top">
-    <span class="ex-area">${ex.area}</span>
-    <span class="ex-badge" style="color:${DC[ex.diff]};background:${DC[ex.diff]}1a">${ex.diff}</span>
+    <span class="ex-area">${area}</span>
+    <span class="ex-badge" style="color:${DC[ex.diff]};background:${DC[ex.diff]}1a">${T(ex.diff)}</span>
   </div>
-  <h3 class="ex-name">${ex.name}</h3>
-  <p class="ex-desc">${ex.desc}</p>
+  <h3 class="ex-name">${name}</h3>
+  <p class="ex-desc">${desc}</p>
   <div class="ex-tags">${ex.muscles.slice(0,3).map(m=>`<span class="ex-tag">${m}</span>`).join('')}</div>
-  <div class="ex-target">${ex.reps===1?'Hold — Full Postural Screen':ex.reps+' Reps Target'}</div>
+  <div class="ex-target">${target}</div>
   <div class="ex-physio">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-    <span>${ex.note}</span>
+    <span>${note}</span>
   </div>
-  ${ex.warn?`<div class="ex-warn">
+  ${warn?`<div class="ex-warn">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    <span>${ex.warn}</span>
+    <span>${warn}</span>
   </div>`:''}
-  <button class="ex-start-btn" onclick="openSession(${i})">Start Your Physio</button>
-</div>`).join('');
+  <button class="ex-start-btn" onclick="openSession(${i})">${T('Start Your Physio')}</button>
+</div>`;
+  }).join('');
+}
+renderExGrid();
 
 // Deep link from index.html's anatomy panels ("Related Exercise" → ?ex=<det>)
 // — scroll to and highlight the matching card instead of auto-starting the
@@ -1631,192 +1908,6 @@ initMagnetic('.gate-btn,.ex-start-btn,.coach-fab,.chat-send,.s-cam-btn');
   });
 })();
 
-// ═══════════════════════════════════════════════════════════
-// LANGUAGE — coaching language toggle (English / Urdu). Covers voice
-// coaching, the on-screen session feedback banner, and the AI chat
-// widget's canned replies. Does not translate the rest of the site's
-// UI chrome (that's a much larger i18n project, out of scope here).
-// ═══════════════════════════════════════════════════════════
-let currentLang=localStorage.getItem('pah-lang')||'en';
-function syncLangBtn(){
-  const el=document.getElementById('lang-tgl-txt');
-  if(el)el.textContent=currentLang==='ur'?'اردو':'EN';
-  const btn=document.getElementById('lang-tgl');
-  if(btn)btn.title='Switch coaching language ('+(currentLang==='ur'?'Urdu → English':'English → Urdu')+')';
-}
-function toggleLang(){
-  currentLang=currentLang==='ur'?'en':'ur';
-  localStorage.setItem('pah-lang',currentLang);
-  syncLangBtn();
-}
-syncLangBtn();
-
-// Exact-match English->Urdu dictionary for fixed coaching/UI strings used
-// by setFB() and VoiceCoach.speak(). T() falls back to the original English
-// untouched if a phrase has no entry, so voice/text output is never blank
-// or broken — it just silently stays English for anything untranslated.
-const UR_MAP={
-  // Session/camera/tracking status (setFB + VoiceCoach)
-  'Activate your camera to begin the session.':'سیشن شروع کرنے کے لیے اپنا کیمرہ آن کریں۔',
-  'Camera requires a secure HTTPS connection.':'کیمرے کے لیے محفوظ HTTPS کنکشن درکار ہے۔',
-  'Stand so your full body is visible. Ensure good lighting.':'اس طرح کھڑے ہوں کہ آپ کا پورا جسم نظر آئے۔ روشنی اچھی ہونی چاہیے۔',
-  'Tracking engine failed to start — this can be a brief hiccup loading the AI model. Tap to retry.':'ٹریکنگ انجن شروع نہیں ہو سکا — یہ AI ماڈل لوڈ ہونے میں معمولی رکاوٹ ہو سکتی ہے۔ دوبارہ کوشش کے لیے ٹیپ کریں۔',
-  'Retrying tracking engine…':'ٹریکنگ انجن دوبارہ شروع کیا جا رہا ہے…',
-  'Tracking engine error. End session and restart.':'ٹریکنگ انجن میں خرابی۔ سیشن ختم کر کے دوبارہ شروع کریں۔',
-  'Body not fully visible. Please step back into frame.':'جسم مکمل طور پر نظر نہیں آ رہا۔ براہ کرم پیچھے ہو کر فریم میں آئیں۔',
-  'Body not fully visible — step back so the tracked joints are in frame.':'جسم مکمل طور پر نظر نہیں آ رہا — پیچھے ہٹیں تاکہ جوڑ فریم میں آ جائیں۔',
-  'Camera is live. Stand back so your full body is visible.':'کیمرہ آن ہے۔ پیچھے ہٹیں تاکہ آپ کا پورا جسم نظر آئے۔',
-  'Tracking failed to start. Tap the message to retry.':'ٹریکنگ شروع نہیں ہو سکی۔ دوبارہ کوشش کے لیے پیغام پر ٹیپ کریں۔',
-  'Release now.':'اب چھوڑ دیں۔',
-  // Camera error messages (handleCameraError -> showCamError -> setFB)
-  'Unable to start camera.':'کیمرہ شروع نہیں ہو سکا۔',
-  'Unknown camera error. Please refresh and try again.':'نامعلوم کیمرہ خرابی۔ براہ کرم صفحہ ریفریش کر کے دوبارہ کوشش کریں۔',
-  'Camera permission denied. Tap "Allow" when prompted, or check browser settings.':'کیمرے کی اجازت نہیں دی گئی۔ پوچھے جانے پر "Allow" پر ٹیپ کریں، یا براؤزر کی سیٹنگز چیک کریں۔',
-  'No camera found. Please connect a camera device.':'کوئی کیمرہ نہیں ملا۔ براہ کرم کیمرہ ڈیوائس منسلک کریں۔',
-  'Camera is in use by another app. Please close other apps using the camera.':'کیمرہ کسی دوسری ایپ میں استعمال ہو رہا ہے۔ براہ کرم کیمرہ استعمال کرنے والی دیگر ایپس بند کریں۔',
-  'Camera does not support requested settings. Trying fallback...':'کیمرہ درخواست کردہ سیٹنگز سپورٹ نہیں کرتا۔ متبادل کوشش کی جا رہی ہے...',
-  'Camera blocked for security. Ensure you are on HTTPS or localhost.':'حفاظتی وجوہات کی بنا پر کیمرہ مسدود ہے۔ یقینی بنائیں کہ آپ HTTPS یا localhost پر ہیں۔',
-  'Camera start was aborted. Please try again.':'کیمرہ شروع ہوتے ہوتے رک گیا۔ براہ کرم دوبارہ کوشش کریں۔',
-  'Camera initialization error. Please refresh and try again.':'کیمرہ شروع کرنے میں خرابی۔ براہ کرم صفحہ ریفریش کر کے دوبارہ کوشش کریں۔',
-  // Generic form-compensation feedback (setFB)
-  'Raise both arms evenly — keep them symmetric.':'دونوں بازو برابر اٹھائیں — انہیں یکساں رکھیں۔',
-  'Lower complete — raise again with control.':'نیچے لانا مکمل — دوبارہ آہستگی سے اٹھائیں۔',
-  'Lower a little slower for full credit.':'مکمل نمبر کے لیے تھوڑا آہستہ نیچے لائیں۔',
-  'Keep your torso still and upright — move only the target joint, not your whole body.':'اپنا دھڑ سیدھا اور ساکت رکھیں — صرف مطلوبہ جوڑ کو حرکت دیں، پورے جسم کو نہیں۔',
-  // Per-exercise cfg messages (engagedMsg/releaseMsg/shortHoldMsg/readyMsg)
-  'Good tilt — hold this position for 3 seconds.':'اچھا جھکاؤ — اس پوزیشن کو 3 سیکنڈ تک رکھیں۔',
-  'Good — return and tilt the other side.':'اچھا — واپس آئیں اور دوسری طرف جھکائیں۔',
-  'Hold the tilt a little longer for full credit.':'مکمل نمبر کے لیے جھکاؤ تھوڑی دیر مزید رکھیں۔',
-  'Slowly tilt your head to one side, hold 3 seconds.':'اپنا سر آہستگی سے ایک طرف جھکائیں، 3 سیکنڈ تک رکھیں۔',
-  'Good side bend — hold 2 seconds.':'اچھا سائیڈ بینڈ — 2 سیکنڈ تک رکھیں۔',
-  'Good — return upright and bend the other side.':'اچھا — سیدھے ہوں اور دوسری طرف جھکیں۔',
-  'Hold the bend a little longer for full credit.':'مکمل نمبر کے لیے جھکاؤ تھوڑی دیر مزید رکھیں۔',
-  'Stand tall, slide one hand down your leg to bend sideways.':'سیدھے کھڑے ہوں، ایک ہاتھ ٹانگ پر نیچے سرکائیں تاکہ آپ سائیڈ کی طرف جھکیں۔',
-  'Good — pull knee toward chest. Hold 3 seconds.':'اچھا — گھٹنے کو سینے کی طرف کھینچیں۔ 3 سیکنڈ تک رکھیں۔',
-  'Lower and raise the other knee.':'نیچے لائیں اور دوسرا گھٹنا اٹھائیں۔',
-  'Hold the lift a little longer for full credit.':'مکمل نمبر کے لیے اٹھاؤ تھوڑی دیر مزید رکھیں۔',
-  'Stand tall. Pull one knee up toward your chest.':'سیدھے کھڑے ہوں۔ ایک گھٹنا اپنے سینے کی طرف اوپر کھینچیں۔',
-  'Good backward extension — hold 3 seconds.':'اچھا پچھلی طرف کھنچاؤ — 3 سیکنڈ تک رکھیں۔',
-  'Stand tall and repeat the extension.':'سیدھے کھڑے ہوں اور کھنچاؤ دہرائیں۔',
-  'Hold the extension a little longer for full credit.':'مکمل نمبر کے لیے کھنچاؤ تھوڑی دیر مزید رکھیں۔',
-  'Place hands on lower back and gently arch backward.':'ہاتھ کمر کے نچلے حصے پر رکھیں اور آہستگی سے پیچھے کی طرف جھکیں۔',
-  'Good depth — pause, then stand back up with control.':'اچھی گہرائی — رکیں، پھر آہستگی سے واپس کھڑے ہوں۔',
-  'Nice — stand tall and repeat.':'بہت خوب — سیدھے کھڑے ہوں اور دہرائیں۔',
-  'Pause a moment at the bottom for full credit.':'مکمل نمبر کے لیے نیچے ایک لمحہ رکیں۔',
-  'Bend both knees into a shallow squat, keeping knees behind your toes.':'دونوں گھٹنے ہلکا سا موڑ کر بیٹھیں، گھٹنوں کو پیر کی انگلیوں سے آگے نہ جانے دیں۔',
-  'Good — heels lifted high. Hold, then lower with control.':'اچھا — ایڑیاں اونچی اٹھی ہوئی ہیں۔ رکیں، پھر آہستگی سے نیچے لائیں۔',
-  'Nice — lower fully and repeat.':'بہت خوب — مکمل نیچے لائیں اور دہرائیں۔',
-  'Hold the raise a little longer for full credit.':'مکمل نمبر کے لیے اٹھاؤ تھوڑی دیر مزید رکھیں۔',
-  'Stand tall, then rise up onto your toes as high as you can.':'سیدھے کھڑے ہوں، پھر جتنا ممکن ہو پیر کی انگلیوں پر اونچا اٹھیں۔',
-  'Good wrist bend — hold 2 seconds.':'اچھا کلائی کا موڑ — 2 سیکنڈ تک رکھیں۔',
-  'Straighten your wrist and bend the other way.':'کلائی سیدھی کریں اور دوسری طرف موڑیں۔',
-  'Extend your arm forward, then bend your wrist side to side.':'اپنا بازو آگے کی طرف سیدھا کریں، پھر کلائی کو دائیں بائیں موڑیں۔',
-  'Good — shoulders lifted toward your ears. Hold 2 seconds.':'اچھا — کندھے کانوں کی طرف اٹھے ہوئے ہیں۔ 2 سیکنڈ تک رکھیں۔',
-  'Let your shoulders drop fully and repeat.':'کندھوں کو مکمل نیچے آنے دیں اور دہرائیں۔',
-  'Hold the shrug a little longer for full credit.':'مکمل نمبر کے لیے کندھے اٹھائے رکھیں تھوڑی دیر مزید۔',
-  'Relax your arms at your sides, then lift both shoulders straight up toward your ears.':'اپنے بازو پہلوؤں میں ڈھیلے چھوڑیں، پھر دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں۔',
-  'Raise both arms forward and up together, nice and slow.':'دونوں بازو آگے اور اوپر کی طرف اکٹھے، آہستگی سے اٹھائیں۔',
-  'Good — both arms raised overhead. Hold 2 seconds.':'اچھا — دونوں بازو سر کے اوپر اٹھے ہوئے ہیں۔ 2 سیکنڈ تک رکھیں۔',
-  'Raise both arms out to the sides, up to shoulder height, nice and slow.':'دونوں بازو سائیڈ کی طرف، کندھے کی اونچائی تک، آہستگی سے اٹھائیں۔',
-  'Good — both arms at shoulder height. Hold 2 seconds.':'اچھا — دونوں بازو کندھے کی اونچائی پر ہیں۔ 2 سیکنڈ تک رکھیں۔',
-  // Chat widget canned replies
-  "I can't answer that — I'm PhysioSync's assistant for human physiotherapy only.":'میں اس کا جواب نہیں دے سکتا — میں صرف انسانی فزیوتھراپی کے لیے PhysioSync کا معاون ہوں۔',
-  "I'm PhysioSync's physiotherapy assistant, so I can only help with pain, injuries, exercises, rehabilitation, and using this site. Try describing a symptom — for example, \"lower back pain, 6/10, for 2 weeks\" — or ask something like \"how do I start a session?\"":'میں PhysioSync کا فزیوتھراپی معاون ہوں، اس لیے صرف درد، چوٹ، ورزشوں، بحالی اور اس ویب سائٹ کے استعمال میں مدد کر سکتا ہوں۔ اپنی تکلیف بیان کریں — مثلاً "کمر کے نچلے حصے میں درد، 6/10، 2 ہفتوں سے" — یا پوچھیں "سیشن کیسے شروع کروں؟"',
-  "Your camera feed never leaves your device — PhysioSync tracks your movement locally in the browser using MediaPipe. Nothing is recorded or uploaded anywhere.":'آپ کا کیمرہ فیڈ کبھی آپ کی ڈیوائس سے باہر نہیں جاتا — PhysioSync براؤزر میں MediaPipe کے ذریعے آپ کی حرکت مقامی طور پر ٹریک کرتا ہے۔ کچھ بھی ریکارڈ یا اپ لوڈ نہیں ہوتا۔',
-  "Pick any exercise card in the library above and tap \"Start Your Physio.\" Allow camera access when prompted, then follow the on-screen form guidance — reps and form score are tracked automatically.":'اوپر لائبریری میں کوئی بھی ورزش کارڈ منتخب کریں اور "Start Your Physio" پر ٹیپ کریں۔ پوچھے جانے پر کیمرے کی اجازت دیں، پھر اسکرین پر دی گئی ہدایات پر عمل کریں — دہرائی اور فارم اسکور خودکار طور پر ٹریک ہوتے ہیں۔',
-  "Your Dashboard (bottom of this page) tracks sessions completed, total reps, average form score, your day streak, and a weekly activity chart — all saved on this device, no account needed.":'آپ کا ڈیش بورڈ (اس صفحے کے نیچے) مکمل سیشنز، کل دہرائیاں، اوسط فارم اسکور، آپ کی دن کی لگاتار حاضری، اور ہفتہ وار سرگرمی چارٹ دکھاتا ہے — یہ سب اسی ڈیوائس پر محفوظ ہوتا ہے، کسی اکاؤنٹ کی ضرورت نہیں۔',
-  "The Hospitals section lists partner hospitals across Pakistan with a direct link to each one's physiotherapy department, for when a case needs in-person clinical care.":'ہسپتال سیکشن پاکستان بھر کے شراکت دار ہسپتالوں کی فہرست دیتا ہے، ہر ایک کے فزیوتھراپی شعبے کے براہ راست لنک کے ساتھ، جب کسی کیس کو بالمشافہ کلینیکل دیکھ بھال کی ضرورت ہو۔',
-  "The 3D Body Map on the home page is an interactive anatomy model — scroll through it to see common conditions by body region, each linking to a matching exercise.":'ہوم پیج پر 3D باڈی میپ ایک انٹرایکٹو اناٹومی ماڈل ہے — اسکرول کر کے جسم کے مختلف حصوں کی عام حالتیں دیکھیں، ہر ایک متعلقہ ورزش سے منسلک ہے۔',
-  "No account or signup is required — just fill in your name, age, weight, and height once so exercises can be tailored to you. That's stored on this device only.":'کسی اکاؤنٹ یا سائن اپ کی ضرورت نہیں — بس ایک بار اپنا نام، عمر، وزن اور قد درج کریں تاکہ ورزشیں آپ کے مطابق بنائی جا سکیں۔ یہ صرف اسی ڈیوائس پر محفوظ ہوتا ہے۔',
-  "Tap the sun/moon icon in the navbar to switch between dark and light mode — your preference is remembered automatically.":'ڈارک اور لائٹ موڈ کے درمیان تبدیل کرنے کے لیے نیویگیشن بار میں سورج/چاند آئیکن پر ٹیپ کریں — آپ کی ترجیح خودکار طور پر یاد رکھی جاتی ہے۔',
-  "PhysioSync tracks your exercise form live through your camera (fully on-device), scores your reps, and saves your progress to a personal dashboard — no account or uploads required. Ask me about a specific feature, like the camera, dashboard, or hospitals.":'PhysioSync آپ کے کیمرے کے ذریعے لائیو آپ کی ورزش کا فارم ٹریک کرتا ہے (مکمل طور پر آپ کی ڈیوائس پر)، آپ کی دہرائیوں کا اسکور نکالتا ہے، اور آپ کی پیش رفت ذاتی ڈیش بورڈ میں محفوظ کرتا ہے — کسی اکاؤنٹ یا اپ لوڈ کی ضرورت نہیں۔ کیمرہ، ڈیش بورڈ، یا ہسپتالوں جیسے کسی خاص فیچر کے بارے میں پوچھیں۔',
-  "Thanks for sharing that — to guide you properly, how would you rate the pain from 1 to 10, and how long has it been going on?":'یہ بتانے کا شکریہ — آپ کی صحیح رہنمائی کے لیے، درد کو 1 سے 10 کے پیمانے پر کیسے درجہ دیں گے، اور یہ کب سے ہو رہا ہے؟',
-  "Ice for about 15 minutes at a time works best in the first 48-72 hours. After that, heat tends to help more with stiffness.":'پہلے 48-72 گھنٹوں میں ایک وقت میں تقریباً 15 منٹ برف لگانا سب سے بہتر ہے۔ اس کے بعد، اکڑن میں گرمائش زیادہ مددگار ہوتی ہے۔',
-  "Heat for 10-15 minutes before exercising loosens things up well — just skip it on a fresh, swollen injury.":'ورزش سے پہلے 10-15 منٹ گرمائش دینے سے اچھی طرح ڈھیلا ہو جاتا ہے — البتہ تازہ، سوجی ہوئی چوٹ پر اس سے پرہیز کریں۔',
-  "Mild-to-moderate cases usually improve noticeably within 2-4 weeks of consistent exercise. No change after that? Time to see a physiotherapist in person.":'ہلکے سے درمیانے کیسز عام طور پر مسلسل ورزش کے 2-4 ہفتوں میں نمایاں بہتری دکھاتے ہیں۔ اس کے بعد بھی کوئی تبدیلی نہیں؟ تو کسی فزیوتھراپسٹ سے بالمشافہ ملنے کا وقت ہے۔',
-  "Get up and move every 30 minutes, and keep your screen at eye level — posture load adds up fast over a workday.":'ہر 30 منٹ بعد اٹھ کر تھوڑا چلیں، اور اپنی اسکرین آنکھوں کی سطح پر رکھیں — کام کے دن میں کرنسی کا بوجھ جلدی بڑھتا ہے۔',
-  "If it's getting worse, or you notice numbness, weakness, or pain that wakes you at night, please see a doctor or physiotherapist rather than waiting it out.":'اگر یہ بگڑ رہا ہے، یا آپ کو سُن ہونا، کمزوری، یا رات کو نیند سے جگا دینے والا درد محسوس ہو، تو انتظار کرنے کی بجائے ڈاکٹر یا فزیوتھراپسٹ سے رجوع کریں۔',
-  "A supportive pillow position that keeps the area neutral overnight helps — avoid positions that reproduce the pain.":'ایسا سہارا دینے والا تکیہ استعمال کریں جو رات بھر متاثرہ حصے کو غیرجانبدار پوزیشن میں رکھے — ایسی پوزیشنز سے پرہیز کریں جن سے درد دوبارہ ہو۔',
-  "Once or twice a day is a good starting frequency — quality of movement matters more than volume early on.":'دن میں ایک یا دو بار شروع کرنے کے لیے اچھا ہے — ابتدا میں حرکت کا معیار تعداد سے زیادہ اہم ہے۔',
-  "You're welcome — take it steady, and come back if anything changes.":'خوش آمدید — آہستگی سے کریں، اور اگر کچھ تبدیل ہو تو دوبارہ رابطہ کریں۔',
-  "Could you tell me a bit more specifically what you'd like to know — icing vs. heat, timeline, or a particular movement?":'کیا آپ تھوڑا واضح بتا سکتے ہیں کہ آپ کیا جاننا چاہتے ہیں — برف بمقابلہ گرمائش، وقت کا اندازہ، یا کوئی خاص حرکت؟',
-  "That sounds significant, so I'd recommend an in-person assessment with a physiotherapist soon — keep movement gentle and pain-free until then.":'یہ کافی شدید لگتا ہے، اس لیے جلد کسی فزیوتھراپسٹ سے بالمشافہ معائنہ کروانے کی سفارش کی جاتی ہے — اس وقت تک حرکت ہلکی اور درد سے پاک رکھیں۔',
-  "This is a reasonable case to begin managing with home rehabilitation.":'یہ گھر پر بحالی کی ورزشوں سے شروع کرنے کے لیے مناسب کیس ہے۔',
-  // fallbackResponse()'s tips[] array (distinct from the similarly-worded
-  // shortFollowUp() ice/heat strings above — different exact text, needs
-  // its own entries for the exact-match lookup to hit).
-  'Ice the area for 15 minutes at a time for the first 48-72 hours to calm inflammation.':'پہلے 48-72 گھنٹوں میں سوجن کم کرنے کے لیے متاثرہ جگہ پر ایک وقت میں 15 منٹ برف لگائیں۔',
-  'Heat for 10-15 minutes before moving helps loosen a stiff, longer-standing ache like this.':'حرکت سے پہلے 10-15 منٹ گرمائش دینے سے اس طرح کی دیرینہ اکڑن ڈھیلی ہو جاتی ہے۔',
-  'Since this is aggravated by posture, check your desk/phone height — micro-breaks every 30 minutes make a real difference.':'چونکہ یہ کرنسی سے بگڑتا ہے، اپنی ڈیسک/فون کی اونچائی چیک کریں — ہر 30 منٹ بعد مختصر وقفہ کافی فرق ڈالتا ہے۔',
-  'Avoid prolonged forward bending or heavy lifting until this settles — movements that centralize the pain (bring it closer to your spine) are a good sign.':'جب تک یہ ٹھیک نہ ہو جائے، زیادہ دیر آگے جھکنے یا بھاری چیزیں اٹھانے سے گریز کریں — وہ حرکتیں اچھی علامت ہیں جو درد کو ریڑھ کی ہڈی کے قریب لے آئیں۔',
-  'Mild presentations like this usually respond well to staying gently active rather than resting completely.':'اس طرح کے ہلکے کیسز عام طور پر مکمل آرام کی بجائے ہلکی سرگرمی جاری رکھنے سے بہتر ہوتے ہیں۔'
-};
-function T(str){
-  if(currentLang!=='ur'||!str)return str;
-  return UR_MAP[str]||str;
-}
-
-// Urdu name/description for each exercise, keyed by det id — used when
-// speaking the exercise intro at session start. Falls back to English
-// (via EX_UR[det] being undefined) if an exercise is ever added without
-// an entry here, so a missing translation never breaks the intro speech.
-const EX_UR={
-  neck_tilt:{name:'گردن کا جھکاؤ',desc:'اپنا سر آہستگی سے دائیں بائیں جھکائیں، ہر انتہا پر 3 سیکنڈ تک رکیں۔ کندھے مکمل طور پر ڈھیلے رکھیں۔'},
-  mckenzie:{name:'ہلکا کمر کا کھنچاؤ',desc:'ہاتھ کمر کے نچلے حصے پر رکھیں۔ آہستگی سے پیچھے کی طرف جھکیں۔ ہر انتہا پر 3 سیکنڈ تک رکیں۔ درمیان میں سیدھے کھڑے ہوں۔'},
-  knee_chest:{name:'گھٹنا سینے کی طرف',desc:'سیدھے کھڑے ہوں۔ گھٹنا سینے کی طرف کھینچیں اور 3 سیکنڈ تک رکھیں۔ کھڑی ٹانگ تھوڑی سی جھکی رہے۔ باری باری کریں۔'},
-  side_bend:{name:'کھڑے ہو کر سائیڈ بینڈ',desc:'سیدھے کھڑے ہوں، پیر کندھوں جتنے فاصلے پر۔ ایک ہاتھ ٹانگ کے باہر کی طرف نیچے سرکائیں، کمر سے سائیڈ کی طرف جھکتے ہوئے۔ رکیں، درمیان میں واپس آئیں، پھر دوسری طرف جھکیں۔'},
-  bilateral_raise:{name:'دونوں بازو سامنے سے اوپر اٹھانا',desc:'سیدھے کھڑے ہوں، بازو پہلوؤں میں۔ دونوں بازو آہستگی اور قابو کے ساتھ آگے اور اوپر سر کے اوپر تک اٹھائیں۔ اسی قابو کے ساتھ نیچے لائیں۔'},
-  mini_squat:{name:'ہلکی اسکواٹ',desc:'پیر کندھوں جتنے فاصلے پر۔ دونوں گھٹنے ہلکا موڑ کر بیٹھیں، گھٹنے پیر کی انگلیوں سے آگے نہ جائیں۔ رکیں، پھر قابو کے ساتھ واپس کھڑے ہوں۔'},
-  lateral_raise:{name:'بازو سائیڈ سے اوپر اٹھانا',desc:'سیدھے کھڑے ہوں، بازو پہلوؤں میں۔ دونوں بازو سائیڈ کی طرف کندھے کی اونچائی تک آہستگی اور قابو کے ساتھ اٹھائیں۔ اسی قابو کے ساتھ نیچے لائیں۔'},
-  wrist_dev:{name:'کلائی کا سائیڈ موڑ',desc:'ایک بازو سامنے کی طرف سیدھا کریں، ہتھیلی نیچے کی طرف۔ کلائی کو انگوٹھے کی طرف، پھر چھوٹی انگلی کی طرف موڑیں — بازو ساکت رکھیں۔'},
-  shoulder_shrug:{name:'کندھے اچکانا',desc:'دونوں بازو پہلوؤں میں ڈھیلے چھوڑیں۔ دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں، 2 سیکنڈ تک رکھیں، پھر مکمل نیچے آنے دیں۔'},
-  calf_raise:{name:'ایڑی اٹھانا',desc:'سیدھے کھڑے ہوں، پیر کندھوں جتنے فاصلے پر۔ جتنا ممکن ہو پیر کی انگلیوں پر اونچا اٹھیں، رکیں، پھر قابو کے ساتھ ایڑیاں واپس نیچے لائیں۔'}
-};
-function exIntroMsg(ex){
-  const ur=EX_UR[ex.det];
-  if(currentLang==='ur'&&ur)return ur.name+'۔ '+ur.desc;
-  return ex.name+'. '+ex.desc;
-}
-function repVoiceMsg(n){return currentLang==='ur'?('دہرائی '+n):('Rep '+n);}
-function targetReachedMsg(n){
-  return currentLang==='ur'
-    ?(n+' دہرائیوں کا ہدف مکمل — بہت خوب!')
-    :('Target of '+n+' reps reached — great work!');
-}
-function sessionCompleteMsg(n){
-  return currentLang==='ur'
-    ?('شاباش! آپ نے تمام '+n+' دہرائیاں مکمل کر لیں۔ سیشن ختم کیا جا رہا ہے۔')
-    :('Great work! You completed all '+n+' reps. Ending the session now.');
-}
-function greetingMsg(first,u){
-  if(currentLang==='ur'){
-    if(u.sessions===0)return first+' کو خوش آمدید! اپنا پہلا سیشن شروع کرنے کے لیے نیچے سے ایک ورزش منتخب کریں۔';
-    if(u.streak>0)return first+'، واپسی پر خوش آمدید! آپ '+u.streak+' دن سے لگاتار ورزش کر رہے ہیں — بہت خوب۔';
-    return first+'، واپسی پر خوش آمدید! اپنی بحالی جاری رکھنے کے لیے تیار ہیں؟';
-  }
-  return u.sessions===0
-    ?`Welcome, ${first}! Pick an exercise below to start your first session.`
-    :u.streak>0
-    ?`Welcome back, ${first}! You're on a ${u.streak}-day streak — nice work.`
-    :`Welcome back, ${first}! Ready to continue your recovery?`;
-}
-// Vocabulary for the local (non-API) chat fallback's first-message clinical
-// assessment — see AIChat.fallbackResponse(). Urdu sentence order/grammar
-// differs enough from English that this composes a dedicated Urdu template
-// from the same parsed location/condition/duration/severity variables,
-// rather than trying to translate the English template word-for-word.
-const LOC_UR={neck:'گردن',shoulder:'کندھے',back:'کمر',hip:'کولہے',knee:'گھٹنے',ankle:'ٹخنے',wrist:'کلائی',elbow:'کہنی',general:'جسم'};
-const COND_UR={pain:'درد','disc herniation':'ڈسک کے کھسکنے',osteoarthritis:'جوڑوں کی ٹوٹ پھوٹ (اوسٹیوآرتھرائٹس)',sprain:'موچ',tendinopathy:'ٹینڈن کے مسئلے','post-fracture':'فریکچر کے بعد کی حالت',neurological:'اعصابی مسئلے','post-surgical':'سرجری کے بعد کی حالت',bursitis:'برسائٹس','degenerative spine':'ریڑھ کی ہڈی کے فرسودہ پن'};
-function durationUr(duration){
-  const m=duration.match(/^(\d+)\s+(day|days|week|weeks|month|months|year|years)$/);
-  if(m){
-    const unit={day:'دن',days:'دن',week:'ہفتہ',weeks:'ہفتے',month:'مہینہ',months:'مہینے',year:'سال',years:'سال'}[m[2]];
-    return m[1]+' '+unit;
-  }
-  if(duration==='chronic')return 'دیرینہ وقت';
-  if(duration==='acute')return 'اچانک شروع ہونے والی';
-  return 'حال ہی';
-}
 
 // ═══════════════════════════════════════════════════════════
 // AI COACH — Fixed with fallback engine & retry logic
@@ -2172,7 +2263,7 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
     // Not counting down — leave the ring alone, it's already showing the
     // live score via setRing() (called every frame regardless of hold
     // state); just make sure the label has reverted back to "Form".
-    if(lbl){lbl.textContent='Form';lbl.classList.remove('counting','done');}
+    if(lbl){lbl.textContent=T('Form');lbl.classList.remove('counting','done');}
     lastSpokenHoldSec=null;
     return;
   }
@@ -2183,7 +2274,7 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
     ringC.style.strokeDashoffset=169.6*(1-frac); // same ring circumference setRing() uses
     const sec=Math.ceil(remaining/1000);
     ringT.textContent=sec;
-    if(lbl){lbl.textContent='Hold';lbl.classList.add('counting');lbl.classList.remove('done');}
+    if(lbl){lbl.textContent=T('Hold');lbl.classList.add('counting');lbl.classList.remove('done');}
     if(sec!==lastSpokenHoldSec){
       lastSpokenHoldSec=sec;
       VoiceCoach.speak(String(sec),{priority:true});
@@ -2192,7 +2283,7 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
     ringC.style.stroke='#00e5a0';
     ringC.style.strokeDashoffset=0;
     ringT.textContent='✓';
-    if(lbl){lbl.textContent='Release';lbl.classList.add('done');lbl.classList.remove('counting');}
+    if(lbl){lbl.textContent=T('Release');lbl.classList.add('done');lbl.classList.remove('counting');}
     if(!holdPraised){
       holdPraised=true;
       VoiceCoach.speak('Release now.',{priority:true});
@@ -2281,8 +2372,9 @@ function openSession(idx){
   document.getElementById('s-target').textContent=sessEx.reps;
   document.getElementById('s-score').textContent='—%';
   document.getElementById('s-phase').textContent='Ready';
-  document.getElementById('sh-name').textContent=sessEx.name;
-  document.getElementById('sh-area').textContent=sessEx.area;
+  const sessExUr=currentLang==='ur'?EX_UR[sessEx.det]:null;
+  document.getElementById('sh-name').textContent=sessExUr?sessExUr.name:sessEx.name;
+  document.getElementById('sh-area').textContent=sessExUr?sessExUr.area:sessEx.area;
   document.getElementById('s-pre-h').textContent='Ready: '+sessEx.name;
   document.getElementById('s-pre-meta').innerHTML=
     `<span style="color:${DC[sessEx.diff]};border-color:${DC[sessEx.diff]}40">${sessEx.diff}</span>`+
@@ -2999,7 +3091,7 @@ function setFB(msg,cls){
     }
   }
 }
-function setPhase(txt){document.getElementById('s-phase').textContent=txt;}
+function setPhase(txt){document.getElementById('s-phase').textContent=T(txt);}
 function doRep(quality){
   const now=performance.now();
   if(now-lastRepAt<REP_DEBOUNCE_MS)return; // guards against noise flicker double-counting a single rep
