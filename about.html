@@ -10,8 +10,11 @@
 <link rel="apple-touch-icon" href="physiosync-icon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link rel="stylesheet" href="styles.css">
-<script src="reveal.js"></script>
+<script src="reveal.js?v=2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&family=Noto+Sans+Arabic:wght@100..900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script>
 <style>
 /* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
@@ -20,6 +23,11 @@
 img{max-width:100%;display:block}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:inherit}
+body.lang-ur .ab-h,body.lang-ur .ab-sub,body.lang-ur .sec-h,body.lang-ur .sec-p,
+body.lang-ur .f-desc,body.lang-ur .mission-card p,body.lang-ur .value-card p,
+body.lang-ur .ab-cta-box p{
+  font-family:'Noto Nastaliq Urdu','Noto Sans Arabic',sans-serif!important;line-height:2.3;
+}
 
 /* NAVBAR (about.html keeps its own 860px collapse breakpoint, narrower than
    the other pages' 768px — pre-existing behavior, unchanged here) */
@@ -108,7 +116,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
   </div>
   <span class="loader-brand">PhysioSync</span>
-  <span class="loader-sub">Loading About…</span>
+  <span class="loader-sub" data-ur="لوڈ ہو رہا ہے…">Loading About…</span>
 </div>
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
@@ -119,10 +127,10 @@ button{cursor:pointer;font-family:inherit}
     <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
   </a>
   <div class="nav-links">
-    <a href="exercises.html#hero" class="nl">Exercises</a>
-    <a href="hospitals.html" class="nl">Hospitals</a>
-    <a href="research.html" class="nl">Research</a>
-    <a href="about.html" class="nl">About</a>
+    <a href="exercises.html#hero" class="nl" data-ur="ورزشیں">Exercises</a>
+    <a href="hospitals.html" class="nl" data-ur="ہسپتال">Hospitals</a>
+    <a href="research.html" class="nl" data-ur="تحقیق">Research</a>
+    <a href="about.html" class="nl" data-ur="ہمارے بارے میں">About</a>
   </div>
   <div class="nav-right">
     <a href="index.html" class="theme-tgl" aria-label="Home" title="Home">
@@ -131,6 +139,9 @@ button{cursor:pointer;font-family:inherit}
     <a href="account.html" class="theme-tgl" aria-label="Your account" title="Your account">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
     </a>
+    <button class="theme-tgl" id="lang-tgl" onclick="toggleLang()" aria-label="Switch language" title="Switch language (English / Urdu)">
+      <span id="lang-tgl-txt" style="font-size:.62rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.02em">EN</span>
+    </button>
     <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
       <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -141,10 +152,10 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </nav>
 <div class="mob-menu" id="mob-nav">
-  <a href="exercises.html#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
-  <a href="hospitals.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
-  <a href="research.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
-  <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
+  <a href="exercises.html#hero" class="nl" data-ur="ورزشیں" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
+  <a href="hospitals.html" class="nl" data-ur="ہسپتال" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
+  <a href="research.html" class="nl" data-ur="تحقیق" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
+  <a href="about.html" class="nl" data-ur="ہمارے بارے میں" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
 </div>
 
 <!-- HERO -->
@@ -153,9 +164,9 @@ button{cursor:pointer;font-family:inherit}
   <div class="blob-parallax"><div class="hero-blob b2"></div></div>
   <div class="physio-ecg" aria-hidden="true"></div>
   <div class="ab-hero-inner">
-    <span class="ab-tag">Our Story</span>
-    <h1 class="ab-h">Physiotherapy that's <span>always within reach</span></h1>
-    <p class="ab-sub">PhysioSync started from a simple frustration: good physiotherapy is expensive, hard to schedule, and often ends the moment you leave the clinic. We built a way to bring real, camera-verified guidance home — private, accurate, and free to use.</p>
+    <span class="ab-tag" data-ur="ہماری کہانی">Our Story</span>
+    <h1 class="ab-h" data-ur="فزیوتھراپی جو <span>ہمیشہ دسترس میں ہے</span>">Physiotherapy that's <span>always within reach</span></h1>
+    <p class="ab-sub" data-ur="PhysioSync ایک سادہ سی مایوسی سے شروع ہوا: اچھی فزیوتھراپی مہنگی ہے، شیڈول کرنا مشکل ہے، اور اکثر کلینک سے نکلتے ہی ختم ہو جاتی ہے۔ ہم نے حقیقی، کیمرے سے تصدیق شدہ رہنمائی گھر لانے کا طریقہ بنایا — نجی، درست، اور استعمال کے لیے مفت۔">PhysioSync started from a simple frustration: good physiotherapy is expensive, hard to schedule, and often ends the moment you leave the clinic. We built a way to bring real, camera-verified guidance home — private, accurate, and free to use.</p>
   </div>
 </section>
 
@@ -163,19 +174,19 @@ button{cursor:pointer;font-family:inherit}
 <section class="section">
   <div class="sec-blob" style="width:320px;height:320px;top:-100px;right:-110px;background:radial-gradient(circle,rgba(225,29,72,.14),transparent 70%)"></div>
   <div class="sec-in">
-    <span class="sec-tag">Why We Built This</span>
-    <h2 class="sec-h">Recovery shouldn't stop at the clinic door</h2>
-    <p class="sec-p">Most rehabilitation happens between appointments — at home, alone, guessing whether you're doing an exercise correctly. PhysioSync closes that gap with real pose-tracking, not a video you have to interpret yourself.</p>
+    <span class="sec-tag" data-ur="ہم نے یہ کیوں بنایا">Why We Built This</span>
+    <h2 class="sec-h" data-ur="بحالی کو کلینک کے دروازے پر نہیں رکنا چاہیے">Recovery shouldn't stop at the clinic door</h2>
+    <p class="sec-p" data-ur="زیادہ تر بحالی اپائنٹمنٹس کے درمیان ہوتی ہے — گھر پر، اکیلے، یہ اندازہ لگاتے ہوئے کہ آیا آپ ورزش صحیح کر رہے ہیں۔ PhysioSync اس خلا کو حقیقی پوز ٹریکنگ سے پُر کرتا ہے، نہ کہ کسی ایسی ویڈیو سے جسے آپ کو خود سمجھنا پڑے۔">Most rehabilitation happens between appointments — at home, alone, guessing whether you're doing an exercise correctly. PhysioSync closes that gap with real pose-tracking, not a video you have to interpret yourself.</p>
     <div class="mission-grid">
       <div class="mission-card">
         <div class="mission-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-        <h3>Real-time, not guesswork</h3>
-        <p>Every rep is measured with actual joint-angle geometry from your camera feed — the same landmarks a physiotherapist would watch for — so form feedback reflects what your body is actually doing, not a generic animation.</p>
+        <h3 data-ur="ریئل ٹائم، اندازہ نہیں">Real-time, not guesswork</h3>
+        <p data-ur="ہر دہرائی آپ کے کیمرے کی فیڈ سے حقیقی جوڑ کے زاویے کی ہندسیات سے ناپی جاتی ہے — وہی نشانات جنہیں ایک فزیوتھراپسٹ دیکھتا — تاکہ فارم فیڈبیک یہ ظاہر کرے کہ آپ کا جسم واقعی کیا کر رہا ہے، نہ کہ ایک عمومی اینیمیشن۔">Every rep is measured with actual joint-angle geometry from your camera feed — the same landmarks a physiotherapist would watch for — so form feedback reflects what your body is actually doing, not a generic animation.</p>
       </div>
       <div class="mission-card">
         <div class="mission-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-        <h3>Private by design</h3>
-        <p>Your camera feed is processed entirely on your own device. Nothing is uploaded, recorded, or sent to a server — the same privacy standard we'd want for our own physiotherapy sessions.</p>
+        <h3 data-ur="ڈیزائن کے اعتبار سے نجی">Private by design</h3>
+        <p data-ur="آپ کا کیمرہ فیڈ مکمل طور پر آپ کی اپنی ڈیوائس پر پروسیس ہوتا ہے۔ کچھ بھی اپ لوڈ، ریکارڈ، یا سرور پر نہیں بھیجا جاتا — وہی پرائیویسی معیار جو ہم اپنے فزیوتھراپی سیشنز کے لیے چاہتے۔">Your camera feed is processed entirely on your own device. Nothing is uploaded, recorded, or sent to a server — the same privacy standard we'd want for our own physiotherapy sessions.</p>
       </div>
     </div>
   </div>
@@ -184,29 +195,29 @@ button{cursor:pointer;font-family:inherit}
 <!-- VALUES -->
 <section class="section">
   <div class="sec-in">
-    <span class="sec-tag">What Guides Us</span>
-    <h2 class="sec-h">Built on clinical principles, not shortcuts</h2>
-    <p class="sec-p">This is a medical-adjacent product, and we treat it that way — every exercise, score, and piece of feedback is designed to be something a physiotherapist would actually stand behind.</p>
+    <span class="sec-tag" data-ur="ہماری رہنمائی کیا کرتی ہے">What Guides Us</span>
+    <h2 class="sec-h" data-ur="کلینیکل اصولوں پر بنایا گیا، شارٹ کٹس پر نہیں">Built on clinical principles, not shortcuts</h2>
+    <p class="sec-p" data-ur="یہ ایک طبی نوعیت کی پروڈکٹ ہے، اور ہم اسے اسی طرح سمجھتے ہیں — ہر ورزش، اسکور، اور فیڈبیک کا ٹکڑا اس طرح بنایا گیا ہے کہ ایک فزیوتھراپسٹ اس کی حمایت کرے۔">This is a medical-adjacent product, and we treat it that way — every exercise, score, and piece of feedback is designed to be something a physiotherapist would actually stand behind.</p>
     <div class="values-grid">
       <div class="value-card">
         <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></div>
-        <h3>Accuracy first</h3>
-        <p>No fake scores. If tracking is uncertain, we say so instead of showing a number we can't stand behind.</p>
+        <h3 data-ur="پہلے درستگی">Accuracy first</h3>
+        <p data-ur="کوئی جعلی اسکور نہیں۔ اگر ٹریکنگ غیر یقینی ہے، تو ہم ایسا کہتے ہیں بجائے اس کے کہ ایسا نمبر دکھائیں جس کی ہم حمایت نہیں کر سکتے۔">No fake scores. If tracking is uncertain, we say so instead of showing a number we can't stand behind.</p>
       </div>
       <div class="value-card">
         <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
-        <h3>Beginner-safe</h3>
-        <p>Every exercise in the library is intentionally gentle and low-risk — appropriate for home use without in-person supervision.</p>
+        <h3 data-ur="ابتدائیوں کے لیے محفوظ">Beginner-safe</h3>
+        <p data-ur="لائبریری میں ہر ورزش جان بوجھ کر ہلکی اور کم خطرے والی ہے — بغیر بالمشافہ نگرانی کے گھر پر استعمال کے لیے موزوں۔">Every exercise in the library is intentionally gentle and low-risk — appropriate for home use without in-person supervision.</p>
       </div>
       <div class="value-card">
         <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
-        <h3>Free to use</h3>
-        <p>No account paywalls, no subscription to access exercises. Recovery guidance shouldn't be gated behind a price tag.</p>
+        <h3 data-ur="استعمال کے لیے مفت">Free to use</h3>
+        <p data-ur="کوئی اکاؤنٹ پے وال نہیں، ورزشوں تک رسائی کے لیے کوئی سبسکرپشن نہیں۔ بحالی کی رہنمائی کو قیمت کے پیچھے بند نہیں ہونا چاہیے۔">No account paywalls, no subscription to access exercises. Recovery guidance shouldn't be gated behind a price tag.</p>
       </div>
       <div class="value-card">
         <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
-        <h3>Evidence-based</h3>
-        <p>Our research library cites WHO data directly — every claim is traceable back to its source, not just asserted.</p>
+        <h3 data-ur="شواہد پر مبنی">Evidence-based</h3>
+        <p data-ur="ہماری تحقیقی لائبریری براہ راست WHO ڈیٹا کا حوالہ دیتی ہے — ہر دعویٰ اپنے ماخذ تک قابل تصدیق ہے، محض کہا نہیں گیا۔">Our research library cites WHO data directly — every claim is traceable back to its source, not just asserted.</p>
       </div>
     </div>
   </div>
@@ -216,13 +227,13 @@ button{cursor:pointer;font-family:inherit}
 <section class="section">
   <div class="sec-blob" style="width:300px;height:300px;bottom:-120px;left:-100px;background:radial-gradient(circle,rgba(139,92,246,.14),transparent 70%)"></div>
   <div class="sec-in">
-    <span class="sec-tag">In Numbers</span>
-    <h2 class="sec-h">What's in the app today</h2>
+    <span class="sec-tag" data-ur="اعداد میں">In Numbers</span>
+    <h2 class="sec-h" data-ur="آج ایپ میں کیا ہے">What's in the app today</h2>
     <div class="stats-strip">
-      <div class="stat-box"><div class="stat-num" data-count="8">0</div><div class="stat-lbl">Beginner Exercises</div></div>
-      <div class="stat-box"><div class="stat-num" data-count="5">0</div><div class="stat-lbl">Partner Hospitals</div></div>
-      <div class="stat-box"><div class="stat-num" data-count="0">0</div><div class="stat-lbl">Data Uploaded</div></div>
-      <div class="stat-box"><div class="stat-num" data-count="100" data-suffix="%">0</div><div class="stat-lbl">Free to Use</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="8">0</div><div class="stat-lbl" data-ur="ابتدائی ورزشیں">Beginner Exercises</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="5">0</div><div class="stat-lbl" data-ur="شراکت دار ہسپتال">Partner Hospitals</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="0">0</div><div class="stat-lbl" data-ur="ڈیٹا اپ لوڈ">Data Uploaded</div></div>
+      <div class="stat-box"><div class="stat-num" data-count="100" data-suffix="%">0</div><div class="stat-lbl" data-ur="استعمال کے لیے مفت">Free to Use</div></div>
     </div>
   </div>
 </section>
@@ -230,9 +241,9 @@ button{cursor:pointer;font-family:inherit}
 <!-- CTA -->
 <section class="ab-cta">
   <div class="ab-cta-box">
-    <h2>Ready to start your recovery?</h2>
-    <p>No signup fees, no account required to browse — just pick an exercise and let PhysioSync guide the rest.</p>
-    <a href="exercises.html#hero" class="ab-cta-btn">Browse Exercises</a>
+    <h2 data-ur="اپنی بحالی شروع کرنے کے لیے تیار ہیں؟">Ready to start your recovery?</h2>
+    <p data-ur="براؤز کرنے کے لیے کوئی سائن اپ فیس نہیں، کوئی اکاؤنٹ درکار نہیں — بس ایک ورزش منتخب کریں اور PhysioSync کو باقی کام کرنے دیں۔">No signup fees, no account required to browse — just pick an exercise and let PhysioSync guide the rest.</p>
+    <a href="exercises.html#hero" class="ab-cta-btn" data-ur="ورزشیں دیکھیں">Browse Exercises</a>
   </div>
 </section>
 
@@ -245,37 +256,37 @@ button{cursor:pointer;font-family:inherit}
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:22px">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
       </div>
-      <p class="f-desc">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
+      <p class="f-desc" data-ur="PhysioSync کلینیکل معیار کی فزیوتھراپی فراہم کرتا ہے — کرنسی درست کرتا ہے، بحالی میں رہنمائی کرتا ہے، اور ہر ڈیوائس پر پیش رفت ٹریک کرتا ہے۔">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
     </div>
     <div>
-      <div class="f-hd">Platform</div>
+      <div class="f-hd" data-ur="پلیٹ فارم">Platform</div>
       <div class="f-lks">
-        <a href="exercises.html#hero">Exercises</a>
-        <a href="hospitals.html">Hospitals</a>
-        <a href="research.html">Research</a>
-        <a href="account.html">Account</a>
-        <a href="index.html">3D Body Map</a>
+        <a href="exercises.html#hero" data-ur="ورزشیں">Exercises</a>
+        <a href="hospitals.html" data-ur="ہسپتال">Hospitals</a>
+        <a href="research.html" data-ur="تحقیق">Research</a>
+        <a href="account.html" data-ur="اکاؤنٹ">Account</a>
+        <a href="index.html" data-ur="3D باڈی میپ">3D Body Map</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Company</div>
+      <div class="f-hd" data-ur="کمپنی">Company</div>
       <div class="f-lks">
-        <a href="about.html">About PhysioSync</a>
+        <a href="about.html" data-ur="PhysioSync کے بارے میں">About PhysioSync</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Contact</div>
+      <div class="f-hd" data-ur="رابطہ">Contact</div>
       <div class="f-lks">
         <span>physiosync@gmail.com</span>
         <span>0316 2404444</span>
-        <span>Karachi, Pakistan</span>
+        <span data-ur="کراچی، پاکستان">Karachi, Pakistan</span>
       </div>
     </div>
   </div>
   <div class="f-bot">
     <div class="f-bot-brand">
-      <span>&copy; 2026 PhysioSync. All rights reserved.</span>
-      <span class="f-powered"><img src="physiosync-icon.png" alt="">Powered by PhysioSync</span>
+      <span data-ur="&copy; 2026 PhysioSync۔ جملہ حقوق محفوظ ہیں۔">&copy; 2026 PhysioSync. All rights reserved.</span>
+      <span class="f-powered"><img src="physiosync-icon.png" alt=""><span data-ur="PhysioSync کی طاقت سے">Powered by PhysioSync</span></span>
     </div>
     <div class="f-soc">
       <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
@@ -283,7 +294,7 @@ button{cursor:pointer;font-family:inherit}
       <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
       <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
     </div>
-    <div class="f-bot-lks"><a href="#">Privacy</a><a href="#">Terms</a></div>
+    <div class="f-bot-lks"><a href="#" data-ur="پرائیویسی">Privacy</a><a href="#" data-ur="شرائط">Terms</a></div>
   </div>
 </footer>
 
