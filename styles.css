@@ -124,6 +124,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
    override (the traditional Urdu script style) onto its own large
    headings/prose selectors, since those class names differ per page. */
 body.lang-ur,body.lang-ur *{font-family:'Noto Sans Arabic','Inter',sans-serif!important}
+/* Safety net for Urdu text overflowing narrow containers (seen live on a
+   real phone: a heading mixing a Latin brand name with Urdu script bled
+   past its card's edges on a narrow screen, though it wrapped fine in
+   every width tested in the browser devtools — likely a mobile-specific
+   font/bidi rendering quirk that's hard to reproduce/diagnose remotely).
+   Forces a break rather than overflow regardless of the exact cause. */
+body.lang-ur *{overflow-wrap:break-word;word-break:break-word}
 .acct-dd{position:relative}
 .acct-dd-trigger{overflow:hidden}
 .acct-dd-panel{
