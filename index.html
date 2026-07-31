@@ -34,7 +34,13 @@ body.lang-ur .gate-sub,body.lang-ur .footer-desc{
    single/double-line heading tall enough to push its own top off-screen
    above the viewport. A smaller ratio still gives the diagonal strokes
    room without ballooning the block's total height. */
-body.lang-ur .jf-title{font-size:clamp(1.8rem,4.6vw,3.6rem)!important;line-height:1.7!important}
+/* Measured live: Noto Nastaliq Urdu's actual painted glyph height runs
+   about 2.5x its font-size (verified via getClientRects() - consecutive
+   wrapped lines were overlapping by ~45px at line-height:1.7, well short
+   of what the font needs). line-height must clear that ratio or wrapped
+   lines visually collide/cut into each other; font-size is pulled down
+   to compensate so the block doesn't grow too tall again. */
+body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-height:2.6!important}
 :root{
   --brand:#e11d48;--accent:#fb7185;--purple:#8b5cf6;--blue:#3b82f6;
   --bg:#000;--bg-strong:#000;--heading:#fff;--text:#fff;--muted:#cbd5e1;--submuted:#94a3b8;
