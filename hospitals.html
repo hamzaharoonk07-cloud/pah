@@ -10,8 +10,11 @@
 <link rel="apple-touch-icon" href="physiosync-icon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link rel="stylesheet" href="styles.css">
-<script src="reveal.js"></script>
+<script src="reveal.js?v=2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&family=Noto+Sans+Arabic:wght@100..900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script>
 <style>
 /* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
@@ -21,6 +24,9 @@
 img{max-width:100%;display:block}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:inherit}
+body.lang-ur .sec-h,body.lang-ur .sec-p,body.lang-ur .f-desc{
+  font-family:'Noto Nastaliq Urdu','Noto Sans Arabic',sans-serif!important;line-height:2.3;
+}
 /* nav-greet is intentionally disabled site-wide (exercises.html has this
    same override) — the markup exists but the feature is unused, so keep
    it hidden here too rather than showing unstyled "Welcome back," text. */
@@ -138,7 +144,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
   </div>
   <span class="loader-brand">PhysioSync</span>
-  <span class="loader-sub">Loading Hospitals…</span>
+  <span class="loader-sub" data-ur="ہسپتال لوڈ ہو رہے ہیں…">Loading Hospitals…</span>
 </div>
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
@@ -150,10 +156,10 @@ button{cursor:pointer;font-family:inherit}
     <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:26px">
   </a>
   <div class="nav-links">
-    <a href="exercises.html#hero" class="nl">Exercises</a>
-    <a href="hospitals.html" class="nl">Hospitals</a>
-    <a href="research.html" class="nl">Research</a>
-    <a href="about.html" class="nl">About</a>
+    <a href="exercises.html#hero" class="nl" data-ur="ورزشیں">Exercises</a>
+    <a href="hospitals.html" class="nl" data-ur="ہسپتال">Hospitals</a>
+    <a href="research.html" class="nl" data-ur="تحقیق">Research</a>
+    <a href="about.html" class="nl" data-ur="ہمارے بارے میں">About</a>
   </div>
   <div class="nav-right">
     <div class="nav-greet" id="nav-greet" style="display:none">Welcome back, <span id="nav-name">—</span></div>
@@ -183,12 +189,15 @@ button{cursor:pointer;font-family:inherit}
           </div>
         </div>
         <div class="acct-dd-lks">
-          <a href="account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>View Dashboard</a>
-          <a href="exercises.html#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Start Exercise</a>
-          <button class="acct-dd-logout" onclick="logoutUser()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Logout</button>
+          <a href="account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span data-ur="ڈیش بورڈ دیکھیں">View Dashboard</span></a>
+          <a href="exercises.html#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span data-ur="ورزش شروع کریں">Start Exercise</span></a>
+          <button class="acct-dd-logout" onclick="logoutUser()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span data-ur="لاگ آؤٹ">Logout</span></button>
         </div>
       </div>
     </div>
+    <button class="theme-tgl" id="lang-tgl" onclick="toggleLang()" aria-label="Switch language" title="Switch language (English / Urdu)">
+      <span id="lang-tgl-txt" style="font-size:.62rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.02em">EN</span>
+    </button>
     <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
       <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -199,10 +208,10 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </nav>
 <div class="mob-menu" id="mob-nav">
-  <a href="exercises.html#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
-  <a href="hospitals.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
-  <a href="research.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
-  <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
+  <a href="exercises.html#hero" class="nl" data-ur="ورزشیں" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
+  <a href="hospitals.html" class="nl" data-ur="ہسپتال" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
+  <a href="research.html" class="nl" data-ur="تحقیق" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
+  <a href="about.html" class="nl" data-ur="ہمارے بارے میں" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
 </div>
 
 <!-- ══════════ HOSPITALS ══════════ -->
@@ -212,8 +221,8 @@ button{cursor:pointer;font-family:inherit}
   <div class="physio-ecg" aria-hidden="true"></div>
   <div class="sec-in">
     <span class="sec-tag"></span>
-    <h2 class="sec-h">For Cases That Need <span>Medical Clearance</span></h2>
-    <p class="sec-p">PhysioSync is partnered with leading hospitals across Pakistan to provide seamless in-person care when home rehabilitation requires clinical intervention.</p>
+    <h2 class="sec-h" data-ur="ایسے کیسز کے لیے جنہیں <span>طبی منظوری</span> درکار ہے">For Cases That Need <span>Medical Clearance</span></h2>
+    <p class="sec-p" data-ur="PhysioSync پاکستان بھر کے معروف ہسپتالوں کے ساتھ شراکت دار ہے تاکہ جب گھریلو بحالی کو کلینیکل مداخلت کی ضرورت ہو تو ہموار ذاتی نگہداشت فراہم کی جا سکے۔">PhysioSync is partnered with leading hospitals across Pakistan to provide seamless in-person care when home rehabilitation requires clinical intervention.</p>
     <div class="hosp-grid" id="hosp-grid"></div>
   </div>
 </section>
@@ -223,11 +232,11 @@ button{cursor:pointer;font-family:inherit}
   <div class="f-badges">
     <div class="f-badge">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-      Camera never leaves your device
+      <span data-ur="کیمرہ کبھی آپ کی ڈیوائس سے باہر نہیں جاتا">Camera never leaves your device</span>
     </div>
     <div class="f-badge">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      Research sourced directly from who.int
+      <span data-ur="تحقیق براہ راست who.int سے حاصل کی گئی">Research sourced directly from who.int</span>
     </div>
   </div>
   <div class="footer-cols">
@@ -237,37 +246,37 @@ button{cursor:pointer;font-family:inherit}
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:30px">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:30px">
       </div>
-      <p class="f-desc">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
+      <p class="f-desc" data-ur="PhysioSync کلینیکل معیار کی فزیوتھراپی فراہم کرتا ہے — کرنسی درست کرتا ہے، بحالی میں رہنمائی کرتا ہے، اور ہر ڈیوائس پر پیش رفت ٹریک کرتا ہے۔">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
     </div>
     <div>
-      <div class="f-hd">Platform</div>
+      <div class="f-hd" data-ur="پلیٹ فارم">Platform</div>
       <div class="f-lks">
-        <a href="exercises.html#hero">Exercises</a>
-        <a href="hospitals.html">Hospitals</a>
-        <a href="research.html">Research</a>
-        <a href="account.html">Account</a>
-        <a href="index.html">3D Body Map</a>
+        <a href="exercises.html#hero" data-ur="ورزشیں">Exercises</a>
+        <a href="hospitals.html" data-ur="ہسپتال">Hospitals</a>
+        <a href="research.html" data-ur="تحقیق">Research</a>
+        <a href="account.html" data-ur="اکاؤنٹ">Account</a>
+        <a href="index.html" data-ur="3D باڈی میپ">3D Body Map</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Company</div>
+      <div class="f-hd" data-ur="کمپنی">Company</div>
       <div class="f-lks">
-        <a href="about.html">About PhysioSync</a>
+        <a href="about.html" data-ur="PhysioSync کے بارے میں">About PhysioSync</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Contact</div>
+      <div class="f-hd" data-ur="رابطہ">Contact</div>
       <div class="f-lks">
         <span>physiosync@gmail.com</span>
         <span>0316 2404444</span>
-        <span>Karachi, Pakistan</span>
+        <span data-ur="کراچی، پاکستان">Karachi, Pakistan</span>
       </div>
     </div>
   </div>
   <div class="f-bot">
     <div class="f-bot-brand">
-      <span>&copy; 2026 PhysioSync. All rights reserved.</span>
-      <span class="f-powered"><img src="physiosync-icon.png" alt="">Powered by PhysioSync</span>
+      <span data-ur="&copy; 2026 PhysioSync۔ جملہ حقوق محفوظ ہیں۔">&copy; 2026 PhysioSync. All rights reserved.</span>
+      <span class="f-powered"><img src="physiosync-icon.png" alt=""><span data-ur="PhysioSync کی طاقت سے">Powered by PhysioSync</span></span>
     </div>
     <div class="f-soc">
       <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
@@ -275,7 +284,7 @@ button{cursor:pointer;font-family:inherit}
       <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
       <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
     </div>
-    <div class="f-bot-lks"><a href="#">Privacy</a><a href="#">Terms</a></div>
+    <div class="f-bot-lks"><a href="#" data-ur="پرائیویسی">Privacy</a><a href="#" data-ur="شرائط">Terms</a></div>
   </div>
 </footer>
 
@@ -386,12 +395,32 @@ const HOSPITALS=[
 const pinSVG='<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 const phoneSVG='<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>';
 
-document.getElementById('hosp-grid').innerHTML=HOSPITALS.map(h=>`
+// Hospital names/addresses/phone numbers are real factual identifiers, so
+// those stay as-is regardless of language — only the descriptive type/tags/
+// button (UI labels, not facts) are translated.
+const HOSP_UR={
+  'Tertiary Care / Teaching':'ترشیری نگہداشت / تدریسی',
+  'Public Tertiary Care':'سرکاری ترشیری نگہداشت',
+  'Free Quality Healthcare':'مفت معیاری صحت کی سہولت',
+  'Private Premium Care':'نجی پریمیم نگہداشت',
+  'Private Tertiary Care':'نجی ترشیری نگہداشت',
+  '24/7 Emergency':'24/7 ایمرجنسی','Cardiac Surgery':'دل کی سرجری','Neurosciences':'نیورو سائنسز',
+  'Orthopaedics':'آرتھوپیڈکس','Rehabilitation':'بحالی','700 Beds':'700 بستر',
+  'Physical Therapy':'فزیکل تھراپی','Spine Surgery':'ریڑھ کی ہڈی کی سرجری','Trauma Care':'ٹراما کیئر',
+  'Diagnostics':'تشخیصی خدمات','Free Care':'مفت علاج','Cancer Centre':'کینسر سینٹر',
+  'Blood Bank':'بلڈ بینک','Telemedicine':'ٹیلی میڈیسن','ICU / CCU':'آئی سی یو / سی سی یو',
+  'Laparoscopic Surgery':'لیپروسکوپک سرجری','Maternity':'زچگی','Physiotherapy':'فزیوتھراپی',
+  'Emergency':'ایمرجنسی','Private Care':'نجی نگہداشت','Trauma Centre':'ٹراما سینٹر',
+  'Burn Unit':'برن یونٹ','Post-Surgical':'سرجری کے بعد کی نگہداشت'
+};
+function hospT(s){return currentLang==='ur'?(HOSP_UR[s]||s):s;}
+function renderHospGrid(){
+  document.getElementById('hosp-grid').innerHTML=HOSPITALS.map(h=>`
 <div class="hosp-card">
   <div class="hosp-top">
     ${h.logo?`<img src="${h.logo}" alt="${h.name}" class="hosp-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="hosp-mark" style="display:none">${h.initials}</div>`:`<div class="hosp-mark">${h.initials}</div>`}
     <div class="hosp-name">${h.name}</div>
-    <div class="hosp-type">${h.type}</div>
+    <div class="hosp-type">${hospT(h.type)}</div>
   </div>
   <div class="hosp-body">
     <div class="hosp-addr">
@@ -403,11 +432,14 @@ document.getElementById('hosp-grid').innerHTML=HOSPITALS.map(h=>`
       <a href="tel:${h.phone.replace(/\s/g,'')}">${h.phone}</a>
     </div>
     <div class="hosp-meta">
-      ${h.tags.map(t=>`<span class="hosp-tag">${t}</span>`).join('')}
+      ${h.tags.map(t=>`<span class="hosp-tag">${hospT(t)}</span>`).join('')}
     </div>
-    <button class="hosp-btn" onclick="window.open('${h.website}','_blank')">Physiotherapy Department →</button>
+    <button class="hosp-btn" onclick="window.open('${h.website}','_blank')">${currentLang==='ur'?'فزیوتھراپی شعبہ →':'Physiotherapy Department →'}</button>
   </div>
 </div>`).join('');
+}
+renderHospGrid();
+function onLangChange(){renderHospGrid();}
 
 initScrollReveal('.hosp-card,.sec-tag,.sec-h,.sec-p',{stagger:55});
 initMagnetic('.hosp-btn');
