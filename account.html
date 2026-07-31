@@ -644,11 +644,29 @@ function removePhoto(){
 // here takes effect in the next live session without exercises.html needing
 // its own selector (per user: "the variants should be 2 or more in accounts
 // not in exercise").
+// Devices can expose 20+ installed system voices — too many to be a useful
+// picker, so rank and cap the list at 8: Urdu voices first (rare, so always
+// worth surfacing), then well-known natural-sounding English voices, then
+// any other English voice, everything else last.
+function voiceRank(v){
+  if(/^ur/i.test(v.lang))return 3;
+  if(/^en/i.test(v.lang))return/female|natural|online|google|zira|samantha|hazel|aria|jenny/i.test(v.name)?2:1;
+  return 0;
+}
+function topVoices(voices,chosenURI){
+  const ranked=voices.slice().sort((a,b)=>voiceRank(b)-voiceRank(a));
+  let top=ranked.slice(0,8);
+  if(chosenURI&&!top.some(v=>v.voiceURI===chosenURI)){
+    const chosenV=voices.find(v=>v.voiceURI===chosenURI);
+    if(chosenV)top=[chosenV,...top.slice(0,7)];
+  }
+  return top;
+}
 function syncVoiceSelect(){
   const sel=document.getElementById('acct-voice-select');
   if(!sel)return;
-  const voices=speechSynthesis.getVoices();
   const chosen=localStorage.getItem('pah_voice_uri')||'';
+  const voices=topVoices(speechSynthesis.getVoices(),chosen);
   sel.innerHTML='<option value="">Auto (match language)</option>'+
     voices.map(v=>`<option value="${v.voiceURI}"${v.voiceURI===chosen?' selected':''}>${v.name} (${v.lang})</option>`).join('');
 }
