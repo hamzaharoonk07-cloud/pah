@@ -701,6 +701,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <div class="fl"><label for="g-name">Full Name</label><input id="g-name" type="text" required placeholder="Your full name" autocomplete="given-name" pattern="[A-Za-z\s\-'\.]+" title="Letters only, no numbers" oninput="this.value=this.value.replace(/[^A-Za-z\s\-'\.]/g,'')"></div>
         <div class="fl"><label for="g-gender">Gender</label><select id="g-gender" required><option value="" disabled selected>Select</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
       </div>
+      <div class="frow1">
+        <div class="fl"><label for="g-email">Email</label><input id="g-email" type="email" required placeholder="you@example.com" autocomplete="email"></div>
+      </div>
       <div class="frow">
         <div class="fl"><label for="g-age">Age (years)</label><input id="g-age" type="number" required min="5" max="120" placeholder="e.g. 30" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
         <div class="fl"><label for="g-weight">Weight (kg)</label><input id="g-weight" type="number" required min="10" max="300" placeholder="e.g. 70" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
@@ -739,9 +742,29 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <a href="index.html" class="theme-tgl" aria-label="Home" title="Home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
     </a>
-    <a href="account.html" class="theme-tgl" aria-label="Your account" title="Your account">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-    </a>
+    <div class="acct-dd" id="acct-dd">
+      <button class="theme-tgl acct-dd-trigger" id="acct-dd-trigger" aria-label="Your account" title="Your account" onclick="toggleAcctDropdown(event)">
+        <img class="acct-dd-avatar-img" alt="" style="display:none">
+        <svg class="acct-dd-default-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+      </button>
+      <div class="acct-dd-panel" id="acct-dd-panel">
+        <div class="acct-dd-head">
+          <div class="acct-dd-avatar-lg">
+            <img class="acct-dd-avatar-img" alt="" style="display:none">
+            <svg class="acct-dd-default-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+          </div>
+          <div style="min-width:0">
+            <div class="acct-dd-name" id="acct-dd-name">—</div>
+            <div class="acct-dd-email" id="acct-dd-email">—</div>
+          </div>
+        </div>
+        <div class="acct-dd-lks">
+          <a href="account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>View Dashboard</a>
+          <a href="#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Start Exercise</a>
+          <button class="acct-dd-logout" onclick="logoutUser()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Logout</button>
+        </div>
+      </div>
+    </div>
     <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
       <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -1350,23 +1373,27 @@ function fmtDM(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMon
 function gateSubmit(e){
   e.preventDefault();
   const name=document.getElementById('g-name').value.trim();
+  const email=document.getElementById('g-email').value.trim();
   const gender=document.getElementById('g-gender').value;
   const age=document.getElementById('g-age').value;
   const weight=document.getElementById('g-weight').value;
   const height=document.getElementById('g-height').value;
   const condition=document.getElementById('g-condition').value.trim();
   const errEl=document.getElementById('gate-err');
-  if(!name||!gender||!age||!weight||!height){
+  if(!name||!email||!gender||!age||!weight||!height){
     errEl.textContent='Please complete all required fields.';errEl.style.display='block';return;
   }
   if(!/^[A-Za-z\s\-'.]+$/.test(name)){
     errEl.textContent='Name can only contain letters.';errEl.style.display='block';return;
   }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    errEl.textContent='Please enter a valid email address.';errEl.style.display='block';return;
+  }
   if(!/^[0-9]+$/.test(age)||!/^[0-9]+$/.test(weight)||!/^[0-9]+$/.test(height)){
     errEl.textContent='Age, weight, and height can only contain numbers.';errEl.style.display='block';return;
   }
   errEl.style.display='none';
-  const acc={name,gender,age,weight,height,condition,joined:fmtDMY(new Date())};
+  const acc={name,email,gender,age,weight,height,condition,joined:fmtDMY(new Date())};
   localStorage.setItem('pah_acc',JSON.stringify(acc));
   document.getElementById('gate').classList.add('hidden');
   initApp(acc);
@@ -1384,6 +1411,7 @@ function initApp(acc){
   document.getElementById('hero-welcome-av').textContent=first.charAt(0).toUpperCase();
   const u=loadU();
   renderNavStreak();
+  renderAcctDropdown(acc);
   greetReturningUser(first,u);
 }
 

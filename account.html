@@ -74,11 +74,19 @@ button{cursor:pointer;font-family:inherit}
 .acct-profile-card{margin-bottom:20px;animation:cardRise .5s cubic-bezier(.2,.8,.2,1) both}
 .acct-profile-brand{display:flex;align-items:center;gap:8px;margin-bottom:18px}
 .ab-tag-logo{padding:6px 16px}
+.acct-avatar-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--w06)}
+.acct-avatar{width:64px;height:64px;border-radius:50%;background:var(--w06);border:1px solid var(--w09);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);flex-shrink:0}
+.acct-avatar img{width:100%;height:100%;object-fit:cover}
+.acct-avatar svg{width:26px;height:26px}
+.acct-avatar-btn{padding:8px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w04);color:var(--heading);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;transition:all .2s}
+.acct-avatar-btn:hover{background:var(--w08);border-color:var(--w12)}
+.acct-avatar-hint{font-size:.66rem;color:var(--muted);margin-top:7px}
 .acct-profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
 .acct-profile-grid div{background:var(--w03);border:1px solid var(--w06);border-radius:12px;padding:12px 14px;transition:border-color .2s,transform .2s}
 .acct-profile-grid div:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
 .acct-profile-grid span{display:block;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
 .acct-profile-grid strong{font-size:.9rem;color:var(--heading);font-weight:700;text-transform:capitalize}
+.acct-profile-grid strong#acct-email{text-transform:none}
 @media(max-width:540px){.acct-profile-grid{grid-template-columns:1fr 1fr}}
 
 /* CONTINUE-RECOVERY CTA */
@@ -333,8 +341,20 @@ button{cursor:pointer;font-family:inherit}
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:14px">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:14px">
       </div>
+      <div class="acct-avatar-row">
+        <div class="acct-avatar" id="acct-avatar">
+          <img id="acct-avatar-img" alt="" style="display:none">
+          <svg id="acct-avatar-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+        </div>
+        <div>
+          <button type="button" class="acct-avatar-btn" onclick="document.getElementById('acct-photo-input').click()">Upload Photo</button>
+          <input type="file" id="acct-photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+          <p class="acct-avatar-hint" id="acct-photo-msg">JPG or PNG, under 2MB — stored only on this device.</p>
+        </div>
+      </div>
       <div class="acct-profile-grid">
         <div><span>Name</span><strong id="acct-name">—</strong></div>
+        <div><span>Email</span><strong id="acct-email">—</strong></div>
         <div><span>Gender</span><strong id="acct-gender">—</strong></div>
         <div><span>Age</span><strong id="acct-age">—</strong></div>
         <div><span>Weight / Height</span><strong id="acct-weight-height">—</strong></div>
@@ -539,6 +559,43 @@ function fmtDM(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMon
 function logoutUser(){
   localStorage.removeItem('pah_acc');
   location.href='exercises.html';
+}
+
+// Profile photo — stored as a base64 data URL directly in pah_acc (same
+// device-only localStorage everything else here already uses, no upload to
+// any server). Swaps the fallback person-icon out for the real photo
+// wherever an avatar is shown (this page's own avatar plus the shared
+// navbar dropdown avatar on other pages, via renderAcctDropdown()).
+function applyAvatar(photo){
+  const img=document.getElementById('acct-avatar-img');
+  const def=document.getElementById('acct-avatar-default');
+  if(!img||!photo)return;
+  img.src=photo;img.style.display='block';
+  if(def)def.style.display='none';
+}
+function handlePhotoUpload(e){
+  const file=e.target.files[0];
+  const msg=document.getElementById('acct-photo-msg');
+  if(!file)return;
+  if(!file.type.startsWith('image/')){
+    msg.textContent='Please choose an image file.';
+    return;
+  }
+  if(file.size>2*1024*1024){
+    msg.textContent='Image must be under 2MB.';
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const acc=JSON.parse(localStorage.getItem('pah_acc')||'null');
+    if(!acc)return;
+    acc.photo=reader.result;
+    localStorage.setItem('pah_acc',JSON.stringify(acc));
+    applyAvatar(acc.photo);
+    msg.textContent='Photo updated.';
+  };
+  reader.onerror=()=>{msg.textContent='Could not read that file — please try another.';};
+  reader.readAsDataURL(file);
 }
 
 // countUp is shared in reveal.js (previously duplicated).
@@ -814,11 +871,13 @@ function showSessionDetail(idx){
   const first=acc.name.split(' ')[0];
   document.getElementById('acct-hero-h').innerHTML='Good '+time+', <span>'+first+'</span>';
   document.getElementById('acct-name').textContent=acc.name;
+  document.getElementById('acct-email').textContent=acc.email||'—';
   document.getElementById('acct-gender').textContent=acc.gender;
   document.getElementById('acct-age').textContent=acc.age+' yrs';
   document.getElementById('acct-weight-height').textContent=acc.weight+'kg / '+acc.height+'cm';
   document.getElementById('acct-condition').textContent=acc.condition||'—';
   document.getElementById('acct-joined').textContent=acc.joined||'—';
+  if(acc.photo)applyAvatar(acc.photo);
 
   const u=loadU();
   document.getElementById('dash-greet-h').textContent=u.streak>0?u.streak+'-Day Streak':'Your Streak';

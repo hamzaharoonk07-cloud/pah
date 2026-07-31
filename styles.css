@@ -108,6 +108,38 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 .theme-tgl:hover{background:var(--w08);border-color:var(--w12);transform:scale(1.1) rotate(-8deg)}
 .theme-tgl:active{transform:scale(.9)}
 .theme-tgl svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+/* ACCOUNT DROPDOWN — the navbar's account icon becomes a popover showing
+   avatar/name/email and quick links, instead of a plain link straight to
+   account.html. Shared by every page that has the icon (exercises.html,
+   hospitals.html, research.html); account.html/about.html don't show it
+   (you're either already there or it never had the icon). */
+.acct-dd{position:relative}
+.acct-dd-trigger{overflow:hidden}
+.acct-dd-panel{
+  position:absolute;top:calc(100% + 10px);right:0;z-index:600;
+  width:250px;background:var(--card1);border:1px solid var(--w10);border-radius:16px;
+  box-shadow:0 20px 50px var(--shadow-color);padding:16px;
+  opacity:0;transform:translateY(-8px) scale(.97);pointer-events:none;
+  transition:opacity .2s ease,transform .2s cubic-bezier(.2,.8,.2,1);
+  transform-origin:top right;
+}
+.acct-dd-panel.open{opacity:1;transform:none;pointer-events:auto}
+.acct-dd-head{display:flex;align-items:center;gap:12px;padding-bottom:14px;margin-bottom:8px;border-bottom:1px solid var(--w06)}
+.acct-dd-avatar-lg{width:44px;height:44px;border-radius:50%;background:var(--w06);border:1px solid var(--w09);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;color:var(--muted)}
+.acct-dd-avatar-img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.acct-dd-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.9rem;color:var(--heading);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.acct-dd-email{font-size:.68rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;margin-top:2px}
+.acct-dd-lks{display:flex;flex-direction:column;gap:2px}
+.acct-dd-lks a,.acct-dd-lks button{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;
+  color:var(--text);font-size:.8rem;font-weight:600;background:none;border:none;
+  width:100%;text-align:left;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;
+}
+.acct-dd-lks a:hover,.acct-dd-lks button:hover{background:var(--w06)}
+.acct-dd-lks svg{width:15px;height:15px;stroke:var(--muted);flex-shrink:0}
+.acct-dd-lks .acct-dd-logout{color:var(--brand)}
+.acct-dd-lks .acct-dd-logout svg{stroke:var(--brand)}
+@media(max-width:540px){.acct-dd-panel{width:220px;right:-10px}}
 .ham{display:none;flex-direction:column;gap:4px;padding:5px;cursor:pointer}
 .ham span{display:block;width:20px;height:2px;background:var(--heading);border-radius:1px;transition:.3s}
 .mob-menu{

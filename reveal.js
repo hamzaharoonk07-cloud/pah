@@ -85,6 +85,42 @@ function countUp(el,end,opts){
 // reduced-motion, since a plain CSS media query handles that directly.
 
 // ═══════════════════════════════════════════════════════════
+// ACCOUNT DROPDOWN — shared navbar avatar/name/email popover + logout.
+// A page calls renderAcctDropdown(acc) once it has the pah_acc object (same
+// place it already populates nav-greet/nav-streak) — this only touches
+// elements that exist, so pages without the dropdown markup are unaffected.
+// ═══════════════════════════════════════════════════════════
+function renderAcctDropdown(acc){
+  const trigger=document.getElementById('acct-dd-trigger');
+  if(!trigger||!acc)return;
+  const nameEl=document.getElementById('acct-dd-name');
+  const emailEl=document.getElementById('acct-dd-email');
+  if(nameEl)nameEl.textContent=acc.name||'—';
+  if(emailEl)emailEl.textContent=acc.email||'No email on file';
+  if(acc.photo){
+    document.querySelectorAll('.acct-dd-avatar-img').forEach(img=>{img.src=acc.photo;img.style.display='block';});
+    document.querySelectorAll('.acct-dd-default-ic').forEach(ic=>{ic.style.display='none';});
+  }
+}
+function toggleAcctDropdown(e){
+  if(e)e.stopPropagation();
+  const panel=document.getElementById('acct-dd-panel');
+  if(panel)panel.classList.toggle('open');
+}
+document.addEventListener('click',(e)=>{
+  const dd=document.getElementById('acct-dd');
+  const panel=document.getElementById('acct-dd-panel');
+  if(dd&&panel&&panel.classList.contains('open')&&!dd.contains(e.target))panel.classList.remove('open');
+});
+// account.html defines its own logoutUser() (identical behavior) since it's
+// the one page that already needed it before this dropdown existed — that
+// later declaration simply wins there, no conflict.
+function logoutUser(){
+  localStorage.removeItem('pah_acc');
+  location.href='exercises.html';
+}
+
+// ═══════════════════════════════════════════════════════════
 // SERVICE WORKER — registers sw.js (shared here since reveal.js is already
 // loaded on every page) so the app installs and its own pages/assets keep
 // working offline after a first visit. See sw.js for what genuinely can't be
