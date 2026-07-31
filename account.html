@@ -721,7 +721,12 @@ function renderTrend(){
   }
   const prev=sel.value;
   const names=[...new Set(u.recent.map(r=>r.name))];
-  sel.innerHTML=`<option value="__all">${ur?'تمام ورزشیں':'All Exercises'}</option>`+names.map(n=>`<option value="${n}">${n}</option>`).join('');
+  // Filter value stays the stored English name (that's what r.name===filter
+  // below matches against) — only the visible label switches language.
+  const nameToUr={};
+  u.recent.forEach(r=>{if(r.nameUr&&!nameToUr[r.name])nameToUr[r.name]=r.nameUr;});
+  sel.innerHTML=`<option value="__all">${ur?'تمام ورزشیں':'All Exercises'}</option>`+
+    names.map(n=>`<option value="${n}">${(ur&&nameToUr[n])?nameToUr[n]:n}</option>`).join('');
   sel.value=(prev&&(prev==='__all'||names.includes(prev)))?prev:'__all';
   const filter=sel.value;
   const rows=(filter==='__all'?u.recent:u.recent.filter(r=>r.name===filter)).slice(0,20).slice().reverse(); // chronological, oldest first
@@ -855,7 +860,7 @@ function showDayDetail(dk){
     <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
       ${sessions.map(r=>`
         <div class="recent-row" onclick="document.getElementById('session-detail-popup').remove();showSessionDetail(${u.recent.indexOf(r)})">
-          <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.area||''}</div></div>
+          <div><div class="recent-name">${(ur&&r.nameUr)?r.nameUr:r.name}</div><div class="recent-date">${(ur&&r.areaUr)?r.areaUr:(r.area||'')}</div></div>
           <div><div class="recent-reps">${r.reps} ${ur?'دہرائیاں':'reps'}</div><div class="recent-form">${r.form}% ${ur?'فارم':'form'}</div></div>
         </div>`).join('')}
     </div>`
@@ -891,7 +896,7 @@ function renderRecent(){
   }
   rl.innerHTML=u.recent.slice(0,8).map((r,i)=>`
     <div class="recent-row" onclick="showSessionDetail(${i})">
-      <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.date}</div></div>
+      <div><div class="recent-name">${(currentLang==='ur'&&r.nameUr)?r.nameUr:r.name}</div><div class="recent-date">${r.date}</div></div>
       <div><div class="recent-reps">${r.reps} ${currentLang==='ur'?'دہرائیاں':'reps'}</div><div class="recent-form">${r.form}% ${currentLang==='ur'?'فارم':'form'}</div></div>
     </div>`).join('');
 }
@@ -913,7 +918,7 @@ function showSessionDetail(idx){
     ?(()=>{const dt=new Date(r.timestamp);return dt.toLocaleDateString(ur?'ur':'en-GB',{weekday:'long'})+', '+fmtDMY(dt)+', '+dt.toLocaleTimeString(ur?'ur':'en-GB',{hour:'2-digit',minute:'2-digit'});})()
     :r.date;
   const durStr=r.durationSec!=null?(r.durationSec>=60?Math.floor(r.durationSec/60)+(ur?'م ':'m ')+(r.durationSec%60)+(ur?'س':'s'):r.durationSec+(ur?'س':'s')):(ur?'ریکارڈ نہیں':'Not recorded');
-  const areaStr=r.area||(ur?'ریکارڈ نہیں':'Not recorded');
+  const areaStr=(ur&&r.areaUr)?r.areaUr:(r.area||(ur?'ریکارڈ نہیں':'Not recorded'));
   const isLegacy=r.timestamp===undefined; // sessions saved before per-session detail tracking was added
   const repsHtml=(r.repScores&&r.repScores.length>1)?`
       <div class="sd-reps-hd">${ur?'دہرائی بہ دہرائی فارم اسکور':'Rep-by-rep form score'}</div>
@@ -929,7 +934,7 @@ function showSessionDetail(idx){
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light">
       </div>
-      <h3>${r.name}</h3>
+      <h3>${(ur&&r.nameUr)?r.nameUr:r.name}</h3>
       <p class="sd-when">${whenStr}</p>
       <div class="sd-stats">
         <div><div class="sd-val">${r.reps}${r.target?'/'+r.target:''}</div><div class="sd-lbl">${ur?'دہرائیاں':'Reps'}</div></div>
@@ -939,7 +944,7 @@ function showSessionDetail(idx){
       </div>
       ${repsHtml}
       ${r.muscles&&r.muscles.length?`<p class="sd-note"><strong>${ur?'ہدف بنائے گئے پٹھے:':'Muscles targeted:'}</strong> ${r.muscles.join(', ')}</p>`:''}
-      ${r.note?`<p class="sd-note">${r.note}</p>`:''}
+      ${r.note?`<p class="sd-note">${(ur&&r.noteUr)?r.noteUr:r.note}</p>`:''}
       ${isLegacy?`<p class="sd-note">${ur?'یہ سیشن تفصیلی ٹریکنگ شامل ہونے سے پہلے ریکارڈ ہوا تھا، اس لیے دورانیہ اور مرکوز حصہ ریکارڈ نہیں ہوئے۔':"This session was logged before detailed tracking was added, so duration and focus area weren't captured."}</p>`:''}
       <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">${ur?'بند کریں':'Close'}</button>
     </div>`;

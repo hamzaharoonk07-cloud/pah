@@ -940,29 +940,29 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     <div class="s-pre-grid">
       <div class="demo-panel">
         <div class="demo-panel-hd">
-          <span class="demo-panel-lbl"><span class="demo-dot-live"></span>Movement Preview</span>
+          <span class="demo-panel-lbl"><span class="demo-dot-live"></span><span data-ur="حرکت کا پیش منظر">Movement Preview</span></span>
           <button class="demo-replay-btn" onclick="replayDemo()" title="Replay preview" aria-label="Replay preview">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
           </button>
         </div>
         <canvas id="demo-canvas" width="420" height="420"></canvas>
-        <div class="demo-caption" id="demo-caption">Loading preview…</div>
+        <div class="demo-caption" id="demo-caption" data-ur="پیش منظر لوڈ ہو رہا ہے…">Loading preview…</div>
         <div class="demo-dots" id="demo-dots"></div>
       </div>
       <div class="s-pre-info">
         <div class="s-pre-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
         </div>
-        <h2 id="s-pre-h">Ready to Track?</h2>
+        <h2 id="s-pre-h" data-ur="ٹریک کرنے کے لیے تیار ہیں؟">Ready to Track?</h2>
         <div class="s-pre-meta" id="s-pre-meta"></div>
         <div class="ex-warn" id="s-pre-warn" style="display:none;text-align:left;max-width:360px">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <span id="s-pre-warn-txt"></span>
         </div>
-        <p>Your camera feed stays on your device. PhysioSync's tracking runs locally — nothing is uploaded.</p>
+        <p data-ur="آپ کا کیمرہ فیڈ آپ کی ڈیوائس پر ہی رہتا ہے۔ PhysioSync کی ٹریکنگ مقامی طور پر چلتی ہے — کچھ بھی اپ لوڈ نہیں ہوتا۔">Your camera feed stays on your device. PhysioSync's tracking runs locally — nothing is uploaded.</p>
         <button class="s-cam-btn" onclick="startCamera()">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
-          Activate Camera and Begin
+          <span data-ur="کیمرہ فعال کریں اور شروع کریں">Activate Camera and Begin</span>
         </button>
       </div>
     </div>
@@ -972,15 +972,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="demo-overlay" id="demo-overlay">
     <div class="demo-overlay-card">
       <div class="demo-panel-hd">
-        <span class="demo-panel-lbl"><span class="demo-dot-live"></span>Movement Preview</span>
+        <span class="demo-panel-lbl"><span class="demo-dot-live"></span><span data-ur="حرکت کا پیش منظر">Movement Preview</span></span>
         <button class="demo-replay-btn" onclick="replayDemo()" title="Replay preview" aria-label="Replay preview">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
         </button>
       </div>
       <canvas id="demo-canvas-live" width="320" height="320"></canvas>
-      <div class="demo-caption" id="demo-caption-live">Loading preview…</div>
+      <div class="demo-caption" id="demo-caption-live" data-ur="پیش منظر لوڈ ہو رہا ہے…">Loading preview…</div>
       <div class="demo-dots" id="demo-dots-live"></div>
-      <button class="demo-overlay-close" onclick="closeDemoOverlay()">Continue Session</button>
+      <button class="demo-overlay-close" onclick="closeDemoOverlay()" data-ur="سیشن جاری رکھیں">Continue Session</button>
     </div>
   </div>
 
@@ -1222,28 +1222,47 @@ function lerpPoseObjs(a,b,t){
 }
 function easeInOutSine(x){return -(Math.cos(Math.PI*Math.max(0,Math.min(1,x)))-1)/2;}
 
+// stepsUr parallels steps 1:1 for the movement-preview caption — previously
+// this caption stayed English even in Urdu mode, unlike everything else in
+// the session view.
 const DEMO_DEFS={
-  neck_tilt:{kind:'hold',peak:{head:{x:.28,y:.155},neck:{x:.44,y:.205},leftShoulder:{y:.235}},steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold 3 seconds'],highlight:['head','neck']},
+  neck_tilt:{kind:'hold',peak:{head:{x:.28,y:.155},neck:{x:.44,y:.205},leftShoulder:{y:.235}},
+    steps:['Stand tall, chin level, shoulders relaxed','Tilt ear toward shoulder — hold 3 seconds'],
+    stepsUr:['سیدھے کھڑے ہوں، ٹھوڑی سیدھی، کندھے ڈھیلے','کان کو کندھے کی طرف جھکائیں — 3 سیکنڈ تک رکھیں'],
+    highlight:['head','neck']},
   mckenzie:{kind:'hold',base:{leftWrist:{x:.44,y:.56},rightWrist:{x:.56,y:.56},leftElbow:{x:.40,y:.46},rightElbow:{x:.60,y:.46}},
     peak:{neck:{x:.5,y:.175},head:{x:.5,y:.075},leftShoulder:{x:.35,y:.195},rightShoulder:{x:.65,y:.195},pelvis:{y:.53}},
-    steps:['Hands on lower back, stand tall','Arch backward gently — hold 3 seconds'],highlight:['neck','pelvis']},
+    steps:['Hands on lower back, stand tall','Arch backward gently — hold 3 seconds'],
+    stepsUr:['ہاتھ کمر کے نچلے حصے پر، سیدھے کھڑے ہوں','آہستگی سے پیچھے کی طرف جھکیں — 3 سیکنڈ تک رکھیں'],
+    highlight:['neck','pelvis']},
   knee_chest:{kind:'hold',peak:{rightKnee:{x:.52,y:.46},rightAnkle:{x:.50,y:.40},rightFoot:{x:.49,y:.42}},
-    steps:['Stand tall','Pull one knee up toward your chest — hold 3 seconds'],highlight:['rightHip','rightKnee']},
+    steps:['Stand tall','Pull one knee up toward your chest — hold 3 seconds'],
+    stepsUr:['سیدھے کھڑے ہوں','ایک گھٹنا اپنے سینے کی طرف کھینچیں — 3 سیکنڈ تک رکھیں'],
+    highlight:['rightHip','rightKnee']},
   side_bend:{kind:'hold',peak:{neck:{x:.42,y:.225},head:{x:.36,y:.145},leftShoulder:{x:.35,y:.245},rightShoulder:{x:.58,y:.20},
       leftElbow:{x:.30,y:.42},leftWrist:{x:.27,y:.60}},
-    steps:['Stand tall, feet hip-width apart','Slide one hand down your leg, bend sideways — hold'],highlight:['neck','leftShoulder']},
+    steps:['Stand tall, feet hip-width apart','Slide one hand down your leg, bend sideways — hold'],
+    stepsUr:['سیدھے کھڑے ہوں، پیر کندھوں جتنے فاصلے پر','ایک ہاتھ ٹانگ پر نیچے سرکائیں، سائیڈ کی طرف جھکیں — رکیں'],
+    highlight:['neck','leftShoulder']},
   bilateral_raise:{kind:'hold',peak:{leftElbow:{x:.37,y:.10},leftWrist:{x:.40,y:.02},rightElbow:{x:.63,y:.10},rightWrist:{x:.60,y:.02}},
-    steps:['Arms relaxed at your sides','Raise both arms fully overhead together — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
+    steps:['Arms relaxed at your sides','Raise both arms fully overhead together — hold 2 seconds'],
+    stepsUr:['بازو پہلوؤں میں ڈھیلے','دونوں بازو مکمل طور پر سر کے اوپر اٹھائیں — 2 سیکنڈ تک رکھیں'],
+    highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
   mini_squat:{kind:'hold',peak:{pelvis:{y:.66},leftHip:{y:.67},rightHip:{y:.67},
       leftKnee:{x:.37,y:.80},rightKnee:{x:.63,y:.80},leftAnkle:{y:.93},rightAnkle:{y:.93}},
-    steps:['Stand tall, feet shoulder-width apart','Bend both knees into a shallow squat — pause, then stand'],highlight:['leftKnee','rightKnee']},
+    steps:['Stand tall, feet shoulder-width apart','Bend both knees into a shallow squat — pause, then stand'],
+    stepsUr:['سیدھے کھڑے ہوں، پیر کندھوں جتنے فاصلے پر','دونوں گھٹنے ہلکا سا موڑ کر بیٹھیں — رکیں، پھر کھڑے ہوں'],
+    highlight:['leftKnee','rightKnee']},
   lateral_raise:{kind:'hold',peak:{leftElbow:{x:.20,y:.22},leftWrist:{x:.10,y:.22},rightElbow:{x:.80,y:.22},rightWrist:{x:.90,y:.22}},
-    steps:['Arms relaxed at your sides','Raise both arms out to the sides to shoulder height — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
+    steps:['Arms relaxed at your sides','Raise both arms out to the sides to shoulder height — hold 2 seconds'],
+    stepsUr:['بازو پہلوؤں میں ڈھیلے','دونوں بازو سائیڈ کی طرف کندھے کی اونچائی تک اٹھائیں — 2 سیکنڈ تک رکھیں'],
+    highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
   shoulder_shrug:{kind:'hold',
     peak:{leftShoulder:{y:.185},rightShoulder:{y:.185},leftElbow:{y:.345},rightElbow:{y:.345},leftWrist:{y:.495},rightWrist:{y:.495}},
     steps:['Relax both arms at your sides','Lift both shoulders straight up toward your ears — hold 2 seconds'],
+    stepsUr:['دونوں بازو پہلوؤں میں ڈھیلے چھوڑیں','دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں — 2 سیکنڈ تک رکھیں'],
     highlight:['leftShoulder','rightShoulder','neck']},
-  _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],highlight:[]}
+  _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],stepsUr:['شروع کرنے کے لیے آن اسکرین ہدایات پر عمل کریں'],highlight:[]}
 };
 
 let demoState=null;
@@ -1329,7 +1348,8 @@ function drawDemoPose(ctx,W,H,pose,highlightSet,isStatic){
 }
 
 function updateDemoUI(def,stepIdx){
-  const capTxt=(def.steps&&def.steps[stepIdx])||(def.steps?def.steps[0]:'');
+  const steps=(currentLang==='ur'&&def.stepsUr)?def.stepsUr:def.steps;
+  const capTxt=(steps&&steps[stepIdx])||(steps?steps[0]:'');
   ['demo-caption','demo-caption-live'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=capTxt;});
   const n=(def.steps||['']).length;
   const dotsHtml=Array.from({length:n}).map((_,i)=>`<span class="${i===stepIdx?'on':''}"></span>`).join('');
@@ -1438,6 +1458,7 @@ const UR_MAP={
   'Release now.':'اب چھوڑ دیں۔',
   // Camera error messages (handleCameraError -> showCamError -> setFB)
   'Unable to start camera.':'کیمرہ شروع نہیں ہو سکا۔',
+  'Camera Access Issue':'کیمرے تک رسائی کا مسئلہ',
   'Unknown camera error. Please refresh and try again.':'نامعلوم کیمرہ خرابی۔ براہ کرم صفحہ ریفریش کر کے دوبارہ کوشش کریں۔',
   'Camera permission denied. Tap "Allow" when prompted, or check browser settings.':'کیمرے کی اجازت نہیں دی گئی۔ پوچھے جانے پر "Allow" پر ٹیپ کریں، یا براؤزر کی سیٹنگز چیک کریں۔',
   'No camera found. Please connect a camera device.':'کوئی کیمرہ نہیں ملا۔ براہ کرم کیمرہ ڈیوائس منسلک کریں۔',
@@ -2502,12 +2523,12 @@ function openSession(idx){
   const sessExUr=currentLang==='ur'?EX_UR[sessEx.det]:null;
   document.getElementById('sh-name').textContent=sessExUr?sessExUr.name:sessEx.name;
   document.getElementById('sh-area').textContent=sessExUr?sessExUr.area:sessEx.area;
-  document.getElementById('s-pre-h').textContent='Ready: '+sessEx.name;
+  document.getElementById('s-pre-h').textContent=(currentLang==='ur'?'تیار: ':'Ready: ')+(sessExUr?sessExUr.name:sessEx.name);
   document.getElementById('s-pre-meta').innerHTML=
-    `<span style="color:${DC[sessEx.diff]};border-color:${DC[sessEx.diff]}40">${sessEx.diff}</span>`+
-    `<span>${sessEx.area}</span><span>${sessEx.reps} reps target</span>`;
+    `<span style="color:${DC[sessEx.diff]};border-color:${DC[sessEx.diff]}40">${T(sessEx.diff)}</span>`+
+    `<span>${sessExUr?sessExUr.area:sessEx.area}</span><span>${sessEx.reps} ${currentLang==='ur'?'دہرائیوں کا ہدف':'reps target'}</span>`;
   const preWarn=document.getElementById('s-pre-warn');
-  if(sessEx.warn){preWarn.style.display='flex';document.getElementById('s-pre-warn-txt').textContent=sessEx.warn;}
+  if(sessEx.warn){preWarn.style.display='flex';document.getElementById('s-pre-warn-txt').textContent=(sessExUr&&sessExUr.warn)?sessExUr.warn:sessEx.warn;}
   else preWarn.style.display='none';
   const preEl=document.getElementById('s-pre');
   preEl.classList.remove('exiting');
@@ -2553,9 +2574,15 @@ function endSession(){
     u.streak++;
     const durationSec=sessStartAt?Math.round((Date.now()-sessStartAt)/1000):null;
     u.recent=u.recent||[];
+    // Stores BOTH languages regardless of which one this session was run in —
+    // account.html reads whichever matches its OWN currentLang at render
+    // time, so history displays correctly even if the language was switched
+    // after the session was saved.
+    const exUr=EX_UR[sessEx.det];
     u.recent.unshift({
       id:Date.now()+'-'+Math.random().toString(36).slice(2,7),
       name:sessEx.name,area:sessEx.area,muscles:sessEx.muscles,note:sessEx.note,
+      nameUr:exUr?exUr.name:null,areaUr:exUr?exUr.area:null,noteUr:exUr?exUr.note:null,
       reps:sessReps,target:sessEx.reps,form:avgF,durationSec,
       repScores:formScores.slice(), // per-rep quality, for the dashboard's rep-by-rep breakdown
       timestamp:now.toISOString(),
@@ -2786,11 +2813,12 @@ function showCamError(title,msg){
   const preEl=document.getElementById('s-pre');
   preEl.classList.remove('exiting');
   preEl.style.display='flex';
-  document.getElementById('s-pre-h').textContent=title;
+  document.getElementById('s-pre-h').textContent=T(title);
   const p=document.getElementById('s-pre').querySelector('p');
-  p.innerHTML=msg+' <a href="#" onclick="showCameraDiagnostics();return false;" style="color:var(--brand);text-decoration:underline;">View Diagnostics</a>';
+  const diagLabel=currentLang==='ur'?'تشخیص دیکھیں':'View Diagnostics';
+  p.innerHTML=T(msg)+' <a href="#" onclick="showCameraDiagnostics();return false;" style="color:var(--brand);text-decoration:underline;">'+diagLabel+'</a>';
   setFB(msg,'warn');
-  toast(msg,5000);
+  toast(T(msg),5000);
 }
 
 function handleCameraError(err){
