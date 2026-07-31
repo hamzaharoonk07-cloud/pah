@@ -87,6 +87,7 @@ body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
 .acct-avatar svg{width:26px;height:26px}
 .acct-avatar-btn{padding:8px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w04);color:var(--heading);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;transition:all .2s}
 .acct-avatar-btn:hover{background:var(--w08);border-color:var(--w12)}
+.acct-voice-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--w06);flex-wrap:wrap}
 .acct-avatar-btn-remove{color:var(--brand);border-color:rgba(225,29,72,.3);background:rgba(225,29,72,.06)}
 .acct-avatar-btn-remove:hover{background:rgba(225,29,72,.14);border-color:rgba(225,29,72,.45)}
 .acct-avatar-hint{font-size:.66rem;color:var(--muted);margin-top:7px}
@@ -377,6 +378,13 @@ body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
         <div><span data-ur="مسئلہ">Condition</span><strong id="acct-condition">—</strong></div>
         <div><span data-ur="ممبر بننے کی تاریخ">Member Since</span><strong id="acct-joined">—</strong></div>
       </div>
+      <div class="acct-voice-row">
+        <div>
+          <span data-ur="اے آئی کوچ کی آواز" style="display:block;font-weight:700;color:var(--heading);font-size:.8rem;margin-bottom:2px">AI Coach Voice</span>
+          <span class="acct-avatar-hint" data-ur="سیشن کے دوران بولی جانے والی رہنمائی کے لیے آواز منتخب کریں۔" style="margin:0">Pick the voice used for spoken coaching during sessions.</span>
+        </div>
+        <select class="trend-select" id="acct-voice-select" onchange="setCoachVoice(this.value)" aria-label="AI coach voice" title="Choose voice" style="max-width:180px"></select>
+      </div>
     </div>
 
     <div class="acct-cta">
@@ -629,6 +637,28 @@ function removePhoto(){
   applyAvatar(null);
   document.getElementById('acct-photo-input').value='';
   document.getElementById('acct-photo-msg').textContent='Photo removed.';
+}
+
+// ── AI COACH VOICE — same speechSynthesis voice list + 'pah_voice_uri'
+// localStorage key that exercises.html's VoiceCoach reads, so a choice made
+// here takes effect in the next live session without exercises.html needing
+// its own selector (per user: "the variants should be 2 or more in accounts
+// not in exercise").
+function syncVoiceSelect(){
+  const sel=document.getElementById('acct-voice-select');
+  if(!sel)return;
+  const voices=speechSynthesis.getVoices();
+  const chosen=localStorage.getItem('pah_voice_uri')||'';
+  sel.innerHTML='<option value="">Auto (match language)</option>'+
+    voices.map(v=>`<option value="${v.voiceURI}"${v.voiceURI===chosen?' selected':''}>${v.name} (${v.lang})</option>`).join('');
+}
+function setCoachVoice(uri){
+  if(uri)localStorage.setItem('pah_voice_uri',uri);
+  else localStorage.removeItem('pah_voice_uri');
+}
+if(typeof speechSynthesis!=='undefined'){
+  syncVoiceSelect();
+  speechSynthesis.onvoiceschanged=syncVoiceSelect;
 }
 
 // countUp is shared in reveal.js (previously duplicated).
