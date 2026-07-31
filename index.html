@@ -325,7 +325,7 @@ body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-heigh
         <div class="gate-field"><label data-ur="ای میل">Email</label><input id="gate-email" type="email" placeholder="you@example.com"></div>
       </div>
       <div class="gate-row">
-        <div class="gate-field"><label data-ur="عمر">Age</label><input id="gate-age" type="number" placeholder="Age" data-ur-ph="عمر"></div>
+        <div class="gate-field"><label data-ur="عمر">Age</label><input id="gate-age" type="number" min="17" max="50" placeholder="17-50" data-ur-ph="عمر" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
         <div class="gate-field"><label data-ur="وزن (کلوگرام)">Weight (kg)</label><input id="gate-weight" type="number" placeholder="Weight" data-ur-ph="وزن"></div>
       </div>
       <div class="gate-row" style="grid-template-columns:1fr">
@@ -374,6 +374,12 @@ body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-heigh
       error.style.display = 'block';
       return false;
     }
+    if(Number(age)<17||Number(age)>50){
+      error.textContent='Age must be between 17 and 50.';
+      error.style.display = 'block';
+      return false;
+    }
+    error.style.display = 'none';
     const __d=new Date();
     const joined=String(__d.getDate()).padStart(2,'0')+'/'+String(__d.getMonth()+1).padStart(2,'0')+'/'+__d.getFullYear();
     const acc={name, email, gender, age, weight, height, joined};

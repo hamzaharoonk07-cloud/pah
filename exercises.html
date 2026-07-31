@@ -713,7 +713,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <div class="fl"><label for="g-email" data-ur="ای میل">Email</label><input id="g-email" type="email" required placeholder="you@example.com" autocomplete="email"></div>
       </div>
       <div class="frow">
-        <div class="fl"><label for="g-age" data-ur="عمر (سال)">Age (years)</label><input id="g-age" type="number" required min="5" max="120" placeholder="e.g. 30" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+        <div class="fl"><label for="g-age" data-ur="عمر (سال)">Age (years)</label><input id="g-age" type="number" required min="17" max="50" placeholder="17-50" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
         <div class="fl"><label for="g-weight" data-ur="وزن (کلوگرام)">Weight (kg)</label><input id="g-weight" type="number" required min="10" max="300" placeholder="e.g. 70" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       </div>
       <div class="frow1">
@@ -1668,6 +1668,9 @@ function gateSubmit(e){
   }
   if(!/^[0-9]+$/.test(age)||!/^[0-9]+$/.test(weight)||!/^[0-9]+$/.test(height)){
     errEl.textContent='Age, weight, and height can only contain numbers.';errEl.style.display='block';return;
+  }
+  if(Number(age)<17||Number(age)>50){
+    errEl.textContent='Age must be between 17 and 50.';errEl.style.display='block';return;
   }
   errEl.style.display='none';
   const acc={name,email,gender,age,weight,height,condition,joined:fmtDMY(new Date())};
