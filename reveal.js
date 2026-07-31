@@ -97,8 +97,14 @@ function renderAcctDropdown(acc){
   const emailEl=document.getElementById('acct-dd-email');
   if(nameEl)nameEl.textContent=acc.name||'—';
   if(emailEl)emailEl.textContent=acc.email||'No email on file';
+  const letter=(acc.name||'').trim().charAt(0).toUpperCase();
   if(acc.photo){
     document.querySelectorAll('.acct-dd-avatar-img').forEach(img=>{img.src=acc.photo;img.style.display='block';});
+    document.querySelectorAll('.acct-dd-avatar-letter').forEach(l=>{l.style.display='none';});
+    document.querySelectorAll('.acct-dd-default-ic').forEach(ic=>{ic.style.display='none';});
+  }else if(letter){
+    document.querySelectorAll('.acct-dd-avatar-img').forEach(img=>{img.style.display='none';});
+    document.querySelectorAll('.acct-dd-avatar-letter').forEach(l=>{l.textContent=letter;l.style.display='flex';});
     document.querySelectorAll('.acct-dd-default-ic').forEach(ic=>{ic.style.display='none';});
   }
 }
