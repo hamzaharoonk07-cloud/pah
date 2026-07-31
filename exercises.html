@@ -1895,7 +1895,25 @@ const AIChat={
   busy:false,
   retryCount:0,
   maxRetries:2,
+  askedLang:false,
+  pendingMsg:null,
+  chooseLang(lang){
+    if(currentLang!==lang)toggleLang(); // updates the whole site, not just chat
+    this.askedLang=true;
+    const msg=this.pendingMsg;
+    this.pendingMsg=null;
+    if(msg)this.send(msg);
+  },
 
+  // Detects Urdu written either in Urdu script or Roman/Latin transliteration
+  // ("ghutna dukh raha hai") — the local keyword matching below is English-
+  // only, so a message in either form would otherwise be misread as
+  // off-topic. Rather than guess a reply, ask which language to continue in.
+  looksUrdu(msg){
+    if(/[؀-ۿ]/.test(msg))return true;
+    const romanUrduWords=/\b(hai|hain|raha|rahi|rahe|mera|meri|mere|mujhe|mujh|dard|dukh|dukhta|dukhti|ghutna|ghutne|kamar|kandha|kandhe|gardan|takleef|masla|museebat|takna|takni|bazu|haath|paon|pair|takleef|acha|theek|nahi|nahin|kya|kaisay|kaise|karo|karna|hafta|mahina|hafton|dinon|salon|zyada|thoda|chalo|shuru|bilkul)\b/i;
+    return romanUrduWords.test(msg);
+  },
   isPhysioRelated(msg){
     const greeting=/^(hi|hello|hey|hiya|yo|thanks|thank you|ok|okay|sure|yes|no)[.!?]*$/i;
     // A body-part/pain word alone isn't enough — "my cat has back pain" matches
@@ -1947,6 +1965,15 @@ const AIChat={
     if(!msg||this.busy)return;
     inp.value='';
     this.addMsg('user',msg);
+    // Roman Urdu ("ghutna dard ho raha hai") or Urdu-script input isn't
+    // recognized by the English-only keyword matching below — ask which
+    // language to continue in rather than misreading it as off-topic.
+    if(!this.askedLang&&this.looksUrdu(msg)){
+      this.askedLang=true;
+      this.pendingMsg=msg;
+      this.addMsg('bot','Would you like to continue in English or Urdu?<br>کیا آپ انگریزی میں جاری رکھنا چاہیں گے یا اردو میں؟<div style="display:flex;gap:6px;margin-top:8px"><span class="qchip" onclick="AIChat.chooseLang(\'en\')">English</span><span class="qchip" onclick="AIChat.chooseLang(\'ur\')">اردو</span></div>');
+      return;
+    }
     if(this.isSiteHelpRelated(msg)){
       this.addMsg('bot',T(this.siteHelpReply(msg)));
       return;
@@ -1993,7 +2020,7 @@ const AIChat={
         body:JSON.stringify({
           model:PAH_CONFIG.ANTHROPIC_MODEL,
           max_tokens:180,
-          system:this.hist[0].content+(currentLang==='ur'?' Respond in Urdu (اردو script), regardless of what language the user writes in.':''),
+          system:this.hist[0].content+(currentLang==='ur'?' Respond in Urdu (اردو script), regardless of what language the user writes in.':' Match the language and script the user is writing in for this specific message (English, Urdu script, or Roman Urdu) even though the site\'s default language is English.'),
           messages:this.hist.slice(1)
         }),
         signal:ctrl.signal
