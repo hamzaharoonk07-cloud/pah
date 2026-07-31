@@ -3496,6 +3496,11 @@ const HOLD_CFG={
     // Flipped to increase-with-engagement (baseline minus current, not the
     // raw ratio) so this follows the same "value>lo" pattern every other
     // increasing-metric exercise here already uses.
+    // Ears (7/8) are small and read lower MediaPipe confidence than big
+    // joints even when genuinely visible — often partly covered by hair —
+    // same reasoning as the toe/fingertip fixes elsewhere in this file.
+    // Without this the whole exercise flipped to "Lost" almost constantly.
+    minVis:0.2,
     compute(lm){
       const raw=smoothAngle(shrugGap(lm));
       const rel=neutralBaseline==null?0:neutralBaseline-raw;
