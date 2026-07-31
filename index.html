@@ -72,7 +72,12 @@ body.lang-ur .jf-title{font-size:clamp(1.8rem,4.6vw,3.6rem)!important;line-heigh
 
 .jf-overlay-grad{
   position:absolute;inset:0;z-index:2;pointer-events:none;
-  background:linear-gradient(180deg,rgba(15,23,42,.1) 0%,rgba(15,23,42,0) 35%,rgba(15,23,42,.85) 100%);
+  /* Guarantees contrast for the always-white jf-title/jf-desc text regardless
+     of theme or exactly how tall that text block is (varies by language) —
+     previously near-transparent from 0-35%, so a shorter/differently-
+     positioned heading (e.g. Urdu's different line-height) could end up
+     against an almost-unfiltered light background in light mode. */
+  background:linear-gradient(180deg,rgba(15,23,42,.35) 0%,rgba(15,23,42,.3) 40%,rgba(15,23,42,.9) 100%);
 }
 
 .jf-dot{
@@ -111,10 +116,13 @@ body.lang-ur .jf-title{font-size:clamp(1.8rem,4.6vw,3.6rem)!important;line-heigh
 }
 @media(max-width:768px){.jf-overlay{padding:28px 24px;text-align:left;width:100%}}
 
-.jf-tag{display:inline-block;font-weight:700;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+.jf-tag{display:inline-block;font-weight:700;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brand);margin-bottom:10px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
 /* jf-overlay-grad keeps a fixed dark gradient behind this text regardless of
    site theme, so it stays fixed light — using the theme's heading/muted
-   colors here would turn it dark-on-dark against that gradient. */
+   colors here would turn it dark-on-dark against that gradient. The
+   text-shadow is a second, position-independent layer of contrast on top of
+   that gradient (belt-and-suspenders, since the gradient's darkest band is
+   fixed but this text block's height/position varies by language). */
 .jf-title{
   font-size:clamp(2.4rem,6vw,5rem);font-weight:900;line-height:1;margin-bottom:14px;letter-spacing:-.02em;text-transform:uppercase;
   color:#fff;
@@ -122,12 +130,13 @@ body.lang-ur .jf-title{font-size:clamp(1.8rem,4.6vw,3.6rem)!important;line-heigh
   background-size:300% 100%;background-position:100% 0;
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   animation:jfTitleShimmer 6s ease-in-out infinite;
+  filter:drop-shadow(0 2px 16px rgba(0,0,0,.55)) drop-shadow(0 1px 4px rgba(0,0,0,.65));
 }
 @keyframes jfTitleShimmer{0%{background-position:180% 0}50%{background-position:-80% 0}100%{background-position:180% 0}}
 @media(prefers-reduced-motion:reduce){
   .jf-title{animation:none;background:none;-webkit-text-fill-color:#fff;color:#fff}
 }
-.jf-desc{color:#cbd5e1;font-size:1rem;line-height:1.75;margin-bottom:18px;margin-left:auto}
+.jf-desc{color:#cbd5e1;font-size:1rem;line-height:1.75;margin-bottom:18px;margin-left:auto;text-shadow:0 1px 10px rgba(0,0,0,.55)}
 @media(max-width:768px){.jf-desc{margin-left:0}}
 .jf-conditions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;justify-content:flex-end}
 @media(max-width:768px){.jf-conditions{justify-content:flex-start}}
