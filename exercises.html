@@ -119,12 +119,13 @@
 }
 @keyframes heroWelcomeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 .hero-welcome-av{
-  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;overflow:hidden;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
   display:flex;align-items:center;justify-content:center;
   font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.75rem;
   box-shadow:0 2px 8px rgba(225,29,72,.5);
 }
+.hero-welcome-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hero-welcome strong{color:var(--heading)}
 .search-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
 .ex-search{
@@ -778,7 +779,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       Clinical Tracking · 3D Muscle Map · 10 Exercises
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
-      <span class="hero-welcome-av" id="hero-welcome-av">P</span>
+      <span class="hero-welcome-av" id="hero-welcome-av"><img id="hero-welcome-img" alt="" style="display:none"><span id="hero-welcome-letter">P</span></span>
       <span>Good <span id="hero-time">day</span>, <strong id="hero-name">—</strong>. Ready for your session?</span>
     </div>
     <h1 class="hero-h">Your <span>Recovery</span><br>Guided by PhysioSync</h1>
@@ -1390,7 +1391,15 @@ function initApp(acc){
   document.getElementById('hero-welcome').style.display='inline-flex';
   document.getElementById('hero-time').textContent=time;
   document.getElementById('hero-name').textContent=first;
-  document.getElementById('hero-welcome-av').textContent=first.charAt(0).toUpperCase();
+  if(acc.photo){
+    document.getElementById('hero-welcome-img').src=acc.photo;
+    document.getElementById('hero-welcome-img').style.display='block';
+    document.getElementById('hero-welcome-letter').style.display='none';
+  }else{
+    document.getElementById('hero-welcome-img').style.display='none';
+    document.getElementById('hero-welcome-letter').style.display='block';
+    document.getElementById('hero-welcome-letter').textContent=first.charAt(0).toUpperCase();
+  }
   const u=loadU();
   renderNavStreak();
   renderAcctDropdown(acc);
