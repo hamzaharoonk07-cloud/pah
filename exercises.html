@@ -445,6 +445,24 @@ body.lang-ur .hero-h{line-height:1.9}
 .s-ring-lbl.counting{color:#f59e0b}
 .s-ring-lbl.done{color:#00e5a0}
 .s-ang.vis{opacity:1}
+/* Large center-screen countdown — the ring's own number (66px ring, 12px
+   text) is too small to read at typical camera distance while mid-exercise.
+   This is purely additive/supplementary to the ring, shown only while a
+   hold is actively counting down or just completed. */
+.hold-cd-big{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:40;
+  display:none;align-items:center;justify-content:center;
+  width:min(38vw,180px);height:min(38vw,180px);border-radius:50%;
+  background:rgba(0,0,0,.45);backdrop-filter:blur(4px);
+  border:4px solid #f59e0b;box-shadow:0 0 40px rgba(245,158,11,.5);
+  color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;
+  font-size:min(18vw,88px);line-height:1;pointer-events:none;
+}
+.hold-cd-big.vis{display:flex}
+.hold-cd-big.done{border-color:#00e5a0;box-shadow:0 0 40px rgba(0,229,160,.5)}
+@keyframes holdCdPulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.08)}}
+.hold-cd-big.tick{animation:holdCdPulse .35s ease-out}
+@media(prefers-reduced-motion:reduce){.hold-cd-big.tick{animation:none}}
 /* Small "Powered by PhysioSync" watermark over the live video, bottom-left —
    the one corner genuinely free at every breakpoint (top-left/top-center/
    top-right/right-middle are already the HUD, demo trigger, instruction
@@ -898,6 +916,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     </svg>
     <div class="s-ring-lbl" id="s-ring-lbl">Form</div>
   </div>
+
+  <!-- Large center-screen hold countdown — see .hold-cd-big comment -->
+  <div class="hold-cd-big" id="hold-cd-big" aria-hidden="true"></div>
 
   <!-- Angle arc -->
   <div class="s-ang" id="s-ang">
@@ -2260,7 +2281,7 @@ let holdPraised=false; // reset each time the phase changes so the countdown/pra
 // before doRep() fires), so sampling it at that moment under-reports how well
 // the hold itself was actually performed.
 let repScoreSum=0,repScoreCount=0,lastSpokenHoldSec=null;
-function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;lastSpokenHoldSec=null;goodFormSince=null;}}
+function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;lastSpokenHoldSec=null;goodFormSince=null;goodFormBadStreak=0;}}
 function phaseAge(){return performance.now()-phaseChangedAt;}
 // Separate from phaseAge(): phaseAge() starts the instant the angle merely
 // crosses into the engaged threshold, even if form is still poor right at
@@ -2280,24 +2301,58 @@ function phaseAge(){return performance.now()-phaseChangedAt;}
 // the hold countdown begins.
 let goodFormSince=null;
 const GOOD_FORM_THRESHOLD=88;
+// A single noisy frame where sessScore dips a point or two below the
+// threshold (ordinary MediaPipe jitter, not a real form break) used to wipe
+// goodFormSince instantly, restarting the countdown from the full duration —
+// every other noise-prone signal in this file (visibility, compensation,
+// the engaged/released dead zone) gets a multi-frame grace period before
+// acting, but this one didn't, and it's what made the countdown visibly
+// jump backward/reset without the user actually doing anything wrong.
+let goodFormBadStreak=0;
+const GOOD_FORM_GRACE=5; // ~150-165ms at 30fps
 
+// Short percussive beep via Web Audio — a distinct, instant audio cue
+// alongside the spoken number. Speech synthesis can lag, get cut off by a
+// competing priority message, or simply not be installed for a given
+// voice/OS combo; a plain oscillator tone always fires immediately and
+// never depends on TTS being available at all. Never throws into the
+// tracking loop if Web Audio is unavailable/blocked.
+let audioCtx=null;
+function beep(freq,durMs,vol=0.16){
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+    osc.type='sine';osc.frequency.value=freq;
+    gain.gain.value=vol;
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    const t=audioCtx.currentTime;
+    osc.start(t);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+durMs/1000);
+    osc.stop(t+durMs/1000+0.02);
+  }catch(e){/* audio unavailable — voice + visual cues still cover it */}
+}
 // Live hold countdown — a depleting ring (not a bouncing badge) shown while
 // the user is correctly holding a target position, counting down to the
 // exercise's own minHoldMs (the same gate phaseAge() already uses to decide
 // whether a rep counts). The voice coach announces every second out loud
 // (priority:true so it always interrupts and is never dropped/skipped),
-// not just a single message at the end. Purely additive UI/voice feedback —
-// never changes when a rep is actually counted, so the existing anti-flick
-// minimum-hold-time logic is untouched.
+// paired with a beep() tone and a large center-screen number — the small
+// 66px ring/12px digit alone was too easy to miss at typical camera
+// distance mid-exercise. Purely additive UI/voice feedback — never changes
+// when a rep is actually counted, so the existing anti-flick minimum-hold-
+// time logic is untouched.
 function updateHoldCountdown(goodFormStart,minHoldMs){
   const ringC=document.getElementById('ring-c');
   const ringT=document.getElementById('ring-t');
   const lbl=document.getElementById('s-ring-lbl');
+  const big=document.getElementById('hold-cd-big');
   if(goodFormStart==null){
     // Not counting down — leave the ring alone, it's already showing the
     // live score via setRing() (called every frame regardless of hold
     // state); just make sure the label has reverted back to "Form".
     if(lbl){lbl.textContent=T('Form');lbl.classList.remove('counting','done');}
+    if(big)big.classList.remove('vis','done','tick');
     lastSpokenHoldSec=null;
     return;
   }
@@ -2309,17 +2364,27 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
     const sec=Math.ceil(remaining/1000);
     ringT.textContent=sec;
     if(lbl){lbl.textContent=T('Hold');lbl.classList.add('counting');lbl.classList.remove('done');}
+    if(big){big.textContent=sec;big.classList.add('vis');big.classList.remove('done');}
     if(sec!==lastSpokenHoldSec){
       lastSpokenHoldSec=sec;
       VoiceCoach.speak(String(sec),{priority:true});
+      beep(660,90);
+      if(big){big.classList.remove('tick');void big.offsetWidth;big.classList.add('tick');}
     }
   }else{
     ringC.style.stroke='#00e5a0';
     ringC.style.strokeDashoffset=0;
     ringT.textContent='✓';
     if(lbl){lbl.textContent=T('Release');lbl.classList.add('done');lbl.classList.remove('counting');}
+    if(big){
+      big.textContent='✓';big.classList.add('vis','done');
+      // Clear after a brief confirmation window, but only if nothing newer
+      // (e.g. the next rep's countdown) has already taken over by then.
+      setTimeout(()=>{if(big.classList.contains('done'))big.classList.remove('vis','done');},900);
+    }
     if(!holdPraised){
       holdPraised=true;
+      beep(880,180);
       VoiceCoach.speak('Release now.',{priority:true});
     }
   }
@@ -3451,8 +3516,12 @@ function runHold(det,lm){
     // "good" a frame or two before the displayed/blended score catches up,
     // which let the countdown start while the user still saw a low, orange
     // number on screen.
-    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
-    else goodFormSince=null;
+    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){
+      goodFormBadStreak=0;
+      if(goodFormSince==null)goodFormSince=performance.now();
+    }else if(goodFormSince!=null&&++goodFormBadStreak>=GOOD_FORM_GRACE){
+      goodFormSince=null;
+    }
     updateHoldCountdown(goodFormSince,cfg.minHoldMs);
   }else if(cfg.isReleased(o,lo,hi)&&repPhase==='engaged'){
     updateHoldCountdown(null,cfg.minHoldMs);
@@ -3523,8 +3592,12 @@ function runBilateralRaise(lm){
     if(!idle){repScoreSum+=s;repScoreCount++;}
     if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
     // Gate on sessScore (smoothed/displayed), not raw s — see runHold for why.
-    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){if(goodFormSince==null)goodFormSince=performance.now();}
-    else goodFormSince=null;
+    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){
+      goodFormBadStreak=0;
+      if(goodFormSince==null)goodFormSince=performance.now();
+    }else if(goodFormSince!=null&&++goodFormBadStreak>=GOOD_FORM_GRACE){
+      goodFormSince=null;
+    }
     updateHoldCountdown(goodFormSince,1200);
   }else if(avg<40&&repPhase==='up'){
     updateHoldCountdown(null,1200);
