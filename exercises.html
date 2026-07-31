@@ -2215,10 +2215,15 @@ async function startCamera(){
   // it tracks the index-finger tip, a small landmark whose MediaPipe
   // confidence was already borderline at 720p (see wrist_dev's minVis
   // comment), and dropping to 480p pushed it below the visibility gate
-  // often enough to look broken. Keep full resolution for that one.
+  // often enough to look broken, so it keeps requesting 720p even on
+  // mobile. Desktop has the CPU headroom mobile doesn't, so it asks for
+  // 4K — 'ideal' (not 'exact') just gracefully falls back to whatever the
+  // webcam actually supports, this never fails outright on lesser cameras.
   const vid=document.getElementById('s-vid');
   const needsFineDetail=sessEx&&FINE_DETAIL_DETS.has(sessEx.det);
-  const idealW=(IS_MOBILE&&!needsFineDetail)?640:1280,idealH=(IS_MOBILE&&!needsFineDetail)?480:720;
+  let idealW,idealH;
+  if(IS_MOBILE){idealW=needsFineDetail?1280:640;idealH=needsFineDetail?720:480;}
+  else{idealW=3840;idealH=2160;}
   const constraints=[
     {video:{facingMode:{exact:'user'},width:{ideal:idealW},height:{ideal:idealH}},audio:false},
     {video:{facingMode:'user',width:{ideal:idealW},height:{ideal:idealH}},audio:false},
