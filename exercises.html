@@ -13,6 +13,7 @@
 <script src="reveal.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script>
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.4/dist/dotlottie-wc.js" type="module"></script>
 <style>
 /* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
    blobFloat/gradShift keyframes, .reveal base, and .footer/.f-* now live in
@@ -427,6 +428,7 @@
   transition:max-height .28s ease,opacity .2s ease;
 }
 .s-hold-bar-wrap.show{max-height:28px;opacity:1;pointer-events:auto}
+.s-hold-bar-lottie{width:26px;height:26px;flex-shrink:0;display:block}
 .s-hold-bar-track{flex:1;height:6px;border-radius:100px;background:var(--w08);overflow:hidden}
 .s-hold-bar-fill{
   height:100%;border-radius:100px;width:0%;
@@ -566,6 +568,18 @@
   border-radius:12px;padding:8px 18px;font-size:.78rem;color:#cbd5e1;text-align:center;
   max-width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
+/* Small "Powered by PhysioSync" watermark, bottom-left — sits above the
+   footer stack (see the HTML comment for why this is the one open corner
+   at every breakpoint), low-opacity so it reads as a subtle mark, not a UI
+   control. */
+.s-watermark{
+  position:absolute;left:18px;bottom:212px;z-index:9;
+  display:flex;align-items:center;gap:6px;
+  font-size:.62rem;font-weight:600;color:rgba(255,255,255,.55);
+  letter-spacing:.02em;pointer-events:none;
+}
+.s-watermark img{width:14px;height:14px;object-fit:contain;opacity:.7}
+@media(max-width:540px){.s-watermark{bottom:196px;font-size:.58rem}.s-watermark img{width:12px;height:12px}}
 /* Session footer */
 .s-foot{
   position:absolute;bottom:0;left:0;right:0;z-index:10;
@@ -910,6 +924,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     </div>
   </div>
 
+  <!-- Small watermark over the live video, bottom-left corner — the only
+       spot on this view genuinely free at every breakpoint (top-left/top-
+       center/top-right/right-middle are already the HUD, demo trigger,
+       instruction strip, score ring, and angle meter; anywhere lower
+       collides with the footer stats/countdown/feedback stack). -->
+  <div class="s-watermark">
+    <img src="physiosync-icon-white.png" alt="">Powered by PhysioSync
+  </div>
+
   <!-- Footer stats -->
   <div class="s-foot">
     <div class="s-stats">
@@ -927,6 +950,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       </div>
     </div>
     <div class="s-hold-bar-wrap" id="s-hold-bar-wrap">
+      <dotlottie-wc class="s-hold-bar-lottie" src="https://lottie.host/816092da-9362-418f-9f94-af60f8ad0342/nrzo3fsJ95.lottie" autoplay loop></dotlottie-wc>
       <div class="s-hold-bar-track"><div class="s-hold-bar-fill" id="s-hold-bar-fill"></div></div>
       <div class="s-hold-bar-txt" id="s-hold-bar-txt"></div>
     </div>

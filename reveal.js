@@ -109,7 +109,7 @@ const PAGE_LOADER_LABELS={
   'hospitals.html':'Loading Hospitals…',
   'research.html':'Loading Research…',
   'about.html':'Loading About…',
-  'account.html':'Loading Your Account…'
+  'account.html':'Loading PhysioSync Account…'
 };
 function initPageLoader(){
   const overlay=document.getElementById('page-loader');
