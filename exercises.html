@@ -2589,7 +2589,19 @@ async function startCamera(){
   const needsFineDetail=sessEx&&FINE_DETAIL_DETS.has(sessEx.det);
   let idealW,idealH;
   if(IS_MOBILE){idealW=needsFineDetail?1280:640;idealH=needsFineDetail?720:480;}
-  else{idealW=3840;idealH=2160;}
+  else{
+    // Was 3840x2160 (4K) for sharper video — reverted. MediaPipe Pose has to
+    // run real inference on every frame during an actual session, not just
+    // decode/display it, and 4K makes that per-frame cost much heavier;
+    // under that load landmarks likely started arriving late/stale, which
+    // reads as skeleton misalignment, missed rep-phase transitions, and a
+    // form score built off outdated angles — across every exercise, since
+    // none of them are exempt from this shared capture path. 1280x720 is
+    // the resolution the rest of the tracking code (skeleton stroke widths,
+    // etc.) is already tuned around and was the proven-working baseline
+    // before the 4K change.
+    idealW=1280;idealH=720;
+  }
   const constraints=[
     {video:{facingMode:{exact:'user'},width:{ideal:idealW},height:{ideal:idealH}},audio:false},
     {video:{facingMode:'user',width:{ideal:idealW},height:{ideal:idealH}},audio:false},
