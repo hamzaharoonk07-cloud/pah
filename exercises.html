@@ -1757,7 +1757,11 @@ const EX=[
     note:'McKenzie method. Primary treatment for L4-L5 disc herniation. Centralizes radiating leg pain.',
     warn:'Stop immediately and seek urgent care if you develop numbness in the groin/inner thighs or new bowel/bladder changes. Check with your doctor first if you have spinal stenosis, spondylolisthesis, or if leg pain spreads further down your leg during this stretch.',
     muscles:['Erector Spinae','Multifidus','Quadratus Lumborum'],
-    angles:{main:[7,11,23],pivot:11,threshold:{lo:5,hi:20}},
+    // lo must exceed runHold's generic movedEnough gate (0.4*(hi-lo)) or no
+    // signal can ever satisfy both isEngaged and movedEnough at once — 5 was
+    // right at that boundary (effectively unreachable given z-axis noise);
+    // 10 leaves real margin.
+    angles:{main:[7,11,23],pivot:11,threshold:{lo:10,hi:25}},
     joints:{p:[11,12,23,24],s:[7,8,25,26],lk:[[11,12],[11,23],[12,24],[23,24]],sk:[[7,11],[8,12],[23,25],[24,26]]}},
   {name:'Knee to Chest',area:'Hip Flexors and Lumbar',diff:'Beginner',tags:['Hip','Back','Knee'],reps:12,det:'knee_chest',
     desc:'Stand tall. Pull knee toward chest and hold 3 seconds. Standing leg slightly bent. Alternate.',
@@ -3384,8 +3388,13 @@ const HOLD_CFG={
       const lean=smoothAngle(spineLeanZ(lm));
       return{value:Math.max(0,lean),lean,label:'Spine',unit:''};
     },
-    isEngaged:(o)=>o.lean>7,
-    isReleased:(o)=>o.lean<2,
+    // Was hardcoded o.lean>7/<2, ignoring this exercise's own declared
+    // threshold ({lo:5,hi:20} above) that every other hold-exercise reads
+    // dynamically — meant a "gentle" arch needed to clear a stricter bar
+    // than the exercise was actually configured for. Now consistent with
+    // the rest of HOLD_CFG.
+    isEngaged:(o,lo)=>o.lean>lo,
+    isReleased:(o,lo)=>o.lean<lo*0.35,
     minHoldMs:3000,activeLabel:'Extended',
     engagedMsg:'Good backward extension — hold 3 seconds.',
     releaseMsg:'Stand tall and repeat the extension.',
@@ -3417,6 +3426,13 @@ const HOLD_CFG={
     // the chain (knee-ankle-toe instead of hip-knee-ankle) — the toe stays
     // planted as a pivot while the heel lifts, so this angle opens up as you
     // rise onto your toes and closes back toward flat-footed as you lower.
+    // Toe/foot-index landmarks (31/32) read lower MediaPipe confidence than
+    // big joints even when genuinely visible and tracked correctly — they're
+    // small, near the bottom frame edge, and often partly occluded by shoes —
+    // same reasoning as wrist_dev's lowered bar for the index-finger tip.
+    // Without this, feet routinely sat below the default 0.35 and the whole
+    // exercise flipped to "Lost" almost constantly.
+    minVis:0.2,
     compute(lm){
       const l=angleDeg(lm[25],lm[27],lm[31]);
       const r=angleDeg(lm[26],lm[28],lm[32]);
