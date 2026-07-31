@@ -73,13 +73,15 @@ button{cursor:pointer;font-family:inherit}
 .dash-card-t svg{width:16px;height:16px;stroke:var(--brand)}
 .acct-profile-card{margin-bottom:20px;animation:cardRise .5s cubic-bezier(.2,.8,.2,1) both}
 .acct-profile-brand{display:flex;align-items:center;gap:8px;margin-bottom:18px}
-.ab-tag-logo{padding:6px 16px}
+.ab-tag-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:22px}
 .acct-avatar-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--w06)}
 .acct-avatar{width:64px;height:64px;border-radius:50%;background:var(--w06);border:1px solid var(--w09);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);flex-shrink:0}
 .acct-avatar img{width:100%;height:100%;object-fit:cover}
 .acct-avatar svg{width:26px;height:26px}
 .acct-avatar-btn{padding:8px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w04);color:var(--heading);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;transition:all .2s}
 .acct-avatar-btn:hover{background:var(--w08);border-color:var(--w12)}
+.acct-avatar-btn-remove{color:var(--brand);border-color:rgba(225,29,72,.3);background:rgba(225,29,72,.06)}
+.acct-avatar-btn-remove:hover{background:rgba(225,29,72,.14);border-color:rgba(225,29,72,.45)}
 .acct-avatar-hint{font-size:.66rem;color:var(--muted);margin-top:7px}
 .acct-profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
 .acct-profile-grid div{background:var(--w03);border:1px solid var(--w06);border-radius:12px;padding:12px 14px;transition:border-color .2s,transform .2s}
@@ -308,10 +310,10 @@ button{cursor:pointer;font-family:inherit}
   <div class="blob-parallax"><div class="hero-blob b2"></div></div>
   <div class="physio-ecg" aria-hidden="true"></div>
   <div class="ab-hero-inner">
-    <span class="ab-tag ab-tag-logo">
-      <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:14px">
-      <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:11px">
-      <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:11px">
+    <span class="ab-tag-logo">
+      <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:36px">
+      <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:26px">
+      <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:26px">
     </span>
     <h1 class="ab-h" id="acct-hero-h">Welcome back<span>.</span></h1>
     <p class="ab-sub">Everything about your recovery journey, in one place — your details and every session you've completed, saved on this device.</p>
@@ -337,9 +339,9 @@ button{cursor:pointer;font-family:inherit}
 
     <div class="dash-card acct-profile-card">
       <div class="acct-profile-brand">
-        <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:20px">
-        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:14px">
-        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:14px">
+        <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:34px">
+        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:24px">
+        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:24px">
       </div>
       <div class="acct-avatar-row">
         <div class="acct-avatar" id="acct-avatar">
@@ -347,7 +349,10 @@ button{cursor:pointer;font-family:inherit}
           <svg id="acct-avatar-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
         </div>
         <div>
-          <button type="button" class="acct-avatar-btn" onclick="document.getElementById('acct-photo-input').click()">Upload Photo</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="acct-avatar-btn" onclick="document.getElementById('acct-photo-input').click()">Upload Photo</button>
+            <button type="button" class="acct-avatar-btn acct-avatar-btn-remove" id="acct-photo-remove-btn" onclick="removePhoto()" style="display:none">Remove</button>
+          </div>
           <input type="file" id="acct-photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
           <p class="acct-avatar-hint" id="acct-photo-msg">JPG or PNG, under 2MB — stored only on this device.</p>
         </div>
@@ -569,9 +574,17 @@ function logoutUser(){
 function applyAvatar(photo){
   const img=document.getElementById('acct-avatar-img');
   const def=document.getElementById('acct-avatar-default');
-  if(!img||!photo)return;
-  img.src=photo;img.style.display='block';
-  if(def)def.style.display='none';
+  const removeBtn=document.getElementById('acct-photo-remove-btn');
+  if(!img)return;
+  if(photo){
+    img.src=photo;img.style.display='block';
+    if(def)def.style.display='none';
+    if(removeBtn)removeBtn.style.display='';
+  }else{
+    img.src='';img.style.display='none';
+    if(def)def.style.display='block';
+    if(removeBtn)removeBtn.style.display='none';
+  }
 }
 function handlePhotoUpload(e){
   const file=e.target.files[0];
@@ -596,6 +609,15 @@ function handlePhotoUpload(e){
   };
   reader.onerror=()=>{msg.textContent='Could not read that file — please try another.';};
   reader.readAsDataURL(file);
+}
+function removePhoto(){
+  const acc=JSON.parse(localStorage.getItem('pah_acc')||'null');
+  if(!acc)return;
+  delete acc.photo;
+  localStorage.setItem('pah_acc',JSON.stringify(acc));
+  applyAvatar(null);
+  document.getElementById('acct-photo-input').value='';
+  document.getElementById('acct-photo-msg').textContent='Photo removed.';
 }
 
 // countUp is shared in reveal.js (previously duplicated).
@@ -877,7 +899,7 @@ function showSessionDetail(idx){
   document.getElementById('acct-weight-height').textContent=acc.weight+'kg / '+acc.height+'cm';
   document.getElementById('acct-condition').textContent=acc.condition||'—';
   document.getElementById('acct-joined').textContent=acc.joined||'—';
-  if(acc.photo)applyAvatar(acc.photo);
+  applyAvatar(acc.photo||null);
 
   const u=loadU();
   document.getElementById('dash-greet-h').textContent=u.streak>0?u.streak+'-Day Streak':'Your Streak';

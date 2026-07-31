@@ -12,9 +12,7 @@
 <link rel="stylesheet" href="styles.css">
 <script src="reveal.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script>
-<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.4/dist/dotlottie-wc.js" type="module"></script>
-<style>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script><style>
 /* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
    blobFloat/gradShift keyframes, .reveal base, and .footer/.f-* now live in
    styles.css. This block keeps only exercises.html-specific layout/components. */
@@ -419,41 +417,26 @@
 .s-ring svg{width:66px;height:66px}
 /* Angle meter */
 .s-ang{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:10;opacity:0;transition:opacity .4s}
-/* Hold countdown — a slim progress bar docked in the footer stack, above the
-   feedback banner, rather than a floating element over the video/body. Grows
-   in via max-height so it reads as a clean reveal, not a hard pop. */
-.s-hold-bar-wrap{
-  display:flex;flex-direction:column;gap:4px;
-  max-height:0;opacity:0;overflow:hidden;pointer-events:none;
-  transition:max-height .28s ease,opacity .2s ease;
-}
-.s-hold-bar-wrap.show{max-height:52px;opacity:1;pointer-events:auto}
-.s-hold-bar-row{display:flex;align-items:center;gap:10px}
-.s-hold-bar-lottie{width:26px;height:26px;flex-shrink:0;display:block}
-/* Small "Powered by PhysioSync" mark at the end of the countdown bar,
-   right-aligned on its own thin row underneath. */
-.s-hold-bar-powered{display:flex;align-items:center;justify-content:flex-end;gap:5px;font-size:.6rem;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.02em}
-.s-hold-bar-powered img{width:12px;height:12px;object-fit:contain;opacity:.7;flex-shrink:0}
-.s-hold-bar-track{flex:1;height:6px;border-radius:100px;background:var(--w08);overflow:hidden}
-.s-hold-bar-fill{
-  height:100%;border-radius:100px;width:0%;
-  background:linear-gradient(90deg,#f59e0b,#fbbf24);
-  transition:width .12s linear,background .3s;
-}
-.s-hold-bar-wrap.done .s-hold-bar-fill{background:linear-gradient(90deg,#00e5a0,#12d999)}
-.s-hold-bar-txt{
-  flex-shrink:0;white-space:nowrap;text-align:right;
-  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;color:#f59e0b;
-  transition:color .3s;
-}
-.s-hold-bar-wrap.done .s-hold-bar-txt{color:#00e5a0}
-.s-hold-bar-txt.tick{animation:holdTick .3s ease}
-@keyframes holdTick{0%{opacity:.4;transform:translateY(2px)}100%{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){
-  .s-hold-bar-wrap{transition:opacity .15s ease}
-  .s-hold-bar-txt.tick{animation:none}
-}
+/* Hold countdown — integrated directly into the existing Form score ring
+   (top-right) rather than a separate element: the ring temporarily shows
+   the countdown number and an "Hold"/"Go!" label instead of the live score,
+   then reverts once the hold ends. No new UI, reuses what's already there. */
+.s-ring-lbl.counting{color:#f59e0b}
+.s-ring-lbl.done{color:#00e5a0}
 .s-ang.vis{opacity:1}
+/* Small "Powered by PhysioSync" watermark over the live video, bottom-left —
+   the one corner genuinely free at every breakpoint (top-left/top-center/
+   top-right/right-middle are already the HUD, demo trigger, instruction
+   strip, score ring, and angle meter; anywhere lower collides with the
+   footer stats/feedback stack). */
+.s-watermark{
+  position:absolute;left:18px;bottom:212px;z-index:9;
+  display:flex;align-items:center;gap:6px;
+  font-size:.62rem;font-weight:600;color:rgba(255,255,255,.55);
+  letter-spacing:.02em;pointer-events:none;
+}
+.s-watermark img{width:14px;height:14px;object-fit:contain;opacity:.7}
+@media(max-width:540px){.s-watermark{bottom:196px;font-size:.58rem}.s-watermark img{width:12px;height:12px}}
 /* Rep flash */
 .rep-flash{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
@@ -873,7 +856,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         transform="rotate(-90 33 33)" style="transition:stroke-dashoffset .6s,stroke .5s ease"/>
       <text id="ring-t" x="33" y="38" text-anchor="middle" fill="#fff" font-family="Plus Jakarta Sans" font-weight="800" font-size="12">--%</text>
     </svg>
-    <div class="s-ring-lbl">Form</div>
+    <div class="s-ring-lbl" id="s-ring-lbl">Form</div>
   </div>
 
   <!-- Angle arc -->
@@ -956,15 +939,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
         <div class="s-stat-l">Status</div>
       </div>
     </div>
-    <div class="s-hold-bar-wrap" id="s-hold-bar-wrap">
-      <div class="s-hold-bar-row">
-        <dotlottie-wc class="s-hold-bar-lottie" src="https://lottie.host/816092da-9362-418f-9f94-af60f8ad0342/nrzo3fsJ95.lottie" autoplay loop></dotlottie-wc>
-        <div class="s-hold-bar-track"><div class="s-hold-bar-fill" id="s-hold-bar-fill"></div></div>
-        <div class="s-hold-bar-txt" id="s-hold-bar-txt"></div>
-      </div>
-      <span class="s-hold-bar-powered"><img src="physiosync-icon-white.png" alt="">Powered by PhysioSync</span>
-    </div>
     <div class="s-fb" id="s-fb">Activate your camera to begin the session.</div>
+  </div>
+
+  <!-- Small watermark over the live video, bottom-left corner -->
+  <div class="s-watermark">
+    <img src="physiosync-icon-white.png" alt="">Powered by PhysioSync
   </div>
 </div>
 
@@ -1977,29 +1957,34 @@ const GOOD_FORM_THRESHOLD=88;
 // never changes when a rep is actually counted, so the existing anti-flick
 // minimum-hold-time logic is untouched.
 function updateHoldCountdown(goodFormStart,minHoldMs){
-  const wrap=document.getElementById('s-hold-bar-wrap');
-  const fill=document.getElementById('s-hold-bar-fill');
-  const txt=document.getElementById('s-hold-bar-txt');
-  if(goodFormStart==null){wrap.classList.remove('show','done');lastSpokenHoldSec=null;return;}
-  wrap.classList.add('show');
+  const ringC=document.getElementById('ring-c');
+  const ringT=document.getElementById('ring-t');
+  const lbl=document.getElementById('s-ring-lbl');
+  if(goodFormStart==null){
+    // Not counting down — leave the ring alone, it's already showing the
+    // live score via setRing() (called every frame regardless of hold
+    // state); just make sure the label has reverted back to "Form".
+    if(lbl){lbl.textContent='Form';lbl.classList.remove('counting','done');}
+    lastSpokenHoldSec=null;
+    return;
+  }
   const remaining=minHoldMs-(performance.now()-goodFormStart);
   if(remaining>0){
-    wrap.classList.remove('done');
     const frac=Math.max(0,Math.min(1,remaining/minHoldMs));
-    fill.style.width=(frac*100)+'%';
+    ringC.style.stroke='#f59e0b';
+    ringC.style.strokeDashoffset=169.6*(1-frac); // same ring circumference setRing() uses
     const sec=Math.ceil(remaining/1000);
+    ringT.textContent=sec;
+    if(lbl){lbl.textContent='Hold';lbl.classList.add('counting');lbl.classList.remove('done');}
     if(sec!==lastSpokenHoldSec){
       lastSpokenHoldSec=sec;
-      txt.textContent='Hold '+sec+'s';
-      // Nudge the number in on each new second instead of just swapping the
-      // digit in place — a plain textContent update reads as flat/static.
-      txt.classList.remove('tick');void txt.offsetWidth;txt.classList.add('tick');
       VoiceCoach.speak(String(sec),{priority:true});
     }
   }else{
-    wrap.classList.add('done');
-    fill.style.width='100%';
-    txt.textContent='Release! ✓';
+    ringC.style.stroke='#00e5a0';
+    ringC.style.strokeDashoffset=0;
+    ringT.textContent='✓';
+    if(lbl){lbl.textContent='Go!';lbl.classList.add('done');lbl.classList.remove('counting');}
     if(!holdPraised){
       holdPraised=true;
       VoiceCoach.speak('Release now.',{priority:true});
@@ -2095,8 +2080,8 @@ function openSession(idx){
   document.getElementById('s-ang').classList.remove('vis');
   document.getElementById('s-instr').style.display='none';
   document.getElementById('demo-live-trigger').style.display='none';
-  document.getElementById('s-hold-bar-wrap').classList.remove('show','done');
-  document.getElementById('s-hold-bar-fill').style.width='0%';
+  document.getElementById('s-ring-lbl').textContent='Form';
+  document.getElementById('s-ring-lbl').classList.remove('counting','done');
   holdPraised=false;lastSpokenHoldSec=null;
   setFB('Activate your camera to begin the session.','');
   document.getElementById('sess').classList.add('open');
