@@ -10,9 +10,11 @@
 <link rel="apple-touch-icon" href="physiosync-icon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link rel="stylesheet" href="styles.css">
-<script src="reveal.js"></script>
+<script src="reveal.js?v=3"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&family=Noto+Sans+Arabic:wght@100..900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
@@ -23,6 +25,16 @@
    names by CSS source order (this block loads after the <link>), which is
    why it's still declared here rather than merged. Reset/.edge-glow/.reveal/
    keyframes that WERE byte-identical to the shared version were removed. */
+body.lang-ur .jf-title,body.lang-ur .jf-desc,body.lang-ur .gate-title,
+body.lang-ur .gate-sub,body.lang-ur .footer-desc{
+  font-family:'Noto Nastaliq Urdu','Noto Sans Arabic',sans-serif!important;line-height:2.3;
+}
+/* .jf-title sits in a bottom-anchored overlay sized to fit its content —
+   Nastaliq's usual 2.3 line-height (fine for wrapping paragraphs) made this
+   single/double-line heading tall enough to push its own top off-screen
+   above the viewport. A smaller ratio still gives the diagonal strokes
+   room without ballooning the block's total height. */
+body.lang-ur .jf-title{font-size:clamp(1.8rem,4.6vw,3.6rem)!important;line-height:1.7!important}
 :root{
   --brand:#e11d48;--accent:#fb7185;--purple:#8b5cf6;--blue:#3b82f6;
   --bg:#000;--bg-strong:#000;--heading:#fff;--text:#fff;--muted:#cbd5e1;--submuted:#94a3b8;
@@ -262,7 +274,7 @@
     <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
   </div>
   <span class="loader-brand">PhysioSync</span>
-  <span class="loader-sub">Loading…</span>
+  <span class="loader-sub" data-ur="لوڈ ہو رہا ہے…">Loading…</span>
 </div>
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
 
@@ -273,27 +285,31 @@
       <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:28px">
       <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:28px">
     </div>
-    <div class="gate-title">Welcome to PhysioSync</div>
-    <p class="gate-sub">A few quick details so we can personalize your plan.</p>
+    <div class="gate-lang-row" style="display:flex;gap:8px;justify-content:center;margin-bottom:14px">
+      <button type="button" class="gate-lang-btn" id="gate-lang-en" onclick="setGateLang('en')" style="padding:6px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w06);color:var(--heading);font-weight:700;font-size:.78rem;cursor:pointer">English</button>
+      <button type="button" class="gate-lang-btn" id="gate-lang-ur" onclick="setGateLang('ur')" style="padding:6px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w06);color:var(--heading);font-weight:700;font-size:.78rem;cursor:pointer">اردو</button>
+    </div>
+    <div class="gate-title" data-ur="PhysioSync میں خوش آمدید">Welcome to PhysioSync</div>
+    <p class="gate-sub" data-ur="آپ کا منصوبہ ذاتی بنانے کے لیے چند تفصیلات درکار ہیں۔">A few quick details so we can personalize your plan.</p>
     <form id="gate-form">
       <div class="gate-row">
-        <div class="gate-field"><label>Name</label><input id="gate-name" type="text" placeholder="Your name"></div>
-        <div class="gate-field"><label>Gender</label>
-          <select id="gate-gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
+        <div class="gate-field"><label data-ur="نام">Name</label><input id="gate-name" type="text" placeholder="Your name" data-ur-ph="آپ کا نام"></div>
+        <div class="gate-field"><label data-ur="جنس">Gender</label>
+          <select id="gate-gender" data-ur='<option value="">منتخب کریں</option><option value="Male">مرد</option><option value="Female">عورت</option><option value="Other">دیگر</option>'><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select>
         </div>
       </div>
       <div class="gate-row" style="grid-template-columns:1fr">
-        <div class="gate-field"><label>Email</label><input id="gate-email" type="email" placeholder="you@example.com"></div>
+        <div class="gate-field"><label data-ur="ای میل">Email</label><input id="gate-email" type="email" placeholder="you@example.com"></div>
       </div>
       <div class="gate-row">
-        <div class="gate-field"><label>Age</label><input id="gate-age" type="number" placeholder="Age"></div>
-        <div class="gate-field"><label>Weight (kg)</label><input id="gate-weight" type="number" placeholder="Weight"></div>
+        <div class="gate-field"><label data-ur="عمر">Age</label><input id="gate-age" type="number" placeholder="Age" data-ur-ph="عمر"></div>
+        <div class="gate-field"><label data-ur="وزن (کلوگرام)">Weight (kg)</label><input id="gate-weight" type="number" placeholder="Weight" data-ur-ph="وزن"></div>
       </div>
       <div class="gate-row" style="grid-template-columns:1fr">
-        <div class="gate-field"><label>Height (cm)</label><input id="gate-height" type="number" placeholder="Height"></div>
+        <div class="gate-field"><label data-ur="قد (سینٹی میٹر)">Height (cm)</label><input id="gate-height" type="number" placeholder="Height" data-ur-ph="قد"></div>
       </div>
-      <button class="gate-submit" type="submit">Get Started</button>
-      <div class="gate-error" id="gate-error">Please fill in all fields.</div>
+      <button class="gate-submit" type="submit" data-ur="شروع کریں">Get Started</button>
+      <div class="gate-error" id="gate-error" data-ur="براہ کرم تمام خانے پُر کریں۔">Please fill in all fields.</div>
     </form>
   </div>
 </div>
@@ -343,6 +359,19 @@ function toggleTheme(){
   if(typeof applyModelBackground==='function') applyModelBackground();
 }
 syncThemeIcon();
+function syncGateLangBtns(){
+  const en=document.getElementById('gate-lang-en'),ur=document.getElementById('gate-lang-ur');
+  if(!en||!ur)return;
+  en.style.background=currentLang==='en'?'var(--brand)':'var(--w06)';
+  en.style.color=currentLang==='en'?'#fff':'var(--heading)';
+  ur.style.background=currentLang==='ur'?'var(--brand)':'var(--w06)';
+  ur.style.color=currentLang==='ur'?'#fff':'var(--heading)';
+}
+function setGateLang(lang){
+  if(currentLang!==lang)toggleLang();
+  syncGateLangBtns();
+}
+syncGateLangBtns();
 </script>
 
 <nav class="navbar">
@@ -351,28 +380,18 @@ syncThemeIcon();
     <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:22px">
     <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
   </a>
-  <div class="nav-links">
-    <a href="#joint-focus" class="nav-link">Conditions</a>
-    <a href="exercises.html#hero" class="nav-link">Exercises</a>
-    <a href="about.html" class="nav-link">About</a>
-  </div>
-  <a href="exercises.html" class="nav-cta">Exercises</a>
+  <a href="exercises.html" class="nav-cta" data-ur="ورزشیں">Exercises</a>
   <a href="account.html" class="theme-tgl" aria-label="Your account" title="Your account">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
   </a>
+  <button class="theme-tgl" id="lang-tgl" onclick="toggleLang()" aria-label="Switch language" title="Switch language (English / Urdu)">
+    <span id="lang-tgl-txt" style="font-size:.62rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.02em">EN</span>
+  </button>
   <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
     <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
     <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
   </button>
-  <button class="nav-ham" id="nav-ham" onclick="document.getElementById('nav-mob-menu').classList.toggle('open')" aria-label="Open menu">
-    <span></span><span></span><span></span>
-  </button>
 </nav>
-<div class="nav-mob-menu" id="nav-mob-menu">
-  <a href="#joint-focus" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Conditions</a>
-  <a href="exercises.html#hero" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">Exercises</a>
-  <a href="about.html" onclick="document.getElementById('nav-mob-menu').classList.remove('open')">About</a>
-</div>
 
 <section id="joint-focus">
   <div class="jf-sticky" id="jf-sticky">
@@ -388,7 +407,7 @@ syncThemeIcon();
         <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
       </div>
       <span class="loader-brand">PhysioSync</span>
-      <span class="loader-sub">Loading 3D Model…</span>
+      <span class="loader-sub" data-ur="3D ماڈل لوڈ ہو رہا ہے…">Loading 3D Model…</span>
     </div>
 
     <svg class="jf-line" id="jf-line"><line id="jf-line-el" x1="0" y1="0" x2="0" y2="0"/></svg>
@@ -401,7 +420,7 @@ syncThemeIcon();
       <div class="jf-conditions" id="ov-pills"></div>
       <p class="jf-desc" id="ov-desc"></p>
       <a class="jf-ex-link" id="ov-ex-link" href="exercises.html#hero">
-        <span class="jf-ex-lbl">Related Exercise</span>
+        <span class="jf-ex-lbl" data-ur="متعلقہ ورزش">Related Exercise</span>
         <span id="ov-ex-name">—</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
@@ -415,63 +434,99 @@ syncThemeIcon();
       data-tag="01 · Neck" data-title="Cervical Spine"
       data-pills="Cervical Spondylosis,Whiplash,Forward Head Posture"
       data-ex="Neck Tilt Stretch" data-ex-det="neck_tilt"
-      data-desc="Neck pain and stiffness are often driven by prolonged screen time and poor posture, leading to muscle tightness, reduced range of motion, and nerve irritation at C5–C6."></div>
+      data-desc="Neck pain and stiffness are often driven by prolonged screen time and poor posture, leading to muscle tightness, reduced range of motion, and nerve irritation at C5–C6."
+      data-tag-ur="01 · گردن" data-title-ur="گردن کی ریڑھ کی ہڈی"
+      data-pills-ur="گردن کا سپونڈیلوسس,وہپلیش,آگے جھکی گردن کی کرنسی"
+      data-ex-ur="گردن کا جھکاؤ"
+      data-desc-ur="گردن کا درد اور اکڑن اکثر طویل اسکرین ٹائم اور خراب کرنسی کی وجہ سے ہوتی ہے، جو پٹھوں کی سختی، حرکت میں کمی، اور C5-C6 پر اعصابی جلن کا باعث بنتی ہے۔"></div>
 
     <div class="jf-panel" data-joint="thoracic"
       data-cam="0.017,0.558,0.264|-0.088,-0.005,0.282" data-ring-x="50" data-ring-y="38"
       data-tag="02 · Mid Back" data-title="Thoracic Spine"
       data-pills="Postural Kyphosis,Rib Dysfunction,Mid-Back Stiffness"
       data-ex="Lateral Arm Raise" data-ex-det="lateral_raise"
-      data-desc="Limited thoracic mobility restricts shoulder and neck function alike. We address rounded-shoulder posture, rib joint restrictions, and breathing mechanics."></div>
+      data-desc="Limited thoracic mobility restricts shoulder and neck function alike. We address rounded-shoulder posture, rib joint restrictions, and breathing mechanics."
+      data-tag-ur="02 · درمیانی کمر" data-title-ur="سینے کی ریڑھ کی ہڈی"
+      data-pills-ur="کرنسی کا کائفوسس,پسلیوں کی خرابی,درمیانی کمر کی اکڑن"
+      data-ex-ur="بازو سائیڈ سے اوپر اٹھانا"
+      data-desc-ur="محدود سینے کی حرکت کندھے اور گردن دونوں کے کام کو متاثر کرتی ہے۔ ہم جھکے ہوئے کندھوں کی کرنسی، پسلیوں کے جوڑ کی محدودیت، اور سانس کی میکانیات کو حل کرتے ہیں۔"></div>
 
     <div class="jf-panel" data-joint="lumbar"
       data-cam="0.041,0.924,0.302|-0.064,-0.005,0.201" data-ring-x="50" data-ring-y="52"
       data-tag="03 · Lower Back" data-title="Lumbar Spine"
       data-pills="Disc Herniation,Sciatica,Lower Back Stiffness"
       data-ex="Gentle Back Arch" data-ex-det="mckenzie"
-      data-desc="Lumbar disc issues at L4–L5 can cause radiating leg pain, numbness, and stiffness. Decompression techniques combined with core stability relieve pressure and prevent recurrence."></div>
+      data-desc="Lumbar disc issues at L4–L5 can cause radiating leg pain, numbness, and stiffness. Decompression techniques combined with core stability relieve pressure and prevent recurrence."
+      data-tag-ur="03 · کمر کا نچلا حصہ" data-title-ur="کمر کا نچلا حصہ"
+      data-pills-ur="ڈسک کا کھسکنا,سائیٹیکا,کمر کے نچلے حصے کی اکڑن"
+      data-ex-ur="ہلکا کمر کا کھنچاؤ"
+      data-desc-ur="L4-L5 پر کمر کی ڈسک کے مسائل ٹانگ میں پھیلنے والا درد، سُن پن، اور اکڑن پیدا کر سکتے ہیں۔ ڈی کمپریشن تکنیکیں کور استحکام کے ساتھ مل کر دباؤ کم کرتی ہیں اور دوبارہ ہونے سے روکتی ہیں۔"></div>
 
     <div class="jf-panel" data-joint="shoulder"
       data-cam="-0.577,0.185,0.401|-0.041,0.012,0.328" data-ring-x="55" data-ring-y="45"
       data-tag="04 · Upper Limb" data-title="Shoulder"
       data-pills="Rotator Cuff Injury,Impingement Syndrome,Frozen Shoulder"
       data-ex="Arms Overhead Raise" data-ex-det="bilateral_raise"
-      data-desc="Rotator cuff strains and shoulder impingement limit overhead reach and disrupt sleep. We restore range of motion and rebuild strength through graded loading."></div>
+      data-desc="Rotator cuff strains and shoulder impingement limit overhead reach and disrupt sleep. We restore range of motion and rebuild strength through graded loading."
+      data-tag-ur="04 · اوپری اعضاء" data-title-ur="کندھا"
+      data-pills-ur="روٹیٹر کف کی چوٹ,امپنجمنٹ سنڈروم,فروزن شولڈر"
+      data-ex-ur="دونوں بازو سامنے سے اوپر اٹھانا"
+      data-desc-ur="روٹیٹر کف کی کھچاؤ اور کندھے کا امپنجمنٹ اوپر پہنچنے کی صلاحیت کو محدود کرتے ہیں اور نیند میں خلل ڈالتے ہیں۔ ہم مرحلہ وار وزن کے ذریعے حرکت کی صلاحیت بحال کرتے ہیں اور طاقت دوبارہ بناتے ہیں۔"></div>
 
     <div class="jf-panel" data-joint="elbow"
       data-cam="-0.512,0.382,0.006|-0.133,-0.128,0.276" data-ring-x="74" data-ring-y="50"
       data-tag="05 · Upper Limb" data-title="Elbow"
       data-pills="Tennis Elbow,Golfer's Elbow,Tendinopathy"
       data-ex="Arms Overhead Raise" data-ex-det="bilateral_raise"
-      data-desc="Repetitive strain at the elbow leads to tendon pain on the inner or outer forearm. Load management and progressive strengthening rebuild tendon resilience."></div>
+      data-desc="Repetitive strain at the elbow leads to tendon pain on the inner or outer forearm. Load management and progressive strengthening rebuild tendon resilience."
+      data-tag-ur="05 · اوپری اعضاء" data-title-ur="کہنی"
+      data-pills-ur="ٹینس ایلبو,گالفرز ایلبو,ٹینڈینوپیتھی"
+      data-ex-ur="دونوں بازو سامنے سے اوپر اٹھانا"
+      data-desc-ur="کہنی پر بار بار دباؤ بازو کے اندرونی یا بیرونی حصے میں ٹینڈن کے درد کا باعث بنتا ہے۔ وزن کا انتظام اور بتدریج مضبوطی ٹینڈن کی لچک بحال کرتی ہے۔"></div>
 
     <div class="jf-panel" data-joint="wrist"
       data-cam="-0.778,0.102,-0.043|-0.154,-0.177,-0.119" data-ring-x="78" data-ring-y="68"
       data-tag="06 · Hand" data-title="Wrist &amp; Hand"
       data-pills="Carpal Tunnel Syndrome,De Quervain's,Wrist Sprains"
       data-ex="Wrist Side Bend" data-ex-det="wrist_dev"
-      data-desc="Numbness, tingling, and wrist pain often stem from nerve compression or repetitive strain. Treatment focuses on nerve gliding, joint mobility, and ergonomic correction."></div>
+      data-desc="Numbness, tingling, and wrist pain often stem from nerve compression or repetitive strain. Treatment focuses on nerve gliding, joint mobility, and ergonomic correction."
+      data-tag-ur="06 · ہاتھ" data-title-ur="کلائی اور ہاتھ"
+      data-pills-ur="کارپل ٹنل سنڈروم,ڈی کیرون کی بیماری,کلائی کی موچ"
+      data-ex-ur="کلائی کا سائیڈ موڑ"
+      data-desc-ur="سُن پن، جھنجھناہٹ، اور کلائی کا درد اکثر اعصاب کے دبنے یا بار بار دباؤ سے ہوتا ہے۔ علاج اعصاب کی حرکت، جوڑ کی نقل و حرکت، اور درست کرنسی پر توجہ دیتا ہے۔"></div>
 
     <div class="jf-panel" data-joint="hip"
       data-cam="0.068,0.474,-0.098|-0.154,-0.177,-0.119" data-ring-x="50" data-ring-y="60"
       data-tag="07 · Lower Limb" data-title="Hip &amp; Pelvis"
       data-pills="Hip Flexor Tightness,Gluteal Weakness,Pelvic Floor Dysfunction"
       data-ex="Knee to Chest" data-ex-det="knee_chest"
-      data-desc="Hip and pelvic issues affect gait, balance, and lower back loading — especially important for post-partum recovery and women's health physiotherapy."></div>
+      data-desc="Hip and pelvic issues affect gait, balance, and lower back loading — especially important for post-partum recovery and women's health physiotherapy."
+      data-tag-ur="07 · نچلے اعضاء" data-title-ur="کولہا اور شرونی"
+      data-pills-ur="کولہے کے فلیکسر کی سختی,کولہے کے پٹھوں کی کمزوری,شرونی کے فرش کی خرابی"
+      data-ex-ur="گھٹنا سینے کی طرف"
+      data-desc-ur="کولہے اور شرونی کے مسائل چال، توازن، اور کمر کے نچلے حصے پر بوجھ کو متاثر کرتے ہیں — خاص طور پر زچگی کے بعد کی بحالی اور خواتین کی صحت کی فزیوتھراپی کے لیے اہم۔"></div>
 
     <div class="jf-panel" data-joint="knee"
       data-cam="0.229,-0.409,-0.644|0.115,0.017,-0.513" data-ring-x="56" data-ring-y="78"
       data-tag="08 · Lower Limb" data-title="Knee"
       data-pills="Knee Osteoarthritis,Patellar Tracking,ACL Rehab"
       data-ex="Mini Squats" data-ex-det="mini_squat"
-      data-desc="From early-stage arthritis to post-surgical ACL recovery, knee rehab focuses on quadriceps strength, joint stability, and restoring confident movement."></div>
+      data-desc="From early-stage arthritis to post-surgical ACL recovery, knee rehab focuses on quadriceps strength, joint stability, and restoring confident movement."
+      data-tag-ur="08 · نچلے اعضاء" data-title-ur="گھٹنا"
+      data-pills-ur="گھٹنے کا اوسٹیوآرتھرائٹس,پٹیلا کی حرکت,ACL کی بحالی"
+      data-ex-ur="ہلکی اسکواٹ"
+      data-desc-ur="ابتدائی مرحلے کے گٹھیا سے لے کر سرجری کے بعد ACL کی بحالی تک، گھٹنے کی بحالی کواڈریسپس کی طاقت، جوڑ کے استحکام، اور پراعتماد حرکت بحال کرنے پر مرکوز ہے۔"></div>
 
     <div class="jf-panel" data-joint="ankle"
       data-cam="-0.331,-0.316,-0.793|0.19,0.125,-0.801" data-ring-x="56" data-ring-y="92"
       data-tag="09 · Lower Limb" data-title="Ankle &amp; Foot"
       data-pills="Ankle Sprains,Plantar Fasciitis,Achilles Tendinopathy"
       data-ex="Calf Raises" data-ex-det="calf_raise"
-      data-desc="Ankle instability and heel pain affect every step. We rebuild strength, balance, and proprioception to prevent re-injury and get you back on your feet."></div>
+      data-desc="Ankle instability and heel pain affect every step. We rebuild strength, balance, and proprioception to prevent re-injury and get you back on your feet."
+      data-tag-ur="09 · نچلے اعضاء" data-title-ur="ٹخنہ اور پیر"
+      data-pills-ur="ٹخنے کی موچ,پلانٹر فیشیائٹس,ایکلیز ٹینڈینوپیتھی"
+      data-ex-ur="ایڑی اٹھانا"
+      data-desc-ur="ٹخنے کا عدم استحکام اور ایڑی کا درد ہر قدم کو متاثر کرتے ہیں۔ ہم دوبارہ چوٹ سے بچنے اور آپ کو دوبارہ اپنے پیروں پر کھڑا کرنے کے لیے طاقت، توازن، اور جسمانی آگاہی دوبارہ بناتے ہیں۔"></div>
   </div>
 </section>
 
@@ -531,7 +586,9 @@ function setCamera(camStr, instant){
   sketchfabApi.setCameraLookAt(position, target, instant ? 0 : 1.2, function(){});
 }
 
+let lastFocusedPanel = null;
 function focusJoint(panel, instant){
+  lastFocusedPanel = panel;
   setCamera(panel.dataset.cam, instant);
 
   const w = sticky.offsetWidth, h = sticky.offsetHeight;
@@ -554,11 +611,12 @@ function focusJoint(panel, instant){
   lineEl.setAttribute('y2', targetY);
   lineSvg.classList.add('active');
 
-  ovTag.textContent = panel.dataset.tag;
-  ovTitle.innerHTML = panel.dataset.title;
-  ovDesc.textContent = panel.dataset.desc;
-  ovPills.innerHTML = panel.dataset.pills.split(',').map(p => `<span class="jf-cond-pill">${p}</span>`).join('');
-  ovExName.textContent = panel.dataset.ex;
+  const ur = currentLang === 'ur';
+  ovTag.textContent = ur ? panel.dataset.tagUr : panel.dataset.tag;
+  ovTitle.innerHTML = ur ? panel.dataset.titleUr : panel.dataset.title;
+  ovDesc.textContent = ur ? panel.dataset.descUr : panel.dataset.desc;
+  ovPills.innerHTML = (ur ? panel.dataset.pillsUr : panel.dataset.pills).split(',').map(p => `<span class="jf-cond-pill">${p}</span>`).join('');
+  ovExName.textContent = ur ? panel.dataset.exUr : panel.dataset.ex;
   ovExLink.href = 'exercises.html?ex=' + encodeURIComponent(panel.dataset.exDet) + '#hero';
 
   gsap.fromTo('#jf-overlay', {opacity:0, y:16}, {opacity:1, y:0, duration:.6, ease:'power2.out'});
@@ -585,6 +643,11 @@ initScrollReveal('.footer-cols>div,.footer-bottom',{stagger:70});
 // Magnetic CTAs — shared implementation in reveal.js (previously duplicated).
 initMagnetic('.nav-cta,.gate-submit');
 initPageLoader();
+
+function onLangChange(){
+  if(typeof syncGateLangBtns==='function')syncGateLangBtns();
+  if(lastFocusedPanel)focusJoint(lastFocusedPanel, true);
+}
 </script>
 
 <footer class="site-footer">
@@ -595,24 +658,24 @@ initPageLoader();
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:22px">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
       </div>
-      <p class="footer-desc">PhysioSync delivers clinical-grade physiotherapy that corrects your posture and guides your rehabilitation — anywhere, anytime, zero compromise on accuracy.</p>
+      <p class="footer-desc" data-ur="PhysioSync کلینیکل معیار کی فزیوتھراپی فراہم کرتا ہے جو آپ کی کرنسی درست کرتی ہے اور آپ کی بحالی میں رہنمائی کرتی ہے — کہیں بھی، کبھی بھی، درستگی پر کوئی سمجھوتہ نہیں۔">PhysioSync delivers clinical-grade physiotherapy that corrects your posture and guides your rehabilitation — anywhere, anytime, zero compromise on accuracy.</p>
     </div>
     <div>
-      <div class="footer-heading">Platform</div>
+      <div class="footer-heading" data-ur="پلیٹ فارم">Platform</div>
       <div class="footer-links">
-        <a href="exercises.html#hero">Exercises</a>
-        <a href="account.html">Account</a>
-        <a href="#joint-focus">Conditions</a>
+        <a href="exercises.html#hero" data-ur="ورزشیں">Exercises</a>
+        <a href="account.html" data-ur="اکاؤنٹ">Account</a>
+        <a href="#joint-focus" data-ur="حالات">Conditions</a>
       </div>
     </div>
     <div>
-      <div class="footer-heading">Company</div>
+      <div class="footer-heading" data-ur="کمپنی">Company</div>
       <div class="footer-links">
-        <a href="about.html">About</a>
+        <a href="about.html" data-ur="ہمارے بارے میں">About</a>
       </div>
     </div>
     <div>
-      <div class="footer-heading">Contact</div>
+      <div class="footer-heading" data-ur="رابطہ">Contact</div>
       <div class="footer-links">
         <span>physiosync@gmail.com</span>
         <span>0316 2404444</span>
@@ -621,8 +684,8 @@ initPageLoader();
   </div>
   <div class="footer-bottom">
     <div class="footer-bottom-brand">
-      <span>&copy; 2026 PhysioSync. All rights reserved.</span>
-      <span class="footer-powered"><img src="physiosync-icon.png" alt="">Powered by PhysioSync</span>
+      <span data-ur="&copy; 2026 PhysioSync۔ جملہ حقوق محفوظ ہیں۔">&copy; 2026 PhysioSync. All rights reserved.</span>
+      <span class="footer-powered"><img src="physiosync-icon.png" alt=""><span data-ur="PhysioSync کی طاقت سے">Powered by PhysioSync</span></span>
     </div>
     <div class="footer-soc">
       <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
@@ -631,8 +694,8 @@ initPageLoader();
       <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
     </div>
     <div class="footer-bottom-links">
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
+      <a href="#" data-ur="پرائیویسی">Privacy</a>
+      <a href="#" data-ur="شرائط">Terms</a>
     </div>
   </div>
 </footer>

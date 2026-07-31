@@ -143,6 +143,7 @@ function syncLangBtn(){
   if(btn)btn.title='Switch language ('+(currentLang==='ur'?'Urdu → English':'English → Urdu')+')';
 }
 function applyLang(){
+  syncLangBtn();
   document.body.classList.toggle('lang-ur',currentLang==='ur');
   document.querySelectorAll('[data-ur]').forEach(el=>{
     if(el.dataset.en===undefined)el.dataset.en=el.innerHTML;
@@ -157,11 +158,9 @@ function applyLang(){
 function toggleLang(){
   currentLang=currentLang==='ur'?'en':'ur';
   localStorage.setItem('pah-lang',currentLang);
-  syncLangBtn();
   applyLang();
 }
-syncLangBtn();
-document.addEventListener('DOMContentLoaded',()=>{if(currentLang==='ur')applyLang();});
+document.addEventListener('DOMContentLoaded',applyLang);
 
 // ═══════════════════════════════════════════════════════════
 // SERVICE WORKER — registers sw.js (shared here since reveal.js is already
