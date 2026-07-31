@@ -1810,7 +1810,12 @@ const EX=[
     note:'Activates and releases tension in the upper trapezius. A gentle first step for tight, stressed, or desk-strained shoulders and neck.',
     warn:'Check with your doctor first if you have a diagnosed cervical nerve impingement, or if shrugging causes tingling or numbness radiating down your arm.',
     muscles:['Upper Trapezius','Levator Scapulae'],
-    angles:{main:[7,11,12],pivot:11,threshold:{lo:0.05,hi:0.20}}, // delta from this session's own tracked resting ratio, not an absolute ratio
+    // hi was 0.20 — too tight a ceiling for a genuine full shrug's relative
+    // displacement (a real vigorous shrug routinely exceeds that), which
+    // combined with scoreHold's now-fixed proportional penalty would make
+    // real reps overshoot into the harsh out-of-range formula. Widened so a
+    // real full shrug lands inside the graduated in-range band instead.
+    angles:{main:[7,11,12],pivot:11,threshold:{lo:0.05,hi:0.6}}, // delta from this session's own tracked resting ratio, not an absolute ratio
     joints:{p:[7,8,11,12],s:[],lk:[[11,12]],sk:[[7,11],[8,12]]}},
   {name:'Calf Raises',area:'Ankle Plantarflexion (Both Ankles)',diff:'Beginner',tags:['Ankle'],reps:15,det:'calf_raise',
     desc:'Stand tall, feet hip-width apart. Rise up onto your toes as high as you can, pause, then lower your heels back down with control.',
@@ -3129,7 +3134,16 @@ function scoreHold(val,lo,hi){
   // range at all is correct form (so it never drops below a good baseline),
   // but sitting precisely centered in it scores higher than barely grazing
   // the edge, so the number actually reflects how well the position was held.
-  const mid=(lo+hi)/2,halfSpan=Math.max((hi-lo)/2,5);
+  // The floors below used to be hardcoded to 10/5, assuming every threshold
+  // is on a degree-like scale — true for 9 of 10 exercises (spans are all
+  // >=15, so the floors were dead code there), but shoulder_shrug's threshold
+  // is a 0-1 normalized ratio (span 0.15), where a floor of 10 made the
+  // out-of-range penalty formula almost completely inert and capped its
+  // score around 83 — permanently below GOOD_FORM_THRESHOLD, so a real
+  // shrug never counted as a rep. Scaling relative to the actual span
+  // instead makes this correct for any unit scale.
+  const span=hi-lo||1;
+  const mid=(lo+hi)/2,halfSpan=span/2;
   if(val>=lo&&val<=hi){
     const distFromCenter=Math.abs(val-mid)/halfSpan; // 0 at center, 1 at either edge
     return Math.round(100-distFromCenter*15);
@@ -3138,7 +3152,7 @@ function scoreHold(val,lo,hi){
   // tracked reads as "very poor form," not a dead zero (true 0 is reserved
   // for when the camera can't see the body at all — see requireVisible()).
   const dist=val<lo?lo-val:val-hi;
-  return Math.max(8,Math.round(85-(dist/Math.max(hi-lo,10))*140));
+  return Math.max(8,Math.round(85-(dist/span)*140));
 }
 // Detects genuine stillness (not just "holding the target") so an idle, unengaged
 // body doesn't keep showing a leftover/false score.
