@@ -117,6 +117,7 @@ body.lang-ur .hero-h{line-height:1.9}
   background-size:300% 100%;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   animation:gradShift 7s ease-in-out infinite;
+  filter:drop-shadow(0 0 20px rgba(225,29,72,.4));
 }
 @media(prefers-reduced-motion:reduce){.hero-h span{animation:none}}
 .hero-sub{color:var(--muted);font-size:.95rem;line-height:1.8;max-width:560px;margin:0 auto 28px}
@@ -688,6 +689,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:80px">
       <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:40px">
       <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:40px">
+    </div>
+    <div class="gate-lang-row" style="display:flex;gap:8px;justify-content:center;margin-bottom:14px">
+      <button type="button" class="gate-lang-btn" id="gate-lang-en" onclick="setGateLang('en')" style="padding:6px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w06);color:var(--heading);font-weight:700;font-size:.78rem;cursor:pointer">English</button>
+      <button type="button" class="gate-lang-btn" id="gate-lang-ur" onclick="setGateLang('ur')" style="padding:6px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w06);color:var(--heading);font-weight:700;font-size:.78rem;cursor:pointer">اردو</button>
     </div>
     <h2 class="gate-h" data-ur="اپنا پروفائل بنائیں">Create Your Profile</h2>
     <p class="gate-sub" data-ur="ذاتی رہنمائی حاصل کرنے کے لیے اپنا بحالی پروفائل بنائیں۔">Set up your recovery profile to get personalized guidance.</p>
@@ -1356,7 +1361,7 @@ function renderHeroGreeting(){
   const el=document.getElementById('hero-welcome-txt');
   if(!el)return;
   if(currentLang==='ur'){
-    const timeUr={morning:'صبح',afternoon:'دوپہر',evening:'شام'}[lastGreetTime]||'دن';
+    const timeUr={morning:'صبح',afternoon:'دوپہر',evening:'شام',night:'رات'}[lastGreetTime]||'دن';
     el.innerHTML=`<strong id="hero-name">${lastGreetFirst}</strong>، ${timeUr} بخیر۔ سیشن کے لیے تیار ہیں؟`;
   }else{
     el.innerHTML=`Good <span id="hero-time">${lastGreetTime}</span>, <strong id="hero-name">${lastGreetFirst}</strong>. Ready for your session?`;
@@ -1365,7 +1370,21 @@ function renderHeroGreeting(){
 function onLangChange(){
   renderHeroGreeting();
   if(typeof renderExGrid==='function'){renderExGrid();if(typeof filterEx==='function')filterEx();}
+  syncGateLangBtns();
 }
+function syncGateLangBtns(){
+  const en=document.getElementById('gate-lang-en'),ur=document.getElementById('gate-lang-ur');
+  if(!en||!ur)return;
+  en.style.background=currentLang==='en'?'var(--brand)':'var(--w06)';
+  en.style.color=currentLang==='en'?'#fff':'var(--heading)';
+  ur.style.background=currentLang==='ur'?'var(--brand)':'var(--w06)';
+  ur.style.color=currentLang==='ur'?'#fff':'var(--heading)';
+}
+function setGateLang(lang){
+  if(currentLang!==lang)toggleLang();
+  syncGateLangBtns();
+}
+syncGateLangBtns();
 
 // Exact-match English->Urdu dictionary for fixed coaching/UI strings used
 // by setFB() and VoiceCoach.speak(). T() falls back to the original English
@@ -1624,7 +1643,7 @@ function gateSubmit(e){
 
 function initApp(acc){
   const hr=new Date().getHours();
-  const time=hr<12?'morning':hr<17?'afternoon':'evening';
+  const time=hr<5?'night':hr<12?'morning':hr<17?'afternoon':hr<21?'evening':'night';
   const first=acc.name.split(' ')[0];
   document.getElementById('nav-greet').style.display='flex';
   document.getElementById('nav-name').textContent=first;

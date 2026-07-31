@@ -898,10 +898,10 @@ function showSessionDetail(idx){
 
 function applyAcctGreeting(acc){
   const hr=new Date().getHours();
-  const time=hr<12?'morning':hr<17?'afternoon':'evening';
+  const time=hr<5?'night':hr<12?'morning':hr<17?'afternoon':hr<21?'evening':'night';
   const first=acc.name.split(' ')[0];
   if(currentLang==='ur'){
-    const timeUr={morning:'صبح',afternoon:'دوپہر',evening:'شام'}[time];
+    const timeUr={morning:'صبح',afternoon:'دوپہر',evening:'شام',night:'رات'}[time];
     document.getElementById('acct-hero-h').innerHTML='<span>'+first+'</span>، '+timeUr+' بخیر';
   }else{
     document.getElementById('acct-hero-h').innerHTML='Good '+time+', <span>'+first+'</span>';
