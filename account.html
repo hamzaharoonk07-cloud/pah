@@ -72,6 +72,8 @@ button{cursor:pointer;font-family:inherit}
 .dash-card-t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:18px;display:flex;align-items:center;gap:8px}
 .dash-card-t svg{width:16px;height:16px;stroke:var(--brand)}
 .acct-profile-card{margin-bottom:20px;animation:cardRise .5s cubic-bezier(.2,.8,.2,1) both}
+.acct-profile-brand{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.ab-tag-logo{padding:6px 16px}
 .acct-profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
 .acct-profile-grid div{background:var(--w03);border:1px solid var(--w06);border-radius:12px;padding:12px 14px;transition:border-color .2s,transform .2s}
 .acct-profile-grid div:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
@@ -298,7 +300,11 @@ button{cursor:pointer;font-family:inherit}
   <div class="blob-parallax"><div class="hero-blob b2"></div></div>
   <div class="physio-ecg" aria-hidden="true"></div>
   <div class="ab-hero-inner">
-    <span class="ab-tag">PhysioSync Account</span>
+    <span class="ab-tag ab-tag-logo">
+      <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:14px">
+      <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:11px">
+      <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:11px">
+    </span>
     <h1 class="ab-h" id="acct-hero-h">Welcome back<span>.</span></h1>
     <p class="ab-sub">Everything about your recovery journey, in one place — your details and every session you've completed, saved on this device.</p>
   </div>
@@ -322,6 +328,11 @@ button{cursor:pointer;font-family:inherit}
   <div class="sec-in">
 
     <div class="dash-card acct-profile-card">
+      <div class="acct-profile-brand">
+        <img src="physiosync-icon.png" alt="" class="brand-icon" style="height:20px">
+        <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:14px">
+        <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:14px">
+      </div>
       <div class="acct-profile-grid">
         <div><span>Name</span><strong id="acct-name">—</strong></div>
         <div><span>Gender</span><strong id="acct-gender">—</strong></div>
