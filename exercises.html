@@ -833,8 +833,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <button class="pill" data-f="Back" data-ur="کمر" onclick="setPill(this,'Back')">Back</button>
       <button class="pill" data-f="Hip" data-ur="کولہا" onclick="setPill(this,'Hip')">Hip</button>
       <button class="pill" data-f="Knee" data-ur="گھٹنا" onclick="setPill(this,'Knee')">Knee</button>
-      <button class="pill" data-f="Ankle" data-ur="ٹخنہ" onclick="setPill(this,'Ankle')">Ankle</button>
-      <button class="pill" data-f="Wrist" data-ur="کلائی" onclick="setPill(this,'Wrist')">Wrist</button>
     </div>
   </div>
 </section>
@@ -1220,8 +1218,6 @@ const DEMO_DEFS={
     steps:['Stand tall, feet shoulder-width apart','Bend both knees into a shallow squat — pause, then stand'],highlight:['leftKnee','rightKnee']},
   lateral_raise:{kind:'hold',peak:{leftElbow:{x:.20,y:.22},leftWrist:{x:.10,y:.22},rightElbow:{x:.80,y:.22},rightWrist:{x:.90,y:.22}},
     steps:['Arms relaxed at your sides','Raise both arms out to the sides to shoulder height — hold 2 seconds'],highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
-  wrist_dev:{kind:'hold',peak:{leftWrist:{x:.24}},
-    steps:['Extend one arm forward, palm down','Bend your wrist side to side, toward the thumb then the little finger'],highlight:['leftElbow','leftWrist']},
   shoulder_shrug:{kind:'hold',
     peak:{leftShoulder:{y:.185},rightShoulder:{y:.185},leftElbow:{y:.345},rightElbow:{y:.345},leftWrist:{y:.495},rightWrist:{y:.495}},
     steps:['Relax both arms at your sides','Lift both shoulders straight up toward your ears — hold 2 seconds'],
@@ -1455,9 +1451,6 @@ const UR_MAP={
   'Nice — stand tall and repeat.':'بہت خوب — سیدھے کھڑے ہوں اور دہرائیں۔',
   'Pause a moment at the bottom for full credit.':'مکمل نمبر کے لیے نیچے ایک لمحہ رکیں۔',
   'Bend both knees into a shallow squat, keeping knees behind your toes.':'دونوں گھٹنے ہلکا سا موڑ کر بیٹھیں، گھٹنوں کو پیر کی انگلیوں سے آگے نہ جانے دیں۔',
-  'Good wrist bend — hold 2 seconds.':'اچھا کلائی کا موڑ — 2 سیکنڈ تک رکھیں۔',
-  'Straighten your wrist and bend the other way.':'کلائی سیدھی کریں اور دوسری طرف موڑیں۔',
-  'Extend your arm forward, then bend your wrist side to side.':'اپنا بازو آگے کی طرف سیدھا کریں، پھر کلائی کو دائیں بائیں موڑیں۔',
   'Good — shoulders lifted toward your ears. Hold 2 seconds.':'اچھا — کندھے کانوں کی طرف اٹھے ہوئے ہیں۔ 2 سیکنڈ تک رکھیں۔',
   'Let your shoulders drop fully and repeat.':'کندھوں کو مکمل نیچے آنے دیں اور دہرائیں۔',
   'Hold the shrug a little longer for full credit.':'مکمل نمبر کے لیے کندھے اٹھائے رکھیں تھوڑی دیر مزید۔',
@@ -1540,10 +1533,6 @@ const EX_UR={
     desc:'سیدھے کھڑے ہوں، بازو پہلوؤں میں۔ دونوں بازو سائیڈ کی طرف کندھے کی اونچائی تک آہستگی اور قابو کے ساتھ اٹھائیں۔ اسی قابو کے ساتھ نیچے لائیں۔',
     note:'سائیڈ ڈیلٹائیڈ کو مضبوط کرتا ہے۔ روزمرہ کے کاموں کے لیے کندھے کا استحکام بناتا ہے۔',
     warn:'اگر بازو اٹھانے سے درمیانی اونچائی پر (تقریباً کان سے کندھے کی سطح) خاص طور پر درد ہو جو مزید اوپر جانے پر کم ہو جائے — یہ کندھے کے امپنجمنٹ کی علامت ہو سکتی ہے، پہلے ڈاکٹر سے رجوع کریں۔'},
-  wrist_dev:{name:'کلائی کا سائیڈ موڑ',area:'بازو اور کلائی',
-    desc:'ایک بازو سامنے کی طرف سیدھا کریں، ہتھیلی نیچے کی طرف۔ کلائی کو انگوٹھے کی طرف، پھر چھوٹی انگلی کی طرف موڑیں — بازو ساکت رکھیں۔',
-    note:'کلائی کو سائیڈ کی طرف حرکت دیتا ہے، فلیکشن/ایکسٹینشن کے ساتھ ایک ضمنی حرکت۔ عمومی کلائی کی اکڑن اور ابتدائی ٹینڈن کی جلن کے لیے مفید۔',
-    warn:'اگر آپ کی کلائی ابھی فریکچر/موچ سے صحت یاب ہو رہی ہے، یا فی الحال سوجی ہوئی یا غیرمستحکم ہے تو پہلے ڈاکٹر سے رجوع کریں۔ اگر انگلیوں میں جھنجھناہٹ یا سُن پن بڑھے تو رک جائیں۔'},
   shoulder_shrug:{name:'کندھے اچکانا',area:'اوپری ٹریپیزیئس (دونوں کندھے)',
     desc:'دونوں بازو پہلوؤں میں ڈھیلے چھوڑیں۔ دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں، 2 سیکنڈ تک رکھیں، پھر مکمل نیچے آنے دیں۔',
     note:'اوپری ٹریپیزیئس میں تناؤ کو فعال اور ریلیز کرتا ہے۔ اکڑے ہوئے یا ڈیسک کے کام سے تھکے کندھوں اور گردن کے لیے ہلکا پہلا قدم۔',
@@ -1786,13 +1775,6 @@ const EX=[
     muscles:['Lateral Deltoid','Supraspinatus','Upper Trapezius'],
     angles:{main:[23,11,15],pivot:11,threshold:{lo:70,hi:100}},
     joints:{p:[11,12,13,14,15,16],s:[7,8,23,24],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12],[11,23],[12,24]]}},
-  {name:'Wrist Side Bend',area:'Forearm and Wrist',diff:'Beginner',tags:['Wrist'],reps:15,det:'wrist_dev',
-    desc:'Extend one arm forward, palm down. Bend your wrist side to side — toward your thumb, then toward your little finger — keeping your forearm still.',
-    note:'Mobilizes the wrist in the side-to-side (radial/ulnar) plane, a companion movement to flexion/extension. Helpful for general wrist stiffness and early-stage tendon irritation.',
-    warn:'Check with your doctor first if your wrist is still healing from a fracture/sprain, or if it’s currently swollen or unstable. Stop if tingling or numbness in your fingers increases.',
-    muscles:['Extensor Carpi Radialis','Extensor Carpi Ulnaris','Flexor Carpi Ulnaris'],
-    angles:{main:[13,15,19],pivot:15,threshold:{lo:28,hi:50}},
-    joints:{p:[13,15,19],s:[11],lk:[[13,15],[15,19]],sk:[[11,13]]}},
   {name:'Shoulder Shrugs',area:'Upper Trapezius (Both Shoulders)',diff:'Beginner',tags:['Shoulder'],reps:12,det:'shoulder_shrug',
     desc:'Let both arms relax at your sides. Lift both shoulders straight up toward your ears, hold 2 seconds, then let them drop fully.',
     note:'Activates and releases tension in the upper trapezius. A gentle first step for tight, stressed, or desk-strained shoulders and neck.',
@@ -1838,7 +1820,6 @@ const ICON_BY_DET={
   bilateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8l-3,-4M12,8l3,-4M12,15l-3,6M12,15l3,6', // both arms overhead
   mini_squat:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v7M12,8l-3,4M12,8l3,4M12,13l-4,4l1,3M12,13l4,4l-1,3', // knees bent into a squat
   lateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8h-6M12,8h6M12,15l-3,6M12,15l3,6', // arms straight out to the sides
-  wrist_dev:'M4,14h10M14,14l5,-3M14,14l5,3', // forearm with hand bending side to side
   shoulder_shrug:'M10,3a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,5v1M7,6h10M7,6v8M17,6v8M12,14l-3,6M12,14l3,6' // shoulders raised close to a short neck, arms hanging straight
 };
 
@@ -2256,7 +2237,7 @@ const IS_MOBILE=/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
 // Exercises tracking a small/fine landmark (vs. the large shoulder/hip/knee
 // joints everything else here uses) that genuinely needs the higher
 // resolution the mobile branch above otherwise drops.
-const FINE_DETAIL_DETS=new Set(['wrist_dev']);
+const FINE_DETAIL_DETS=new Set();
 // Exercises measured off MediaPipe's z (depth) axis, not x/y joint angles —
 // confirmed via live testing that mobile's lighter modelComplexity:0 (the
 // "lite" model, needed elsewhere for phone performance) produces z estimates
@@ -2603,15 +2584,13 @@ async function startCamera(){
   // 4. Progressive constraint fallback — mobile asks for 480p up front
   // instead of 720p; a phone CPU running full-res decode + pose inference +
   // skeleton redraw every frame is exactly what turns into visible lag and
-  // stale-looking numbers, and 480p is plenty of resolution for the large-
-  // joint (shoulder/hip/knee) exercises. wrist_dev is the one exception —
-  // it tracks the index-finger tip, a small landmark whose MediaPipe
-  // confidence was already borderline at 720p (see wrist_dev's minVis
-  // comment), and dropping to 480p pushed it below the visibility gate
-  // often enough to look broken, so it keeps requesting 720p even on
-  // mobile. Desktop has the CPU headroom mobile doesn't, so it asks for
-  // 4K — 'ideal' (not 'exact') just gracefully falls back to whatever the
-  // webcam actually supports, this never fails outright on lesser cameras.
+  // stale-looking numbers, and 480p is plenty of resolution for the current
+  // large-joint (shoulder/hip/knee) exercises. FINE_DETAIL_DETS exists for
+  // any future exercise that tracks a small/far landmark needing more
+  // resolution even on mobile — currently empty. Desktop has the CPU
+  // headroom mobile doesn't, so it asks for 4K — 'ideal' (not 'exact') just
+  // gracefully falls back to whatever the webcam actually supports, this
+  // never fails outright on lesser cameras.
   const vid=document.getElementById('s-vid');
   const needsFineDetail=sessEx&&FINE_DETAIL_DETS.has(sessEx.det);
   let idealW,idealH;
@@ -3243,9 +3222,8 @@ function safe(lm,...idx){return idx.every(i=>lm[i]&&vis(lm[i]));}
 let visLossStreak=0;
 const VIS_LOSS_GRACE=6; // ~200ms at 30fps
 // minVis defaults to safe()'s standard 0.35 for big core-body joints, but a detector can pass
-// a lower bar for a small/far extremity landmark (e.g. wrist_dev's index-finger tip) that
-// genuinely reads lower confidence from MediaPipe even while actually visible and trackable —
-// same reasoning as the bilateral-raise wrist check.
+// a lower bar for a small/far extremity landmark that genuinely reads lower confidence from
+// MediaPipe even while actually visible and trackable — see the bilateral-raise wrist check.
 function requireVisible(lm,minVis,...idx){
   const seen=idx.every(i=>lm[i]&&typeof lm[i].visibility==='number'&&lm[i].visibility>minVis);
   if(seen){visLossStreak=0;return true;}
@@ -3414,30 +3392,6 @@ const HOLD_CFG={
     shortHoldMsg:'Pause a moment at the bottom for full credit.',
     readyMsg:'Bend both knees into a shallow squat, keeping knees behind your toes.'
   },
-  wrist_dev:{
-    vis:[13,15,19],
-    // The forearm-wrist-index angle is a genuine, real wrist-bend magnitude
-    // measurement (not a proxy) — it can't distinguish which direction the
-    // wrist bent (that's an inherent limit of a 3-point angle, not something
-    // faked), so the coaching cue only ever claims "bend," never a specific
-    // side, matching what's actually measured. The index-finger landmark is
-    // small and farther from the camera than the big-joint exercises in this
-    // app, so it genuinely reads lower MediaPipe confidence even while
-    // actually visible and trackable — same reasoning and same fix as the
-    // bilateral-raise wrist check, just on the primary visibility gate
-    // instead of a secondary one.
-    minVis:0.2,
-    compute(lm){
-      return{value:smoothAngle(Math.max(0,180-angleDeg(lm[13],lm[15],lm[19]))),label:'Wrist Bend',unit:'°'};
-    },
-    isEngaged:(o,lo)=>o.value>lo,
-    isReleased:(o,lo)=>o.value<lo*0.3,
-    minHoldMs:1000,activeLabel:'Bent',
-    engagedMsg:'Good wrist bend — hold 2 seconds.',
-    releaseMsg:'Straighten your wrist and bend the other way.',
-    shortHoldMsg:'Hold the bend a little longer for full credit.',
-    readyMsg:'Extend your arm forward, then bend your wrist side to side.'
-  },
   shoulder_shrug:{
     vis:[7,8,11,12],
     // shrugGap is a normalized on-screen ratio (ear-shoulder gap / shoulder
@@ -3593,7 +3547,7 @@ function runBilateralRaise(lm){
   }
 }
 
-const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','wrist_dev','shoulder_shrug']);
+const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','shoulder_shrug']);
 const BILATERAL_DETS=new Set(['bilateral_raise','lateral_raise']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
