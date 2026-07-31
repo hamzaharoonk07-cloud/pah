@@ -190,10 +190,11 @@ body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-heigh
 }
 .nav-cta:hover{opacity:.88;transform:translateY(-1px)}
 .nav-cta:active{transform:scale(.95)}
+.nav-actions{display:flex;align-items:center;gap:12px}
 .theme-tgl{
   display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;
   background:var(--w05);border:1px solid var(--w10);color:var(--heading);cursor:pointer;
-  transition:all .2s;flex-shrink:0;margin-left:14px;
+  transition:all .2s;flex-shrink:0;
 }
 .theme-tgl:hover{background:var(--w08);border-color:var(--w12);transform:scale(1.1) rotate(-8deg)}
 .theme-tgl:active{transform:scale(.9)}
@@ -212,7 +213,8 @@ body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-heigh
   .nav-links{display:none}
   .nav-cta{display:none}
   .nav-ham{display:flex}
-  .navbar{padding:14px 18px}
+  .navbar{padding:14px 12px}
+  .nav-actions{gap:8px}
 }
 
 /* ACCOUNT GATE */
@@ -395,17 +397,19 @@ syncGateLangBtns();
     <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:22px">
     <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
   </a>
-  <a href="exercises.html" class="nav-cta" data-ur="ورزشیں">Exercises</a>
-  <a href="account.html" class="theme-tgl" aria-label="Your account" title="Your account">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-  </a>
-  <button class="theme-tgl" id="lang-tgl" onclick="toggleLang()" aria-label="Switch language" title="Switch language (English / Urdu)">
-    <span id="lang-tgl-txt" style="font-size:.62rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.02em">EN</span>
-  </button>
-  <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
-    <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-    <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-  </button>
+  <div class="nav-actions">
+    <a href="exercises.html" class="nav-cta" data-ur="ورزشیں">Exercises</a>
+    <a href="account.html" class="theme-tgl" aria-label="Your account" title="Your account">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+    </a>
+    <button class="theme-tgl" id="lang-tgl" onclick="toggleLang()" aria-label="Switch language" title="Switch language (English / Urdu)">
+      <span id="lang-tgl-txt" style="font-size:.62rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.02em">EN</span>
+    </button>
+    <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
+      <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+  </div>
 </nav>
 
 <section id="joint-focus">
