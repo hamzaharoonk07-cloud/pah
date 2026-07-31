@@ -53,7 +53,8 @@ body.lang-ur .hero-h{line-height:1.9}
 @media(prefers-reduced-motion:reduce){:root[data-theme="light"] body::before{animation:none}}
 /* ═══ GATE ═══ */
 #gate{
-  position:fixed;inset:0;z-index:9999;background:var(--bg-strong);
+  position:fixed;top:0;right:0;bottom:0;left:0;width:100%;height:100%;
+  z-index:9999;background:var(--bg-strong);box-sizing:border-box;
   display:flex;align-items:center;justify-content:center;padding:20px;
 }
 #gate.hidden{display:none}
@@ -79,7 +80,12 @@ body.lang-ur .hero-h{line-height:1.9}
   transition:border-color .2s;
 }
 .fl input:focus,.fl select:focus{outline:none;border-color:var(--brand)}
-.fl select option{background:#111}
+/* Some browsers render the native <select> popup list using the OS's own
+   light-theme colors regardless of the select's own custom background,
+   ignoring inherited text color — explicit background+color on the
+   option itself is the one part of a select browsers reliably respect. */
+.fl select{background-color:#111}
+.fl select option{background:#111;color:#fff}
 .gate-btn{
   margin-top:14px;width:100%;padding:14px;border-radius:var(--r-md);border:none;
   background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;
@@ -859,6 +865,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <select id="voice-select" onchange="VoiceCoach.setVoice(this.value)" aria-label="Voice coach voice" title="Choose voice" style="max-width:110px;height:34px;border-radius:100px;background:var(--w10);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:.68rem;padding:0 8px;flex-shrink:0"></select>
       <button class="voice-toggle-btn" id="voice-toggle-btn" onclick="VoiceCoach.toggle()" aria-label="Mute voice coach" title="Mute voice coach">
         <svg class="ic-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/><path d="M18.5 5.5a9 9 0 010 13"/></svg>
         <svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
@@ -2352,7 +2359,8 @@ const VoiceCoach=(function(){
   const supported='speechSynthesis' in window;
   let enabled=true;
   try{enabled=JSON.parse(localStorage.getItem('pah_voice_on')??'true');}catch(e){}
-  let voice=null,voiceUr=null;
+  let voice=null,voiceUr=null,chosenVoice=null;
+  let chosenVoiceURI=localStorage.getItem('pah_voice_uri')||null;
   function pickVoice(){
     if(!supported)return;
     const voices=window.speechSynthesis.getVoices();
@@ -2365,10 +2373,35 @@ const VoiceCoach=(function(){
     // still sets utterance.lang to ur-PK so the OS/browser's own language
     // fallback has the best chance of picking a reasonable voice itself.
     voiceUr=voices.find(v=>/^ur/i.test(v.lang))||null;
+    chosenVoice=chosenVoiceURI?(voices.find(v=>v.voiceURI===chosenVoiceURI)||null):null;
+    syncVoiceSelect();
   }
   if(supported){
     pickVoice();
     window.speechSynthesis.onvoiceschanged=pickVoice;
+  }
+  // Lets the user override the auto-picked voice entirely — some devices
+  // have several English/Urdu voices installed (different accents, gender,
+  // "natural"-sounding vs robotic) and the auto-pick can't know which one
+  // the user actually prefers to hear during coaching.
+  function listVoices(){
+    if(!supported)return[];
+    return window.speechSynthesis.getVoices().map(v=>({uri:v.voiceURI,name:v.name,lang:v.lang}));
+  }
+  function setVoice(uri){
+    chosenVoiceURI=uri||null;
+    if(uri)localStorage.setItem('pah_voice_uri',uri);else localStorage.removeItem('pah_voice_uri');
+    pickVoice();
+  }
+  function syncVoiceSelect(){
+    document.querySelectorAll('#voice-select').forEach(sel=>{
+      if(!supported){sel.style.display='none';return;}
+      const voices=window.speechSynthesis.getVoices();
+      if(!voices.length)return;
+      const prevValue=sel.value;
+      sel.innerHTML='<option value="">Auto</option>'+voices.map(v=>`<option value="${v.voiceURI}">${v.name} (${v.lang})</option>`).join('');
+      sel.value=(chosenVoiceURI&&voices.some(v=>v.voiceURI===chosenVoiceURI))?chosenVoiceURI:(prevValue||'');
+    });
   }
   function speak(text,{priority=false}={}){
     if(!supported||!enabled||!text)return;
@@ -2377,7 +2410,9 @@ const VoiceCoach=(function(){
     else if(window.speechSynthesis.speaking)return; // drop rather than queue — keeps live cues from stacking up
     const u=new SpeechSynthesisUtterance(text);
     u.rate=1.03;u.pitch=1.0;u.volume=1;
-    if(currentLang==='ur'){
+    if(chosenVoice){
+      u.voice=chosenVoice;u.lang=chosenVoice.lang;
+    }else if(currentLang==='ur'){
       u.lang='ur-PK';
       if(voiceUr)u.voice=voiceUr;
     }else{
@@ -2402,7 +2437,7 @@ const VoiceCoach=(function(){
       btn.title=enabled?'Mute voice coach':'Unmute voice coach';
     });
   }
-  return{speak,stop,toggle,setEnabled,syncVoiceBtn,get enabled(){return enabled;},get supported(){return supported;}};
+  return{speak,stop,toggle,setEnabled,syncVoiceBtn,listVoices,setVoice,get enabled(){return enabled;},get supported(){return supported;}};
 })();
 VoiceCoach.syncVoiceBtn();
 
