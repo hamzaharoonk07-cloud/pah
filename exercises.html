@@ -1984,7 +1984,7 @@ function updateHoldCountdown(goodFormStart,minHoldMs){
     ringC.style.stroke='#00e5a0';
     ringC.style.strokeDashoffset=0;
     ringT.textContent='✓';
-    if(lbl){lbl.textContent='Go!';lbl.classList.add('done');lbl.classList.remove('counting');}
+    if(lbl){lbl.textContent='Release';lbl.classList.add('done');lbl.classList.remove('counting');}
     if(!holdPraised){
       holdPraised=true;
       VoiceCoach.speak('Release now.',{priority:true});
