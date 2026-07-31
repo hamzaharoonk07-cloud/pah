@@ -10,8 +10,11 @@
 <link rel="apple-touch-icon" href="physiosync-icon.png">
 <script>(function(){var t=localStorage.getItem('pah-theme');if(!t)t=matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';if(t==='light')document.documentElement.setAttribute('data-theme','light');})();</script>
 <link rel="stylesheet" href="styles.css">
-<script src="reveal.js"></script>
+<script src="reveal.js?v=2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&family=Noto+Sans+Arabic:wght@100..900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/motion@12.42.2/dist/motion.js"></script>
 <style>
 /* :root tokens, reset, #navbar/.nl/.theme-tgl/.ham/.mob-menu, .edge-glow,
@@ -21,6 +24,10 @@ img{max-width:100%;display:block}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:inherit}
 .nl{position:relative}
+body.lang-ur .ab-h,body.lang-ur .ab-sub,body.lang-ur .f-desc,
+body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
+  font-family:'Noto Nastaliq Urdu','Noto Sans Arabic',sans-serif!important;line-height:2.3;
+}
 
 /* NAVBAR (account.html keeps its own 860px collapse breakpoint, matching
    about.html — narrower than the other pages' 768px, pre-existing behavior) */
@@ -267,7 +274,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="loader-logo-fill"><img src="physiosync-icon.png" alt=""></div>
   </div>
   <span class="loader-brand">PhysioSync</span>
-  <span class="loader-sub">Loading PhysioSync Account…</span>
+  <span class="loader-sub" data-ur="PhysioSync اکاؤنٹ لوڈ ہو رہا ہے…">Loading PhysioSync Account…</span>
 </div>
 
 <div class="edge-glow et"></div><div class="edge-glow eb"></div><div class="edge-glow el"></div><div class="edge-glow er"></div>
@@ -279,15 +286,18 @@ button{cursor:pointer;font-family:inherit}
     <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
   </a>
   <div class="nav-links">
-    <a href="exercises.html#hero" class="nl">Exercises</a>
-    <a href="hospitals.html" class="nl">Hospitals</a>
-    <a href="research.html" class="nl">Research</a>
-    <a href="about.html" class="nl">About</a>
+    <a href="exercises.html#hero" class="nl" data-ur="ورزشیں">Exercises</a>
+    <a href="hospitals.html" class="nl" data-ur="ہسپتال">Hospitals</a>
+    <a href="research.html" class="nl" data-ur="تحقیق">Research</a>
+    <a href="about.html" class="nl" data-ur="ہمارے بارے میں">About</a>
   </div>
   <div class="nav-right">
     <a href="index.html" class="theme-tgl" aria-label="Home" title="Home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
     </a>
+    <button class="theme-tgl" id="lang-tgl" onclick="toggleLang()" aria-label="Switch language" title="Switch language (English / Urdu)">
+      <span id="lang-tgl-txt" style="font-size:.62rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.02em">EN</span>
+    </button>
     <button class="theme-tgl" id="theme-tgl" onclick="toggleTheme()" aria-label="Toggle light/dark theme" title="Toggle theme">
       <svg id="theme-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg id="theme-ic-moon" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="width:15px;height:15px;display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -298,10 +308,10 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </nav>
 <div class="mob-menu" id="mob-nav">
-  <a href="exercises.html#hero" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
-  <a href="hospitals.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
-  <a href="research.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
-  <a href="about.html" class="nl" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
+  <a href="exercises.html#hero" class="nl" data-ur="ورزشیں" onclick="document.getElementById('mob-nav').classList.remove('open')">Exercises</a>
+  <a href="hospitals.html" class="nl" data-ur="ہسپتال" onclick="document.getElementById('mob-nav').classList.remove('open')">Hospitals</a>
+  <a href="research.html" class="nl" data-ur="تحقیق" onclick="document.getElementById('mob-nav').classList.remove('open')">Research</a>
+  <a href="about.html" class="nl" data-ur="ہمارے بارے میں" onclick="document.getElementById('mob-nav').classList.remove('open')">About</a>
 </div>
 
 <!-- HERO -->
@@ -316,7 +326,7 @@ button{cursor:pointer;font-family:inherit}
       <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:26px">
     </span>
     <h1 class="ab-h" id="acct-hero-h">Welcome back<span>.</span></h1>
-    <p class="ab-sub">Everything about your recovery journey, in one place — your details and every session you've completed, saved on this device.</p>
+    <p class="ab-sub" data-ur="آپ کے بحالی کے سفر کے بارے میں ہر چیز، ایک جگہ پر — آپ کی تفصیلات اور آپ کا مکمل کردہ ہر سیشن، اسی ڈیوائس پر محفوظ۔">Everything about your recovery journey, in one place — your details and every session you've completed, saved on this device.</p>
   </div>
 </section>
 
@@ -325,9 +335,9 @@ button{cursor:pointer;font-family:inherit}
   <div class="sec-in">
     <div class="acct-empty">
       <div class="acct-empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg></div>
-      <h2>No profile yet</h2>
-      <p>Set up your recovery profile from the exercises page to see your account and progress here.</p>
-      <a href="exercises.html" class="acct-empty-btn">Set Up My Profile</a>
+      <h2 data-ur="ابھی تک کوئی پروفائل نہیں">No profile yet</h2>
+      <p data-ur="اپنا اکاؤنٹ اور پیش رفت یہاں دیکھنے کے لیے ورزشوں کے صفحے سے اپنا بحالی پروفائل بنائیں۔">Set up your recovery profile from the exercises page to see your account and progress here.</p>
+      <a href="exercises.html" class="acct-empty-btn" data-ur="میرا پروفائل بنائیں">Set Up My Profile</a>
     </div>
   </div>
 </section>
@@ -350,31 +360,31 @@ button{cursor:pointer;font-family:inherit}
         </div>
         <div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button type="button" class="acct-avatar-btn" onclick="document.getElementById('acct-photo-input').click()">Upload Photo</button>
-            <button type="button" class="acct-avatar-btn acct-avatar-btn-remove" id="acct-photo-remove-btn" onclick="removePhoto()" style="display:none">Remove</button>
+            <button type="button" class="acct-avatar-btn" data-ur="تصویر اپ لوڈ کریں" onclick="document.getElementById('acct-photo-input').click()">Upload Photo</button>
+            <button type="button" class="acct-avatar-btn acct-avatar-btn-remove" id="acct-photo-remove-btn" data-ur="ہٹائیں" onclick="removePhoto()" style="display:none">Remove</button>
           </div>
           <input type="file" id="acct-photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
-          <p class="acct-avatar-hint" id="acct-photo-msg">JPG or PNG, under 2MB — stored only on this device.</p>
+          <p class="acct-avatar-hint" id="acct-photo-msg" data-ur="JPG یا PNG، 2MB سے کم — صرف اسی ڈیوائس پر محفوظ۔">JPG or PNG, under 2MB — stored only on this device.</p>
         </div>
       </div>
       <div class="acct-profile-grid">
-        <div><span>Name</span><strong id="acct-name">—</strong></div>
-        <div><span>Email</span><strong id="acct-email">—</strong></div>
-        <div><span>Gender</span><strong id="acct-gender">—</strong></div>
-        <div><span>Age</span><strong id="acct-age">—</strong></div>
-        <div><span>Weight / Height</span><strong id="acct-weight-height">—</strong></div>
-        <div><span>Condition</span><strong id="acct-condition">—</strong></div>
-        <div><span>Member Since</span><strong id="acct-joined">—</strong></div>
+        <div><span data-ur="نام">Name</span><strong id="acct-name">—</strong></div>
+        <div><span data-ur="ای میل">Email</span><strong id="acct-email">—</strong></div>
+        <div><span data-ur="جنس">Gender</span><strong id="acct-gender">—</strong></div>
+        <div><span data-ur="عمر">Age</span><strong id="acct-age">—</strong></div>
+        <div><span data-ur="وزن / قد">Weight / Height</span><strong id="acct-weight-height">—</strong></div>
+        <div><span data-ur="مسئلہ">Condition</span><strong id="acct-condition">—</strong></div>
+        <div><span data-ur="ممبر بننے کی تاریخ">Member Since</span><strong id="acct-joined">—</strong></div>
       </div>
     </div>
 
     <div class="acct-cta">
       <div class="acct-cta-text">
-        <h3>Ready for today's session?</h3>
+        <h3 data-ur="آج کے سیشن کے لیے تیار ہیں؟">Ready for today's session?</h3>
         <p id="acct-cta-sub">Pick up where you left off and keep your streak going.</p>
       </div>
       <a href="exercises.html#hero" class="acct-cta-btn">
-        Continue Recovery
+        <span data-ur="بحالی جاری رکھیں">Continue Recovery</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
     </div>
@@ -404,9 +414,9 @@ button{cursor:pointer;font-family:inherit}
           </svg>
         </div>
         <div class="dash-ring-key">
-          <span><i style="background:linear-gradient(135deg,#e11d48,#fb7185)"></i>Streak</span>
-          <span><i style="background:linear-gradient(135deg,#a78bfa,#8b5cf6)"></i>Sessions</span>
-          <span><i style="background:linear-gradient(135deg,#12d999,#3b82f6)"></i>Form Score</span>
+          <span><i style="background:linear-gradient(135deg,#e11d48,#fb7185)"></i><span data-ur="لگاتار دن">Streak</span></span>
+          <span><i style="background:linear-gradient(135deg,#a78bfa,#8b5cf6)"></i><span data-ur="سیشنز">Sessions</span></span>
+          <span><i style="background:linear-gradient(135deg,#12d999,#3b82f6)"></i><span data-ur="فارم اسکور">Form Score</span></span>
         </div>
       </div>
     </div>
@@ -415,17 +425,17 @@ button{cursor:pointer;font-family:inherit}
       <div class="dash-m">
         <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
         <div class="dash-m-val" id="d-sessions">0</div>
-        <div class="dash-m-lbl">Sessions Completed</div>
+        <div class="dash-m-lbl" data-ur="مکمل سیشنز">Sessions Completed</div>
       </div>
       <div class="dash-m">
         <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
         <div class="dash-m-val" id="d-reps">0</div>
-        <div class="dash-m-lbl">Total Reps Performed</div>
+        <div class="dash-m-lbl" data-ur="کل دہرائیاں">Total Reps Performed</div>
       </div>
       <div class="dash-m">
         <div class="dash-m-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
         <div class="dash-m-val" id="d-form">—</div>
-        <div class="dash-m-lbl">Average Form Score</div>
+        <div class="dash-m-lbl" data-ur="اوسط فارم اسکور">Average Form Score</div>
       </div>
     </div>
 
@@ -434,11 +444,11 @@ button{cursor:pointer;font-family:inherit}
         <div class="dash-card-t" style="justify-content:space-between">
           <span style="display:flex;align-items:center;gap:8px">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            Activity
+            <span data-ur="سرگرمی">Activity</span>
           </span>
           <span class="view-toggle">
-            <button class="view-toggle-btn on" id="view-week-btn" onclick="setViewMode('week')">Week</button>
-            <button class="view-toggle-btn" id="view-month-btn" onclick="setViewMode('month')">Month</button>
+            <button class="view-toggle-btn on" id="view-week-btn" data-ur="ہفتہ" onclick="setViewMode('week')">Week</button>
+            <button class="view-toggle-btn" id="view-month-btn" data-ur="مہینہ" onclick="setViewMode('month')">Month</button>
           </span>
         </div>
         <div class="week-range-row">
@@ -455,9 +465,9 @@ button{cursor:pointer;font-family:inherit}
       <div class="dash-card">
         <div class="dash-card-t">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Recent Sessions
+          <span data-ur="حالیہ سیشنز">Recent Sessions</span>
         </div>
-        <div id="recent-list"><div class="dash-empty">No sessions yet — start your first exercise on the Exercises page.</div></div>
+        <div id="recent-list"><div class="dash-empty" data-ur="ابھی تک کوئی سیشن نہیں — ورزشوں کے صفحے پر اپنی پہلی ورزش شروع کریں۔">No sessions yet — start your first exercise on the Exercises page.</div></div>
       </div>
     </div>
 
@@ -465,7 +475,7 @@ button{cursor:pointer;font-family:inherit}
       <div class="dash-card-t" style="justify-content:space-between">
         <span style="display:flex;align-items:center;gap:8px">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="3 17 9 11 13 15 21 6"/><polyline points="14 6 21 6 21 13"/></svg>
-          Form Score Trend
+          <span data-ur="فارم اسکور رجحان">Form Score Trend</span>
         </span>
         <select class="trend-select" id="trend-select" onchange="renderTrend()"></select>
       </div>
@@ -475,7 +485,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="acct-logout-row">
       <button class="acct-logout-btn" onclick="logoutUser()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-        Logout
+        <span data-ur="لاگ آؤٹ">Logout</span>
       </button>
     </div>
   </div>
@@ -490,37 +500,37 @@ button{cursor:pointer;font-family:inherit}
         <img src="physiosync-text-dark.png" alt="PhysioSync" class="brand-text brand-text-dark" style="height:22px">
         <img src="physiosync-text-light.png" alt="PhysioSync" class="brand-text brand-text-light" style="height:22px">
       </div>
-      <p class="f-desc">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
+      <p class="f-desc" data-ur="PhysioSync کلینیکل معیار کی فزیوتھراپی فراہم کرتا ہے — کرنسی درست کرتا ہے، بحالی میں رہنمائی کرتا ہے، اور ہر ڈیوائس پر پیش رفت ٹریک کرتا ہے۔">PhysioSync delivers clinical-grade physiotherapy — corrects posture, guides rehabilitation, and tracks progress on every device.</p>
     </div>
     <div>
-      <div class="f-hd">Platform</div>
+      <div class="f-hd" data-ur="پلیٹ فارم">Platform</div>
       <div class="f-lks">
-        <a href="exercises.html#hero">Exercises</a>
-        <a href="hospitals.html">Hospitals</a>
-        <a href="research.html">Research</a>
-        <a href="account.html">Account</a>
-        <a href="index.html">3D Body Map</a>
+        <a href="exercises.html#hero" data-ur="ورزشیں">Exercises</a>
+        <a href="hospitals.html" data-ur="ہسپتال">Hospitals</a>
+        <a href="research.html" data-ur="تحقیق">Research</a>
+        <a href="account.html" data-ur="اکاؤنٹ">Account</a>
+        <a href="index.html" data-ur="3D باڈی میپ">3D Body Map</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Company</div>
+      <div class="f-hd" data-ur="کمپنی">Company</div>
       <div class="f-lks">
-        <a href="about.html">About PhysioSync</a>
+        <a href="about.html" data-ur="PhysioSync کے بارے میں">About PhysioSync</a>
       </div>
     </div>
     <div>
-      <div class="f-hd">Contact</div>
+      <div class="f-hd" data-ur="رابطہ">Contact</div>
       <div class="f-lks">
         <span>physiosync@gmail.com</span>
         <span>0316 2404444</span>
-        <span>Karachi, Pakistan</span>
+        <span data-ur="کراچی، پاکستان">Karachi, Pakistan</span>
       </div>
     </div>
   </div>
   <div class="f-bot">
     <div class="f-bot-brand">
-      <span>&copy; 2026 PhysioSync. All rights reserved.</span>
-      <span class="f-powered"><img src="physiosync-icon.png" alt="">Powered by PhysioSync</span>
+      <span data-ur="&copy; 2026 PhysioSync۔ جملہ حقوق محفوظ ہیں۔">&copy; 2026 PhysioSync. All rights reserved.</span>
+      <span class="f-powered"><img src="physiosync-icon.png" alt=""><span data-ur="PhysioSync کی طاقت سے">Powered by PhysioSync</span></span>
     </div>
     <div class="f-soc">
       <a href="https://facebook.com/physiosync" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.5-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg></a>
@@ -528,7 +538,7 @@ button{cursor:pointer;font-family:inherit}
       <a href="https://twitter.com/physiosync" target="_blank" rel="noopener" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.5 8.57L23 22h-6.9l-5.4-6.9L4.6 22H1.5l8.02-9.17L1 2h7.06l4.87 6.3L18.9 2zm-1.2 18h1.7L7.4 4h-1.8l12.1 16z"/></svg></a>
       <a href="https://linkedin.com/company/physiosync" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.37 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></a>
     </div>
-    <div class="f-bot-lks"><a href="#">Privacy</a><a href="#">Terms</a></div>
+    <div class="f-bot-lks"><a href="#" data-ur="پرائیویسی">Privacy</a><a href="#" data-ur="شرائط">Terms</a></div>
   </div>
 </footer>
 
@@ -652,21 +662,24 @@ function scoreColorFor(p){
 }
 function renderTrend(){
   const u=loadU();
+  const ur=currentLang==='ur';
   const sel=document.getElementById('trend-select');
   const body=document.getElementById('trend-body');
   if(!u.recent||!u.recent.length){
-    sel.innerHTML='<option value="__all">All Exercises</option>';
-    body.innerHTML='<div class="dash-empty">No sessions yet — your form-score trend will appear here.</div>';
+    sel.innerHTML=`<option value="__all">${ur?'تمام ورزشیں':'All Exercises'}</option>`;
+    body.innerHTML=`<div class="dash-empty">${ur?'ابھی تک کوئی سیشن نہیں — آپ کا فارم اسکور رجحان یہاں ظاہر ہوگا۔':'No sessions yet — your form-score trend will appear here.'}</div>`;
     return;
   }
   const prev=sel.value;
   const names=[...new Set(u.recent.map(r=>r.name))];
-  sel.innerHTML='<option value="__all">All Exercises</option>'+names.map(n=>`<option value="${n}">${n}</option>`).join('');
+  sel.innerHTML=`<option value="__all">${ur?'تمام ورزشیں':'All Exercises'}</option>`+names.map(n=>`<option value="${n}">${n}</option>`).join('');
   sel.value=(prev&&(prev==='__all'||names.includes(prev)))?prev:'__all';
   const filter=sel.value;
   const rows=(filter==='__all'?u.recent:u.recent.filter(r=>r.name===filter)).slice(0,20).slice().reverse(); // chronological, oldest first
   if(rows.length<2){
-    body.innerHTML=`<div class="dash-empty">Complete a couple more sessions${filter==='__all'?'':' of this exercise'} to see a trend.</div>`;
+    body.innerHTML=ur
+      ?`<div class="dash-empty">رجحان دیکھنے کے لیے${filter==='__all'?'':' اس ورزش کے'} مزید چند سیشن مکمل کریں۔</div>`
+      :`<div class="dash-empty">Complete a couple more sessions${filter==='__all'?'':' of this exercise'} to see a trend.</div>`;
     return;
   }
   // Percent-space (0-100 both axes) so the SVG can stretch to fill the card
@@ -682,7 +695,7 @@ function renderTrend(){
   const dots=pts.map(p=>`<div class="trend-dot" style="left:${p.x}%;top:${p.y}%;background:${scoreColorFor(p.form/100)}" title="${p.date}: ${p.form}%"></div>`).join('');
   const avg=Math.round(rows.reduce((a,r)=>a+r.form,0)/rows.length);
   body.innerHTML=`
-    <div class="trend-meta"><span class="trend-avg">Average<strong>${avg}%</strong></span><span class="trend-count">${rows.length} session${rows.length===1?'':'s'}</span></div>
+    <div class="trend-meta"><span class="trend-avg">${ur?'اوسط':'Average'}<strong>${avg}%</strong></span><span class="trend-count">${rows.length} ${ur?'سیشنز':('session'+(rows.length===1?'':'s'))}</span></div>
     <div class="trend-svg-wrap">
       <svg viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs><linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--brand)" stop-opacity=".3"/><stop offset="100%" stop-color="var(--brand)" stop-opacity="0"/></linearGradient></defs>
@@ -718,7 +731,7 @@ function renderActivity(){
 }
 function renderWeekly(){
   const u=loadU();
-  const dayLbls=['M','T','W','T','F','S','S'];
+  const dayLbls=currentLang==='ur'?['پ','م','ب','ج','ج','ہ','ا']:['M','T','W','T','F','S','S'];
   const monday=mondayOf(new Date());
   monday.setDate(monday.getDate()+weekOffset*7);
   const weekDates=Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return d;});
@@ -754,7 +767,7 @@ function renderMonthly(){
       <div class="wbar-track"><div class="wbar-fill" style="height:${Math.round(d.reps/maxR*100)}%"></div></div>
       <div class="wbar-lbl">${d.day%5===1?d.day:''}</div>
     </div>`).join('');
-  document.getElementById('weekly-range').textContent=base.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  document.getElementById('weekly-range').textContent=base.toLocaleDateString(currentLang==='ur'?'ur':'en-GB',{month:'long',year:'numeric'});
   document.getElementById('week-next').disabled=monthOffset>=0;
 }
 function weekNav(dir){
@@ -777,7 +790,8 @@ function showDayDetail(dk){
   const reps=u.dailyReps[dk]||0;
   const[y,mo,da]=dk.split('-').map(Number);
   const dateObj=new Date(y,mo-1,da);
-  const whenStr=dateObj.toLocaleDateString('en-GB',{weekday:'long'})+', '+fmtDMY(dateObj);
+  const ur=currentLang==='ur';
+  const whenStr=dateObj.toLocaleDateString(ur?'ur':'en-GB',{weekday:'long'})+', '+fmtDMY(dateObj);
   const sessions=(u.recent||[]).filter(r=>r.timestamp&&dateKey(new Date(r.timestamp))===dk);
   let m=document.getElementById('session-detail-popup');
   if(!m){
@@ -788,17 +802,17 @@ function showDayDetail(dk){
     document.body.appendChild(m);
   }
   const listHtml=sessions.length?`
-    <div class="sd-reps-hd">Exercises completed</div>
+    <div class="sd-reps-hd">${ur?'مکمل کردہ ورزشیں':'Exercises completed'}</div>
     <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
       ${sessions.map(r=>`
         <div class="recent-row" onclick="document.getElementById('session-detail-popup').remove();showSessionDetail(${u.recent.indexOf(r)})">
           <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.area||''}</div></div>
-          <div><div class="recent-reps">${r.reps} reps</div><div class="recent-form">${r.form}% form</div></div>
+          <div><div class="recent-reps">${r.reps} ${ur?'دہرائیاں':'reps'}</div><div class="recent-form">${r.form}% ${ur?'فارم':'form'}</div></div>
         </div>`).join('')}
     </div>`
     :(count>0
-      ?`<p class="sd-note">${count} exercise${count===1?'':'s'} completed this day, but the individual session details have since rolled off history.</p>`
-      :`<p class="sd-note">No exercises were completed on this day.</p>`);
+      ?`<p class="sd-note">${ur?`اس دن ${count} ورزش${count===1?'':'یں'} مکمل ہوئیں، لیکن انفرادی سیشن کی تفصیلات تاریخ سے ہٹا دی گئی ہیں۔`:`${count} exercise${count===1?'':'s'} completed this day, but the individual session details have since rolled off history.`}</p>`
+      :`<p class="sd-note">${ur?'اس دن کوئی ورزش مکمل نہیں ہوئی۔':'No exercises were completed on this day.'}</p>`);
   m.innerHTML=`
     <div class="sd-card">
       <div class="sd-logo-row">
@@ -808,11 +822,11 @@ function showDayDetail(dk){
       </div>
       <h3>${whenStr}</h3>
       <div class="sd-stats">
-        <div><div class="sd-val">${count}</div><div class="sd-lbl">Exercises Done</div></div>
-        <div><div class="sd-val">${reps}</div><div class="sd-lbl">Total Reps</div></div>
+        <div><div class="sd-val">${count}</div><div class="sd-lbl">${ur?'مکمل ورزشیں':'Exercises Done'}</div></div>
+        <div><div class="sd-val">${reps}</div><div class="sd-lbl">${ur?'کل دہرائیاں':'Total Reps'}</div></div>
       </div>
       ${listHtml}
-      <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">Close</button>
+      <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">${ur?'بند کریں':'Close'}</button>
     </div>`;
 }
 
@@ -821,13 +835,15 @@ function renderRecent(){
   const u=loadU();
   const rl=document.getElementById('recent-list');
   if(!u.recent||!u.recent.length){
-    rl.innerHTML='<div class="dash-empty">No sessions yet — start your first exercise on the Exercises page.</div>';
+    rl.innerHTML=currentLang==='ur'
+      ?'<div class="dash-empty">ابھی تک کوئی سیشن نہیں — ورزشوں کے صفحے پر اپنی پہلی ورزش شروع کریں۔</div>'
+      :'<div class="dash-empty">No sessions yet — start your first exercise on the Exercises page.</div>';
     return;
   }
   rl.innerHTML=u.recent.slice(0,8).map((r,i)=>`
     <div class="recent-row" onclick="showSessionDetail(${i})">
       <div><div class="recent-name">${r.name}</div><div class="recent-date">${r.date}</div></div>
-      <div><div class="recent-reps">${r.reps} reps</div><div class="recent-form">${r.form}% form</div></div>
+      <div><div class="recent-reps">${r.reps} ${currentLang==='ur'?'دہرائیاں':'reps'}</div><div class="recent-form">${r.form}% ${currentLang==='ur'?'فارم':'form'}</div></div>
     </div>`).join('');
 }
 
@@ -843,16 +859,17 @@ function showSessionDetail(idx){
     m.onclick=(e)=>{if(e.target===m)m.remove();};
     document.body.appendChild(m);
   }
+  const ur=currentLang==='ur';
   const whenStr=r.timestamp
-    ?(()=>{const dt=new Date(r.timestamp);return dt.toLocaleDateString('en-GB',{weekday:'long'})+', '+fmtDMY(dt)+', '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});})()
+    ?(()=>{const dt=new Date(r.timestamp);return dt.toLocaleDateString(ur?'ur':'en-GB',{weekday:'long'})+', '+fmtDMY(dt)+', '+dt.toLocaleTimeString(ur?'ur':'en-GB',{hour:'2-digit',minute:'2-digit'});})()
     :r.date;
-  const durStr=r.durationSec!=null?(r.durationSec>=60?Math.floor(r.durationSec/60)+'m '+(r.durationSec%60)+'s':r.durationSec+'s'):'Not recorded';
-  const areaStr=r.area||'Not recorded';
+  const durStr=r.durationSec!=null?(r.durationSec>=60?Math.floor(r.durationSec/60)+(ur?'م ':'m ')+(r.durationSec%60)+(ur?'س':'s'):r.durationSec+(ur?'س':'s')):(ur?'ریکارڈ نہیں':'Not recorded');
+  const areaStr=r.area||(ur?'ریکارڈ نہیں':'Not recorded');
   const isLegacy=r.timestamp===undefined; // sessions saved before per-session detail tracking was added
   const repsHtml=(r.repScores&&r.repScores.length>1)?`
-      <div class="sd-reps-hd">Rep-by-rep form score</div>
+      <div class="sd-reps-hd">${ur?'دہرائی بہ دہرائی فارم اسکور':'Rep-by-rep form score'}</div>
       <div class="sd-reps-row">${r.repScores.map((s,i)=>`
-        <div class="sd-rep-bar-wrap" title="Rep ${i+1}: ${s}%">
+        <div class="sd-rep-bar-wrap" title="${ur?'دہرائی':'Rep'} ${i+1}: ${s}%">
           <div class="sd-rep-bar" style="height:${Math.max(4,s)}%;background:${scoreColorFor(s/100)}"></div>
           <div class="sd-rep-lbl">${i+1}</div>
         </div>`).join('')}</div>`:'';
@@ -866,17 +883,70 @@ function showSessionDetail(idx){
       <h3>${r.name}</h3>
       <p class="sd-when">${whenStr}</p>
       <div class="sd-stats">
-        <div><div class="sd-val">${r.reps}${r.target?'/'+r.target:''}</div><div class="sd-lbl">Reps</div></div>
-        <div><div class="sd-val">${r.form}%</div><div class="sd-lbl">Form Score</div></div>
-        <div><div class="sd-val sd-val-sm">${durStr}</div><div class="sd-lbl">Duration</div></div>
-        <div><div class="sd-val sd-val-sm">${areaStr}</div><div class="sd-lbl">Focus Area</div></div>
+        <div><div class="sd-val">${r.reps}${r.target?'/'+r.target:''}</div><div class="sd-lbl">${ur?'دہرائیاں':'Reps'}</div></div>
+        <div><div class="sd-val">${r.form}%</div><div class="sd-lbl">${ur?'فارم اسکور':'Form Score'}</div></div>
+        <div><div class="sd-val sd-val-sm">${durStr}</div><div class="sd-lbl">${ur?'دورانیہ':'Duration'}</div></div>
+        <div><div class="sd-val sd-val-sm">${areaStr}</div><div class="sd-lbl">${ur?'مرکوز حصہ':'Focus Area'}</div></div>
       </div>
       ${repsHtml}
-      ${r.muscles&&r.muscles.length?`<p class="sd-note"><strong>Muscles targeted:</strong> ${r.muscles.join(', ')}</p>`:''}
+      ${r.muscles&&r.muscles.length?`<p class="sd-note"><strong>${ur?'ہدف بنائے گئے پٹھے:':'Muscles targeted:'}</strong> ${r.muscles.join(', ')}</p>`:''}
       ${r.note?`<p class="sd-note">${r.note}</p>`:''}
-      ${isLegacy?`<p class="sd-note">This session was logged before detailed tracking was added, so duration and focus area weren't captured.</p>`:''}
-      <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">Close</button>
+      ${isLegacy?`<p class="sd-note">${ur?'یہ سیشن تفصیلی ٹریکنگ شامل ہونے سے پہلے ریکارڈ ہوا تھا، اس لیے دورانیہ اور مرکوز حصہ ریکارڈ نہیں ہوئے۔':"This session was logged before detailed tracking was added, so duration and focus area weren't captured."}</p>`:''}
+      <button class="sd-close" onclick="document.getElementById('session-detail-popup').remove()">${ur?'بند کریں':'Close'}</button>
     </div>`;
+}
+
+function applyAcctGreeting(acc){
+  const hr=new Date().getHours();
+  const time=hr<12?'morning':hr<17?'afternoon':'evening';
+  const first=acc.name.split(' ')[0];
+  if(currentLang==='ur'){
+    const timeUr={morning:'صبح',afternoon:'دوپہر',evening:'شام'}[time];
+    document.getElementById('acct-hero-h').innerHTML='<span>'+first+'</span>، '+timeUr+' بخیر';
+  }else{
+    document.getElementById('acct-hero-h').innerHTML='Good '+time+', <span>'+first+'</span>';
+  }
+  document.getElementById('acct-name').textContent=acc.name;
+  document.getElementById('acct-email').textContent=acc.email||'—';
+  document.getElementById('acct-gender').textContent=acc.gender;
+  document.getElementById('acct-age').textContent=acc.age+(currentLang==='ur'?' سال':' yrs');
+  document.getElementById('acct-weight-height').textContent=acc.weight+(currentLang==='ur'?'کلوگرام / ':'kg / ')+acc.height+(currentLang==='ur'?'سینٹی میٹر':'cm');
+  document.getElementById('acct-condition').textContent=acc.condition||'—';
+  document.getElementById('acct-joined').textContent=acc.joined||'—';
+  applyAvatar(acc.photo||null);
+
+  const u=loadU();
+  if(currentLang==='ur'){
+    document.getElementById('dash-greet-h').textContent=u.streak>0?u.streak+' دن کی حاضری':'آپ کی حاضری';
+    document.getElementById('dash-greet-p').textContent=
+      u.sessions===0
+        ?'آپ کا بحالی کا سفر آج شروع ہوتا ہے۔ ورزشوں کے صفحے پر اپنا پہلا سیشن مکمل کریں۔'
+        :'آپ نے '+u.sessions+' سیشنز اور کل '+u.reps+' دہرائیاں مکمل کی ہیں۔ جاری رکھیں!';
+    document.getElementById('acct-cta-sub').textContent=
+      u.sessions===0
+        ?'آپ کا پہلا سیشن بس ایک کلک کی دوری پر ہے۔'
+        :u.streak>0
+        ?`آپ ${u.streak} دن سے لگاتار ورزش کر رہے ہیں — اب اسے مت توڑیں۔`
+        :'جہاں سے چھوڑا تھا وہیں سے جاری رکھیں اور نئی حاضری شروع کریں۔';
+  }else{
+    document.getElementById('dash-greet-h').textContent=u.streak>0?u.streak+'-Day Streak':'Your Streak';
+    document.getElementById('dash-greet-p').textContent=
+      u.sessions===0
+        ?'Your rehabilitation journey starts today. Complete your first session on the Exercises page.'
+        :'You have completed '+u.sessions+' sessions and '+u.reps+' total reps. Keep going!';
+    document.getElementById('acct-cta-sub').textContent=
+      u.sessions===0
+        ?'Your first session is just a click away.'
+        :u.streak>0
+        ?`You're on a ${u.streak}-day streak — don't break it now.`
+        :'Pick up where you left off and start a new streak.';
+  }
+}
+function onLangChange(){
+  const acc=JSON.parse(localStorage.getItem('pah_acc')||'null');
+  if(!acc)return;
+  applyAcctGreeting(acc);
+  renderDash();
 }
 
 (function init(){
@@ -888,31 +958,7 @@ function showSessionDetail(idx){
   document.getElementById('acct-content').style.display='block';
   requestAnimationFrame(()=>document.getElementById('acct-content').classList.add('in'));
 
-  const hr=new Date().getHours();
-  const time=hr<12?'morning':hr<17?'afternoon':'evening';
-  const first=acc.name.split(' ')[0];
-  document.getElementById('acct-hero-h').innerHTML='Good '+time+', <span>'+first+'</span>';
-  document.getElementById('acct-name').textContent=acc.name;
-  document.getElementById('acct-email').textContent=acc.email||'—';
-  document.getElementById('acct-gender').textContent=acc.gender;
-  document.getElementById('acct-age').textContent=acc.age+' yrs';
-  document.getElementById('acct-weight-height').textContent=acc.weight+'kg / '+acc.height+'cm';
-  document.getElementById('acct-condition').textContent=acc.condition||'—';
-  document.getElementById('acct-joined').textContent=acc.joined||'—';
-  applyAvatar(acc.photo||null);
-
-  const u=loadU();
-  document.getElementById('dash-greet-h').textContent=u.streak>0?u.streak+'-Day Streak':'Your Streak';
-  document.getElementById('dash-greet-p').textContent=
-    u.sessions===0
-      ?'Your rehabilitation journey starts today. Complete your first session on the Exercises page.'
-      :'You have completed '+u.sessions+' sessions and '+u.reps+' total reps. Keep going!';
-  document.getElementById('acct-cta-sub').textContent=
-    u.sessions===0
-      ?'Your first session is just a click away.'
-      :u.streak>0
-      ?`You're on a ${u.streak}-day streak — don't break it now.`
-      :'Pick up where you left off and start a new streak.';
+  applyAcctGreeting(acc);
   renderDash();
   initScrollReveal('.dash-m,.recent-row',{stagger:60});
 })();
