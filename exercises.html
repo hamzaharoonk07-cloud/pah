@@ -714,6 +714,18 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       <div class="frow1">
         <div class="fl"><label for="g-condition" data-ur="بنیادی مسئلہ (اختیاری)">Primary Condition (optional)</label><input id="g-condition" type="text" placeholder="e.g. Lower back pain, Knee OA"></div>
       </div>
+      <div class="frow1">
+        <div class="fl" style="display:flex;align-items:center;gap:12px">
+          <div id="gate-avatar" style="width:48px;height:48px;border-radius:50%;background:var(--w06);border:1px solid var(--w10);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
+            <img id="gate-avatar-img" alt="" style="display:none;width:100%;height:100%;object-fit:cover">
+            <svg id="gate-avatar-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--muted)"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+          </div>
+          <div>
+            <button type="button" class="gate-lang-btn" onclick="document.getElementById('g-photo').click()" style="padding:6px 14px;border-radius:100px;border:1px solid var(--w10);background:var(--w06);color:var(--heading);font-weight:700;font-size:.72rem;cursor:pointer" data-ur="تصویر شامل کریں (اختیاری)">Add Photo (optional)</button>
+            <input type="file" id="g-photo" accept="image/*" style="display:none" onchange="handleGatePhotoUpload(event)">
+          </div>
+        </div>
+      </div>
       <button type="submit" class="gate-btn" data-ur="میرا بحالی پروگرام شروع کریں">Start My Recovery Program</button>
       <div class="gate-err" id="gate-err" data-ur="براہ کرم تمام ضروری خانے پُر کریں۔">Please complete all required fields.</div>
     </form>
@@ -1612,6 +1624,21 @@ function fmtDM(d){return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMon
   if(acc){gate.classList.add('hidden');initApp(acc);}
 })();
 
+let gatePhotoData=null;
+function handleGatePhotoUpload(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith('image/')){alert('Please choose an image file.');return;}
+  if(file.size>2*1024*1024){alert('Image must be under 2MB.');return;}
+  const reader=new FileReader();
+  reader.onload=()=>{
+    gatePhotoData=reader.result;
+    document.getElementById('gate-avatar-img').src=gatePhotoData;
+    document.getElementById('gate-avatar-img').style.display='block';
+    document.getElementById('gate-avatar-default').style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
 function gateSubmit(e){
   e.preventDefault();
   const name=document.getElementById('g-name').value.trim();
@@ -1636,6 +1663,7 @@ function gateSubmit(e){
   }
   errEl.style.display='none';
   const acc={name,email,gender,age,weight,height,condition,joined:fmtDMY(new Date())};
+  if(gatePhotoData)acc.photo=gatePhotoData;
   localStorage.setItem('pah_acc',JSON.stringify(acc));
   document.getElementById('gate').classList.add('hidden');
   initApp(acc);
