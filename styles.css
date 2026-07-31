@@ -197,6 +197,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 .f-lks a:hover{color:var(--heading);padding-left:2px}
 .f-bot{max-width:1320px;margin:0 auto;padding-top:16px;border-top:1px solid var(--w05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .f-bot span{color:var(--submuted);font-size:.69rem}
+.f-bot-brand{display:flex;flex-direction:column;gap:3px}
+.f-powered{display:flex;align-items:center;gap:5px;color:var(--submuted);font-size:.66rem}
+.f-powered img{width:13px;height:13px;object-fit:contain;flex-shrink:0}
 .f-soc{display:flex;gap:12px}
 .f-soc a{width:30px;height:30px;border-radius:50%;background:var(--w05);border:1px solid var(--w08);display:flex;align-items:center;justify-content:center;color:var(--submuted);transition:all .2s}
 .f-soc a svg{width:15px;height:15px}
