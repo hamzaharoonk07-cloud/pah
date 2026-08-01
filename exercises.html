@@ -855,7 +855,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      <span data-ur="کلینیکل ٹریکنگ · 3D پٹھوں کا نقشہ · 8 ورزشیں">Clinical Tracking · 3D Muscle Map · 8 Exercises</span>
+      <span data-ur="کلینیکل ٹریکنگ · 3D پٹھوں کا نقشہ · 7 ورزشیں">Clinical Tracking · 3D Muscle Map · 7 Exercises</span>
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av"><img id="hero-welcome-img" alt="" style="display:none"><span id="hero-welcome-letter">P</span></span>
@@ -1290,11 +1290,6 @@ const DEMO_DEFS={
     steps:['Arms relaxed at your sides','Raise both arms out to the sides to shoulder height — hold 2 seconds'],
     stepsUr:['بازو پہلوؤں میں ڈھیلے','دونوں بازو سائیڈ کی طرف کندھے کی اونچائی تک اٹھائیں — 2 سیکنڈ تک رکھیں'],
     highlight:['leftShoulder','rightShoulder','leftWrist','rightWrist']},
-  shoulder_shrug:{kind:'hold',
-    peak:{leftShoulder:{y:.185},rightShoulder:{y:.185},leftElbow:{y:.345},rightElbow:{y:.345},leftWrist:{y:.495},rightWrist:{y:.495}},
-    steps:['Relax both arms at your sides','Lift both shoulders straight up toward your ears — hold 2 seconds'],
-    stepsUr:['دونوں بازو پہلوؤں میں ڈھیلے چھوڑیں','دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں — 2 سیکنڈ تک رکھیں'],
-    highlight:['leftShoulder','rightShoulder','neck']},
   _default:{kind:'static',steps:['Follow the on-screen guidance to begin'],stepsUr:['شروع کرنے کے لیے آن اسکرین ہدایات پر عمل کریں'],highlight:[]}
 };
 
@@ -1526,10 +1521,6 @@ const UR_MAP={
   'Nice — stand tall and repeat.':'بہت خوب — سیدھے کھڑے ہوں اور دہرائیں۔',
   'Pause a moment at the bottom for full credit.':'مکمل نمبر کے لیے نیچے ایک لمحہ رکیں۔',
   'Bend both knees into a shallow squat, keeping knees behind your toes.':'دونوں گھٹنے ہلکا سا موڑ کر بیٹھیں، گھٹنوں کو پیر کی انگلیوں سے آگے نہ جانے دیں۔',
-  'Good — shoulders lifted toward your ears. Hold 2 seconds.':'اچھا — کندھے کانوں کی طرف اٹھے ہوئے ہیں۔ 2 سیکنڈ تک رکھیں۔',
-  'Let your shoulders drop fully and repeat.':'کندھوں کو مکمل نیچے آنے دیں اور دہرائیں۔',
-  'Hold the shrug a little longer for full credit.':'مکمل نمبر کے لیے کندھے اٹھائے رکھیں تھوڑی دیر مزید۔',
-  'Relax your arms at your sides, then lift both shoulders straight up toward your ears.':'اپنے بازو پہلوؤں میں ڈھیلے چھوڑیں، پھر دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں۔',
   'Raise both arms forward and up together, nice and slow.':'دونوں بازو آگے اور اوپر کی طرف اکٹھے، آہستگی سے اٹھائیں۔',
   'Good — both arms raised overhead. Hold 2 seconds.':'اچھا — دونوں بازو سر کے اوپر اٹھے ہوئے ہیں۔ 2 سیکنڈ تک رکھیں۔',
   'Raise both arms out to the sides, up to shoulder height, nice and slow.':'دونوں بازو سائیڈ کی طرف، کندھے کی اونچائی تک، آہستگی سے اٹھائیں۔',
@@ -1607,11 +1598,7 @@ const EX_UR={
   lateral_raise:{name:'بازو سائیڈ سے اوپر اٹھانا',area:'کندھے کا سائیڈ اٹھاؤ (دونوں بازو)',
     desc:'سیدھے کھڑے ہوں، بازو پہلوؤں میں۔ دونوں بازو سائیڈ کی طرف کندھے کی اونچائی تک آہستگی اور قابو کے ساتھ اٹھائیں۔ اسی قابو کے ساتھ نیچے لائیں۔',
     note:'سائیڈ ڈیلٹائیڈ کو مضبوط کرتا ہے۔ روزمرہ کے کاموں کے لیے کندھے کا استحکام بناتا ہے۔',
-    warn:'اگر بازو اٹھانے سے درمیانی اونچائی پر (تقریباً کان سے کندھے کی سطح) خاص طور پر درد ہو جو مزید اوپر جانے پر کم ہو جائے — یہ کندھے کے امپنجمنٹ کی علامت ہو سکتی ہے، پہلے ڈاکٹر سے رجوع کریں۔'},
-  shoulder_shrug:{name:'کندھے اچکانا',area:'اوپری ٹریپیزیئس (دونوں کندھے)',
-    desc:'دونوں بازو پہلوؤں میں ڈھیلے چھوڑیں۔ دونوں کندھے سیدھا کانوں کی طرف اوپر اٹھائیں، 2 سیکنڈ تک رکھیں، پھر مکمل نیچے آنے دیں۔',
-    note:'اوپری ٹریپیزیئس میں تناؤ کو فعال اور ریلیز کرتا ہے۔ اکڑے ہوئے یا ڈیسک کے کام سے تھکے کندھوں اور گردن کے لیے ہلکا پہلا قدم۔',
-    warn:'اگر آپ کو گردن کے اعصاب دبنے کی تشخیص ہے، یا کندھے اچکانے سے بازو میں جھنجھناہٹ یا سُن پن پھیلے تو پہلے ڈاکٹر سے رجوع کریں۔'}
+    warn:'اگر بازو اٹھانے سے درمیانی اونچائی پر (تقریباً کان سے کندھے کی سطح) خاص طور پر درد ہو جو مزید اوپر جانے پر کم ہو جائے — یہ کندھے کے امپنجمنٹ کی علامت ہو سکتی ہے، پہلے ڈاکٹر سے رجوع کریں۔'}
 };
 function exIntroMsg(ex){
   const ur=EX_UR[ex.det];
@@ -1849,19 +1836,7 @@ const EX=[
     warn:'Check with your doctor first if raising your arm causes pain specifically midway up (roughly ear-to-shoulder height) that eases again higher — this can indicate shoulder impingement.',
     muscles:['Lateral Deltoid','Supraspinatus','Upper Trapezius'],
     angles:{main:[23,11,15],pivot:11,threshold:{lo:70,hi:100}},
-    joints:{p:[11,12,13,14,15,16],s:[7,8,23,24],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12],[11,23],[12,24]]}},
-  {name:'Shoulder Shrugs',area:'Upper Trapezius (Both Shoulders)',diff:'Beginner',tags:['Shoulder'],reps:12,det:'shoulder_shrug',
-    desc:'Let both arms relax at your sides. Lift both shoulders straight up toward your ears, hold 2 seconds, then let them drop fully.',
-    note:'Activates and releases tension in the upper trapezius. A gentle first step for tight, stressed, or desk-strained shoulders and neck.',
-    warn:'Check with your doctor first if you have a diagnosed cervical nerve impingement, or if shrugging causes tingling or numbness radiating down your arm.',
-    muscles:['Upper Trapezius','Levator Scapulae'],
-    // hi was 0.20 — too tight a ceiling for a genuine full shrug's relative
-    // displacement (a real vigorous shrug routinely exceeds that), which
-    // combined with scoreHold's now-fixed proportional penalty would make
-    // real reps overshoot into the harsh out-of-range formula. Widened so a
-    // real full shrug lands inside the graduated in-range band instead.
-    angles:{main:[7,11,12],pivot:11,threshold:{lo:0.05,hi:0.6}}, // delta from this session's own tracked resting ratio, not an absolute ratio
-    joints:{p:[7,8,11,12],s:[],lk:[[11,12]],sk:[[7,11],[8,12]]}}
+    joints:{p:[11,12,13,14,15,16],s:[7,8,23,24],lk:[[11,12],[11,13],[12,14],[13,15],[14,16]],sk:[[7,11],[8,12],[11,23],[12,24]]}}
 ];
 
 // ═══════════════════════════════════════════════════════════
@@ -1894,8 +1869,7 @@ const ICON_BY_DET={
   side_bend:'M9,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M11,6q3,4,2,9M13,8l4,2M13,15l3,6M13,15l-1,6', // torso curved sideways
   bilateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8l-3,-4M12,8l3,-4M12,15l-3,6M12,15l3,6', // both arms overhead
   mini_squat:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v7M12,8l-3,4M12,8l3,4M12,13l-4,4l1,3M12,13l4,4l-1,3', // knees bent into a squat
-  lateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8h-6M12,8h6M12,15l-3,6M12,15l3,6', // arms straight out to the sides
-  shoulder_shrug:'M10,3a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,5v1M7,6h10M7,6v8M17,6v8M12,14l-3,6M12,14l3,6' // shoulders raised close to a short neck, arms hanging straight
+  lateral_raise:'M10,4a2,2 0 1,0 4,0a2,2 0 1,0 -4,0M12,6v9M12,8h-6M12,8h6M12,15l-3,6M12,15l3,6' // arms straight out to the sides
 };
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
@@ -3192,15 +3166,6 @@ function spineLeanZ(lm){
   const shoulderZ=(lm[11].z+lm[12].z)/2,hipZ=(lm[23].z+lm[24].z)/2;
   return(shoulderZ-hipZ)*100;
 }
-// Vertical ear-to-shoulder gap, normalized by shoulder width so it scales with
-// build/camera distance rather than raw pixels — shrinks as the shoulders lift
-// toward the ears during a shrug. Ears (not the nose) are the reference since
-// they move with the head as a rigid unit, same as the shoulders move as a unit.
-function shrugGap(lm){
-  const earY=(lm[7].y+lm[8].y)/2,shoulderY=(lm[11].y+lm[12].y)/2;
-  const shoulderW=Math.max(Math.hypot(lm[11].x-lm[12].x,lm[11].y-lm[12].y),0.05);
-  return Math.max(0,(shoulderY-earY)/shoulderW);
-}
 let angleRawBuf=[];
 function smoothAngle(val){
   // Median-of-3 rejects single-frame pose-estimation spikes before EMA smoothing —
@@ -3220,13 +3185,11 @@ function scoreHold(val,lo,hi){
   // but sitting precisely centered in it scores higher than barely grazing
   // the edge, so the number actually reflects how well the position was held.
   // The floors below used to be hardcoded to 10/5, assuming every threshold
-  // is on a degree-like scale — true for 9 of 10 exercises (spans are all
-  // >=15, so the floors were dead code there), but shoulder_shrug's threshold
-  // is a 0-1 normalized ratio (span 0.15), where a floor of 10 made the
-  // out-of-range penalty formula almost completely inert and capped its
-  // score around 83 — permanently below GOOD_FORM_THRESHOLD, so a real
-  // shrug never counted as a rep. Scaling relative to the actual span
-  // instead makes this correct for any unit scale.
+  // is on a degree-like scale — broke badly for a since-removed exercise
+  // whose threshold was a 0-1 normalized ratio (a flat floor of 10 made the
+  // out-of-range penalty formula almost completely inert for it). Scaling
+  // relative to the exercise's own (hi-lo) span instead makes this correct
+  // for any unit scale, not just degrees.
   const span=hi-lo||1;
   const mid=(lo+hi)/2,halfSpan=span/2;
   if(val>=lo&&val<=hi){
@@ -3241,13 +3204,11 @@ function scoreHold(val,lo,hi){
 }
 // Detects genuine stillness (not just "holding the target") so an idle, unengaged
 // body doesn't keep showing a leftover/false score. Threshold used to be a flat
-// 3 (degrees) — fine for the 9 degree-scale exercises (their hi-lo spans are
-// all >=15, so 3 reads as a sensible ~12-20% noise band), but shoulder_shrug's
-// threshold is a 0-1 ratio where a "3-unit" wobble is physically impossible —
-// every frame counted as motionless, so idle was permanently true for it
-// whenever it sat outside [lo,hi], pinning its score at the floor (8)
-// regardless of what the user actually did. Scaling to the exercise's own
-// span fixes this without changing behavior for the degree-scale exercises.
+// 3 (degrees) — broke for a since-removed exercise whose threshold was a 0-1
+// ratio, where a "3-unit" wobble is physically impossible, so idle was
+// permanently true whenever it sat outside [lo,hi], pinning its score at the
+// floor (8) regardless of what the user did. Scaling to the exercise's own
+// span makes this correct for any unit scale.
 let motionHistory=[];
 function trackStillness(val,threshold=3){
   const now=performance.now();
@@ -3260,13 +3221,13 @@ function trackStillness(val,threshold=3){
 function isIdleHold(val,lo,hi){
   return trackStillness(val,Math.abs(hi-lo||20)*0.12)&&!(val>=lo&&val<=hi);
 }
-// Gates neutralBaseline adaptation (shoulder_shrug/mckenzie/bilateral_raise/
-// lateral_raise all self-calibrate to "this session's own resting value") to
-// genuinely-still frames only. It used to adapt on every not-yet-engaged
-// frame regardless of motion — confirmed live: holding a full shoulder shrug
-// for 20 straight frames dragged the baseline most of the way toward the
-// shrugged position instead of staying anchored to the true resting state,
-// so a real ~1s human movement (never an instant step) got partially
+// Gates neutralBaseline adaptation (mckenzie/bilateral_raise/lateral_raise
+// all self-calibrate to "this session's own resting value") to genuinely-
+// still frames only. It used to adapt on every not-yet-engaged frame
+// regardless of motion — confirmed live (on a since-removed exercise):
+// holding the engaged position for 20 straight frames dragged the baseline
+// most of the way toward it instead of staying anchored to the true resting
+// state, so a real ~1s human movement (never an instant step) got partially
 // absorbed into its own reference point and could never register as
 // "moved enough" to engage. Uses a short, separate raw-value buffer so this
 // doesn't depend on (and can't circularly corrupt) the exercise's own
@@ -3421,10 +3382,10 @@ function smoothTorso(val){
 // move at all — everything else here either involves intentional torso
 // movement (side_bend, mckenzie) or is arm-based and uses its own symmetry
 // check instead (bilateral_raise, lateral_raise), or requires a single-leg
-// balance adjustment that would false-positive this check. Shoulder shrugs
-// and calf raises are both standing, both-feet, torso-still exercises with
-// no intentional trunk motion, so they get the same guard as neck_tilt.
-const COMPENSATION_CHECK_DETS=new Set(['neck_tilt','shoulder_shrug']);
+// balance adjustment that would false-positive this check. Neck tilt is
+// standing, both-feet, torso-still with no intentional trunk motion, so it
+// gets this guard.
+const COMPENSATION_CHECK_DETS=new Set(['neck_tilt']);
 let compensationStreak=0;
 // Reported live: users were seeing "Keep your torso still... / Compensating"
 // almost constantly, even standing normally — confirmed by simulating this
@@ -3542,35 +3503,6 @@ const HOLD_CFG={
     releaseMsg:'Nice — stand tall and repeat.',
     shortHoldMsg:'Pause a moment at the bottom for full credit.',
     readyMsg:'Bend both knees into a shallow squat, keeping knees behind your toes.'
-  },
-  shoulder_shrug:{
-    vis:[7,8,11,12],
-    // shrugGap is a normalized on-screen ratio (ear-shoulder gap / shoulder
-    // width), not a physical angle — its resting value varies with build,
-    // head tilt, and camera angle, so a fixed absolute threshold can only ever
-    // guess at THIS session's actual resting ratio. Score against how much
-    // it's SHRUNK from this session's own tracked resting baseline instead —
-    // self-calibrating to whatever the real resting value turns out to be.
-    // Flipped to increase-with-engagement (baseline minus current, not the
-    // raw ratio) so this follows the same "value>lo" pattern every other
-    // increasing-metric exercise here already uses.
-    // Ears (7/8) are small and read lower MediaPipe confidence than big
-    // joints even when genuinely visible — often partly covered by hair —
-    // same reasoning as the toe/fingertip fixes elsewhere in this file.
-    // Without this the whole exercise flipped to "Lost" almost constantly.
-    minVis:0.2,
-    compute(lm){
-      const raw=smoothAngle(shrugGap(lm));
-      const rel=neutralBaseline==null?0:neutralBaseline-raw;
-      return{value:Math.max(0,rel),raw,label:'Shrug',unit:''};
-    },
-    isEngaged:(o,lo)=>o.value>lo,
-    isReleased:(o,lo)=>o.value<lo*0.3,
-    minHoldMs:1500,activeLabel:'Shrugged',
-    engagedMsg:'Good — shoulders lifted toward your ears. Hold 2 seconds.',
-    releaseMsg:'Let your shoulders drop fully and repeat.',
-    shortHoldMsg:'Hold the shrug a little longer for full credit.',
-    readyMsg:'Relax your arms at your sides, then lift both shoulders straight up toward your ears.'
   }
 };
 function runHold(det,lm){
@@ -3580,16 +3512,15 @@ function runHold(det,lm){
   const o=cfg.compute(lm);
   setAngle(o.value,o.label,o.unit);
   const idle=isIdleHold(o.value,lo,hi);
-  // shoulder_shrug can't use a fixed real-world angle threshold — its signal
-  // (a normalized on-screen ratio) has no universal "textbook" value, so a
-  // hardcoded absolute threshold is only ever a guess at THIS session's
-  // camera angle/body scale. Its compute() instead returns o.value already
-  // expressed relative to this session's own tracked neutralBaseline, and
-  // separately exposes the true raw signal as o.raw so baseline-tracking
+  // A self-calibrating detector (normalized on-screen ratio, no universal
+  // "textbook" value — a fixed absolute threshold could only ever guess at
+  // THIS session's camera angle/body scale) can return o.value already
+  // expressed relative to this session's own tracked neutralBaseline, while
+  // separately exposing the true raw signal as o.raw so baseline-tracking
   // itself stays anchored to the real physical quantity, not to a value
-  // that's already relative to the baseline
-  // it's updating (which would be circular). Detectors that don't set o.raw
-  // are unaffected — raw just falls back to o.value, identical to before.
+  // that's already relative to the baseline it's updating (which would be
+  // circular). Detectors that don't set o.raw are unaffected — raw just
+  // falls back to o.value.
   const raw=o.raw!=null?o.raw:o.value;
   // Track the resting baseline while not engaged, and require the user to have
   // actually MOVED a meaningful amount away from it before crediting engagement —
@@ -3715,7 +3646,7 @@ function runBilateralRaise(lm){
   }
 }
 
-const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat','shoulder_shrug']);
+const HOLD_DETS=new Set(['neck_tilt','side_bend','knee_chest','mckenzie','mini_squat']);
 const BILATERAL_DETS=new Set(['bilateral_raise','lateral_raise']);
 function analyzeExercise(lm,W,H){
   if(!sessEx)return;
