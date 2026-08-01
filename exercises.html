@@ -345,14 +345,23 @@ body.lang-ur .hero-h{line-height:1.9}
 .coach-panel.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
 .coach-wrap{background:transparent;display:flex;flex-direction:column;height:100%;position:relative}
 .coach-wrap::before{
-  content:'';position:absolute;top:50%;left:50%;width:190px;height:190px;z-index:0;pointer-events:none;
-  background-image:url('physiosync-icon-white.png');background-size:contain;background-repeat:no-repeat;background-position:center;
+  content:'';position:absolute;top:42%;left:50%;width:140px;height:140px;z-index:0;pointer-events:none;
+  background-image:url('physiosync-icon.png');background-size:contain;background-repeat:no-repeat;background-position:center;
   transform:translate(-50%,-50%);opacity:.05;
   animation:coachLogoBreathe 6s ease-in-out infinite;
 }
-:root[data-theme="light"] .coach-wrap::before{background-image:url('physiosync-icon.png')}
+/* "PhysioSync" wordmark watermark, stacked below the icon above — real
+   text (not an image) so its color is exactly the brand red regardless of
+   theme, per feedback asking for a red logo with the name written out. */
+.coach-wrap::after{
+  content:'PhysioSync';position:absolute;top:61%;left:50%;z-index:0;pointer-events:none;
+  transform:translate(-50%,-50%);
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:.01em;
+  color:var(--brand);opacity:.05;
+  animation:coachLogoBreathe 6s ease-in-out infinite;
+}
 @keyframes coachLogoBreathe{0%,100%{opacity:.04;transform:translate(-50%,-50%) scale(1)}50%{opacity:.1;transform:translate(-50%,-50%) scale(1.06)}}
-@media(prefers-reduced-motion:reduce){.coach-wrap::before{animation:none}}
+@media(prefers-reduced-motion:reduce){.coach-wrap::before,.coach-wrap::after{animation:none}}
 .coach-head{padding:14px 18px;border-bottom:1px solid var(--w06);display:flex;align-items:center;gap:12px;position:relative;z-index:1;background:var(--card1)}
 .coach-av{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--brand),#be123c);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .coach-av img{width:19px;height:auto}
