@@ -14,7 +14,7 @@
 // Bump SW_VERSION whenever a precached file's content changes so clients
 // pick up the new copy instead of serving a stale cached one forever.
 // ═══════════════════════════════════════════════════════════
-const SW_VERSION='physiosync-v1';
+const SW_VERSION='physiosync-v2';
 
 // Only real, currently-linked local files — no point precaching dead assets
 // nothing on the site actually loads (e.g. the unused self-hosted 3D model,
@@ -41,13 +41,33 @@ self.addEventListener('activate',e=>{
   );
 });
 
-// Cache-first, refresh-in-background for every GET request the page makes —
-// same-origin pages/assets AND cross-origin CDN scripts/fonts alike. A cached
-// hit answers immediately; the network fetch still runs in the background so
-// the cache stays current for next time, and its result is what a later
-// offline visit will fall back to.
+// This app's own pages/scripts/styles use NETWORK-FIRST: a bug fix pushed to
+// the live site must reach a returning user's browser on their very next
+// visit, not "eventually, after however many visits it takes the old
+// cache-first background-refresh to catch up." Cache is purely an offline
+// fallback here, never the thing served by default while online.
+function isAppShell(req){
+  const url=new URL(req.url);
+  if(url.origin!==self.location.origin)return false;
+  return req.mode==='navigate'||/\.(html|js|css)$/.test(url.pathname)||url.pathname==='/'||url.pathname.endsWith('/');
+}
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
+  if(isAppShell(e.request)){
+    e.respondWith(
+      fetch(e.request).then(res=>{
+        if(res&&res.ok){
+          const copy=res.clone();
+          caches.open(SW_VERSION).then(cache=>cache.put(e.request,copy));
+        }
+        return res;
+      }).catch(()=>caches.match(e.request)) // offline — fall back to whatever was last cached
+    );
+    return;
+  }
+  // Cross-origin CDN assets (MediaPipe, fonts, hospital logos) and other
+  // static files genuinely don't change often, so cache-first with a
+  // background refresh is still the right tradeoff for those.
   e.respondWith(
     caches.match(e.request).then(cached=>{
       const network=fetch(e.request).then(res=>{
