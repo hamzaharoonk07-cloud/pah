@@ -360,7 +360,14 @@ body.lang-ur .jf-title{font-size:clamp(1.5rem,3.6vw,2.7rem)!important;line-heigh
   const form = document.getElementById('gate-form');
   const error = document.getElementById('gate-error');
   const account = JSON.parse(localStorage.getItem('pah_acc') || 'null');
-  if(account){ overlay.classList.add('hidden'); }
+  if(account){
+    overlay.classList.add('hidden');
+    // This script runs while parsing the gate overlay, which sits before the
+    // navbar in the document — the nav's acct-dd-trigger doesn't exist yet,
+    // so renderAcctDropdown would silently no-op. Deferred until the full
+    // document (nav included) has been parsed.
+    document.addEventListener('DOMContentLoaded',()=>renderAcctDropdown(account));
+  }
   form.addEventListener('submit', function(e){
     e.preventDefault();
     e.stopPropagation();
@@ -445,9 +452,31 @@ syncGateLangBtns();
   </a>
   <div class="nav-actions">
     <a href="exercises.html" class="nav-cta" data-ur="ورزشیں">Exercises</a>
-    <a href="account.html" class="theme-tgl" aria-label="Your account" title="Your account">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-    </a>
+    <div class="acct-dd" id="acct-dd">
+      <button class="theme-tgl acct-dd-trigger" id="acct-dd-trigger" aria-label="Your account" title="Your account" onclick="toggleAcctDropdown(event)">
+        <img class="acct-dd-avatar-img" alt="" style="display:none">
+        <span class="acct-dd-avatar-letter"></span>
+        <svg class="acct-dd-default-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+      </button>
+      <div class="acct-dd-panel" id="acct-dd-panel">
+        <div class="acct-dd-head">
+          <div class="acct-dd-avatar-lg">
+            <img class="acct-dd-avatar-img" alt="" style="display:none">
+            <span class="acct-dd-avatar-letter"></span>
+            <svg class="acct-dd-default-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
+          </div>
+          <div style="min-width:0">
+            <div class="acct-dd-name" id="acct-dd-name">—</div>
+            <div class="acct-dd-email" id="acct-dd-email">—</div>
+          </div>
+        </div>
+        <div class="acct-dd-lks">
+          <a href="account.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span data-ur="ڈیش بورڈ دیکھیں">View Dashboard</span></a>
+          <a href="exercises.html#hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span data-ur="ورزش شروع کریں">Start Exercise</span></a>
+          <button class="acct-dd-logout" onclick="logoutUser()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg><span data-ur="لاگ آؤٹ">Logout</span></button>
+        </div>
+      </div>
+    </div>
     <button class="theme-tgl" id="lang-tgl" onclick="toggleLang()" aria-label="Switch language" title="Switch language (English / Urdu)">
       <span id="lang-tgl-txt" style="font-size:.62rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:.02em">EN</span>
     </button>
