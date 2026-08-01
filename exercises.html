@@ -137,7 +137,7 @@ body.lang-ur .hero-h{line-height:1.9}
   padding:18px 34px 18px 18px;margin:0 auto 28px;max-width:100%;
   box-shadow:0 0 32px -8px rgba(225,29,72,.35);
 }
-.reviewer-badge img{
+.reviewer-badge>img{
   width:76px;height:76px;border-radius:50%;object-fit:cover;flex-shrink:0;
   border:3px solid var(--brand);
 }
@@ -149,7 +149,14 @@ body.lang-ur .hero-h{line-height:1.9}
 .reviewer-badge-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.2rem;color:var(--heading);display:flex;align-items:center;gap:7px}
 .reviewer-badge-name svg{width:19px;height:19px;stroke:#00e5a0;flex-shrink:0}
 .reviewer-badge-cred{font-size:.88rem;color:var(--muted);line-height:1.4}
-@media(max-width:540px){.reviewer-badge{padding:14px 20px 14px 14px;gap:13px}.reviewer-badge img{width:56px;height:56px}.reviewer-badge-label{font-size:.6rem}.reviewer-badge-name{font-size:.98rem}.reviewer-badge-cred{font-size:.74rem}}
+/* Hospital logo assumes a light background, kept theme-independent by
+   design — same reasoning as hospitals.html's .hosp-top treatment. */
+.reviewer-hosp-chip{
+  display:inline-flex;align-items:center;margin-top:8px;padding:5px 10px;
+  background:#fff;border-radius:8px;width:fit-content;
+}
+.reviewer-hosp-chip img{width:auto;height:18px;max-width:140px;object-fit:contain;border:none}
+@media(max-width:540px){.reviewer-badge{padding:14px 20px 14px 14px;gap:13px}.reviewer-badge>img{width:56px;height:56px}.reviewer-badge-label{font-size:.6rem}.reviewer-badge-name{font-size:.98rem}.reviewer-badge-cred{font-size:.74rem}.reviewer-hosp-chip img{width:auto;height:15px;max-width:110px}}
 .hero-welcome{
   display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
   background:rgba(225,29,72,.06);border:1px solid rgba(225,29,72,.25);
@@ -881,6 +888,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
           <span data-ur="حارون اسماعیل">Haroon Ismail</span>
         </span>
         <span class="reviewer-badge-cred" data-ur="فزیوتھراپسٹ — لیاقت نیشنل ہسپتال سے فزیوتھراپی میں 4 سالہ ڈپلومہ">Physiotherapist — 4-Year Diploma in Physiotherapy, Liaquat National Hospital</span>
+        <span class="reviewer-hosp-chip"><img src="hospitallogos/liaquat_national.png" alt="Liaquat National Hospital"></span>
       </div>
     </div>
     <div class="search-row">
