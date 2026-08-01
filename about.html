@@ -78,6 +78,19 @@ body.lang-ur .ab-cta-box p{
 .value-card h3{font-size:.95rem;margin-bottom:7px}
 .value-card p{color:var(--muted);font-size:.8rem;line-height:1.65}
 
+/* Clinical reviewer credential card */
+.reviewer-card{
+  display:flex;align-items:center;gap:22px;margin-top:24px;
+  background:var(--card2);border:1px solid var(--w07);border-radius:var(--r-lg);
+  padding:26px 28px;box-shadow:var(--shadow-md);
+}
+.reviewer-card img{width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid var(--brand);flex-shrink:0}
+.reviewer-card-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;color:var(--heading);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.reviewer-card-name svg{width:17px;height:17px;stroke:#00e5a0;flex-shrink:0}
+.reviewer-card-role{color:var(--brand);font-weight:700;font-size:.78rem;margin-bottom:8px}
+.reviewer-card-cred{color:var(--muted);font-size:.83rem;line-height:1.6}
+@media(max-width:540px){.reviewer-card{flex-direction:column;text-align:center;padding:22px 20px}.reviewer-card-name{justify-content:center}}
+
 /* STATS STRIP */
 .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
 @media(max-width:700px){.stats-strip{grid-template-columns:1fr 1fr}}
@@ -218,6 +231,17 @@ body.lang-ur .ab-cta-box p{
         <div class="value-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
         <h3 data-ur="شواہد پر مبنی">Evidence-based</h3>
         <p data-ur="ہماری تحقیقی لائبریری براہ راست WHO ڈیٹا کا حوالہ دیتی ہے — ہر دعویٰ اپنے ماخذ تک قابل تصدیق ہے، محض کہا نہیں گیا۔">Our research library cites WHO data directly — every claim is traceable back to its source, not just asserted.</p>
+      </div>
+    </div>
+    <div class="reviewer-card">
+      <img src="haroon-ismail.png" alt="Haroon Ismail, Physiotherapist">
+      <div>
+        <div class="reviewer-card-name">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span data-ur="حارون اسماعیل">Haroon Ismail</span>
+        </div>
+        <div class="reviewer-card-role" data-ur="فزیوتھراپسٹ">Physiotherapist</div>
+        <p class="reviewer-card-cred" data-ur="لیاقت نیشنل ہسپتال سے فزیوتھراپی میں 4 سالہ ڈپلومہ۔ ایپ کی لائبریری میں شامل تمام ورزشیں ان کی طرف سے جائزہ لے کر منظور شدہ ہیں۔">4-Year Diploma in Physiotherapy from Liaquat National Hospital. Every exercise in this app's library has been reviewed and approved by him.</p>
       </div>
     </div>
   </div>

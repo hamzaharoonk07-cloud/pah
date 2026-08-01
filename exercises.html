@@ -128,6 +128,21 @@ body.lang-ur .hero-h{line-height:1.9}
 }
 @media(prefers-reduced-motion:reduce){.hero-h span{animation:none}}
 .hero-sub{color:var(--muted);font-size:.95rem;line-height:1.8;max-width:560px;margin:0 auto 28px}
+/* Clinical-reviewer credential badge */
+.reviewer-badge{
+  display:inline-flex;align-items:center;gap:12px;text-align:left;
+  background:var(--w04);border:1px solid var(--w08);border-radius:100px;
+  padding:8px 20px 8px 8px;margin:0 auto 28px;max-width:100%;
+}
+.reviewer-badge img{
+  width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;
+  border:2px solid var(--brand);
+}
+.reviewer-badge-text{display:flex;flex-direction:column;gap:1px}
+.reviewer-badge-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;color:var(--heading);display:flex;align-items:center;gap:5px}
+.reviewer-badge-name svg{width:14px;height:14px;stroke:#00e5a0;flex-shrink:0}
+.reviewer-badge-cred{font-size:.7rem;color:var(--muted);line-height:1.3}
+@media(max-width:540px){.reviewer-badge{padding:7px 16px 7px 7px;gap:9px}.reviewer-badge img{width:36px;height:36px}.reviewer-badge-name{font-size:.76rem}.reviewer-badge-cred{font-size:.65rem}}
 .hero-welcome{
   display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;
   background:rgba(225,29,72,.06);border:1px solid rgba(225,29,72,.25);
@@ -833,7 +848,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
   <div class="hero-inner">
     <div class="hero-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-      <span data-ur="کلینیکل ٹریکنگ · 3D پٹھوں کا نقشہ · 10 ورزشیں">Clinical Tracking · 3D Muscle Map · 10 Exercises</span>
+      <span data-ur="کلینیکل ٹریکنگ · 3D پٹھوں کا نقشہ · 8 ورزشیں">Clinical Tracking · 3D Muscle Map · 8 Exercises</span>
     </div>
     <div class="hero-welcome" id="hero-welcome" style="display:none">
       <span class="hero-welcome-av" id="hero-welcome-av"><img id="hero-welcome-img" alt="" style="display:none"><span id="hero-welcome-letter">P</span></span>
@@ -841,6 +856,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
     </div>
     <h1 class="hero-h" data-ur="آپ کی <span>بحالی</span><br>PhysioSync کی رہنمائی میں">Your <span>Recovery</span><br>Guided by PhysioSync</h1>
     <p class="hero-sub" data-ur="فزیو کی تصدیق شدہ ورزشیں، لائیو MediaPipe پوز ٹریکنگ اور فارم اسکورنگ کے ساتھ — سب کچھ نجی، سب کچھ آپ کی ڈیوائس پر۔">Physio-approved exercises with real-time MediaPipe pose tracking and live form scoring — all private, all on your device.</p>
+    <div class="reviewer-badge">
+      <img src="haroon-ismail.png" alt="Haroon Ismail, Physiotherapist">
+      <div class="reviewer-badge-text">
+        <span class="reviewer-badge-name">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span data-ur="حارون اسماعیل">Haroon Ismail</span>
+        </span>
+        <span class="reviewer-badge-cred" data-ur="فزیوتھراپسٹ — لیاقت نیشنل ہسپتال سے فزیوتھراپی میں 4 سالہ ڈپلومہ">Physiotherapist — 4-Year Diploma in Physiotherapy, Liaquat National Hospital</span>
+      </div>
+    </div>
     <div class="search-row">
       <input class="ex-search" id="ex-search" type="text" placeholder="Search exercises, muscles, joints..." data-ur-ph="ورزش، پٹھے، جوڑ تلاش کریں..." oninput="filterEx()">
     </div>
