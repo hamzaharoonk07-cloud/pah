@@ -92,10 +92,10 @@ body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
 .acct-avatar-btn-remove:hover{background:rgba(225,29,72,.14);border-color:rgba(225,29,72,.45)}
 .acct-avatar-hint{font-size:.66rem;color:var(--muted);margin-top:7px}
 .acct-profile-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
-.acct-profile-grid div{background:var(--w03);border:1px solid var(--w06);border-radius:12px;padding:12px 14px;transition:border-color .2s,transform .2s}
+.acct-profile-grid div{background:var(--w03);border:1px solid var(--w06);border-radius:12px;padding:12px 14px;transition:border-color .2s,transform .2s;min-width:0}
 .acct-profile-grid div:hover{border-color:rgba(225,29,72,.3);transform:translateY(-2px)}
 .acct-profile-grid span{display:block;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
-.acct-profile-grid strong{font-size:.9rem;color:var(--heading);font-weight:700;text-transform:capitalize}
+.acct-profile-grid strong{font-size:.9rem;color:var(--heading);font-weight:700;text-transform:capitalize;overflow-wrap:anywhere;display:block}
 .acct-profile-grid strong#acct-email{text-transform:none}
 @media(max-width:540px){.acct-profile-grid{grid-template-columns:1fr 1fr}}
 
