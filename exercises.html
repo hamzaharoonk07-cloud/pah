@@ -2327,7 +2327,7 @@ let holdPraised=false; // reset each time the phase changes so the countdown/pra
 // before doRep() fires), so sampling it at that moment under-reports how well
 // the hold itself was actually performed.
 let repScoreSum=0,repScoreCount=0,lastSpokenHoldSec=null;
-function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;lastSpokenHoldSec=null;goodFormSince=null;goodFormBadStreak=0;}}
+function setRepPhase(p){if(p!==repPhase){repPhase=p;phaseChangedAt=performance.now();holdPraised=false;repScoreSum=0;repScoreCount=0;lastSpokenHoldSec=null;goodFormSince=null;goodFormBadStreak=0;baselineRawBuf.length=0;}}
 function phaseAge(){return performance.now()-phaseChangedAt;}
 // Separate from phaseAge(): phaseAge() starts the instant the angle merely
 // crosses into the engaged threshold, even if form is still poor right at
@@ -2537,7 +2537,7 @@ const CamDiag={
 function openSession(idx){
   sessEx=EX[idx];sessReps=0;sessScore=0;repPhase='neutral';formScores=[];emaAngle=null;lastRepAt=0;phaseChangedAt=0;
   sessCompleting=false;
-  angleRawBuf=[];motionHistory=[];visLossStreak=0;noPoseStreak=0;neutralBaseline=null;goodFormSince=null;
+  angleRawBuf=[];motionHistory=[];visLossStreak=0;noPoseStreak=0;neutralBaseline=null;goodFormSince=null;baselineRawBuf=[];
   torsoRawBuf=[];torsoEma=null;compensationStreak=0;bilateralArmCheck.reset();
   lastVoiceMsg='';lastVoiceAt=0;VoiceCoach.stop();
   document.getElementById('sr-announcer').textContent='';
@@ -3232,18 +3232,43 @@ function scoreHold(val,lo,hi){
   return Math.max(8,Math.round(85-(dist/span)*140));
 }
 // Detects genuine stillness (not just "holding the target") so an idle, unengaged
-// body doesn't keep showing a leftover/false score.
+// body doesn't keep showing a leftover/false score. Threshold used to be a flat
+// 3 (degrees) — fine for the 9 degree-scale exercises (their hi-lo spans are
+// all >=15, so 3 reads as a sensible ~12-20% noise band), but shoulder_shrug's
+// threshold is a 0-1 ratio where a "3-unit" wobble is physically impossible —
+// every frame counted as motionless, so idle was permanently true for it
+// whenever it sat outside [lo,hi], pinning its score at the floor (8)
+// regardless of what the user actually did. Scaling to the exercise's own
+// span fixes this without changing behavior for the degree-scale exercises.
 let motionHistory=[];
-function trackStillness(val){
+function trackStillness(val,threshold=3){
   const now=performance.now();
   motionHistory.push({t:now,v:val});
   while(motionHistory.length&&now-motionHistory[0].t>1200)motionHistory.shift();
   if(motionHistory.length<8)return false; // not enough samples yet — don't false-flag at session start
   const vals=motionHistory.map(p=>p.v);
-  return(Math.max(...vals)-Math.min(...vals))<3; // <3° of wobble over 1.2s = not moving
+  return(Math.max(...vals)-Math.min(...vals))<threshold;
 }
 function isIdleHold(val,lo,hi){
-  return trackStillness(val)&&!(val>=lo&&val<=hi);
+  return trackStillness(val,Math.abs(hi-lo||20)*0.12)&&!(val>=lo&&val<=hi);
+}
+// Gates neutralBaseline adaptation (shoulder_shrug/mckenzie/bilateral_raise/
+// lateral_raise all self-calibrate to "this session's own resting value") to
+// genuinely-still frames only. It used to adapt on every not-yet-engaged
+// frame regardless of motion — confirmed live: holding a full shoulder shrug
+// for 20 straight frames dragged the baseline most of the way toward the
+// shrugged position instead of staying anchored to the true resting state,
+// so a real ~1s human movement (never an instant step) got partially
+// absorbed into its own reference point and could never register as
+// "moved enough" to engage. Uses a short, separate raw-value buffer so this
+// doesn't depend on (and can't circularly corrupt) the exercise's own
+// smoothed angle buffer.
+let baselineRawBuf=[];
+function baselineCanAdapt(raw,threshold){
+  baselineRawBuf.push(raw);
+  if(baselineRawBuf.length>10)baselineRawBuf.shift(); // ~330ms at 30fps
+  if(baselineRawBuf.length<10)return true; // let it establish quickly at session start
+  return(Math.max(...baselineRawBuf)-Math.min(...baselineRawBuf))<threshold;
 }
 function setAngle(deg,lbl,unit='°'){
   const perc=Math.min(deg/180,1);
@@ -3562,7 +3587,9 @@ function runHold(det,lm){
   // actually MOVED a meaningful amount away from it before crediting engagement —
   // otherwise someone whose resting posture already sits inside the target range
   // (camera angle, natural stance) gets credited without ever intentionally moving.
-  if(repPhase!=='engaged')neutralBaseline=neutralBaseline==null?raw:neutralBaseline+(raw-neutralBaseline)*0.06;
+  if(repPhase!=='engaged'&&baselineCanAdapt(raw,Math.abs(hi-lo||20)*0.12)){
+    neutralBaseline=neutralBaseline==null?raw:neutralBaseline+(raw-neutralBaseline)*0.06;
+  }
   const movedEnough=neutralBaseline==null||Math.abs(raw-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
   if(cfg.isEngaged(o,lo,hi)&&movedEnough){
     if(repPhase!=='engaged'){setRepPhase('engaged');setFB(cfg.engagedMsg,'good');}
@@ -3640,7 +3667,9 @@ function runBilateralRaise(lm){
   const symErr=Math.abs(lAng-rAng);
   setAngle(avg,'Arms');
   const idle=isIdleHold(avg,lo,hi);
-  if(repPhase!=='up')neutralBaseline=neutralBaseline==null?avg:neutralBaseline+(avg-neutralBaseline)*0.06;
+  if(repPhase!=='up'&&baselineCanAdapt(avg,Math.abs(hi-lo||20)*0.12)){
+    neutralBaseline=neutralBaseline==null?avg:neutralBaseline+(avg-neutralBaseline)*0.06;
+  }
   const movedEnough=neutralBaseline==null||Math.abs(avg-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
   if(weaker>lo&&movedEnough){
     if(repPhase!=='up'){setRepPhase('up');setFB(cfg.engagedMsg,'good');}
