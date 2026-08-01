@@ -3532,15 +3532,41 @@ function runHold(det,lm){
   const movedEnough=neutralBaseline==null||Math.abs(raw-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
   if(cfg.isEngaged(o,lo,hi)&&movedEnough){
     if(repPhase!=='engaged'){setRepPhase('engaged');setFB(cfg.engagedMsg,'good');}
-    const s=idle?8:scoreHold(o.value,lo,hi);
+    // idle used to still gate the score/rep-accounting even inside this
+    // isEngaged-true branch — but isEngaged only checks the lower bound
+    // (o.value>lo), while isIdleHold flags "idle" for ANY value outside the
+    // full [lo,hi] range, including above hi. A real user who holds a
+    // genuine engaged position past the calibrated hi (very common —
+    // overhead raises, deep arches, anything past an average flexibility
+    // baseline) was isEngaged==true AND idle==true simultaneously — a
+    // contradiction that floored their score to 8 and blocked the hold
+    // countdown entirely despite doing the exercise correctly. Confirmed
+    // live with zero jitter: a perfectly steady hold just past hi crashed
+    // straight to the idle floor. Once isEngaged is true, idle no longer
+    // applies by definition — score reflects scoreHold() directly.
+    // Every detector's isEngaged only ever checks ONE side (value>lo for
+    // increasing metrics, value<hi for decreasing ones) — the other bound is
+    // a soft "typical full range" reference for the centered-score gradient,
+    // not a hard ceiling/floor the user must stay within. Left unclamped,
+    // exceeding it (e.g. raising an arm further than the calibrated hi,
+    // common for anyone more flexible than the calibration) fell into
+    // scoreHold's out-of-range decay and could sit just under
+    // GOOD_FORM_THRESHOLD forever — even clamping to the nearest edge still
+    // only scores ~85 there BY DESIGN (the edge is deliberately not "fully
+    // centered"), so a rep performed correctly, and MORE fully than
+    // calibrated, could never complete. Exceeding the reference range is
+    // doing at least as well as the ideal case, so it's treated as dead
+    // center (the max score), not merely at the edge.
+    const clampedForScore=(o.value<lo||o.value>hi)?(lo+hi)/2:o.value;
+    const s=scoreHold(clampedForScore,lo,hi);
     updateScore(s);setPhase(cfg.activeLabel);
-    if(!idle){repScoreSum+=s;repScoreCount++;}
+    repScoreSum+=s;repScoreCount++;
     // Gate on sessScore (the smoothed value actually shown on screen and used
     // for the skeleton color), not the raw per-frame s — s can already read
     // "good" a frame or two before the displayed/blended score catches up,
     // which let the countdown start while the user still saw a low, orange
     // number on screen.
-    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){
+    if(sessScore>=GOOD_FORM_THRESHOLD){
       goodFormBadStreak=0;
       if(goodFormSince==null)goodFormSince=performance.now();
     }else if(goodFormSince!=null&&++goodFormBadStreak>=GOOD_FORM_GRACE){
@@ -3612,13 +3638,22 @@ function runBilateralRaise(lm){
   const movedEnough=neutralBaseline==null||Math.abs(avg-neutralBaseline)>=Math.abs(hi-lo||20)*0.4;
   if(weaker>lo&&movedEnough){
     if(repPhase!=='up'){setRepPhase('up');setFB(cfg.engagedMsg,'good');}
+    // idle no longer gates score/rep-accounting here — see runHold's comment
+    // on the same fix. weaker>lo only checks the lower bound, so a real user
+    // raising past the calibrated hi (very common for overhead/lateral
+    // raises) was engaged==true AND idle==true simultaneously, flooring
+    // their score to 8 and blocking the countdown despite correct form.
+    // avg past hi also treated as dead-center (max score), not merely the
+    // edge — see runHold's comment: hi is a soft "full range" reference
+    // here, and exceeding it is doing at least as well as the ideal case.
     const penalty=symErr>20?15:0;
-    const s=idle?8:Math.max(8,scoreHold(avg,lo,hi)-penalty);
+    const clampedForScore=(avg<lo||avg>hi)?(lo+hi)/2:avg;
+    const s=Math.max(8,scoreHold(clampedForScore,lo,hi)-penalty);
     updateScore(s);setPhase('Raised');
-    if(!idle){repScoreSum+=s;repScoreCount++;}
+    repScoreSum+=s;repScoreCount++;
     if(symErr>25)setFB('Raise both arms evenly — keep them symmetric.','warn');
     // Gate on sessScore (smoothed/displayed), not raw s — see runHold for why.
-    if(!idle&&sessScore>=GOOD_FORM_THRESHOLD){
+    if(sessScore>=GOOD_FORM_THRESHOLD){
       goodFormBadStreak=0;
       if(goodFormSince==null)goodFormSince=performance.now();
     }else if(goodFormSince!=null&&++goodFormBadStreak>=GOOD_FORM_GRACE){
