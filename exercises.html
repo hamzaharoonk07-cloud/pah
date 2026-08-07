@@ -216,6 +216,18 @@ body.lang-ur .hero-h{line-height:1.9}
 .ex-card:hover::after{opacity:1}
 .ex-card:active{transform:translateY(-1px) scale(.99)}
 .ex-card.hidden{display:none}
+.ex-empty{
+  max-width:420px;margin:20px auto 80px;padding:0 24px;text-align:center;
+  color:var(--muted);
+}
+.ex-empty svg{width:36px;height:36px;stroke:var(--muted);margin-bottom:14px}
+.ex-empty p{font-size:.9rem;line-height:1.6;margin-bottom:16px}
+.ex-empty button{
+  padding:9px 20px;border-radius:100px;border:1px solid var(--w10);background:var(--w05);
+  color:var(--heading);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.8rem;
+  cursor:pointer;transition:background .2s,border-color .2s;
+}
+.ex-empty button:hover{background:var(--w08);border-color:rgba(225,29,72,.3)}
 .ex-card.ex-linked{animation:exLinkedPulse 1.3s ease 2}
 @keyframes exLinkedPulse{0%,100%{box-shadow:var(--shadow-md),0 0 0 0 rgba(225,29,72,.5)}50%{box-shadow:var(--shadow-md),0 0 0 6px rgba(225,29,72,.18)}}
 .ex-idx{
@@ -907,6 +919,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 
 <!-- ══════════ EXERCISE GRID ══════════ -->
 <div id="ex-grid"></div>
+<div class="ex-empty" id="ex-empty" style="display:none">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
+  <p data-ur="کوئی ورزش نہیں ملی — فلٹر صاف کرنے یا مختلف الفاظ تلاش کرنے کی کوشش کریں۔">No exercises match — try clearing filters or searching a different term.</p>
+  <button type="button" onclick="clearExFilters()" data-ur="فلٹر صاف کریں">Clear filters</button>
+</div>
 
 <!-- Hospitals and Research are now their own pages: hospitals.html, research.html -->
 
@@ -1866,12 +1883,20 @@ function setPill(el,f){
 }
 function filterEx(){
   const q=document.getElementById('ex-search').value.toLowerCase();
+  let visibleCount=0;
   document.querySelectorAll('.ex-card').forEach((c,i)=>{
     const ex=EX[i];
     const mq=!q||(ex.name+ex.area+ex.desc+ex.muscles.join(' ')).toLowerCase().includes(q);
     const mf=activeFilter==='all'||ex.diff===activeFilter||ex.tags.includes(activeFilter);
-    c.classList.toggle('hidden',!mq||!mf);
+    const show=mq&&mf;
+    c.classList.toggle('hidden',!show);
+    if(show)visibleCount++;
   });
+  document.getElementById('ex-empty').style.display=visibleCount===0?'block':'none';
+}
+function clearExFilters(){
+  document.getElementById('ex-search').value='';
+  setPill(document.querySelector('.pill[data-f="all"]'),'all');
 }
 
 // One deliberate icon per movement type (not a rotating grab-bag) so the glyph

@@ -87,7 +87,37 @@ body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
 .acct-avatar svg{width:26px;height:26px}
 .acct-avatar-btn{padding:8px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w04);color:var(--heading);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;transition:all .2s}
 .acct-avatar-btn:hover{background:var(--w08);border-color:var(--w12)}
+/* Reviewer credential — same trust signal shown on the exercises hero,
+   About, and homepage footer, surfaced here too since a dashboard of your
+   own health data is exactly where that trust matters most. */
+.acct-reviewer-badge{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;padding-top:18px;
+  border-top:1px solid var(--w06);
+}
+.acct-reviewer-badge>img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--brand);flex-shrink:0}
+.acct-reviewer-text{display:flex;flex-direction:column;gap:3px}
+.acct-reviewer-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--brand)}
+.acct-reviewer-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.92rem;color:var(--heading);display:flex;align-items:center;gap:6px}
+.acct-reviewer-name svg{width:14px;height:14px;stroke:#00e5a0;flex-shrink:0}
+.acct-reviewer-cred{font-size:.72rem;color:var(--muted);line-height:1.4}
+.acct-reviewer-hosp-chip{display:inline-flex;align-items:center;margin-top:6px;padding:4px 9px;background:#fff;border-radius:7px;width:fit-content}
+.acct-reviewer-hosp-chip img{width:auto;height:14px;max-width:110px;object-fit:contain;border:none}
 .acct-voice-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--w06);flex-wrap:wrap}
+/* Preferences card — consolidates language/theme/voice, previously split
+   between navbar icons and this page, into one discoverable place. */
+.acct-pref-card{margin-bottom:20px}
+.acct-pref-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--w06);flex-wrap:wrap}
+.acct-pref-row:last-child{border-bottom:none;padding-bottom:0}
+.acct-pref-row:first-child{padding-top:0}
+.acct-pref-label{display:block;font-weight:700;color:var(--heading);font-size:.8rem;margin-bottom:2px}
+.acct-pref-seg{display:flex;gap:6px;flex-shrink:0}
+.acct-pref-seg button{
+  padding:6px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w06);
+  color:var(--heading);font-weight:700;font-size:.76rem;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:background .2s,color .2s,border-color .2s;
+}
+.acct-pref-seg button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.acct-pref-seg button:hover:not(.on){background:var(--w09)}
 .acct-avatar-btn-remove{color:var(--brand);border-color:rgba(225,29,72,.3);background:rgba(225,29,72,.06)}
 .acct-avatar-btn-remove:hover{background:rgba(225,29,72,.14);border-color:rgba(225,29,72,.45)}
 .acct-avatar-hint{font-size:.66rem;color:var(--muted);margin-top:7px}
@@ -378,9 +408,48 @@ body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
         <div><span data-ur="مسئلہ">Condition</span><strong id="acct-condition">—</strong></div>
         <div><span data-ur="ممبر بننے کی تاریخ">Member Since</span><strong id="acct-joined">—</strong></div>
       </div>
-      <div class="acct-voice-row">
+      <div class="acct-reviewer-badge">
+        <img src="haroon-ismail.png" alt="Haroon Ismail, Physiotherapist">
+        <div class="acct-reviewer-text">
+          <span class="acct-reviewer-label" data-ur="کی جانب سے منظور شدہ">Approved by</span>
+          <span class="acct-reviewer-name">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span data-ur="حارون اسماعیل">Haroon Ismail</span>
+          </span>
+          <span class="acct-reviewer-cred" data-ur="فزیوتھراپسٹ — لیاقت نیشنل ہسپتال سے فزیوتھراپی میں 4 سالہ ڈپلومہ">Physiotherapist — 4-Year Diploma in Physiotherapy, Liaquat National Hospital</span>
+          <span class="acct-reviewer-hosp-chip"><img src="hospitallogos/liaquat_national.png" alt="Liaquat National Hospital"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-card acct-pref-card">
+      <div class="dash-card-t">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span data-ur="ترجیحات">Preferences</span>
+      </div>
+      <div class="acct-pref-row">
         <div>
-          <span data-ur="اے آئی کوچ کی آواز" style="display:block;font-weight:700;color:var(--heading);font-size:.8rem;margin-bottom:2px">AI Coach Voice</span>
+          <span class="acct-pref-label" data-ur="زبان">Language</span>
+          <span class="acct-avatar-hint" data-ur="ایپ کو انگریزی اور اردو کے درمیان تبدیل کریں۔" style="margin:0">Switch the app between English and Urdu.</span>
+        </div>
+        <div class="acct-pref-seg">
+          <button type="button" id="pref-lang-en" onclick="setPrefLang('en')">English</button>
+          <button type="button" id="pref-lang-ur" onclick="setPrefLang('ur')">اردو</button>
+        </div>
+      </div>
+      <div class="acct-pref-row">
+        <div>
+          <span class="acct-pref-label" data-ur="تھیم">Theme</span>
+          <span class="acct-avatar-hint" data-ur="ڈارک اور لائٹ موڈ کے درمیان تبدیل کریں۔" style="margin:0">Switch between dark and light mode.</span>
+        </div>
+        <div class="acct-pref-seg">
+          <button type="button" id="pref-theme-dark" onclick="setPrefTheme('dark')" data-ur="ڈارک">Dark</button>
+          <button type="button" id="pref-theme-light" onclick="setPrefTheme('light')" data-ur="لائٹ">Light</button>
+        </div>
+      </div>
+      <div class="acct-pref-row">
+        <div>
+          <span class="acct-pref-label" data-ur="اے آئی کوچ کی آواز">AI Coach Voice</span>
           <span class="acct-avatar-hint" data-ur="سیشن کے دوران بولی جانے والی رہنمائی کے لیے آواز منتخب کریں۔" style="margin:0">Pick the voice used for spoken coaching during sessions.</span>
         </div>
         <select class="trend-select" id="acct-voice-select" onchange="setCoachVoice(this.value)" aria-label="AI coach voice" title="Choose voice" style="max-width:180px"></select>
@@ -556,6 +625,7 @@ function syncThemeIcon(){
   const light=document.documentElement.getAttribute('data-theme')==='light';
   const sun=document.getElementById('theme-ic-sun'),moon=document.getElementById('theme-ic-moon');
   if(sun&&moon){sun.style.display=light?'block':'none';moon.style.display=light?'none':'block';}
+  syncPrefControls();
 }
 function toggleTheme(){
   const isLight=document.documentElement.getAttribute('data-theme')==='light';
@@ -564,6 +634,27 @@ function toggleTheme(){
   syncThemeIcon();
 }
 syncThemeIcon();
+
+// ── PREFERENCES CARD — keeps its language/theme buttons in sync regardless
+// of whether the change came from here or the navbar icons (both paths
+// funnel through toggleLang/toggleTheme, which already call the sync hooks
+// below via onLangChange/syncThemeIcon).
+function setPrefLang(lang){
+  if(currentLang!==lang)toggleLang();
+  else syncPrefControls();
+}
+function setPrefTheme(theme){
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  if((theme==='light')!==isLight)toggleTheme();
+  else syncPrefControls();
+}
+function syncPrefControls(){
+  const enBtn=document.getElementById('pref-lang-en'),urBtn=document.getElementById('pref-lang-ur');
+  if(enBtn&&urBtn){enBtn.classList.toggle('on',currentLang==='en');urBtn.classList.toggle('on',currentLang==='ur');}
+  const darkBtn=document.getElementById('pref-theme-dark'),lightBtn=document.getElementById('pref-theme-light');
+  const isLight=document.documentElement.getAttribute('data-theme')==='light';
+  if(darkBtn&&lightBtn){darkBtn.classList.toggle('on',!isLight);lightBtn.classList.toggle('on',isLight);}
+}
 
 function loadU(){
   const u=JSON.parse(localStorage.getItem('pah_v5')||JSON.stringify({
@@ -997,6 +1088,7 @@ function applyAcctGreeting(acc){
   }
 }
 function onLangChange(){
+  syncPrefControls();
   const acc=JSON.parse(localStorage.getItem('pah_acc')||'null');
   if(!acc)return;
   applyAcctGreeting(acc);
