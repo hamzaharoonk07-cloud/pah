@@ -175,13 +175,23 @@ body.lang-ur .hero-h{line-height:1.9}
 .hero-welcome-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .hero-welcome strong{color:var(--heading)}
 .search-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.ex-search-wrap{position:relative;width:min(380px,100%)}
 .ex-search{
   background:var(--w05);border:1px solid var(--w10);
-  border-radius:100px;padding:12px 22px;color:var(--heading);font-family:'Inter',sans-serif;font-size:.85rem;
-  width:min(380px,100%);outline:none;transition:border-color .2s;
+  border-radius:100px;padding:12px 38px 12px 22px;color:var(--heading);font-family:'Inter',sans-serif;font-size:.85rem;
+  width:100%;outline:none;transition:border-color .2s;
 }
 .ex-search:focus{border-color:var(--brand)}
 .ex-search::placeholder{color:var(--muted)}
+.ex-search-clear{
+  position:absolute;top:50%;right:8px;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;border:none;background:var(--w08);
+  color:var(--muted);display:none;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .2s,color .2s;padding:0;
+}
+.ex-search-clear.vis{display:flex}
+.ex-search-clear svg{width:12px;height:12px}
+.ex-search-clear:hover{background:var(--w10);color:var(--heading)}
 .pills{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
 .pill{
   padding:5px 16px;border-radius:100px;font-size:.72rem;font-weight:600;cursor:pointer;
@@ -904,7 +914,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
       </div>
     </div>
     <div class="search-row">
-      <input class="ex-search" id="ex-search" type="text" placeholder="Search exercises, muscles, joints..." data-ur-ph="ورزش، پٹھے، جوڑ تلاش کریں..." oninput="filterEx()">
+      <div class="ex-search-wrap">
+        <input class="ex-search" id="ex-search" type="text" placeholder="Search exercises, muscles, joints..." data-ur-ph="ورزش، پٹھے، جوڑ تلاش کریں..." oninput="filterEx()">
+        <button type="button" class="ex-search-clear" id="ex-search-clear" onclick="clearExSearch()" aria-label="Clear search" title="Clear search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
     </div>
     <div class="pills" id="pills">
       <button class="pill on" data-f="all" data-ur="تمام" onclick="setPill(this,'all')">All</button>
@@ -1882,7 +1897,9 @@ function setPill(el,f){
   el.classList.add('on');activeFilter=f;filterEx();
 }
 function filterEx(){
-  const q=document.getElementById('ex-search').value.toLowerCase();
+  const searchEl=document.getElementById('ex-search');
+  const q=searchEl.value.toLowerCase();
+  document.getElementById('ex-search-clear').classList.toggle('vis',searchEl.value.length>0);
   let visibleCount=0;
   document.querySelectorAll('.ex-card').forEach((c,i)=>{
     const ex=EX[i];
@@ -1893,6 +1910,12 @@ function filterEx(){
     if(show)visibleCount++;
   });
   document.getElementById('ex-empty').style.display=visibleCount===0?'block':'none';
+}
+function clearExSearch(){
+  const searchEl=document.getElementById('ex-search');
+  searchEl.value='';
+  searchEl.focus();
+  filterEx();
 }
 function clearExFilters(){
   document.getElementById('ex-search').value='';
@@ -1916,6 +1939,19 @@ const ICON_BY_DET={
 
 const AREA_COLOR={Neck:'#fb7185',Shoulder:'#3b82f6',Back:'#8b5cf6',Hip:'#f59e0b',Knee:'#00e5a0',Ankle:'#22d3ee',Wrist:'#f472b6'};
 
+// Rough per-rep seconds (hold time + release/reset), used only for the
+// card's "~N min" estimate — a genuine, if approximate, planning aid.
+// Every exercise here is Beginner difficulty (a fixed library-wide
+// constraint, not a per-exercise attribute), so a "Beginner" badge on
+// every single card conveyed no actual information; this replaces it
+// with something that varies and is actually useful when scanning the
+// library deciding what to start.
+const DURATION_SEC_PER_REP={neck_tilt:6,side_bend:4.5,knee_chest:6,mckenzie:6,mini_squat:3,bilateral_raise:4,lateral_raise:4};
+function estimateMinutes(ex){
+  const perRep=DURATION_SEC_PER_REP[ex.det]||5;
+  return Math.max(1,Math.round((ex.reps*perRep+15)/60)); // +15s flat setup/read-instructions buffer
+}
+
 function renderExGrid(){
   document.getElementById('ex-grid').innerHTML=EX.map((ex,i)=>{
     const ur=currentLang==='ur'?EX_UR[ex.det]:null;
@@ -1937,7 +1973,7 @@ function renderExGrid(){
   </div>
   <div class="ex-top">
     <span class="ex-area">${area}</span>
-    <span class="ex-badge" style="color:${DC[ex.diff]};background:${DC[ex.diff]}1a">${T(ex.diff)}</span>
+    <span class="ex-badge" style="color:${DC.Beginner};background:${DC.Beginner}1a">~${estimateMinutes(ex)} ${currentLang==='ur'?'منٹ':'min'}</span>
   </div>
   <h3 class="ex-name">${name}</h3>
   <p class="ex-desc">${desc}</p>
@@ -2639,19 +2675,20 @@ function endSession(){
     });
     if(u.recent.length>30)u.recent=u.recent.slice(0,30);
     saveU(u);renderNavStreak();
-    toast('Session saved — '+sessReps+' reps at '+avgF+'% form.');
+    showSessionReport({
+      name:sessEx.name,nameUr:exUr?exUr.name:null,
+      reps:sessReps,target:sessEx.reps,form:avgF,streak:u.streak,durationSec
+    });
   }
   sessStartAt=null;
 }
 
-// Triggered once the exercise's own configured rep target is reached — speaks
-// a completion message, then closes out the session (camera off, saved to
-// the dashboard exactly like a manual "End Session") and shows a report.
+// Triggered once the exercise's own configured rep target is reached — the
+// completion voice line already played from doRep() before this fires;
+// endSession() itself now shows the report (used to be duplicated here and
+// skipped entirely on a manual "End Session" before its target was reached).
 function completeSessionAuto(){
-  const avgF=formScores.length?Math.round(formScores.reduce((a,b)=>a+b,0)/formScores.length):sessScore;
-  const report={name:sessEx.name,reps:sessReps,target:sessEx.reps,form:avgF};
   endSession();
-  showSessionReport(report);
 }
 
 function showSessionReport(d){
@@ -2662,26 +2699,41 @@ function showSessionReport(d){
     m.style.cssText='position:fixed;inset:0;z-index:10001;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);';
     document.body.appendChild(m);
   }
-  const grade=d.form>=80?'Excellent form — keep this up.':d.form>=60?'Good effort — a little more control will raise your score.':'Keep practicing — focus on slow, controlled movement over speed.';
+  const ur=currentLang==='ur';
+  const name=(ur&&d.nameUr)?d.nameUr:d.name;
+  const gradeEn=d.form>=80?'Excellent form — keep this up.':d.form>=60?'Good effort — a little more control will raise your score.':'Keep practicing — focus on slow, controlled movement over speed.';
+  const gradeUr=d.form>=80?'بہترین کرنسی — اسے جاری رکھیں۔':d.form>=60?'اچھی کوشش — تھوڑا اور قابو آپ کا اسکور بڑھا دے گا۔':'مشق جاری رکھیں — رفتار کی بجائے آہستہ، قابو والی حرکت پر توجہ دیں۔';
+  const grade=ur?gradeUr:gradeEn;
+  const disclaimer=ur
+    ?'یہ ٹریکر پیشہ ورانہ طبی مشورے کا متبادل نہیں ہے — اگر درد محسوس ہو تو فزیوتھراپسٹ سے رجوع کریں۔'
+    :"This tracker isn't a substitute for professional medical advice — consult a physiotherapist if you experience pain.";
+  const streakBox=d.streak?`
+        <div style="flex:1;background:var(--w04);border:1px solid var(--w08);border-radius:14px;padding:14px;">
+          <div style="font-size:1.4rem;font-weight:800;color:var(--brand);">${d.streak}${ur?' دن':'d'}</div>
+          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">${ur?'حاضری':'Streak'}</div>
+        </div>`:'';
   m.innerHTML=`
     <div style="background:var(--card1);border:1px solid var(--w10);border-radius:var(--r-xl);padding:28px;max-width:100%;width:400px;color:var(--text);font-family:Inter,sans-serif;box-shadow:0 24px 70px var(--shadow-color);text-align:center;">
       <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--brand),#be123c);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="width:28px;height:28px"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
-      <h3 style="margin:0 0 4px;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2rem;color:var(--heading);">Session Complete</h3>
-      <p style="margin:0 0 20px;color:var(--muted);font-size:.85rem;">${d.name}</p>
+      <h3 style="margin:0 0 4px;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.2rem;color:var(--heading);">${ur?'سیشن مکمل':'Session Complete'}</h3>
+      <p style="margin:0 0 20px;color:var(--muted);font-size:.85rem;">${name}</p>
       <div style="display:flex;gap:10px;margin-bottom:18px;">
         <div style="flex:1;background:var(--w04);border:1px solid var(--w08);border-radius:14px;padding:14px;">
           <div style="font-size:1.4rem;font-weight:800;color:var(--brand);">${d.reps}/${d.target}</div>
-          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Reps</div>
+          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">${ur?'دہرائیاں':'Reps'}</div>
         </div>
         <div style="flex:1;background:var(--w04);border:1px solid var(--w08);border-radius:14px;padding:14px;">
           <div style="font-size:1.4rem;font-weight:800;color:var(--brand);">${d.form}%</div>
-          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Form Score</div>
-        </div>
+          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">${ur?'فارم اسکور':'Form Score'}</div>
+        </div>${streakBox}
       </div>
-      <p style="margin:0 0 20px;font-size:.8rem;color:var(--text);line-height:1.5;">${grade} This tracker isn't a substitute for professional medical advice — consult a physiotherapist if you experience pain.</p>
-      <button onclick="document.getElementById('session-report-popup').remove()" style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.88rem;cursor:pointer;">Done</button>
+      <p style="margin:0 0 20px;font-size:.8rem;color:var(--text);line-height:1.5;">${grade} ${disclaimer}</p>
+      <div style="display:flex;gap:10px;">
+        <button onclick="document.getElementById('session-report-popup').remove();document.getElementById('hero').scrollIntoView({behavior:'smooth'})" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--w10);background:var(--w05);color:var(--heading);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;">${ur?'ایک اور ورزش':'Try Another'}</button>
+        <button onclick="document.getElementById('session-report-popup').remove()" style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--brand),#be123c);color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;">${ur?'ہو گیا':'Done'}</button>
+      </div>
     </div>`;
 }
 

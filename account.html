@@ -85,6 +85,15 @@ body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
 .acct-avatar{width:64px;height:64px;border-radius:50%;background:var(--w06);border:1px solid var(--w09);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted);flex-shrink:0}
 .acct-avatar img{width:100%;height:100%;object-fit:cover}
 .acct-avatar svg{width:26px;height:26px}
+/* Same gradient-letter fallback already used by the shared navbar avatar
+   (acct-dd-avatar-letter in styles.css) — a generic outline-person icon
+   here read as an unfinished/anonymous state next to that more personal
+   treatment elsewhere. */
+.acct-avatar-letter{
+  width:100%;height:100%;border-radius:50%;display:none;align-items:center;justify-content:center;
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;
+  background:linear-gradient(135deg,var(--brand),#7c3aed);
+}
 .acct-avatar-btn{padding:8px 16px;border-radius:100px;border:1px solid var(--w10);background:var(--w04);color:var(--heading);font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.76rem;cursor:pointer;transition:all .2s}
 .acct-avatar-btn:hover{background:var(--w08);border-color:var(--w12)}
 /* Reviewer credential — same trust signal shown on the exercises hero,
@@ -388,6 +397,7 @@ body.lang-ur #dash-greet-p,body.lang-ur .sd-note{
       <div class="acct-avatar-row">
         <div class="acct-avatar" id="acct-avatar">
           <img id="acct-avatar-img" alt="" style="display:none">
+          <span class="acct-avatar-letter" id="acct-avatar-letter"></span>
           <svg id="acct-avatar-default" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
         </div>
         <div>
@@ -681,18 +691,27 @@ function logoutUser(){
 // any server). Swaps the fallback person-icon out for the real photo
 // wherever an avatar is shown (this page's own avatar plus the shared
 // navbar dropdown avatar on other pages, via renderAcctDropdown()).
-function applyAvatar(photo){
+function applyAvatar(photo,name){
   const img=document.getElementById('acct-avatar-img');
   const def=document.getElementById('acct-avatar-default');
+  const letterEl=document.getElementById('acct-avatar-letter');
   const removeBtn=document.getElementById('acct-photo-remove-btn');
   if(!img)return;
+  const letter=(name||'').trim().charAt(0).toUpperCase();
   if(photo){
     img.src=photo;img.style.display='block';
     if(def)def.style.display='none';
+    if(letterEl)letterEl.style.display='none';
     if(removeBtn)removeBtn.style.display='';
+  }else if(letter){
+    img.src='';img.style.display='none';
+    if(def)def.style.display='none';
+    if(letterEl){letterEl.textContent=letter;letterEl.style.display='flex';}
+    if(removeBtn)removeBtn.style.display='none';
   }else{
     img.src='';img.style.display='none';
     if(def)def.style.display='block';
+    if(letterEl)letterEl.style.display='none';
     if(removeBtn)removeBtn.style.display='none';
   }
 }
@@ -714,7 +733,7 @@ function handlePhotoUpload(e){
     if(!acc)return;
     acc.photo=reader.result;
     localStorage.setItem('pah_acc',JSON.stringify(acc));
-    applyAvatar(acc.photo);
+    applyAvatar(acc.photo,acc.name);
     msg.textContent='Photo updated.';
   };
   reader.onerror=()=>{msg.textContent='Could not read that file — please try another.';};
@@ -725,7 +744,7 @@ function removePhoto(){
   if(!acc)return;
   delete acc.photo;
   localStorage.setItem('pah_acc',JSON.stringify(acc));
-  applyAvatar(null);
+  applyAvatar(null,acc.name);
   document.getElementById('acct-photo-input').value='';
   document.getElementById('acct-photo-msg').textContent='Photo removed.';
 }
@@ -1058,7 +1077,7 @@ function applyAcctGreeting(acc){
   document.getElementById('acct-weight-height').textContent=acc.weight+(currentLang==='ur'?'کلوگرام / ':'kg / ')+acc.height+(currentLang==='ur'?'سینٹی میٹر':'cm');
   document.getElementById('acct-condition').textContent=acc.condition||'—';
   document.getElementById('acct-joined').textContent=acc.joined||'—';
-  applyAvatar(acc.photo||null);
+  applyAvatar(acc.photo||null,acc.name);
 
   const u=loadU();
   if(currentLang==='ur'){
